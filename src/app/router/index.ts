@@ -18,6 +18,26 @@ export const router = createRouter({
           path: '',
           name: 'admin-dashboard',
           component: () => import('../../surfaces/admin/views/DashboardView.vue')
+        },
+        {
+          path: 'events',
+          name: 'admin-events',
+          component: () => import('../../surfaces/admin/views/events/EventListView.vue')
+        },
+        {
+          path: 'events/new',
+          name: 'admin-events-new',
+          component: () => import('../../surfaces/admin/views/events/EventCreateView.vue')
+        },
+        {
+          path: 'events/:id',
+          name: 'admin-events-detail',
+          component: () => import('../../surfaces/admin/views/events/EventDetailView.vue')
+        },
+        {
+          path: 'events/:id/recipient-funds/new',
+          name: 'admin-recipient-funds-new',
+          component: () => import('../../surfaces/admin/views/recipient-funds/RecipientFundCreateView.vue')
         }
       ]
     },
