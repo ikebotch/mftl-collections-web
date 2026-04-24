@@ -25,6 +25,7 @@ export function mapEventDto(dto: EventDto): Event {
     totalTarget,
     progress,
     fundCount: dto.fundCount ?? 0,
+    collectorCount: dto.collectorCount ?? 0,
     slug: dto.slug ?? id.slice(0, 8),
   }
 }

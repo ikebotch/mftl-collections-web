@@ -7,6 +7,9 @@ export interface Donor {
   lastDonationAt: string
   donationCount: number
   status: 'active' | 'blocked'
+  eventsSupported: number
+  preferredMethod: string
+  lastEvent?: string
 }
 
 export interface DonorDto {

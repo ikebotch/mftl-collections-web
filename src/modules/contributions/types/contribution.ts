@@ -10,4 +10,7 @@ export interface ContributionRow {
   contributorName: string
   contributorPhone: string
   contributorEmail?: string
+  receiptId?: string | null
+  note?: string | null
+  collectorName?: string | null
 }

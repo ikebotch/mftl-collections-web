@@ -28,8 +28,12 @@
     >
       <header class="p-8 border-b border-slate-100 flex items-center justify-between">
         <div>
-          <h2 class="text-2xl font-black text-slate-900 font-display leading-none">{{ title }}</h2>
-          <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-2">{{ subtitle }}</p>
+          <h2 class="text-2xl font-black text-slate-900 font-display leading-none">
+            {{ title }}
+          </h2>
+          <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-2">
+            {{ subtitle }}
+          </p>
         </div>
         <button 
           class="p-2 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-900 transition-all"
@@ -43,7 +47,10 @@
         <slot />
       </div>
 
-      <footer v-if="$slots.actions" class="p-8 bg-slate-50 border-t border-slate-100 flex items-center gap-4">
+      <footer
+        v-if="$slots.actions"
+        class="p-8 bg-slate-50 border-t border-slate-100 flex items-center gap-4"
+      >
         <slot name="actions" />
       </footer>
     </aside>
