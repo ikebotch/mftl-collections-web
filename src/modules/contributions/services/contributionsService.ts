@@ -1,6 +1,7 @@
 import { httpClient } from '@/core/api/httpClient'
 import type { RequestOptions } from '@/core/api/types'
 import type { ContributionRow } from '../types/contribution'
+import { formatCurrency, formatDate } from '@/shared/utils/formatters'
 
 export interface CashContributionResult {
   contributionId: string
@@ -30,6 +31,25 @@ export interface RecordCashContributionInput {
   note?: string
 }
 
+interface ContributionListItemDto {
+  id?: string
+  Id?: string
+  createdAt?: string
+  CreatedAt?: string
+  eventTitle?: string
+  EventTitle?: string
+  recipientFundName?: string
+  RecipientFundName?: string
+  paymentMethod?: string
+  PaymentMethod?: string
+  status?: string
+  Status?: string
+  amount?: number
+  Amount?: number
+  currency?: string
+  Currency?: string
+}
+
 function mapCashContributionResult(dto: CashContributionResultDto): CashContributionResult {
   return {
     contributionId: dto.contributionId ?? dto.ContributionId ?? '',
@@ -38,10 +58,25 @@ function mapCashContributionResult(dto: CashContributionResultDto): CashContribu
   }
 }
 
+function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
+  const amount = dto.amount ?? dto.Amount ?? 0
+  const currency = dto.currency ?? dto.Currency ?? 'GHS'
+
+  return {
+    id: dto.id ?? dto.Id ?? '',
+    date: formatDate(dto.createdAt ?? dto.CreatedAt),
+    event: dto.eventTitle ?? dto.EventTitle ?? 'Unknown event',
+    recipientFund: dto.recipientFundName ?? dto.RecipientFundName ?? 'Unknown fund',
+    paymentMethod: dto.paymentMethod ?? dto.PaymentMethod ?? 'Unknown',
+    status: dto.status ?? dto.Status ?? 'Unknown',
+    amount: formatCurrency(amount, currency),
+  }
+}
+
 export async function listContributions(): Promise<ContributionRow[]> {
   try {
-    const response = await httpClient.get<ContributionRow[]>('/contributions')
-    return response.data || []
+    const response = await httpClient.get<ContributionListItemDto[]>('/contributions')
+    return (response.data || []).map(mapContributionRow)
   } catch (error) {
     // Fallback for not implemented or missing endpoint
     console.warn('Contributions list endpoint error:', error)
