@@ -35,6 +35,10 @@ export function mapReceiptDetail(dto: ReceiptDto): ReceiptDetail {
     contributionId: dto.contributionId ?? dto.ContributionId ?? '',
     paymentId: dto.paymentId ?? dto.PaymentId ?? null,
     recordedByUserId: dto.recordedByUserId ?? dto.RecordedByUserId ?? null,
+    contributorPhone: dto.contributorPhone ?? dto.ContributorPhone ?? '',
+    contributorEmail: dto.contributorEmail ?? dto.ContributorEmail ?? '',
+    isAnonymous: dto.isAnonymous ?? dto.IsAnonymous ?? false,
+    collectorName: dto.collectorName ?? dto.CollectorName ?? '',
     note: dto.note ?? dto.Note ?? '',
   }
 }

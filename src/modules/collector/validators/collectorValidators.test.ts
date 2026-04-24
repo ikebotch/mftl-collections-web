@@ -8,6 +8,7 @@ describe('collectorContributionSchema', () => {
       recipientFundId: '',
       contributorName: 'Cash Donor',
       contributorPhone: '012345678',
+      contributorEmail: '',
       amount: 20,
       currency: 'GBP',
       anonymous: false,
@@ -18,12 +19,13 @@ describe('collectorContributionSchema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('allows anonymous contributions without name and phone', () => {
+  it('allows anonymous contributions without name but still requires phone', () => {
     const result = collectorContributionSchema.safeParse({
       eventId: 'event-1',
       recipientFundId: 'fund-1',
       contributorName: '',
-      contributorPhone: '',
+      contributorPhone: '012345678',
+      contributorEmail: '',
       amount: 20,
       currency: 'GBP',
       anonymous: true,

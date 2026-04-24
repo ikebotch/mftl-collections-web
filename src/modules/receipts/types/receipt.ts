@@ -32,6 +32,10 @@ export interface ReceiptDto extends ReceiptListItemDto {
   contributionId?: string
   paymentId?: string | null
   recordedByUserId?: string | null
+  contributorPhone?: string | null
+  contributorEmail?: string | null
+  isAnonymous?: boolean
+  collectorName?: string | null
   note?: string | null
   TenantId?: string
   EventId?: string
@@ -39,6 +43,10 @@ export interface ReceiptDto extends ReceiptListItemDto {
   ContributionId?: string
   PaymentId?: string | null
   RecordedByUserId?: string | null
+  ContributorPhone?: string | null
+  ContributorEmail?: string | null
+  IsAnonymous?: boolean
+  CollectorName?: string | null
   Note?: string | null
 }
 
@@ -63,5 +71,9 @@ export interface ReceiptDetail extends ReceiptRow {
   contributionId: string
   paymentId: string | null
   recordedByUserId: string | null
+  contributorPhone: string
+  contributorEmail: string
+  isAnonymous: boolean
+  collectorName: string
   note: string
 }

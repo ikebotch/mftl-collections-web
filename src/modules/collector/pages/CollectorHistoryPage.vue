@@ -1,86 +1,102 @@
 <template>
-  <div class="space-y-6">
-    <section class="space-y-3">
-      <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-300">
-        Collector
-      </p>
-      <h2 class="text-3xl font-semibold tracking-tight text-white">
-        Recent collections
+  <div class="space-y-5 pb-4">
+    <section>
+      <h2 class="text-2xl font-semibold text-white">
+        Receipt History
       </h2>
-      <p class="max-w-2xl text-sm leading-6 text-slate-300">
-        Review live receipt activity and jump straight back into collection capture when needed.
+      <p class="mt-2 text-sm text-slate-300">
+        Review issued, pending, and voided receipts created by this collector only.
       </p>
     </section>
 
-    <AppCard class="border-white/10 bg-white/95 shadow-2xl shadow-slate-950/30">
-      <LoadingState
-        v-if="query.isLoading.value"
-        text="Loading collector history…"
-      />
-      <ErrorState
-        v-else-if="query.isError.value"
-        title="Could not load collector history"
-        :message="query.error.value?.message ?? 'Try again later.'"
-        :correlation-id="query.error.value?.correlationId"
-        show-retry
-        @retry="query.refetch"
-      />
-      <EmptyState
-        v-else-if="(query.data.value?.length ?? 0) === 0"
-        title="No collection history yet"
-        description="Receipts will appear here after the first successful contribution is recorded."
-      />
-      <AppTable
-        v-else
-        caption="Collector history"
-        :columns="columns"
-        :rows="query.data.value ?? []"
-        row-key="id"
+    <div class="grid grid-cols-4 gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1">
+      <button
+        v-for="filter in filters"
+        :key="filter.value"
+        type="button"
+        class="rounded-full px-3 py-2 text-xs font-medium transition"
+        :class="activeFilter === filter.value ? 'bg-violet-500 text-white' : 'text-slate-300'"
+        @click="activeFilter = filter.value"
       >
-        <template #cell:status="{ value }">
-          <ReceiptStatusBadge :status="String(value)" />
-        </template>
-        <template #cell:actions="{ row }">
-          <AppButton
-            size="sm"
-            @click="router.push(`/collector/receipts/${getRowValue(row, 'id')}`)"
-          >
-            View receipt
-          </AppButton>
-        </template>
-      </AppTable>
-    </AppCard>
+        {{ filter.label }}
+      </button>
+    </div>
+
+    <LoadingState
+      v-if="query.isLoading.value"
+      text="Loading history…"
+    />
+    <ErrorState
+      v-else-if="query.isError.value"
+      title="Could not load collector history"
+      :message="query.error.value?.message ?? 'Try again later.'"
+      :correlation-id="query.error.value?.correlationId"
+      show-retry
+      @retry="query.refetch"
+    />
+    <template v-else>
+      <div
+        v-if="filteredReceipts.length === 0"
+        class="rounded-[1.75rem] border border-dashed border-white/10 bg-white/[0.03] p-5 text-sm text-slate-300"
+      >
+        No receipts match this filter.
+      </div>
+
+      <template v-else>
+        <button
+          v-for="receipt in filteredReceipts"
+          :key="receipt.id"
+          type="button"
+          class="w-full rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-4 text-left"
+          @click="router.push(`/collector/receipts/${receipt.id}`)"
+        >
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-base font-semibold text-white">
+                {{ receipt.receiptNumber }}
+              </p>
+              <p class="mt-2 text-xl font-semibold text-white">
+                {{ receipt.amount }}
+              </p>
+              <p class="mt-3 text-sm text-slate-300">
+                {{ receipt.eventTitle }} · {{ receipt.recipientFundName }}
+              </p>
+              <p class="mt-1 text-xs text-slate-500">
+                {{ receipt.issuedAt }}
+              </p>
+            </div>
+            <ReceiptStatusBadge :status="receipt.status" />
+          </div>
+        </button>
+      </template>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCollectorHistory } from '../composables/useCollector'
 import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppCard from '@/shared/components/cards/AppCard.vue'
-import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import AppTable from '@/shared/components/tables/AppTable.vue'
 
 const router = useRouter()
 const query = useCollectorHistory()
-const columns = [
-  { key: 'receiptNumber', label: 'Receipt' },
-  { key: 'eventTitle', label: 'Event' },
-  { key: 'contributorName', label: 'Contributor' },
-  { key: 'paymentMethod', label: 'Method' },
-  { key: 'amount', label: 'Amount' },
-  { key: 'status', label: 'Receipt' },
-  { key: 'actions', label: 'Actions' },
+const activeFilter = ref<'all' | 'issued' | 'pending' | 'voided'>('all')
+const filters = [
+  { label: 'All', value: 'all' as const },
+  { label: 'Issued', value: 'issued' as const },
+  { label: 'Pending', value: 'pending' as const },
+  { label: 'Voided', value: 'voided' as const },
 ]
 
-function getRowValue(row: unknown, key: string): string {
-  if (row && typeof row === 'object') {
-    return String((row as Record<string, unknown>)[key] ?? '')
+const filteredReceipts = computed(() => {
+  const receipts = query.data.value ?? []
+  if (activeFilter.value === 'all') {
+    return receipts
   }
 
-  return ''
-}
+  return receipts.filter(receipt => receipt.status.toLowerCase() === activeFilter.value)
+})
 </script>

@@ -1,4 +1,5 @@
 import { httpClient } from '@/core/api/httpClient'
+import type { RequestOptions } from '@/core/api/types'
 import type { ContributionRow } from '../types/contribution'
 
 export interface CashContributionResult {
@@ -20,7 +21,12 @@ export interface RecordCashContributionInput {
   eventId: string
   recipientFundId: string
   amount: number
+  currency: string
   contributorName?: string
+  contributorPhone: string
+  contributorEmail?: string
+  anonymous: boolean
+  paymentMethod: string
   note?: string
 }
 
@@ -43,10 +49,14 @@ export async function listContributions(): Promise<ContributionRow[]> {
   }
 }
 
-export async function recordCashContribution(payload: RecordCashContributionInput): Promise<CashContributionResult> {
+export async function recordCashContribution(
+  payload: RecordCashContributionInput,
+  options?: RequestOptions,
+): Promise<CashContributionResult> {
   const response = await httpClient.post<CashContributionResultDto, RecordCashContributionInput>(
     '/contributions/cash',
     payload,
+    options,
   )
   return mapCashContributionResult(response.data)
 }

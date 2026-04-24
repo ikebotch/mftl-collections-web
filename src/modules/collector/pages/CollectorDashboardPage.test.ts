@@ -9,16 +9,41 @@ const dashboardState = {
   refetch: vi.fn(),
   data: {
     value: {
-      totalCollected: 'GHS 150.00',
-      contributionCount: '1',
-      assignedEvents: '2',
+      profile: {
+        id: 'collector-1',
+        name: 'Abena Osei',
+        email: 'abena@example.com',
+        status: 'Active',
+        assignedEventCount: 2,
+        assignedFundCount: 3,
+        totalCollectedToday: 1245,
+        receiptsIssuedToday: 18,
+        lastActiveAt: '2026-04-24T09:42:00Z',
+        hasAssignments: true,
+        blockedReason: '',
+      },
+      assignments: {
+        hasAssignments: true,
+        blockedReason: '',
+        events: [],
+        funds: [],
+      },
+      todayTotal: 'GHS 1,245.00',
+      receiptsIssued: 18,
+      assignedEvents: 2,
+      assignedFunds: 3,
+      currentShiftLabel: 'Main Site',
+      syncStatusLabel: 'Online',
+      syncStatusDescription: 'Last activity 24 Apr 2026',
       recentReceipts: [
         {
           id: 'receipt-1',
           receiptNumber: 'RCT-1001',
           eventTitle: 'Community Fundraiser',
+          recipientFundName: 'Medical Fund',
           amount: 'GHS 150.00',
           status: 'Issued',
+          issuedAt: '24 Apr 2026',
         },
       ],
     },
@@ -30,24 +55,35 @@ vi.mock('../composables/useCollector', () => ({
 }))
 
 describe('CollectorDashboardPage', () => {
-  it('renders live collector dashboard metrics', () => {
+  it('renders collector-scoped metrics and recent receipts', () => {
     const wrapper = mount(CollectorDashboardPage)
 
-    expect(wrapper.text()).toContain('Total collected')
-    expect(wrapper.text()).toContain('GHS 150.00')
+    expect(wrapper.text()).toContain('Abena Osei')
+    expect(wrapper.text()).toContain('GHS 1,245.00')
+    expect(wrapper.text()).toContain('Start New Collection')
     expect(wrapper.text()).toContain('RCT-1001')
   })
 
-  it('renders the empty state when no recent receipts exist', async () => {
+  it('renders blocked state when collector has no assignments', () => {
     dashboardState.data.value = {
-      totalCollected: 'GBP 0.00',
-      contributionCount: '0',
-      assignedEvents: '0',
+      ...dashboardState.data.value,
+      profile: {
+        ...dashboardState.data.value.profile,
+        hasAssignments: false,
+        blockedReason: 'No event and fund assignments are active for this collector.',
+      },
+      assignments: {
+        hasAssignments: false,
+        blockedReason: 'No event and fund assignments are active for this collector.',
+        events: [],
+        funds: [],
+      },
       recentReceipts: [],
     }
 
     const wrapper = mount(CollectorDashboardPage)
 
-    expect(wrapper.text()).toContain('No contributions recorded yet')
+    expect(wrapper.text()).toContain('Collection blocked')
+    expect(wrapper.text()).toContain('No event and fund assignments are active for this collector.')
   })
 })

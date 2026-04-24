@@ -1,352 +1,548 @@
 <template>
-  <div class="space-y-6">
-    <section class="space-y-3">
-      <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-300">
-        Collector
-      </p>
-      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div class="space-y-2">
-          <h2 class="text-3xl font-semibold tracking-tight text-white">
-            New cash contribution
-          </h2>
-          <p class="max-w-2xl text-sm leading-6 text-slate-300">
-            Capture in-person collections quickly, validate required details, and issue a receipt immediately.
-          </p>
-        </div>
-        <div class="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-3 text-sm text-cyan-100">
-          Select an event first, then choose a recipient fund to unlock submission.
-        </div>
+  <div class="space-y-5 pb-4">
+    <section class="flex items-center justify-between gap-3">
+      <div>
+        <h2 class="text-2xl font-semibold text-white">
+          New Contribution
+        </h2>
+        <p class="mt-2 text-sm text-slate-300">
+          Capture a contribution with the assigned event and fund locked to this collector.
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <AppButton
+          variant="ghost"
+          size="sm"
+          @click="$router.push('/collector/history')"
+        >
+          History
+        </AppButton>
       </div>
     </section>
 
-    <AppCard class="border-white/10 bg-white/95 shadow-2xl shadow-slate-950/30">
-      <ErrorState
-        v-if="submissionError"
-        title="Could not record contribution"
-        :message="submissionError.message"
-        :correlation-id="submissionError.correlationId"
-      />
-      <ErrorState
-        v-else-if="eventsQuery.isError.value"
-        title="Could not load assigned events"
-        :message="eventsQuery.error.value?.message ?? 'Try again later.'"
-        :correlation-id="eventsQuery.error.value?.correlationId"
-        show-retry
-        @retry="eventsQuery.refetch"
-      />
+    <div class="grid grid-cols-4 gap-2">
+      <div
+        v-for="step in steps"
+        :key="step.id"
+        class="space-y-2"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold"
+            :class="activeStep >= step.id ? 'border-violet-400 bg-violet-500 text-white' : 'border-white/10 bg-white/[0.04] text-slate-400'"
+          >
+            {{ step.id }}
+          </div>
+          <div
+            v-if="step.id < 4"
+            class="h-[2px] flex-1 rounded-full"
+            :class="activeStep > step.id ? 'bg-violet-500' : 'bg-white/10'"
+          />
+        </div>
+        <p class="text-xs text-slate-400">
+          {{ step.label }}
+        </p>
+      </div>
+    </div>
+
+    <LoadingState
+      v-if="assignmentsQuery.isLoading.value"
+      text="Loading collector assignments…"
+    />
+    <ErrorState
+      v-else-if="assignmentsQuery.isError.value"
+      title="Could not load assignments"
+      :message="assignmentsQuery.error.value?.message ?? 'Try again later.'"
+      :correlation-id="assignmentsQuery.error.value?.correlationId"
+      show-retry
+      @retry="assignmentsQuery.refetch"
+    />
+    <template v-else-if="assignmentsQuery.data.value">
+      <div
+        v-if="!assignmentsQuery.data.value.hasAssignments"
+        class="rounded-[1.75rem] border border-amber-400/15 bg-amber-400/8 p-5"
+      >
+        <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-300">
+          Collection blocked
+        </p>
+        <p class="mt-3 text-sm leading-6 text-slate-200">
+          {{ assignmentsQuery.data.value.blockedReason || 'No recipient funds are assigned to this collector.' }}
+        </p>
+      </div>
+
       <form
         v-else
-        class="grid gap-5 md:grid-cols-2"
+        class="space-y-5"
         @submit.prevent="onSubmit"
       >
-        <div class="space-y-3">
-          <AppSelect
-            id="collector-event"
-            v-model="form.eventId"
-            label="Assigned event"
-            :options="eventOptions"
-            :disabled="eventsQuery.isLoading.value"
-            :error="errors.eventId"
-          />
-          <div
-            v-if="eventsQuery.isLoading.value"
-            class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600"
-          >
-            Loading available events…
-          </div>
-          <div
-            v-else-if="(eventsQuery.data.value?.length ?? 0) === 0"
-            class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
-          >
-            <p class="font-semibold">
-              No assigned events yet
-            </p>
-            <router-link
-              to="/admin/events/new"
-              class="mt-2 inline-flex font-semibold text-violet-700 underline underline-offset-4"
-            >
-              Create an event in admin
-            </router-link>
-          </div>
-        </div>
+        <ErrorState
+          v-if="submissionError"
+          title="Could not record contribution"
+          :message="submissionError.message"
+          :correlation-id="submissionError.correlationId"
+        />
 
-        <div class="space-y-3">
-          <AppSelect
-            id="collector-fund"
-            v-model="form.recipientFundId"
-            label="Recipient fund"
-            :options="fundOptions"
-            :disabled="fundSelectDisabled"
-            :error="errors.recipientFundId"
-          />
-          <div
-            v-if="fundHelper.message"
-            class="rounded-2xl border px-4 py-3 text-sm"
-            :class="fundHelper.classes"
-          >
-            <p class="font-semibold">
-              {{ fundHelper.title }}
-            </p>
-            <p class="mt-1 leading-6">
-              {{ fundHelper.message }}
-            </p>
-            <router-link
-              v-if="fundHelper.showCreateLink"
-              :to="fundCreationPath"
-              class="mt-3 inline-flex font-semibold text-violet-700 underline underline-offset-4"
+        <section class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-sm font-semibold text-violet-300">
+            Selected Event
+          </p>
+          <div class="mt-4">
+            <label class="mb-2 block text-xs uppercase tracking-[0.16em] text-slate-400">Assigned event</label>
+            <select
+              id="collector-event"
+              v-model="form.eventId"
+              class="w-full rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-4 text-base text-white outline-none"
             >
-              Create recipient fund in admin
-            </router-link>
-          </div>
-        </div>
-
-        <AppInput
-          id="collector-name"
-          v-model="form.contributorName"
-          label="Contributor name"
-          :disabled="anonymous"
-          :placeholder="anonymous ? 'Anonymous contribution selected' : 'Enter contributor name'"
-          :error="errors.contributorName"
-        />
-        <AppInput
-          id="collector-phone"
-          v-model="form.contributorPhone"
-          label="Contributor phone"
-          :disabled="anonymous"
-          :placeholder="anonymous ? 'Phone number not required' : 'Enter contributor phone'"
-          :error="errors.contributorPhone"
-        />
-        <AppInput
-          id="collector-amount"
-          v-model="form.amount"
-          type="number"
-          label="Amount"
-          placeholder="0.00"
-          :error="errors.amount"
-        />
-        <AppInput
-          id="collector-currency"
-          v-model="form.currency"
-          label="Currency"
-          :error="errors.currency"
-        />
-        <AppSelect
-          id="collector-method"
-          v-model="form.paymentMethod"
-          label="Payment method"
-          :options="paymentOptions"
-        />
-        <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 md:col-span-2">
-          <input
-            v-model="anonymous"
-            type="checkbox"
-            class="h-4 w-4 rounded border-slate-300 text-cyan-600"
-          >
-          Anonymous contribution
-        </label>
-        <div class="md:col-span-2">
-          <AppTextarea
-            id="collector-note"
-            v-model="form.note"
-            label="Note"
-          />
-        </div>
-        <div class="md:col-span-2 rounded-[1.5rem] bg-slate-950 px-5 py-5 text-white">
-          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">
-                Submission
-              </p>
-              <p class="mt-1 text-sm text-slate-300">
-                The button unlocks only when the selected event, fund, amount, and contributor details are valid.
-              </p>
-            </div>
-            <div class="md:w-72">
-              <AppButton
-                native-type="submit"
-                size="lg"
-                class="w-full"
-                :loading="isSubmitting"
-                :disabled="!canSubmit"
-                aria-label="Submit collector cash contribution"
+              <option value="">
+                Select event
+              </option>
+              <option
+                v-for="event in assignmentsQuery.data.value.events"
+                :key="event.id"
+                :value="event.id"
               >
-                Issue receipt
-              </AppButton>
+                {{ event.title }}
+              </option>
+            </select>
+            <p
+              v-if="selectedEvent"
+              class="mt-3 text-sm text-slate-300"
+            >
+              {{ selectedEvent.dateLabel }} · {{ selectedEvent.location }} · {{ selectedEvent.status }}
+            </p>
+            <p
+              v-if="errors.eventId"
+              class="mt-2 text-xs text-rose-300"
+            >
+              {{ errors.eventId }}
+            </p>
+          </div>
+        </section>
+
+        <section class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-violet-300">
+                Selected Fund
+              </p>
+              <p class="mt-2 text-sm text-slate-300">
+                Funds are filtered to the currently selected event.
+              </p>
+            </div>
+            <router-link
+              v-if="form.eventId"
+              :to="`/admin/events/${form.eventId}/recipient-funds/new`"
+              class="text-xs font-medium text-cyan-300"
+            >
+              Create fund
+            </router-link>
+          </div>
+
+          <div class="mt-4">
+            <label class="mb-2 block text-xs uppercase tracking-[0.16em] text-slate-400">Assigned fund</label>
+            <select
+              id="collector-fund"
+              v-model="form.recipientFundId"
+              :disabled="availableFunds.length === 0"
+              class="w-full rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-4 text-base text-white outline-none disabled:opacity-50"
+            >
+              <option value="">
+                {{ fundSelectLabel }}
+              </option>
+              <option
+                v-for="fund in availableFunds"
+                :key="fund.id"
+                :value="fund.id"
+              >
+                {{ fund.name }}
+              </option>
+            </select>
+            <p
+              v-if="!availableFunds.length && form.eventId"
+              class="mt-3 text-sm text-amber-200"
+            >
+              No recipient funds found for this event.
+            </p>
+            <p
+              v-else-if="selectedFund"
+              class="mt-3 text-sm text-slate-300"
+            >
+              Target {{ formatCurrency(selectedFund.targetAmount, selectedFund.currency) }} · Raised
+              {{ formatCurrency(selectedFund.collectedAmount, selectedFund.currency) }}
+            </p>
+            <p
+              v-if="errors.recipientFundId"
+              class="mt-2 text-xs text-rose-300"
+            >
+              {{ errors.recipientFundId }}
+            </p>
+          </div>
+        </section>
+
+        <section class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-sm font-semibold text-violet-300">
+            Contributor Details
+          </p>
+          <div class="mt-4 grid gap-4">
+            <div class="rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+              <label
+                for="collector-name"
+                class="text-xs uppercase tracking-[0.16em] text-slate-400"
+              >
+                Contributor name
+              </label>
+              <input
+                id="collector-name"
+                v-model="form.contributorName"
+                :disabled="form.anonymous"
+                class="mt-2 w-full bg-transparent text-base text-white outline-none disabled:text-slate-500"
+                placeholder="Ama Serwaa"
+              >
+            </div>
+            <p
+              v-if="errors.contributorName"
+              class="text-xs text-rose-300"
+            >
+              {{ errors.contributorName }}
+            </p>
+
+            <div class="rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+              <label
+                for="collector-phone"
+                class="text-xs uppercase tracking-[0.16em] text-slate-400"
+              >
+                Phone number
+              </label>
+              <input
+                id="collector-phone"
+                v-model="form.contributorPhone"
+                class="mt-2 w-full bg-transparent text-base text-white outline-none"
+                placeholder="+233 24 123 4567"
+              >
+            </div>
+            <p
+              v-if="errors.contributorPhone"
+              class="text-xs text-rose-300"
+            >
+              {{ errors.contributorPhone }}
+            </p>
+
+            <div class="rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+              <label
+                for="collector-email"
+                class="text-xs uppercase tracking-[0.16em] text-slate-400"
+              >
+                Email (optional)
+              </label>
+              <input
+                id="collector-email"
+                v-model="form.contributorEmail"
+                class="mt-2 w-full bg-transparent text-base text-white outline-none"
+                placeholder="name@example.com"
+              >
+            </div>
+            <p
+              v-if="errors.contributorEmail"
+              class="text-xs text-rose-300"
+            >
+              {{ errors.contributorEmail }}
+            </p>
+
+            <label class="flex items-start gap-3 rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-4">
+              <input
+                v-model="form.anonymous"
+                type="checkbox"
+                class="mt-1 h-5 w-5 rounded border-white/20 bg-transparent text-violet-500"
+              >
+              <span>
+                <span class="block text-base font-medium text-white">Anonymous contribution</span>
+                <span class="mt-1 block text-sm text-slate-300">
+                  Donor name will not appear on receipts or reports.
+                </span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-sm font-semibold text-violet-300">
+            Payment
+          </p>
+          <div class="mt-4 grid gap-4">
+            <div class="grid grid-cols-[2fr_1fr] gap-3">
+              <div class="rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+                <label
+                  for="collector-amount"
+                  class="text-xs uppercase tracking-[0.16em] text-slate-400"
+                >
+                  Amount
+                </label>
+                <input
+                  id="collector-amount"
+                  v-model="form.amount"
+                  class="mt-2 w-full bg-transparent text-3xl font-semibold text-white outline-none"
+                  inputmode="decimal"
+                  placeholder="150.00"
+                >
+              </div>
+              <div class="rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+                <label
+                  for="collector-currency"
+                  class="text-xs uppercase tracking-[0.16em] text-slate-400"
+                >
+                  Currency
+                </label>
+                <select
+                  id="collector-currency"
+                  v-model="form.currency"
+                  class="mt-2 w-full bg-transparent text-xl font-semibold text-white outline-none"
+                >
+                  <option value="GHS">
+                    GHS
+                  </option>
+                  <option value="USD">
+                    USD
+                  </option>
+                  <option value="GBP">
+                    GBP
+                  </option>
+                </select>
+              </div>
+            </div>
+            <p
+              v-if="errors.amount || errors.currency"
+              class="text-xs text-rose-300"
+            >
+              {{ errors.amount || errors.currency }}
+            </p>
+
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                v-for="method in paymentMethods"
+                :key="method.value"
+                type="button"
+                class="rounded-[1.2rem] border px-4 py-4 text-left transition"
+                :class="form.paymentMethod === method.value ? method.activeClass : 'border-white/10 bg-[#0F172A] text-slate-200'"
+                @click="form.paymentMethod = method.value"
+              >
+                <p class="text-base font-semibold">
+                  {{ method.label }}
+                </p>
+                <p class="mt-2 text-xs text-slate-300">
+                  {{ method.description }}
+                </p>
+              </button>
+            </div>
+            <p
+              v-if="errors.paymentMethod"
+              class="text-xs text-rose-300"
+            >
+              {{ errors.paymentMethod }}
+            </p>
+            <p
+              v-if="form.paymentMethod !== 'cash'"
+              class="text-sm text-amber-200"
+            >
+              Non-cash collection is backend-pending in this collector flow. Use cash for live local verification.
+            </p>
+
+            <div class="rounded-[1.2rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+              <label
+                for="collector-note"
+                class="text-xs uppercase tracking-[0.16em] text-slate-400"
+              >
+                Note (optional)
+              </label>
+              <textarea
+                id="collector-note"
+                v-model="form.note"
+                rows="3"
+                class="mt-2 w-full resize-none bg-transparent text-base text-white outline-none"
+                placeholder="Collection note"
+              />
             </div>
           </div>
+        </section>
+
+        <div class="sticky bottom-24 z-10 rounded-[1.5rem] border border-white/10 bg-[#0B1220]/95 p-4 shadow-[0_20px_40px_rgba(0,0,0,0.35)] backdrop-blur">
+          <AppButton
+            native-type="submit"
+            class="w-full !rounded-[1.25rem] !py-4 text-base"
+            size="lg"
+            :loading="isSubmitting"
+            :disabled="!canSubmit"
+          >
+            {{ form.paymentMethod === 'cash' ? 'Submit Cash Contribution' : 'Payment initiation pending' }}
+          </AppButton>
         </div>
       </form>
-    </AppCard>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useQuery } from '@tanstack/vue-query'
 import { z } from 'zod'
+import { useCollectorAssignments } from '../composables/useCollector'
 import { collectorContributionSchema } from '../validators/collectorValidators'
-import { useAssignedEvents } from '../composables/useCollector'
-import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
-import type { RecipientFund } from '@/modules/recipient-funds/types/recipientFund'
 import { contributionsService } from '@/modules/contributions/services/contributionsService'
 import type { ApiError } from '@/core/api/apiError'
+import { shouldBypassAuth } from '@/core/auth/auth0'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppCard from '@/shared/components/cards/AppCard.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
-import AppInput from '@/shared/components/forms/AppInput.vue'
-import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
+import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import { formatCurrency } from '@/shared/utils/formatters'
 
 const route = useRoute()
 const router = useRouter()
-const anonymous = ref(false)
-const errors = ref<Record<string, string>>({})
-const submissionError = ref<ApiError | null>(null)
-const isSubmitting = ref(false)
+const assignmentsQuery = useCollectorAssignments()
+const steps = [
+  { id: 1, label: 'Event' },
+  { id: 2, label: 'Fund' },
+  { id: 3, label: 'Details' },
+  { id: 4, label: 'Payment' },
+]
+
 const form = reactive({
   eventId: typeof route.query.eventId === 'string' ? route.query.eventId : '',
   recipientFundId: '',
   contributorName: '',
   contributorPhone: '',
-  amount: '0',
-  currency: 'GBP',
-  note: '',
+  contributorEmail: '',
+  anonymous: false,
+  amount: '',
+  currency: 'GHS',
   paymentMethod: 'cash',
+  note: '',
 })
 
-const eventsQuery = useAssignedEvents()
-const fundsQuery = useQuery<RecipientFund[], ApiError>({
-  queryKey: ['collector-recipient-funds', computed(() => form.eventId)],
-  queryFn: () => recipientFundsService.listByEvent(form.eventId),
-  enabled: computed(() => Boolean(form.eventId)),
-  retry: false,
+const errors = ref<Record<string, string>>({})
+const submissionError = ref<ApiError | null>(null)
+const isSubmitting = ref(false)
+
+const availableFunds = computed(() =>
+  (assignmentsQuery.data.value?.funds ?? []).filter(fund => fund.eventId === form.eventId),
+)
+
+const selectedEvent = computed(() =>
+  (assignmentsQuery.data.value?.events ?? []).find(event => event.id === form.eventId),
+)
+
+const selectedFund = computed(() =>
+  availableFunds.value.find(fund => fund.id === form.recipientFundId),
+)
+
+const fundSelectLabel = computed(() => {
+  if (!form.eventId) {
+    return 'Select an event first'
+  }
+
+  if (!availableFunds.value.length) {
+    return 'No recipient funds found for this event'
+  }
+
+  return 'Select fund'
 })
 
-const eventOptions = computed(() => [
-  { label: eventsQuery.isLoading.value ? 'Loading events…' : 'Select event', value: '' },
-  ...(eventsQuery.data.value ?? []).map(event => ({
-    label: event.title,
-    value: event.id,
-  })),
-])
+const activeStep = computed(() => {
+  if (!form.eventId) {
+    return 1
+  }
+  if (!form.recipientFundId) {
+    return 2
+  }
+  if (!form.amount || (!form.anonymous && !form.contributorName) || !form.contributorPhone) {
+    return 3
+  }
+  return 4
+})
 
-const fundOptions = computed(() => [
-  { label: 'Select recipient fund', value: '' },
-  ...(fundsQuery.data.value ?? []).map(fund => ({
-    label: fund.name,
-    value: fund.id,
-  })),
-])
-
-const paymentOptions = [
-  { label: 'Cash', value: 'cash' },
-  { label: 'Mobile money assisted', value: 'momo' },
-  { label: 'Card assisted', value: 'card' },
+const paymentMethods = [
+  { value: 'cash', label: 'Cash', description: 'Record immediate payment', activeClass: 'border-emerald-400/60 bg-emerald-400/10 text-emerald-200' },
+  { value: 'momo', label: 'Mobile Money', description: 'Initiation pending', activeClass: 'border-amber-400/60 bg-amber-400/10 text-amber-100' },
+  { value: 'card', label: 'Card', description: 'Initiation pending', activeClass: 'border-cyan-400/60 bg-cyan-400/10 text-cyan-100' },
+  { value: 'bank-transfer', label: 'Bank Transfer', description: 'Placeholder', activeClass: 'border-violet-400/60 bg-violet-400/10 text-violet-100' },
 ]
 
-const fundCreationPath = computed(() => `/admin/events/${form.eventId}/recipient-funds/new`)
-const fundSelectDisabled = computed(
-  () => eventsQuery.isLoading.value || fundsQuery.isLoading.value || !form.eventId || fundsQuery.isError.value,
-)
-const fundHelper = computed(() => {
-  if (!form.eventId) {
-    return {
-      title: 'Recipient fund pending',
-      message: 'Choose an event to load its recipient funds.',
-      showCreateLink: false,
-      classes: 'border-slate-200 bg-slate-50 text-slate-600',
-    }
-  }
-
-  if (fundsQuery.isLoading.value) {
-    return {
-      title: 'Loading recipient funds',
-      message: 'Fetching available funds for the selected event.',
-      showCreateLink: false,
-      classes: 'border-slate-200 bg-slate-50 text-slate-600',
-    }
-  }
-
-  if (fundsQuery.isError.value) {
-    return {
-      title: 'Could not load recipient funds',
-      message: `${fundsQuery.error.value?.message ?? 'Try again later.'}${fundsQuery.error.value?.correlationId ? ` Ref: ${fundsQuery.error.value.correlationId}` : ''}`,
-      showCreateLink: false,
-      classes: 'border-rose-200 bg-rose-50 text-rose-700',
-    }
-  }
-
-  if ((fundsQuery.data.value?.length ?? 0) === 0) {
-    return {
-      title: 'No recipient funds found for this event',
-      message: 'Create a recipient fund in admin before recording a contribution against this event.',
-      showCreateLink: true,
-      classes: 'border-amber-200 bg-amber-50 text-amber-800',
-    }
-  }
-
-  return {
-    title: '',
-    message: '',
-    showCreateLink: false,
-    classes: '',
-  }
-})
 const canSubmit = computed(() => {
-  const validationResult = collectorContributionSchema.safeParse({
-    ...form,
-    anonymous: anonymous.value,
-  })
+  if (form.paymentMethod !== 'cash') {
+    return false
+  }
 
-  return validationResult.success && !isSubmitting.value && !fundSelectDisabled.value
+  return Boolean(
+    form.eventId &&
+      form.recipientFundId &&
+      form.contributorPhone &&
+      form.amount &&
+      form.currency &&
+      (form.anonymous || form.contributorName),
+  )
 })
 
 watch(
   () => form.eventId,
   () => {
     form.recipientFundId = ''
-    submissionError.value = null
   },
 )
 
-watch(anonymous, value => {
-  if (value) {
-    form.contributorName = ''
-    form.contributorPhone = ''
-    delete errors.value.contributorName
-    delete errors.value.contributorPhone
-  }
-})
+watch(
+  () => [assignmentsQuery.data.value, route.query.eventId],
+  () => {
+    const requestedEventId = typeof route.query.eventId === 'string' ? route.query.eventId : ''
+    const matchingEvent = assignmentsQuery.data.value?.events.find(event => event.id === requestedEventId)
+    if (matchingEvent) {
+      form.eventId = matchingEvent.id
+    }
+  },
+  { immediate: true },
+)
 
 async function onSubmit() {
   errors.value = {}
   submissionError.value = null
-  const result = collectorContributionSchema.safeParse({
+
+  const parsed = collectorContributionSchema.safeParse({
     ...form,
-    anonymous: anonymous.value,
+    amount: Number(form.amount),
   })
 
-  if (!result.success) {
-    applyZodErrors(result.error)
+  if (!parsed.success) {
+    applyZodErrors(parsed.error)
+    return
+  }
+
+  if (form.paymentMethod !== 'cash') {
     return
   }
 
   try {
     isSubmitting.value = true
-    const response = await contributionsService.recordCash({
+    const result = await contributionsService.recordCash({
       eventId: form.eventId,
       recipientFundId: form.recipientFundId,
       amount: Number(form.amount),
-      contributorName: anonymous.value ? 'Anonymous' : form.contributorName.trim(),
+      currency: form.currency,
+      contributorName: form.contributorName,
+      contributorPhone: form.contributorPhone,
+      contributorEmail: form.contributorEmail || undefined,
+      anonymous: form.anonymous,
+      paymentMethod: form.paymentMethod,
       note: form.note,
-    })
+    }, shouldBypassAuth()
+      ? {
+          headers: {
+            'X-Dev-User-Id': 'dev-collector',
+          },
+        }
+      : undefined)
 
-    if (!response.receiptId) {
+    if (!result.receiptId) {
       throw new Error('Receipt ID was not returned by the backend.')
     }
 
-    await router.push(`/collector/receipts/${response.receiptId}`)
+    await router.push(`/collector/receipts/${result.receiptId}`)
   } catch (error) {
     submissionError.value = error as ApiError
   } finally {

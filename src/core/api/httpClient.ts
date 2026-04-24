@@ -38,9 +38,6 @@ export class HttpClient {
         if (accessToken) {
           headers.Authorization = `Bearer ${accessToken}`
         }
-      } else if (appConfig.auth.devBypass) {
-        // In dev bypass mode, we might want to log or attach a mock token
-        console.debug('[HttpClient] Auth0 bypass enabled. Skipping token attachment.')
       }
 
       config.headers = headers
@@ -49,7 +46,7 @@ export class HttpClient {
   }
 
   async get<T>(url: string, options?: RequestOptions): Promise<ApiEnvelope<T>> {
-    return this.request<T>({ ...options, method: 'GET', url })
+    return this.request<T>(mergeRequestOptions({ method: 'GET', url }, options))
   }
 
   async post<T, TBody = unknown>(
@@ -57,7 +54,7 @@ export class HttpClient {
     data?: TBody,
     options?: RequestOptions,
   ): Promise<ApiEnvelope<T>> {
-    return this.request<T>({ ...options, method: 'POST', url, data })
+    return this.request<T>(mergeRequestOptions({ method: 'POST', url, data }, options))
   }
 
   async put<T, TBody = unknown>(
@@ -65,7 +62,7 @@ export class HttpClient {
     data?: TBody,
     options?: RequestOptions,
   ): Promise<ApiEnvelope<T>> {
-    return this.request<T>({ ...options, method: 'PUT', url, data })
+    return this.request<T>(mergeRequestOptions({ method: 'PUT', url, data }, options))
   }
 
   async patch<T, TBody = unknown>(
@@ -73,11 +70,11 @@ export class HttpClient {
     data?: TBody,
     options?: RequestOptions,
   ): Promise<ApiEnvelope<T>> {
-    return this.request<T>({ ...options, method: 'PATCH', url, data })
+    return this.request<T>(mergeRequestOptions({ method: 'PATCH', url, data }, options))
   }
 
   async delete<T>(url: string, options?: RequestOptions): Promise<ApiEnvelope<T>> {
-    return this.request<T>({ ...options, method: 'DELETE', url })
+    return this.request<T>(mergeRequestOptions({ method: 'DELETE', url }, options))
   }
 
   async request<T>(config: AxiosRequestConfig): Promise<ApiEnvelope<T>> {
@@ -107,6 +104,18 @@ export class HttpClient {
     } catch (error) {
       throw mapApiError(error)
     }
+  }
+}
+
+function mergeRequestOptions(config: AxiosRequestConfig, options?: RequestOptions): AxiosRequestConfig {
+  return {
+    ...config,
+    signal: options?.signal,
+    params: options?.params,
+    headers: {
+      ...(config.headers ?? {}),
+      ...(options?.headers ?? {}),
+    },
   }
 }
 

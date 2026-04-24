@@ -5,12 +5,13 @@ export const collectorContributionSchema = z
     eventId: z.string().trim().min(1, 'Selected event is required'),
     recipientFundId: z.string().trim().min(1, 'Selected recipient fund is required'),
     contributorName: z.string().trim(),
-    contributorPhone: z.string().trim(),
+    contributorPhone: z.string().trim().min(7, 'Phone number is required'),
+    contributorEmail: z.string().trim().email('Enter a valid email').or(z.literal('')),
     amount: z.coerce.number().min(1, 'Amount must be greater than 0'),
-    currency: z.string().trim().min(3),
+    currency: z.string().trim().min(3, 'Currency is required'),
     anonymous: z.boolean(),
     note: z.string().trim().default(''),
-    paymentMethod: z.enum(['cash', 'momo', 'card']),
+    paymentMethod: z.enum(['cash', 'momo', 'card', 'bank-transfer']),
   })
   .superRefine((value, context) => {
     if (value.anonymous) {
