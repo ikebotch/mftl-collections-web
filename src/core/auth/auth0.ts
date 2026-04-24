@@ -1,8 +1,9 @@
 import { createAuth0 } from '@auth0/auth0-vue'
 import type { App } from 'vue'
 import { appConfig } from '@/core/config/appConfig'
+import type { AppPermission } from './permissions'
 
-const authEnabled = Boolean(appConfig.auth.domain && appConfig.auth.clientId)
+const authEnabled = Boolean(appConfig.auth.domain && appConfig.auth.clientId) && !appConfig.auth.devBypass
 
 let tokenGetter: (() => Promise<string | undefined>) | undefined
 
@@ -43,4 +44,40 @@ export async function getAccessToken(): Promise<string | undefined> {
 
 export function isAuthConfigured(): boolean {
   return authEnabled
+}
+
+export function isDevAuthBypassEnabled(): boolean {
+  return appConfig.auth.devBypass
+}
+
+export function shouldBypassAuth(): boolean {
+  return isDevAuthBypassEnabled() || !isAuthConfigured()
+}
+
+export interface DevAuthUser {
+  sub: string
+  email: string
+  name: string
+  picture: string
+  role: string
+  permissions: AppPermission[]
+}
+
+export function createDevAuthUser(): DevAuthUser {
+  return {
+    sub: 'dev-user',
+    email: 'dev-admin@mftl.local',
+    name: 'Dev Admin',
+    picture: '',
+    role: 'Admin',
+    permissions: [
+      'events:read',
+      'events:write',
+      'recipient-funds:write',
+      'reports:read',
+      'collector:write',
+      'payments:read',
+      'users:read',
+    ],
+  }
 }
