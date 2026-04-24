@@ -203,9 +203,10 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth0 } from '@auth0/auth0-vue'
 import { appConfig } from '@/core/config/appConfig'
 import { useCurrentUser } from '@/core/auth/currentUser'
+import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
+import { useAuth0 } from '@auth0/auth0-vue'
 import TenantSelector from '@/modules/tenants/components/TenantSelector.vue'
 import { 
   LayoutDashboard, 
@@ -225,7 +226,7 @@ import {
   UserCheck
 } from 'lucide-vue-next'
 
-const auth0 = useAuth0()
+const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
 const { currentUser } = useCurrentUser()
 
 const appName = appConfig.appName
@@ -270,6 +271,11 @@ const navGroups = [
 ]
 
 function handleLogout() {
+  if (!auth0) {
+    window.location.assign(window.location.origin)
+    return
+  }
+
   void auth0.logout({
     logoutParams: {
       returnTo: window.location.origin,
@@ -277,4 +283,3 @@ function handleLogout() {
   })
 }
 </script>
-

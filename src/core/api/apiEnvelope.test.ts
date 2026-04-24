@@ -16,4 +16,19 @@ describe('unwrapApiEnvelope', () => {
     expect(envelope.errors).toEqual([])
     expect(envelope.correlationId).toBe('corr-1')
   })
+
+  it('supports PascalCase backend envelopes', () => {
+    const envelope = unwrapApiEnvelope({
+      Success: true,
+      Message: 'ok',
+      Data: { Id: '2' },
+      Errors: null,
+      CorrelationId: 'corr-2',
+    })
+
+    expect(envelope.success).toBe(true)
+    expect(envelope.data.Id).toBe('2')
+    expect(envelope.errors).toEqual([])
+    expect(envelope.correlationId).toBe('corr-2')
+  })
 })
