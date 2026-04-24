@@ -3,6 +3,14 @@ import type { CreateRecipientFundInput, RecipientFund, RecipientFundDto } from '
 import { mapRecipientFundDto } from '../mappers/recipientFundMappers'
 
 export const recipientFundsService = {
+  async list(): Promise<RecipientFund[]> {
+    const response = await httpClient.get<RecipientFundDto[]>('/recipient-funds')
+    return response.data.map(mapRecipientFundDto)
+  },
+  async getById(id: string): Promise<RecipientFund> {
+    const response = await httpClient.get<RecipientFundDto>(`/recipient-funds/${id}`)
+    return mapRecipientFundDto(response.data)
+  },
   async listByEvent(eventId: string): Promise<RecipientFund[]> {
     const response = await httpClient.get<RecipientFundDto[]>(`/recipient-funds/event/${eventId}`)
     return response.data.map(mapRecipientFundDto)
@@ -26,5 +34,8 @@ export const recipientFundsService = {
     }
 
     return mapRecipientFundDto(response.data)
+  },
+  async update(id: string, payload: CreateRecipientFundInput): Promise<void> {
+    await httpClient.put<void, CreateRecipientFundInput>(`/recipient-funds/${id}`, payload)
   },
 }

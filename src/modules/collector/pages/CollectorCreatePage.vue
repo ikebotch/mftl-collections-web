@@ -1,331 +1,280 @@
 <template>
-  <div class="max-w-6xl mx-auto py-20 px-8">
-    <!-- Editorial Header -->
-    <header class="mb-20 text-center space-y-4">
-      <div class="flex items-center justify-center gap-3 mb-2">
-        <div class="w-1.5 h-8 bg-slate-900" />
-        <h1 class="text-6xl font-black font-display tracking-tighter text-slate-900 uppercase italic">
-          {{ currentStep === 5 ? 'Review Profile' : 'New Collector' }}
-        </h1>
-      </div>
-      <p class="text-slate-500 font-bold uppercase tracking-[0.4em] text-[10px]">
-        {{ stepDescriptions[currentStep - 1] }}
+  <div class="max-w-4xl mx-auto py-12 px-6">
+    <header class="text-center mb-12">
+      <h1 class="text-4xl font-black font-display tracking-tight text-slate-900 mb-4">
+        Add Collector
+      </h1>
+      <p class="text-slate-500 font-medium text-lg max-w-xl mx-auto leading-relaxed">
+        Create field collector access and assign collection scope.
       </p>
     </header>
 
-    <!-- High-Fidelity Stepper -->
-    <div class="mb-16">
-      <StepIndicator 
-        :steps="['Identity', 'Scope', 'Logic', 'Security', 'Review']"
+    <div class="mb-12">
+      <StepIndicator
+        :steps="['Details', 'Access', 'Assignments', 'Limits', 'Review']"
         :current-step="currentStep"
-        class="max-w-3xl mx-auto"
       />
     </div>
 
-    <AppCard class="!rounded-[3rem] border-2 border-slate-100 shadow-2xl !p-0 overflow-hidden min-h-[600px] flex flex-col bg-white">
-      <div class="flex-1 p-12 md:p-16">
-        <!-- Step 1: Personal Info -->
-        <div
-          v-if="currentStep === 1"
-          class="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700"
-        >
+    <form @submit.prevent="handleSubmit">
+      <AppCard class="shadow-premium border-none !p-12 bg-white rounded-[2rem] min-h-[400px]">
+        <!-- Step 1: Details -->
+        <div v-if="currentStep === 1" class="space-y-10">
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput 
-              v-model="form.name"
-              label="Full Legal Name"
-              placeholder="e.g. John Doe"
-              class="!py-7 !rounded-2xl !bg-slate-50 border-none focus:ring-2 focus:ring-violet-500/20"
-              required
-            />
-            <AppInput 
-              v-model="form.email"
-              label="Professional Email"
-              placeholder="john@mftl.com"
-              class="!py-7 !rounded-2xl !bg-slate-50 border-none focus:ring-2 focus:ring-violet-500/20"
-              required
+            <AppInput v-model="form.name" label="Full Name" placeholder="e.g. John Doe" required />
+            <AppInput v-model="form.email" label="Email Address" type="email" placeholder="john@example.com" required />
+          </div>
+          <div class="grid md:grid-cols-2 gap-10">
+            <AppInput v-model="form.phone" label="Phone Number" placeholder="+233..." required />
+            <AppSelect
+              v-model="form.type"
+              label="Collector Type"
+              :options="[
+                { label: 'Collector', value: 'Collector' },
+                { label: 'Lead Collector', value: 'Lead' },
+                { label: 'Supervisor', value: 'Supervisor' }
+              ]"
             />
           </div>
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput 
-              v-model="form.phone"
-              label="Field Phone Number"
-              placeholder="+233..."
-              class="!py-7 !rounded-2xl !bg-slate-50 border-none focus:ring-2 focus:ring-violet-500/20"
-              required
-            />
-            <AppInput 
-              v-model="form.staffId"
-              label="Internal Staff ID"
-              placeholder="AGENT-001"
-              class="!py-7 !rounded-2xl !bg-slate-50 border-none focus:ring-2 focus:ring-violet-500/20"
+            <AppSelect
+              v-model="form.status"
+              label="Initial Status"
+              :options="[
+                { label: 'Invited', value: 'Invited' },
+                { label: 'Active', value: 'Active' },
+                { label: 'Inactive', value: 'Inactive' },
+                { label: 'Suspended', value: 'Suspended' }
+              ]"
             />
           </div>
+          <AppTextarea id="collector-notes" v-model="form.notes" label="Notes" placeholder="Optional notes about this collector..." :rows="3" />
         </div>
 
-        <!-- Step 2: Permissions -->
-        <div
-          v-if="currentStep === 2"
-          class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700"
-        >
-          <div class="grid gap-4">
-            <label
-              v-for="perm in permissionOptions"
-              :key="perm.id"
-              class="flex items-center gap-6 p-8 rounded-[2.5rem] border-2 border-slate-50 bg-slate-50/30 hover:border-violet-200 hover:bg-violet-50/30 cursor-pointer transition-all group"
-            >
-              <div class="relative flex items-center justify-center">
-                <input
-                  v-model="form.permissions"
-                  type="checkbox"
-                  :value="perm.id"
-                  class="peer w-8 h-8 rounded-xl border-2 border-slate-200 text-violet-600 focus:ring-violet-500/20 transition-all cursor-pointer"
-                >
-                <div class="absolute inset-0 bg-violet-600 rounded-xl opacity-0 peer-checked:opacity-100 transition-opacity flex items-center justify-center">
-                  <Check class="w-5 h-5 text-white" />
-                </div>
-              </div>
-              <div class="flex-1">
-                <p class="text-base font-black text-slate-900 uppercase tracking-tight italic">{{ perm.label }}</p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{{ perm.description }}</p>
-              </div>
-            </label>
+        <!-- Step 2: Access & Permissions -->
+        <div v-if="currentStep === 2" class="space-y-8">
+          <div class="space-y-4">
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">System Access</h3>
+            <div class="grid gap-4">
+              <ToggleCard v-model="form.loginEnabled" title="Login Enabled" description="Allow collector to sign in to the mobile app." />
+              <ToggleCard v-model="form.sendInvite" title="Send Auth0 Invite" description="Automatically send an email invite to set up credentials." />
+            </div>
+          </div>
+          <div class="space-y-4">
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">Field Permissions</h3>
+            <div class="grid gap-4">
+              <ToggleCard v-model="form.recordCash" title="Record Cash Contributions" description="Can accept and record physical cash." />
+              <ToggleCard v-model="form.issueReceipts" title="Issue Receipts" description="Can generate and send digital receipts." />
+              <ToggleCard v-model="form.viewDashboard" title="View Assigned Dashboard" description="Can see personal performance metrics." />
+              <ToggleCard v-model="form.viewReports" title="View Assigned Reports" description="Access to historical collection data." />
+            </div>
           </div>
         </div>
 
         <!-- Step 3: Assignments -->
-        <div
-          v-if="currentStep === 3"
-          class="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700"
-        >
-          <div class="flex flex-col items-center justify-center py-16 text-center">
-            <div class="w-24 h-24 rounded-[2.5rem] bg-slate-900 flex items-center justify-center text-white mb-8 shadow-2xl relative">
-              <div class="absolute inset-0 bg-violet-600 rounded-[2.5rem] animate-pulse opacity-20" />
-              <LayoutGrid class="w-10 h-10 relative z-10" />
-            </div>
-            <h3 class="text-3xl font-black text-slate-900 tracking-tighter uppercase italic">
-              Operational Scope
-            </h3>
-            <p class="text-slate-500 mt-4 max-w-sm font-bold uppercase tracking-widest text-[10px] leading-relaxed">
-              Assignments to specific campaigns and funds will be configured in the Post-Provisioning stage.
+        <div v-if="currentStep === 3" class="space-y-10">
+          <div class="p-6 rounded-2xl bg-amber-50 border border-amber-100 flex gap-4">
+            <Info class="w-5 h-5 text-amber-600 shrink-0" />
+            <p class="text-xs text-amber-900 font-medium leading-relaxed">
+              Assignments to specific campaigns and funds will be configured in the Post-Provisioning stage. 
+              Deferred assignment strategy active.
             </p>
-            <div class="mt-10 px-6 py-2 rounded-xl bg-violet-600 text-white text-[9px] font-black uppercase tracking-[0.3em] shadow-lg shadow-violet-600/20">
-              Deferred Assignment Strategy
-            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-10">
+            <AppInput v-model="form.region" label="Region/Location" placeholder="e.g. Accra Central" />
           </div>
         </div>
 
-        <!-- Step 4: Logic & Security -->
-        <div
-          v-if="currentStep === 4"
-          class="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700"
-        >
-          <div class="grid md:grid-cols-2 gap-16">
-            <div class="space-y-8">
-              <h3 class="text-lg font-black text-slate-900 uppercase italic tracking-tight">
-                Collection Logic
-              </h3>
-              <AppInput 
-                v-model="form.dailyLimit"
-                type="number"
-                label="Daily Hard Limit (GHS)"
-                placeholder="0.00"
-                class="!py-7 !rounded-2xl !bg-slate-50 border-none focus:ring-2 focus:ring-violet-500/20"
-                description="Terminal will automatically lock if threshold is breached."
-              />
-            </div>
-            <div class="space-y-8">
-              <h3 class="text-lg font-black text-slate-900 uppercase italic tracking-tight">
-                Security Constraints
-              </h3>
-              <label class="flex items-center gap-5 p-8 rounded-[2.5rem] border-2 border-slate-50 bg-slate-50/30 hover:border-emerald-200 cursor-pointer transition-all group">
-                <div class="relative flex items-center justify-center">
-                  <input
-                    v-model="form.requireLocation"
-                    type="checkbox"
-                    class="peer w-8 h-8 rounded-xl border-2 border-slate-200 text-emerald-600 focus:ring-emerald-500/20 transition-all cursor-pointer"
-                  >
-                  <div class="absolute inset-0 bg-emerald-600 rounded-xl opacity-0 peer-checked:opacity-100 transition-opacity flex items-center justify-center">
-                    <Check class="w-5 h-5 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <span class="text-sm font-black text-slate-900 uppercase tracking-tight italic">Mandatory GPS Telemetry</span>
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Audit trail requires location headers</p>
-                </div>
-              </label>
+        <!-- Step 4: Device & Limits -->
+        <div v-if="currentStep === 4" class="space-y-10">
+          <div class="grid md:grid-cols-2 gap-10">
+            <AppInput v-model="form.deviceName" label="Device Name" placeholder="e.g. Samsung A54" />
+            <AppInput v-model="form.deviceId" label="Device ID (Serial)" placeholder="Optional" />
+          </div>
+          <div class="grid md:grid-cols-2 gap-10">
+            <AppInput v-model="form.dailyLimit" type="number" label="Daily Collection Limit" placeholder="0.00">
+              <template #prefix><span class="text-slate-400 font-bold">GHS</span></template>
+            </AppInput>
+            <AppInput v-model="form.maxCashHolding" type="number" label="Max Cash Holding Limit" placeholder="0.00">
+              <template #prefix><span class="text-slate-400 font-bold">GHS</span></template>
+            </AppInput>
+          </div>
+          <div class="grid md:grid-cols-2 gap-10">
+            <AppInput v-model="form.approvalThreshold" type="number" label="Supervisor Approval Threshold" placeholder="0.00">
+              <template #prefix><span class="text-slate-400 font-bold">GHS</span></template>
+            </AppInput>
+            <div class="flex items-center justify-between p-6 rounded-2xl bg-slate-50/50">
+              <span class="text-sm font-bold text-slate-700">Offline Allowed</span>
+              <AppSwitch v-model="form.offlineAllowed" />
             </div>
           </div>
         </div>
 
         <!-- Step 5: Review -->
-        <div
-          v-if="currentStep === 5"
-          class="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700"
-        >
-          <section class="flex items-center gap-8 p-10 rounded-[3rem] bg-slate-900 overflow-hidden relative shadow-2xl">
-            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.5),transparent)]" />
-            <div class="relative z-10 w-24 h-24 rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-3xl font-black text-white shadow-2xl">
-              {{ getInitials(form.name) }}
+        <div v-if="currentStep === 5" class="space-y-10">
+          <section class="p-8 rounded-[2rem] bg-slate-900 text-white flex items-center gap-6 shadow-premium">
+            <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-2xl font-black">
+              {{ form.name.charAt(0) }}
             </div>
-            <div class="relative z-10">
-              <p class="text-3xl font-black text-white tracking-tighter uppercase italic">
-                {{ form.name }}
-              </p>
-              <p class="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-2">
-                {{ form.email }} • {{ form.phone }}
-              </p>
+            <div>
+              <p class="text-2xl font-black tracking-tight">{{ form.name }}</p>
+              <p class="text-slate-400 font-medium uppercase tracking-widest text-[10px] mt-1">{{ form.type }} • {{ form.status }}</p>
             </div>
           </section>
 
-          <div class="grid md:grid-cols-2 gap-12 px-4">
-            <div>
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                <Shield class="w-3 h-3" />
-                Authorization Scope
-              </h4>
-              <div class="flex flex-wrap gap-2">
-                <span
-                  v-for="p in form.permissions"
-                  :key="p"
-                  class="px-3 py-1.5 rounded-lg bg-violet-50 text-violet-700 text-[9px] font-black uppercase tracking-widest border border-violet-100"
-                >
-                  {{ p.replace('_', ' ') }}
-                </span>
+          <div class="grid md:grid-cols-2 gap-12">
+            <div class="space-y-6">
+              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Identity & Access</h4>
+              <div class="space-y-2">
+                <p class="text-sm font-bold text-slate-900">{{ form.email }}</p>
+                <p class="text-sm font-bold text-slate-900">{{ form.phone }}</p>
+                <div class="flex gap-2 mt-4">
+                  <StatusBadge v-if="form.loginEnabled" status="Login" variant="success" />
+                  <StatusBadge v-if="form.recordCash" status="Cash" variant="neutral" />
+                  <StatusBadge v-if="form.issueReceipts" status="Receipts" variant="neutral" />
+                </div>
               </div>
             </div>
-            <div>
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                <Zap class="w-3 h-3" />
-                Operational Logic
-              </h4>
-              <div class="space-y-2">
-                <p class="text-base font-black text-slate-900 italic tracking-tight">
-                  Threshold: {{ formatCurrency(form.dailyLimit, 'GHS') }}
-                </p>
-                <div class="flex items-center gap-2">
-                  <div :class="[form.requireLocation ? 'bg-emerald-500' : 'bg-slate-300', 'w-1.5 h-1.5 rounded-full']" />
-                  <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                    {{ form.requireLocation ? 'Telemetry Active' : 'Telemetry Disabled' }}
-                  </p>
+            <div class="space-y-6">
+              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Limits & Security</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-500">Daily Limit</span>
+                  <span class="text-xs font-black text-slate-900">{{ formatCurrency(form.dailyLimit, 'GHS') }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-500">Max Holding</span>
+                  <span class="text-xs font-black text-slate-900">{{ formatCurrency(form.maxCashHolding, 'GHS') }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-500">Approval Threshold</span>
+                  <span class="text-xs font-black text-slate-900">{{ formatCurrency(form.approvalThreshold, 'GHS') }}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
-        <ErrorState
-          v-if="submissionError"
-          class="mt-12"
-          title="Provisioning Failed"
-          :message="submissionError"
-        />
-      </div>
+      </AppCard>
 
-      <footer class="p-10 md:p-12 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
-        <AppButton 
-          variant="outline" 
-          class="!rounded-2xl !py-6 !px-10 border-2 border-slate-200 hover:border-slate-900 font-black uppercase tracking-widest text-[10px]"
-          :disabled="currentStep === 1 || isSubmitting"
-          @click="prevStep"
-        >
-          Back
-        </AppButton>
-        <div class="flex items-center gap-4">
+      <StickyFormActions>
+        <template #left>
           <AppButton 
-            v-if="currentStep < 5"
-            variant="primary" 
-            class="!rounded-2xl !py-6 !px-12 bg-slate-900 font-black uppercase tracking-widest text-[10px] shadow-xl"
-            @click="nextStep"
+            v-if="currentStep > 1"
+            variant="outline" 
+            class="!rounded-xl"
+            @click="currentStep--"
           >
-            Continue
+            Back
           </AppButton>
           <AppButton 
             v-else
-            variant="primary" 
-            class="!rounded-2xl !py-6 !px-12 bg-violet-600 font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-violet-600/30"
-            :loading="isSubmitting"
-            @click="submit"
+            variant="outline" 
+            class="!rounded-xl"
+            @click="router.push({ name: 'admin-collectors' })"
           >
-            Provision Collector
+            Cancel
+          </AppButton>
+        </template>
+        
+        <AppButton 
+          v-if="currentStep < 5"
+          variant="primary" 
+          class="!rounded-xl shadow-premium px-12"
+          @click="currentStep++"
+        >
+          Continue
+        </AppButton>
+        <div v-else class="flex gap-3">
+          <AppButton 
+            variant="outline"
+            class="!rounded-xl"
+            :loading="isSubmitting"
+            @click="handleSubmit('Draft')"
+          >
+            Save Draft
+          </AppButton>
+          <AppButton 
+            variant="primary" 
+            class="!rounded-xl shadow-premium px-10"
+            :loading="isSubmitting"
+            @click="handleSubmit('Active')"
+          >
+            Create Collector
           </AppButton>
         </div>
-      </footer>
-    </AppCard>
+      </StickyFormActions>
+    </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { collectorService } from '../services/collectorService'
+import { useCreateCollector } from '../composables/useCollectors'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
+import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
+import AppSelect from '@/shared/components/forms/AppSelect.vue'
+import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import StepIndicator from '@/shared/components/steppers/StepIndicator.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
+import ToggleCard from '@/shared/components/cards/ToggleCard.vue'
+import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import { formatCurrency } from '@/shared/utils/formatters'
-import { LayoutGrid, Check, Shield, Zap } from 'lucide-vue-next'
+import { Info } from 'lucide-vue-next'
 
 const router = useRouter()
 const currentStep = ref(1)
-const isSubmitting = ref(false)
-const submissionError = ref<string | null>(null)
-
-const stepDescriptions = [
-  'Provide the basic identity details for the collection agent.',
-  'Define what actions this collector can perform in the field.',
-  'Assign the collector to specific events and funds.',
-  'Set financial limits and security requirements.',
-  'Review the profile before final creation.'
-]
-
-const permissionOptions = [
-  { id: 'collect_cash', label: 'Cash Collection', description: 'Can record and issue receipts for physical cash' },
-  { id: 'issue_refunds', label: 'Issue Refunds', description: 'Can initiate refund requests for contributions' },
-  { id: 'view_history', label: 'View History', description: 'Can see past receipts they have issued' },
-  { id: 'manage_events', label: 'Event Manager', description: 'Advanced permissions for on-site management' }
-]
+const mutation = useCreateCollector()
+const isSubmitting = computed(() => mutation.isPending.value)
 
 const form = reactive({
   name: '',
   email: '',
   phone: '',
-  staffId: '',
-  permissions: ['collect_cash', 'view_history'],
-  dailyLimit: 5000,
-  requireLocation: true
+  type: 'Collector',
+  status: 'Invited',
+  notes: '',
+  loginEnabled: true,
+  sendInvite: true,
+  recordCash: true,
+  issueReceipts: true,
+  viewDashboard: true,
+  viewReports: false,
+  region: '',
+  deviceName: '',
+  deviceId: '',
+  dailyLimit: 2000,
+  maxCashHolding: 1000,
+  approvalThreshold: 500,
+  offlineAllowed: false
 })
 
-function nextStep() {
-  if (currentStep.value < 5) currentStep.value++
-}
-
-function prevStep() {
-  if (currentStep.value > 1) currentStep.value--
-}
-
-async function submit() {
-  isSubmitting.value = true
-  submissionError.value = null
-  
+async function handleSubmit(finalStatus?: string | SubmitEvent) {
   try {
-    await collectorService.create({
-      name: form.name,
-      email: form.email,
-      phoneNumber: form.phone,
-      // staffId etc are for metadata
-    })
+    const status = typeof finalStatus === 'string' ? finalStatus : form.status
+    const payload = {
+      ...form,
+      status,
+      metadata: JSON.stringify({
+        notes: form.notes,
+        region: form.region,
+        device: { name: form.deviceName, id: form.deviceId },
+        permissions: {
+          login: form.loginEnabled,
+          cash: form.recordCash,
+          receipts: form.issueReceipts,
+          dashboard: form.viewDashboard,
+          reports: form.viewReports
+        }
+      })
+    }
     
-    router.push('/admin/collectors')
-  } catch (err: any) {
-    submissionError.value = err.message || 'Failed to create collector. Please try again.'
-  } finally {
-    isSubmitting.value = false
+    await mutation.mutateAsync(payload)
+    router.push({ name: 'admin-collectors' })
+  } catch (err) {
+    console.error('Failed to create collector:', err)
   }
-}
-
-function getInitials(name?: string) {
-  if (!name) return '??'
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 </script>

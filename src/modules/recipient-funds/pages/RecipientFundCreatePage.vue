@@ -1,111 +1,135 @@
 <template>
-  <div class="space-y-6">
-    <PageHeader
-      eyebrow="Admin"
-      title="Create recipient fund"
-      description="Define a recipient fund for the selected event."
-    />
+  <div class="max-w-4xl mx-auto py-12 px-6">
+    <header class="text-center mb-12">
+      <h1 class="text-4xl font-black font-display tracking-tight text-slate-900 mb-4">
+        New Recipient Fund
+      </h1>
+      <p class="text-slate-500 font-medium text-lg max-w-xl mx-auto leading-relaxed">
+        Define a new target for contributions within an event.
+      </p>
+    </header>
 
-    <AppCard class="max-w-3xl">
-      <form
-        class="space-y-5"
-        @submit.prevent="onSubmit"
-      >
-        <AppInput
-          id="recipient-name"
-          v-model="form.name"
-          label="Recipient fund name"
-          placeholder="Example: School supplies"
-          :error="errors.name"
-        />
+    <form @submit.prevent="handleCreate">
+      <AppCard class="shadow-premium border-none !p-12 bg-white rounded-[2rem] space-y-10">
+        <div class="grid md:grid-cols-2 gap-10">
+          <AppInput
+            v-model="form.name"
+            label="Fund Name"
+            placeholder="e.g. Medical Supplies"
+            required
+          />
+          <AppSelect
+            v-model="form.eventId"
+            label="Associated Event"
+            :options="eventOptions"
+            required
+          />
+        </div>
+
         <AppTextarea
-          id="description"
+          id="fund-description"
           v-model="form.description"
           label="Description"
-          placeholder="Briefly describe what this fund is for..."
-          :error="errors.description"
-        />
-        <AppInput
-          id="recipient-target"
-          v-model="form.targetAmount"
-          type="number"
-          label="Target amount"
-          placeholder="5000"
-          :error="errors.targetAmount"
+          placeholder="What will these contributions be used for?"
+          :rows="4"
         />
 
-        <ErrorState
-          v-if="mutation.isError.value"
-          title="Recipient fund creation failed"
-          :message="mutation.error.value?.message ?? 'Please try again.'"
-        />
+        <div class="grid md:grid-cols-2 gap-10">
+          <AppInput
+            v-model="form.targetAmount"
+            type="number"
+            label="Target Amount"
+            placeholder="0.00"
+            required
+          >
+            <template #prefix>
+              <span class="text-slate-400 font-bold">{{ form.currency }}</span>
+            </template>
+          </AppInput>
+          <AppSelect
+            v-model="form.currency"
+            label="Currency"
+            :options="[{ label: 'GHS', value: 'GHS' }, { label: 'USD', value: 'USD' }]"
+          />
+        </div>
 
-        <div class="flex flex-wrap justify-end gap-3">
-          <AppButton
-            variant="secondary"
-            @click="router.push(`/admin/events/${eventId}/recipient-funds`)"
+        <div class="flex items-center justify-between p-6 rounded-2xl bg-slate-50/50">
+          <div class="space-y-1">
+            <p class="font-bold text-slate-900">
+              Active Status
+            </p>
+            <p class="text-xs text-slate-500 font-medium">
+              Allow contributions to be recorded for this fund.
+            </p>
+          </div>
+          <AppSwitch v-model="form.isActive" />
+        </div>
+      </AppCard>
+
+      <StickyFormActions>
+        <template #left>
+          <AppButton 
+            variant="outline" 
+            class="!rounded-xl"
+            @click="router.push({ name: 'admin-funds' })"
           >
             Cancel
           </AppButton>
-          <AppButton
-            native-type="submit"
-            :loading="mutation.isPending.value"
-          >
-            Create recipient fund
-          </AppButton>
-        </div>
-      </form>
-    </AppCard>
+        </template>
+        <AppButton 
+          variant="primary" 
+          type="submit"
+          class="!rounded-xl shadow-premium px-12"
+          :loading="mutation.isPending.value"
+        >
+          Create Fund
+        </AppButton>
+      </StickyFormActions>
+    </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { z } from 'zod'
+import { reactive, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useCreateRecipientFund } from '../composables/useRecipientFunds'
-import { createRecipientFundSchema } from '../validators/recipientFundValidators'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
+import { useEvents } from '@/modules/events/composables/useEvents'
 import AppCard from '@/shared/components/cards/AppCard.vue'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
-import PageHeader from '@/shared/components/headers/PageHeader.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import AppSelect from '@/shared/components/forms/AppSelect.vue'
+import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
+import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 
-const route = useRoute()
 const router = useRouter()
-const eventId = computed(() => String(route.params.id ?? ''))
-const mutation = useCreateRecipientFund(eventId.value)
+const mutation = useCreateRecipientFund()
+const eventsQuery = useEvents()
+
+const eventOptions = computed(() => 
+  (eventsQuery.data.value || []).map(e => ({ label: e.title, value: e.id }))
+)
 
 const form = reactive({
   name: '',
+  eventId: '',
   description: '',
-  targetAmount: '0',
+  targetAmount: 0,
+  currency: 'GHS',
+  isActive: true
 })
 
-const errors = ref<Record<string, string>>({})
-
-async function onSubmit() {
-  errors.value = {}
-  const result = createRecipientFundSchema.safeParse({
-    eventId: eventId.value,
-    name: form.name,
-    description: form.description,
-    targetAmount: form.targetAmount,
-  })
-
-  if (!result.success) {
-    applyZodErrors(result.error)
-    return
-  }
-
-  await mutation.mutateAsync(result.data)
-  await router.push(`/admin/events/${eventId.value}/recipient-funds`)
-}
-
-function applyZodErrors(error: z.ZodError) {
-  for (const issue of error.issues) {
-    errors.value[String(issue.path[0] ?? '')] = issue.message
+async function handleCreate() {
+  try {
+    await mutation.mutateAsync({
+      eventId: form.eventId,
+      name: form.name,
+      description: form.description,
+      targetAmount: form.targetAmount
+    })
+    router.push({ name: 'admin-funds' })
+  } catch (err) {
+    console.error('Failed to create fund:', err)
   }
 }
 </script>

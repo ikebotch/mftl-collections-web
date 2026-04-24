@@ -115,7 +115,13 @@ export async function recordCashContribution(
   return mapCashContributionResult(response.data)
 }
 
+export async function getContributionById(id: string): Promise<ContributionRow> {
+  const response = await httpClient.get<ContributionListItemDto>(`/contributions/${id}`)
+  return mapContributionRow(response.data)
+}
+
 export const contributionsService = {
   list: listContributions,
+  getById: getContributionById,
   recordCash: recordCashContribution,
 }

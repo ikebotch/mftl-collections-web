@@ -27,6 +27,11 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/modules/users/pages/UsersPage.vue'),
       },
       {
+        path: 'roles-permissions',
+        name: 'admin-roles-permissions',
+        component: () => import('@/modules/users/pages/RolesPermissionsPage.vue'),
+      },
+      {
         path: 'settings',
         name: 'admin-settings',
         component: () => import('@/modules/tenants/pages/TenantSettingsPage.vue'),

@@ -1,8 +1,8 @@
 <template>
-  <div class="space-y-12">
+  <div class="space-y-10">
     <AdminPageHeader
       title="Payments"
-      description="Monitor payment attempts, provider references, and transaction status."
+      description="Monitor payment attempts, provider references, and real-time transaction status across all gateways."
     >
       <template #actions>
         <AppButton
@@ -10,105 +10,118 @@
           class="!rounded-xl bg-white shadow-sm border-slate-200"
         >
           <Download class="w-4 h-4 mr-2 text-slate-400" />
-          Export Ledger
+          Export Transaction Log
         </AppButton>
       </template>
     </AdminPageHeader>
 
-    <LoadingState
-      v-if="query.isLoading.value"
-      text="Syncing payment transactions..."
-      class="py-32"
-    />
-    
-    <template v-else-if="payments">
-      <!-- Search & Filters -->
-      <div class="flex flex-col md:flex-row items-center gap-4">
-        <div class="flex-1 relative w-full">
-          <Search class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <AppInput
-            v-model="searchQuery"
-            placeholder="Search by reference or provider..."
-            class="!pl-14 !py-7 !rounded-3xl !bg-white border-2 border-slate-100 focus:border-slate-900 shadow-sm transition-all"
+    <AdminMetricGrid>
+      <MetricCard
+        label="Gross Transactions"
+        :value="payments.length.toString()"
+        icon="CreditCard"
+        color="slate"
+      />
+      <MetricCard
+        label="Success Rate"
+        value="98.4%"
+        icon="CheckCircle"
+        color="emerald"
+      />
+      <MetricCard
+        label="Volume (24h)"
+        value="GHS 4,200"
+        icon="TrendingUp"
+        color="blue"
+      />
+      <MetricCard
+        label="Avg Processing"
+        value="1.2s"
+        icon="Zap"
+        color="amber"
+      />
+    </AdminMetricGrid>
+
+    <div class="space-y-6">
+      <AdminFilterBar
+        v-model="searchQuery"
+        placeholder="Search by reference or provider..."
+      >
+        <template #extra>
+          <AppSelect
+            v-model="statusFilter"
+            :options="statusOptions"
+            class="w-48"
           />
-        </div>
-        <AppSelect
-          v-model="statusFilter"
-          :options="statusOptions"
-          class="w-full md:w-64 !py-7 !rounded-3xl !bg-white border-2 border-slate-100 shadow-sm"
-        />
-      </div>
+        </template>
+      </AdminFilterBar>
 
-      <!-- Transaction Table -->
-      <AppCard class="!rounded-[3rem] overflow-hidden border-2 border-slate-100 shadow-2xl bg-white">
-        <AppTable
-          :columns="columns"
-          :rows="filteredPayments"
-          row-key="id"
-          class="!border-none"
-          empty-message="No payment transactions found matching criteria."
-        >
-          <template #cell:providerReference="{ value }">
-            <div class="flex flex-col">
-              <span class="text-sm font-black text-slate-900 tracking-tight">{{ value }}</span>
-              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">External Ref</span>
-            </div>
-          </template>
+      <DataTable
+        :columns="columns"
+        :rows="filteredPayments"
+        :loading="query.isLoading.value"
+      >
+        <template #cell:providerReference="{ value }">
+          <div class="flex flex-col">
+            <span class="text-sm font-black text-slate-900 tracking-tight">{{ value }}</span>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5 italic">Provider Ref</span>
+          </div>
+        </template>
 
-          <template #cell:method="{ value }">
-            <div class="flex items-center gap-2">
-              <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">{{ value }}</span>
-            </div>
-          </template>
+        <template #cell:method="{ value }">
+          <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">{{ value }}</span>
+        </template>
 
-          <template #cell:status="{ value }">
-            <PaymentStatusBadge
-              :status="value"
-              class="scale-90"
-            />
-          </template>
+        <template #cell:status="{ value }">
+          <StatusBadge
+            :status="value"
+            :tone="getStatusTone(value)"
+          />
+        </template>
 
-          <template #cell:amount="{ value }">
-            <span class="text-sm font-black text-slate-900">{{ value }}</span>
-          </template>
+        <template #cell:amount="{ value }">
+          <span class="text-sm font-black text-slate-900 italic">{{ value }}</span>
+        </template>
 
-          <template #cell:contributionId>
-            <div class="flex items-center gap-2">
-              <AppButton 
-                variant="ghost" 
-                size="sm" 
-                class="!px-3 !py-1 !rounded-lg bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all"
-              >
-                View Contrib
-              </AppButton>
-            </div>
-          </template>
+        <template #cell:contributionId>
+          <AppButton 
+            variant="ghost" 
+            size="sm" 
+            class="!px-3 !py-1 !rounded-lg bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all border border-slate-100"
+          >
+            Contribution
+          </AppButton>
+        </template>
 
-          <template #cell:receiptId="{ value }">
-            <div
-              v-if="value"
-              class="flex items-center gap-2"
-            >
-              <AppButton 
-                variant="ghost" 
-                size="sm" 
-                class="!px-3 !py-1 !rounded-lg bg-violet-50 text-[10px] font-black uppercase tracking-widest text-violet-600 hover:text-violet-900 transition-all"
-              >
-                View Receipt
-              </AppButton>
-            </div>
-            <span
-              v-else
-              class="text-[9px] font-black text-slate-300 uppercase tracking-widest"
-            >N/A</span>
-          </template>
+        <template #cell:receiptId="{ value }">
+          <AppButton 
+            v-if="value"
+            variant="ghost" 
+            size="sm" 
+            class="!px-3 !py-1 !rounded-lg bg-violet-50 text-[10px] font-black uppercase tracking-widest text-violet-600 hover:text-violet-900 transition-all border border-violet-100"
+          >
+            Receipt
+          </AppButton>
+          <span
+            v-else
+            class="text-[9px] font-black text-slate-300 uppercase tracking-widest"
+          >N/A</span>
+        </template>
 
-          <template #cell:createdAt="{ value }">
-            <span class="text-[10px] font-bold text-slate-600">{{ value }}</span>
-          </template>
-        </AppTable>
-      </AppCard>
-    </template>
+        <template #cell:createdAt="{ value }">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ value }}</span>
+        </template>
+
+        <template #rowActions>
+          <RowActions
+            :actions="[
+              { label: 'View Timeline', icon: 'Clock', onClick: () => {} },
+              { label: 'Provider Logs', icon: 'Database', onClick: () => {} }
+            ]"
+          />
+        </template>
+      </DataTable>
+    </div>
   </div>
 </template>
 
@@ -116,27 +129,34 @@
 import { ref, computed } from 'vue'
 import { usePayments } from '../composables/usePayments'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
-import PaymentStatusBadge from '../components/PaymentStatusBadge.vue'
+import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
+import MetricCard from '@/shared/components/cards/MetricCard.vue'
+import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
+import DataTable from '@/shared/components/tables/DataTable.vue'
+import RowActions from '@/shared/components/tables/RowActions.vue'
+import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppTable from '@/shared/components/tables/AppTable.vue'
-import AppCard from '@/shared/components/cards/AppCard.vue'
-import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import { Search, Download } from 'lucide-vue-next'
+import { 
+  Download,
+  CreditCard,
+  CheckCircle,
+  TrendingUp,
+  Zap
+} from 'lucide-vue-next'
 
 const query = usePayments()
 const searchQuery = ref('')
 const statusFilter = ref('')
 
 const columns = [
-  { key: 'providerReference', label: 'Reference' },
+  { key: 'providerReference', label: 'Reference', sortable: true },
   { key: 'method', label: 'Method' },
-  { key: 'amount', label: 'Amount' },
+  { key: 'amount', label: 'Amount', sortable: true },
   { key: 'status', label: 'Status' },
-  { key: 'contributionId', label: 'Contribution' },
+  { key: 'contributionId', label: 'Entity' },
   { key: 'receiptId', label: 'Receipt' },
-  { key: 'createdAt', label: 'Created' },
+  { key: 'createdAt', label: 'Processed', sortable: true },
 ]
 
 const statusOptions = [
@@ -165,4 +185,12 @@ const filteredPayments = computed(() => {
   
   return list
 })
+
+function getStatusTone(status: string) {
+  const s = status.toLowerCase()
+  if (s === 'completed' || s === 'success') return 'success'
+  if (s === 'pending') return 'amber'
+  if (s === 'failed') return 'red'
+  return 'neutral'
+}
 </script>
