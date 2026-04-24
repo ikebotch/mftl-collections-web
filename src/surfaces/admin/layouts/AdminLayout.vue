@@ -1,75 +1,101 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Sidebar / Nav -->
-    <nav class="fixed inset-y-0 left-0 w-64 bg-white shadow-sm ring-1 ring-gray-900/5">
-      <div class="flex h-16 items-center px-6 border-b border-gray-100">
-        <span class="text-xl font-bold tracking-tight text-indigo-600">MFTL Collections</span>
-      </div>
-      <div class="p-4">
-        <!-- Tenant Switcher Placeholder -->
-        <div class="mb-6 rounded-lg bg-gray-50 p-3">
-          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            Tenant
-          </p>
-          <p class="text-sm font-medium text-gray-900">
-            {{ tenantStore.currentTenantName || 'Select Tenant' }}
-          </p>
+  <div class="min-h-screen bg-slate-100">
+    <div class="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[280px_1fr]">
+      <aside class="border-b border-slate-200 bg-slate-950 px-6 py-8 text-slate-100 lg:border-b-0 lg:border-r">
+        <div class="flex items-center justify-between lg:block">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-teal-300">
+              Admin surface
+            </p>
+            <h1 class="mt-3 text-2xl font-semibold">
+              {{ appName }}
+            </h1>
+          </div>
         </div>
-        
-        <ul class="space-y-1">
-          <li
+        <div class="mt-8">
+          <TenantSwitcher />
+        </div>
+        <nav
+          class="mt-8 space-y-2"
+          aria-label="Admin navigation"
+        >
+          <router-link
             v-for="item in navItems"
-            :key="item.name"
+            :key="item.to"
+            :to="item.to"
+            class="block rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+            active-class="bg-white text-slate-950"
           >
-            <router-link
-              :to="item.to"
-              class="flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition-colors"
-              active-class="bg-indigo-50 text-indigo-600"
-            >
-              {{ item.name }}
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </nav>
+            {{ item.label }}
+          </router-link>
+        </nav>
+      </aside>
 
-    <!-- Main Content -->
-    <main class="pl-64">
-      <header class="h-16 border-b border-gray-100 bg-white flex items-center justify-between px-8 sticky top-0 z-10">
-        <div class="flex items-center gap-x-4">
-          <h1 class="text-lg font-semibold text-gray-900">
-            Admin Dashboard
-          </h1>
-        </div>
-        <div class="flex items-center gap-x-4">
-          <span class="text-sm text-gray-500">{{ user?.email }}</span>
-          <button
-            class="text-sm font-medium text-gray-700 hover:text-indigo-600"
-            @click="() => logout()"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-      
-      <div class="p-8">
-        <router-view />
+      <div class="min-w-0">
+        <header class="border-b border-slate-200 bg-white/90 px-6 py-4 backdrop-blur">
+          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p class="text-sm text-slate-500">
+                Tenant-aware operations through {{ tenantHeaderName }}
+              </p>
+              <p class="text-base font-medium text-slate-950">
+                {{ tenantName }}
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-sm text-slate-500">{{ currentUser.email || 'Not signed in' }}</span>
+              <AppButton
+                variant="secondary"
+                @click="handleLogout"
+              >
+                Sign out
+              </AppButton>
+            </div>
+          </div>
+        </header>
+        <main class="space-y-8 px-6 py-8">
+          <router-view />
+        </main>
       </div>
-    </main>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
-import { useTenantStore } from '../../../core/stores/tenantStore'
+import { appConfig } from '@/core/config/appConfig'
+import { useCurrentUser } from '@/core/auth/currentUser'
+import TenantSwitcher from '@/modules/tenants/components/TenantSwitcher.vue'
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
 
-const { user, logout } = useAuth0()
+const auth0 = useAuth0()
+const { currentUser } = useCurrentUser()
 const tenantStore = useTenantStore()
 
+const appName = appConfig.appName
+const tenantHeaderName = appConfig.api.tenantHeaderName
+const tenantName = computed(() => tenantStore.selectedTenantName || 'No tenant selected')
+
 const navItems = [
-  { name: 'Dashboard', to: '/admin' },
-  { name: 'Events', to: '/admin/events' },
-  { name: 'Recipient Funds', to: '/admin/recipient-funds' },
-  { name: 'Reports', to: '/admin/reports' },
+  { label: 'Dashboard', to: '/admin' },
+  { label: 'Events', to: '/admin/events' },
+  { label: 'Users', to: '/admin/users' },
+  { label: 'Settings', to: '/admin/settings' },
+  { label: 'Contributions', to: '/admin/contributions' },
+  { label: 'Payments', to: '/admin/payments' },
+  { label: 'Receipts', to: '/admin/receipts' },
+  { label: 'Reports', to: '/admin/reports' },
+  { label: 'Settlements', to: '/admin/settlements' },
+  { label: 'Self donations', to: '/admin/self-donations' },
 ]
+
+function handleLogout() {
+  void auth0.logout({
+    logoutParams: {
+      returnTo: window.location.origin,
+    },
+  })
+}
 </script>
