@@ -434,7 +434,7 @@ import { shouldBypassAuth } from '@/core/auth/auth0'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import { 
   History, 
   Check, 

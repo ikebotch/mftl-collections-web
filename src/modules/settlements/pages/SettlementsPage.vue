@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'

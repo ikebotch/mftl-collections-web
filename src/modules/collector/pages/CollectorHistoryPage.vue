@@ -124,7 +124,7 @@ import { useCollectorHistory } from '../composables/useCollector'
 import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import { 
   Wallet, 
   FileText, 

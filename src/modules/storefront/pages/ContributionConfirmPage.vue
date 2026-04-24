@@ -55,7 +55,7 @@ import { useContributionFlowStore } from '../store/contributionFlowStore'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import PageHeader from '@/shared/components/headers/PageHeader.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 
 const route = useRoute()
 const router = useRouter()

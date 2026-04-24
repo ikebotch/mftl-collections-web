@@ -1,20 +1,17 @@
+import type { CurrencyTotal } from '@/modules/events/types/event'
+
 export interface RecipientFundDto {
   id: string
   eventId: string
   name: string
   description: string
   targetAmount: number
-  collectedAmount: number
+  totals?: CurrencyTotal[]
 }
 
-export interface RecipientFund {
-  id: string
-  eventId: string
-  name: string
-  description: string
-  targetAmount: number
-  receivedAmount: number
-  currency: string
+export interface RecipientFund extends RecipientFundDto {
+  receivedAmount: number 
+  currency: string // Legacy support for single-currency views
 }
 
 export interface CreateRecipientFundInput {

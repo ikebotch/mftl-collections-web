@@ -179,7 +179,7 @@ import { useRouter } from 'vue-router'
 import { useCollectorAssignments } from '../composables/useCollector'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import { 
   ChevronRight, 
   AlertTriangle, 

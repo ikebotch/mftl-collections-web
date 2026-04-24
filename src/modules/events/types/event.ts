@@ -1,30 +1,23 @@
+export interface CurrencyTotal {
+  currency: string
+  amount: number
+}
+
 export interface EventDto {
   id: string
   title: string
   description: string
   eventDate: string | null
   isActive: boolean
-  totalRaised?: number
-  totalTarget?: number
-  fundCount?: number
-  collectorCount?: number
-  slug?: string
-}
-
-export interface Event {
-  id: string
-  title: string
-  description: string
-  eventDate: string | null
-  status: 'active' | 'draft'
-  eventType: 'community' | 'support'
-  currency: string
-  totalRaised: number
+  totals?: CurrencyTotal[]
   totalTarget: number
-  progress: number
   fundCount: number
   collectorCount: number
   slug: string
+}
+
+export interface Event extends EventDto {
+  status: 'active' | 'draft'
 }
 
 export interface CreateEventInput {

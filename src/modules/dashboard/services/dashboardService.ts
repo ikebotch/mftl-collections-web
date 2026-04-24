@@ -1,41 +1,32 @@
-import { eventsService } from '@/modules/events/services/eventsService'
-import { contributionsService } from '@/modules/contributions/services/contributionsService'
-import { collectorService } from '@/modules/collector/services/collectorService'
-import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
-import { donorsService } from '@/modules/donors/services/donorsService'
-import { listReceipts } from '@/modules/receipts/services/receiptsService'
+import { httpClient as api } from '@/core/api/httpClient'
+
+export interface CurrencyTotal {
+  currency: string
+  amount: number
+}
+
+export interface RecentContribution {
+  contributorName: string
+  amount: number
+  currency: string
+  date: string
+  status: string
+  eventTitle?: string
+  paymentMethod?: string
+}
 
 export interface DashboardSummary {
   totalEvents: number
   totalContributions: number
-  totalCollected: number
+  totals: CurrencyTotal[]
   activeRecipientFunds: number
   totalCollectors: number
   totalDonors: number
   totalReceipts: number
-  recentContributions: any[]
+  recentContributions: RecentContribution[]
 }
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const [events, contributions, collectors, funds, donors, receipts] = await Promise.all([
-    eventsService.list().catch(() => []),
-    contributionsService.list().catch(() => []),
-    collectorService.listAll().catch(() => []),
-    recipientFundsService.list().catch(() => []),
-    donorsService.list().catch(() => []),
-    listReceipts().catch(() => [])
-  ])
-
-  const totalCollected = (contributions as any[]).reduce((acc: number, c: any) => acc + (c.amountValue || 0), 0)
-
-  return {
-    totalEvents: events.length,
-    totalContributions: contributions.length,
-    totalCollected,
-    activeRecipientFunds: funds.length,
-    totalCollectors: collectors.length,
-    totalDonors: donors.length,
-    totalReceipts: receipts.length,
-    recentContributions: contributions.slice(0, 5)
-  }
+  const response = await api.get<DashboardSummary>('/dashboards/admin')
+  return response.data
 }

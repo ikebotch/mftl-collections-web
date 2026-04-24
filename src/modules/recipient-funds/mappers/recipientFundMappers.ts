@@ -1,19 +1,13 @@
 import type { RecipientFund, RecipientFundDto } from '../types/recipientFund'
 
 export function mapRecipientFundDto(dto: RecipientFundDto): RecipientFund {
-  const id = dto.id ?? (dto as RecipientFundDto & { Id?: string }).Id ?? ''
-  const eventId = dto.eventId ?? (dto as RecipientFundDto & { EventId?: string }).EventId ?? ''
-  const name = dto.name ?? (dto as RecipientFundDto & { Name?: string }).Name ?? ''
-  const description =
-    dto.description ?? (dto as RecipientFundDto & { Description?: string }).Description ?? ''
-  const targetAmount =
-    dto.targetAmount ??
-    (dto as RecipientFundDto & { TargetAmount?: number }).TargetAmount ??
-    0
-  const collectedAmount =
-    dto.collectedAmount ??
-    (dto as RecipientFundDto & { CollectedAmount?: number }).CollectedAmount ??
-    0
+  const id = dto.id ?? ''
+  const eventId = dto.eventId ?? ''
+  const name = dto.name ?? ''
+  const description = dto.description ?? ''
+  const targetAmount = dto.targetAmount ?? 0
+  
+  const ghsTotal = dto.totals?.find(t => t.currency === 'GHS')?.amount ?? 0
 
   return {
     id,
@@ -21,7 +15,8 @@ export function mapRecipientFundDto(dto: RecipientFundDto): RecipientFund {
     name,
     description,
     targetAmount,
-    receivedAmount: collectedAmount,
-    currency: 'GBP',
+    totals: dto.totals ?? [],
+    receivedAmount: ghsTotal, // Default to GHS for legacy views
+    currency: 'GHS'
   }
 }

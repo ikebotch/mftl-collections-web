@@ -221,7 +221,7 @@ import StepIndicator from '@/shared/components/steppers/StepIndicator.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import ToggleCard from '@/shared/components/cards/ToggleCard.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import { Info } from 'lucide-vue-next'
 
 const router = useRouter()

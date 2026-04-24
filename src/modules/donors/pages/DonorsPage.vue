@@ -235,7 +235,7 @@ import MoneyCell from '@/shared/components/tables/MoneyCell.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import { FileText, ChevronRight } from 'lucide-vue-next'
 import type { Donor } from '../types/donor'
 

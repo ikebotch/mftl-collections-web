@@ -145,7 +145,7 @@ import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import ProgressBar from '@/shared/components/feedback/ProgressBar.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import { 
   Download, 
   Share2, 

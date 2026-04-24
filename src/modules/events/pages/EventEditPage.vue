@@ -96,7 +96,7 @@
               </template>
             </AppInput>
             <AppInput
-              v-model="form.eventDate"
+              v-model="form!.eventDate as string"
               type="date"
               label="Event Date"
               required

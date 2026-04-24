@@ -201,7 +201,7 @@ import MoneyCell from '@/shared/components/tables/MoneyCell.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
-import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import { Plus } from 'lucide-vue-next'
 import type { CollectorProfile } from '../types/collector'
 

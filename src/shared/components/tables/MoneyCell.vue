@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 
 defineProps<{
   amount: number

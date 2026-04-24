@@ -34,7 +34,7 @@
       />
       <MetricCard
         label="Total Raised"
-        :value="formatCurrency(totalRaised, 'GHS')"
+        :value="aggregateTotals(events)"
         icon="Wallet"
         color="green"
       />
@@ -89,12 +89,10 @@
           </div>
         </template>
 
-        <template #cell:totalRaised="{ value }">
-          <MoneyCell
-            :amount="value"
-            currency="GHS"
-            class="font-black"
-          />
+        <template #cell:totalRaised="{ row }">
+          <span class="font-bold text-slate-700">
+            {{ row.totals?.length ? row.totals.map((t: any) => formatCurrency(t.amount, t.currency)).join(' • ') : 'GHS 0.00' }}
+          </span>
         </template>
 
         <template #cell:fundCount="{ value }">
@@ -166,11 +164,10 @@ import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
-import MoneyCell from '@/shared/components/tables/MoneyCell.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
-import { formatDate, formatCurrency } from '@/shared/utils/formatters'
+import { formatDate, formatCurrency } from '@/core/formatting/formatters'
 import { 
   Plus, 
   Download, 
@@ -211,9 +208,18 @@ const filteredEvents = computed(() => {
   return list
 })
 
-const totalRaised = computed(() => {
-  return events.value.reduce((acc, e) => acc + (e.totalRaised || 0), 0)
-})
+function aggregateTotals(list: any[]) {
+  const map: Record<string, number> = {}
+  list.forEach(e => {
+    e.totals?.forEach((t: any) => {
+      map[t.currency] = (map[t.currency] || 0) + t.amount
+    })
+  })
+  
+  const entries = Object.entries(map)
+  if (entries.length === 0) return 'GHS 0.00'
+  return entries.map(([curr, amt]) => formatCurrency(amt, curr)).join(' • ')
+}
 
 const totalFunds = computed(() => {
   return events.value.reduce((acc, e) => acc + (e.fundCount || 0), 0)
