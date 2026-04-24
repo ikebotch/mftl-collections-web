@@ -79,7 +79,7 @@
                 <p class="text-xs font-black text-slate-900 uppercase tracking-tight italic">Auth0 / Dev Bypass</p>
                 <p class="text-[10px] text-slate-500 font-medium">Currently using X-Dev-User-Id header for local development.</p>
               </div>
-              <StatusBadge status="Active" tone="amber" />
+              <StatusBadge status="Active" tone="success" />
             </div>
           </div>
         </AppCard>

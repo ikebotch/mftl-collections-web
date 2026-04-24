@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-10">
     <AdminPageHeader
-      title="Self-Donation Log"
+      title="Self-Donations"
       description="Monitor and audit direct contributions made by registered users."
     />
 

@@ -3,7 +3,7 @@ import { contributionsService } from '@/modules/contributions/services/contribut
 import { collectorService } from '@/modules/collector/services/collectorService'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
 import { donorsService } from '@/modules/donors/services/donorsService'
-import { receiptsService } from '@/modules/receipts/services/receiptsService'
+import { listReceipts } from '@/modules/receipts/services/receiptsService'
 
 export interface DashboardSummary {
   totalEvents: number
@@ -23,10 +23,10 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
     collectorService.listAll().catch(() => []),
     recipientFundsService.list().catch(() => []),
     donorsService.list().catch(() => []),
-    receiptsService.list().catch(() => [])
+    listReceipts().catch(() => [])
   ])
 
-  const totalCollected = contributions.reduce((acc, c) => acc + (c.amountValue || 0), 0)
+  const totalCollected = (contributions as any[]).reduce((acc: number, c: any) => acc + (c.amountValue || 0), 0)
 
   return {
     totalEvents: events.length,

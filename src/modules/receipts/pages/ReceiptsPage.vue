@@ -26,7 +26,7 @@
         label="Verified Value"
         value="GHS 12,450.00"
         icon="ShieldCheck"
-        color="emerald"
+        color="green"
       />
       <MetricCard
         label="Issued Today"
@@ -212,12 +212,7 @@ import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
 import { 
   Download, 
-  Printer, 
-  Eye,
-  FileText,
-  ShieldCheck,
-  Zap,
-  Shield
+  Printer
 } from 'lucide-vue-next'
 
 const query = useReceipts()
