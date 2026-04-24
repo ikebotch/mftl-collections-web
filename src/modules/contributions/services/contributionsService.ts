@@ -1,12 +1,35 @@
 import { httpClient } from '@/core/api/httpClient'
 import type { ContributionRow } from '../types/contribution'
 
+export interface CashContributionResult {
+  contributionId: string
+  receiptId: string | null
+  status: string
+}
+
+export interface CashContributionResultDto {
+  contributionId?: string
+  receiptId?: string | null
+  status?: string
+  ContributionId?: string
+  ReceiptId?: string | null
+  Status?: string
+}
+
 export interface RecordCashContributionInput {
   eventId: string
   recipientFundId: string
   amount: number
   contributorName?: string
   note?: string
+}
+
+function mapCashContributionResult(dto: CashContributionResultDto): CashContributionResult {
+  return {
+    contributionId: dto.contributionId ?? dto.ContributionId ?? '',
+    receiptId: dto.receiptId ?? dto.ReceiptId ?? null,
+    status: dto.status ?? dto.Status ?? '',
+  }
 }
 
 export async function listContributions(): Promise<ContributionRow[]> {
@@ -20,12 +43,12 @@ export async function listContributions(): Promise<ContributionRow[]> {
   }
 }
 
-export async function recordCashContribution(payload: RecordCashContributionInput): Promise<string> {
-  const response = await httpClient.post<string, RecordCashContributionInput>(
+export async function recordCashContribution(payload: RecordCashContributionInput): Promise<CashContributionResult> {
+  const response = await httpClient.post<CashContributionResultDto, RecordCashContributionInput>(
     '/contributions/cash',
     payload,
   )
-  return response.data
+  return mapCashContributionResult(response.data)
 }
 
 export const contributionsService = {

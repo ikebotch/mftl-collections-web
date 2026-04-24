@@ -14,14 +14,10 @@ const props = defineProps<{
 
 const tone = computed(() => {
   switch (props.status.toLowerCase()) {
-    case 'succeeded':
+    case 'issued':
       return 'success'
-    case 'failed':
-    case 'cancelled':
-    case 'reversed':
+    case 'voided':
       return 'danger'
-    case 'cash':
-      return 'success'
     default:
       return 'warning'
   }

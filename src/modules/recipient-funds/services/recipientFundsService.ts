@@ -8,10 +8,23 @@ export const recipientFundsService = {
     return response.data.map(mapRecipientFundDto)
   },
   async create(payload: CreateRecipientFundInput): Promise<RecipientFund> {
-    const response = await httpClient.post<RecipientFundDto, CreateRecipientFundInput>(
+    const response = await httpClient.post<RecipientFundDto | string, CreateRecipientFundInput>(
       '/recipient-funds',
       payload,
     )
+
+    if (typeof response.data === 'string') {
+      return {
+        id: response.data,
+        eventId: payload.eventId,
+        name: payload.name,
+        description: payload.description,
+        targetAmount: payload.targetAmount,
+        receivedAmount: 0,
+        currency: 'GBP',
+      }
+    }
+
     return mapRecipientFundDto(response.data)
   },
 }

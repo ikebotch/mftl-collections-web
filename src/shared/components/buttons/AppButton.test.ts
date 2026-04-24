@@ -18,4 +18,17 @@ describe('AppButton', () => {
     expect(wrapper.attributes('aria-busy')).toBe('true')
     expect(wrapper.attributes('aria-label')).toBe('Submit contribution')
   })
+
+  it('honors nativeType for form submit buttons', () => {
+    const wrapper = mount(AppButton, {
+      props: {
+        nativeType: 'submit',
+      },
+      slots: {
+        default: 'Create event',
+      },
+    })
+
+    expect(wrapper.attributes('type')).toBe('submit')
+  })
 })

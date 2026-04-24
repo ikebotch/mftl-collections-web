@@ -4,6 +4,8 @@ import ReceiptsPage from './ReceiptsPage.vue'
 
 vi.mock('../composables/useReceipts', () => ({
   useReceipts: () => ({
+    isLoading: { value: false },
+    isError: { value: false },
     data: {
       value: [],
     },

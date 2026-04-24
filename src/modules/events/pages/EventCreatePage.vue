@@ -103,7 +103,7 @@ async function onSubmit() {
   const result = createEventSchema.safeParse({
     title: form.title,
     description: form.description,
-    eventDate: form.eventDate || null,
+    eventDate: form.eventDate ? new Date(`${form.eventDate}T00:00:00Z`).toISOString() : null,
   })
 
   if (!result.success) {
@@ -111,8 +111,8 @@ async function onSubmit() {
     return
   }
 
-  const event = await mutation.mutateAsync(result.data)
-  await router.push(`/admin/events/${event.id}`)
+  const createdEvent = await mutation.mutateAsync(result.data)
+  await router.push(`/admin/events/${createdEvent.id}`)
 }
 
 function applyZodErrors(error: z.ZodError) {
