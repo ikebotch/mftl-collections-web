@@ -1,7 +1,7 @@
 <template>
   <section
     :class="[
-      'rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60',
+      'rounded-2xl bg-white p-6 shadow-premium transition-all duration-300 hover:shadow-premium-hover ring-1 ring-slate-900/5',
       padded ? '' : 'p-0',
     ]"
   >

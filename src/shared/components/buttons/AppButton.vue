@@ -47,20 +47,20 @@ const props = withDefaults(
 
 const classes = computed(() => {
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-full font-medium transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60'
+    'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-display active:scale-95'
   const width = props.fullWidth ? 'w-full' : ''
   const sizeMap: Record<Size, string> = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-2.5 text-sm',
-    lg: 'px-6 py-3 text-base',
+    sm: 'px-4 py-2 text-sm',
+    md: 'px-5 py-2.5 text-sm',
+    lg: 'px-8 py-3.5 text-base',
   }
   const variantMap: Record<Variant, string> = {
-    primary: 'bg-teal-500 text-slate-950 hover:bg-teal-400 focus-visible:ring-teal-500',
+    primary: 'bg-brand-600 text-white shadow-premium hover:bg-brand-700 hover:shadow-premium-hover focus-visible:ring-brand-500',
     secondary:
-      'border border-slate-300 bg-white text-slate-900 hover:border-slate-400 hover:bg-slate-50 focus-visible:ring-slate-400',
-    ghost: 'bg-transparent text-slate-700 hover:bg-slate-100 focus-visible:ring-slate-400',
-    danger: 'bg-rose-600 text-white hover:bg-rose-500 focus-visible:ring-rose-600',
-    soft: 'bg-slate-100 text-slate-800 hover:bg-slate-200 focus-visible:ring-slate-400',
+      'border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-brand-300 hover:text-brand-700 hover:bg-brand-50 focus-visible:ring-brand-500',
+    ghost: 'bg-transparent text-slate-600 hover:bg-brand-50 hover:text-brand-700 focus-visible:ring-brand-500',
+    danger: 'bg-rose-500 text-white shadow-premium hover:bg-rose-600 focus-visible:ring-rose-500',
+    soft: 'bg-brand-50 text-brand-700 hover:bg-brand-100 focus-visible:ring-brand-500',
   }
 
   return [base, width, sizeMap[props.size], variantMap[props.variant]].join(' ')

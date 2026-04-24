@@ -1,35 +1,35 @@
 <template>
-  <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+  <div class="overflow-hidden rounded-2xl bg-white shadow-premium ring-1 ring-slate-900/5">
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-slate-200">
+      <table class="min-w-full">
         <caption
           v-if="caption"
           class="sr-only"
         >
           {{ caption }}
         </caption>
-        <thead class="bg-slate-50">
-          <tr>
+        <thead>
+          <tr class="border-b border-slate-100">
             <th
               v-for="column in columns"
               :key="column.key"
               scope="col"
-              class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.16em] text-slate-500"
+              class="px-6 py-4 text-left text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 bg-slate-50/50"
             >
               {{ column.label }}
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-200">
+        <tbody class="divide-y divide-slate-50">
           <tr
             v-for="row in rows"
             :key="getRowKey(row)"
-            class="hover:bg-slate-50/80"
+            class="group hover:bg-brand-50/30 transition-colors duration-200"
           >
             <td
               v-for="column in columns"
               :key="column.key"
-              class="px-4 py-4 text-sm text-slate-700"
+              class="px-6 py-4 text-sm text-slate-600 transition-colors duration-200 group-hover:text-slate-900"
             >
               <slot
                 :name="`cell:${column.key}`"
@@ -43,9 +43,16 @@
           <tr v-if="rows.length === 0">
             <td
               :colspan="columns.length"
-              class="px-4 py-12 text-center text-sm text-slate-500"
+              class="px-6 py-16 text-center"
             >
-              {{ emptyMessage }}
+              <div class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 mb-4">
+                  📭
+                </div>
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                  {{ emptyMessage }}
+                </p>
+              </div>
             </td>
           </tr>
         </tbody>
