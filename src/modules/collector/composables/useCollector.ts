@@ -1,30 +1,26 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
-import { listAssignedEvents, listCollectorHistory, collectorService, getCollectorDashboard } from '../services/collectorService'
-import type { CollectorEventRow, CollectorReceipt, CollectorRow, CreateCollectorInput } from '../types/collector'
+import { collectorService } from '../services/collectorService'
+import type { CollectorAssignmentDto, CollectorMeDto, CollectorReceipt, CollectorRow, CreateCollectorInput } from '../types/collector'
 import type { ApiError } from '@/core/api/apiError'
 
-export function useCollectorDashboard() {
-  return useQuery<{
-    todayCollections: string
-    receiptsIssued: string
-    assignedEvents: string
-  }, ApiError>({
-    queryKey: ['collector-dashboard'],
-    queryFn: getCollectorDashboard,
+export function useCollectorMe() {
+  return useQuery<CollectorMeDto, ApiError>({
+    queryKey: ['collector-me'],
+    queryFn: collectorService.getMe,
   })
 }
 
 export function useAssignedEvents() {
-  return useQuery<CollectorEventRow[], ApiError>({
-    queryKey: ['collector-events'],
-    queryFn: listAssignedEvents,
+  return useQuery<CollectorAssignmentDto[], ApiError>({
+    queryKey: ['collector-assignments'],
+    queryFn: collectorService.listAssignments,
   })
 }
 
 export function useCollectorHistory() {
   return useQuery<CollectorReceipt[], ApiError>({
     queryKey: ['collector-history'],
-    queryFn: listCollectorHistory,
+    queryFn: collectorService.listCollectorHistory,
   })
 }
 

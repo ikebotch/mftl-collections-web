@@ -93,7 +93,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useQuery } from '@tanstack/vue-query'
 import { z } from 'zod'
 import { collectorContributionSchema } from '../validators/collectorValidators'
@@ -109,18 +109,20 @@ import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import PageHeader from '@/shared/components/headers/PageHeader.vue'
 
+const route = useRoute()
 const router = useRouter()
 const anonymous = ref(false)
 const errors = ref<Record<string, string>>({})
 const submissionError = ref<ApiError | null>(null)
 const isSubmitting = ref(false)
+
 const form = reactive({
-  eventId: '',
+  eventId: (route.query.eventId as string) || '',
   recipientFundId: '',
   contributorName: '',
   contributorPhone: '',
   amount: '0',
-  currency: 'GBP',
+  currency: 'GHS',
   note: '',
   paymentMethod: 'cash',
 })

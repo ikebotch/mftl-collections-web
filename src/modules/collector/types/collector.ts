@@ -43,3 +43,23 @@ export interface CreateCollectorInput {
   assignedEventIds?: string[]
   assignedFundIds?: string[]
 }
+
+export interface CollectorMeDto {
+  id: string
+  name: string
+  email: string
+  status: string
+  assignedEventCount: number
+  assignedFundCount: number
+  totalCollectedToday: number
+  receiptsIssuedToday: number
+  lastActiveAt: string | null
+}
+
+export interface CollectorAssignmentDto {
+  id: string
+  title: string
+  location: string
+  date: string
+  fundCount: number
+}

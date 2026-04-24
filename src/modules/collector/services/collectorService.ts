@@ -1,7 +1,6 @@
 import { httpClient } from '@/core/api/httpClient'
-import { eventsService } from '@/modules/events/services/eventsService'
-import { listReceipts } from '@/modules/receipts/services/receiptsService'
-import type { CollectorEventRow, CollectorReceipt, CollectorRow, CollectorDto, CreateCollectorInput } from '../types/collector'
+import type { CollectorAssignmentDto, CollectorMeDto, CollectorReceipt, CollectorRow, CollectorDto, CreateCollectorInput } from '../types/collector'
+import type { ReceiptListItemDto } from '@/modules/receipts/types/receipt'
 import { formatCurrency, formatDate } from '@/shared/utils/formatters'
 
 export async function listCollectors(): Promise<CollectorRow[]> {
@@ -16,7 +15,7 @@ export async function listCollectors(): Promise<CollectorRow[]> {
     activeEvents: dto.assignedEventCount,
     totalCollected: formatCurrency(dto.totalCollectedMonth, 'GHS'),
     lastActive: dto.lastActiveAt ? formatDate(dto.lastActiveAt) : 'Never',
-    type: 'Staff' // Fixed for now
+    type: 'Staff'
   }))
 }
 
@@ -35,41 +34,34 @@ export async function createCollector(payload: CreateCollectorInput): Promise<Co
   }
 }
 
-export async function listAssignedEvents(): Promise<CollectorEventRow[]> {
-  // For now, collectors see all events until assigned events endpoint is ready
-  const events = await eventsService.list()
-  return events.map(e => ({
-    id: e.id,
-    title: e.title,
-    location: 'Main Site', // Placeholder
-    shift: 'All Day', // Placeholder
-  }))
+export async function getCollectorMe(): Promise<CollectorMeDto> {
+  const response = await httpClient.get<CollectorMeDto>('/collector/me')
+  return response.data
 }
 
-export async function getCollectorDashboard() {
-  // This will eventually be a real endpoint
-  const events = await listAssignedEvents()
-  return {
-    todayCollections: 'GHS 0.00',
-    receiptsIssued: '0',
-    assignedEvents: String(events.length),
-  }
+export async function listAssignments(): Promise<CollectorAssignmentDto[]> {
+  const response = await httpClient.get<CollectorAssignmentDto[]>('/collector/assignments')
+  return response.data || []
 }
 
 export async function listCollectorHistory(): Promise<CollectorReceipt[]> {
-  const receipts = await listReceipts()
-  return receipts.map(receipt => ({
-    id: receipt.id,
-    amount: receipt.amount,
-    status: receipt.status,
-    receiptNumber: receipt.receiptNumber,
+  const response = await httpClient.get<ReceiptListItemDto[]>('/collector/history')
+  const data = response.data || []
+  
+  return data.map(receipt => ({
+    id: receipt.id || '',
+    amount: formatCurrency(receipt.amount || 0, receipt.currency || 'GHS'),
+    status: receipt.status || 'Unknown',
+    receiptNumber: receipt.receiptNumber || '---',
+    eventTitle: receipt.eventTitle,
+    date: receipt.issuedAt ? formatDate(receipt.issuedAt) : '---'
   }))
 }
 
 export const collectorService = {
   list: listCollectors,
   create: createCollector,
-  listAssignedEvents,
-  getCollectorDashboard,
+  getMe: getCollectorMe,
+  listAssignments,
   listCollectorHistory,
 }

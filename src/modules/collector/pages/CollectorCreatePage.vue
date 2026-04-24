@@ -237,7 +237,10 @@ async function onSubmit() {
               class="w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center"
               :class="form.assignedEventIds.includes(event.id) ? 'border-violet-600 bg-violet-600 text-white' : 'border-slate-200 group-hover:border-violet-400'"
             >
-              <Check v-if="form.assignedEventIds.includes(event.id)" class="w-3 h-3" />
+              <Check
+                v-if="form.assignedEventIds.includes(event.id)"
+                class="w-3 h-3"
+              />
             </div>
             <span class="text-sm font-bold text-slate-900">{{ event.title }}</span>
           </div>

@@ -3,12 +3,14 @@ import { mount } from '@vue/test-utils'
 import CollectorDashboardPage from './CollectorDashboardPage.vue'
 
 vi.mock('../composables/useCollector', () => ({
-  useCollectorDashboard: () => ({
+  useCollectorMe: () => ({
+    isLoading: { value: false },
     data: {
       value: {
-        todayCollections: 'GBP 0.00',
-        receiptsIssued: '0',
-        assignedEvents: '2',
+        name: 'Isaac Collector',
+        totalCollectedToday: 0,
+        receiptsIssuedToday: 0,
+        assignedEventCount: 2,
       },
     },
   }),

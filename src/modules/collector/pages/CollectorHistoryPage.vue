@@ -26,8 +26,9 @@ import AppTable from '@/shared/components/tables/AppTable.vue'
 
 const query = useCollectorHistory()
 const columns = [
-  { key: 'receiptNumber', label: 'Receipt' },
+  { key: 'date', label: 'Date' },
+  { key: 'eventTitle', label: 'Event' },
   { key: 'amount', label: 'Amount' },
-  { key: 'status', label: 'Receipt' },
+  { key: 'status', label: 'Status' },
 ]
 </script>

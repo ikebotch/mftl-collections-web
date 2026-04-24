@@ -9,31 +9,32 @@
         Field Hub
       </h1>
       <p class="text-slate-600 font-medium">
-        Ready for today's collection shift, Isaac.
+        Ready for today's collection shift, {{ profile?.name.split(' ')[0] || 'Collector' }}.
       </p>
     </div>
 
     <div class="grid gap-6">
       <MetricCard
         label="Today's Total"
-        :value="query.data.value?.todayCollections ?? '$1,450.50'"
+        :value="todayTotalFormatted"
         icon="Wallet"
         color="purple"
-        trend="+12.5%"
-        trend-positive
+        :is-loading="query.isLoading.value"
       />
       <div class="grid grid-cols-2 gap-6">
         <MetricCard
           label="Receipts"
-          :value="query.data.value?.receiptsIssued ?? '12'"
+          :value="String(profile?.receiptsIssuedToday ?? 0)"
           icon="FileText"
           color="green"
+          :is-loading="query.isLoading.value"
         />
         <MetricCard
           label="Assignments"
-          :value="query.data.value?.assignedEvents ?? '3'"
+          :value="String(profile?.assignedEventCount ?? 0)"
           icon="Calendar"
           color="amber"
+          :is-loading="query.isLoading.value"
         />
       </div>
     </div>
@@ -80,13 +81,19 @@
 </template>
 
 <script setup lang="ts">
-import { useCollectorDashboard } from '../composables/useCollector'
+import { computed } from 'vue'
+import { useCollectorMe } from '../composables/useCollector'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import { 
   ShieldCheck, 
   Plus
 } from 'lucide-vue-next'
+import { formatCurrency } from '@/shared/utils/formatters'
 
-const query = useCollectorDashboard()
+const query = useCollectorMe()
+const profile = computed(() => query.data.value)
+const todayTotalFormatted = computed(() => 
+  profile.value ? formatCurrency(profile.value.totalCollectedToday, 'GHS') : 'GHS 0.00'
+)
 </script>
