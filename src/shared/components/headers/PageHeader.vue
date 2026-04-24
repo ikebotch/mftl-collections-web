@@ -3,7 +3,7 @@
     <div class="space-y-1">
       <p
         v-if="eyebrow"
-        class="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-600 mb-1"
+        class="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-600 mb-1"
       >
         {{ eyebrow }}
       </p>
@@ -12,7 +12,7 @@
       </h1>
       <p
         v-if="description"
-        class="text-sm text-slate-500 font-medium max-w-xl"
+        class="text-sm text-slate-600 font-medium max-w-xl"
       >
         {{ description }}
       </p>

@@ -6,7 +6,7 @@
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]"
+            class="px-8 py-5 text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]"
           >
             {{ column.label }}
           </th>
@@ -41,7 +41,7 @@
               <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 mb-4">
                 <Inbox class="w-6 h-6" />
               </div>
-              <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">
+              <p class="text-xs font-bold text-slate-600 uppercase tracking-widest">
                 {{ emptyMessage }}
               </p>
             </div>

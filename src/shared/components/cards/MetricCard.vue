@@ -22,7 +22,7 @@
       </div>
 
       <div class="space-y-1">
-        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] leading-none mb-2">
+        <p class="text-[11px] font-bold text-slate-600 uppercase tracking-[0.15em] leading-none mb-2">
           {{ label }}
         </p>
         <h3 class="text-2xl font-black text-slate-900 font-display leading-none">
@@ -38,7 +38,7 @@
             :style="{ width: '65%' }"
           />
         </div>
-        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">vs last 7d</span>
+        <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest">vs last 7d</span>
       </div>
     </div>
   </AppCard>
@@ -69,7 +69,7 @@ const resolvedIcon = computed(() => (Icons as any)[props.icon] || Icons.Activity
 
 const colorClasses = computed(() => {
   const maps = {
-    purple: 'bg-brand-50 text-brand-600',
+    purple: 'bg-violet-50 text-violet-600',
     green: 'bg-emerald-50 text-emerald-600',
     amber: 'bg-amber-50 text-amber-600',
     blue: 'bg-blue-50 text-blue-600',
@@ -81,7 +81,7 @@ const colorClasses = computed(() => {
 
 const barColorClass = computed(() => {
   const maps = {
-    purple: 'bg-brand-500',
+    purple: 'bg-violet-500',
     green: 'bg-emerald-500',
     amber: 'bg-amber-500',
     blue: 'bg-blue-500',

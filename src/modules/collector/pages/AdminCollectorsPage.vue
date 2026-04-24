@@ -5,7 +5,7 @@
         <h1 class="text-3xl font-bold font-display tracking-tight text-slate-900">
           Collectors
         </h1>
-        <p class="text-slate-500 mt-2 font-medium">
+        <p class="text-slate-600 mt-2 font-medium">
           Manage and monitor your field collection agents.
         </p>
       </div>
@@ -65,7 +65,7 @@
               <p class="text-sm font-bold text-slate-900">
                 {{ value }}
               </p>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+              <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
                 {{ row.email }}
               </p>
             </div>
@@ -75,7 +75,7 @@
         <template #cell:status="{ value }">
           <div 
             class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest"
-            :class="value === 'Active' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-500 border border-slate-100'"
+            :class="value === 'Active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-50 text-slate-600 border border-slate-200'"
           >
             <span
               class="w-1.5 h-1.5 rounded-full"
@@ -87,10 +87,10 @@
 
         <template #cell:actions>
           <div class="flex items-center gap-2">
-            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-brand-600 transition-all">
+            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-violet-600 transition-all">
               <Eye class="w-4 h-4" />
             </button>
-            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-brand-600 transition-all">
+            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-violet-600 transition-all">
               <Settings class="w-4 h-4" />
             </button>
           </div>

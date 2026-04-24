@@ -3,10 +3,11 @@
     :type="type"
     :disabled="disabled || loading"
     :class="[
-      'inline-flex items-center justify-center font-bold transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]',
+      'inline-flex items-center justify-center font-bold transition-all duration-300 focus:outline-none focus:ring-4 active:scale-[0.98]',
+      'disabled:opacity-40 disabled:cursor-not-allowed disabled:saturate-50',
       sizeClasses,
       variantClasses,
-      rounded ? 'rounded-full' : 'rounded-[1rem]'
+      rounded ? 'rounded-full' : 'rounded-[1.25rem]'
     ]"
     :aria-busy="loading ? 'true' : undefined"
     :aria-label="ariaLabel"
@@ -59,11 +60,11 @@ const sizeClasses = computed(() => {
 
 const variantClasses = computed(() => {
   const variants = {
-    primary: 'bg-brand-600 text-white shadow-lg shadow-brand-600/20 hover:bg-brand-700 hover:shadow-brand-600/30 focus:ring-brand-500/20',
-    secondary: 'bg-white border-2 border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 focus:ring-slate-200',
+    primary: 'bg-violet-600 text-white shadow-lg shadow-violet-600/20 hover:bg-violet-700 hover:shadow-violet-600/30 focus:ring-violet-500/20',
+    secondary: 'bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 focus:ring-slate-200',
     ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-200',
     danger: 'bg-red-600 text-white shadow-lg shadow-red-600/20 hover:bg-red-700 focus:ring-red-500/20',
-    outline: 'bg-transparent border-2 border-slate-200 text-slate-700 hover:border-brand-500 hover:text-brand-600 focus:ring-brand-500/10',
+    outline: 'bg-transparent border-2 border-slate-200 text-slate-600 hover:border-violet-500 hover:text-violet-600 focus:ring-violet-500/10',
     white: 'bg-white text-slate-900 shadow-premium hover:bg-slate-50 focus:ring-slate-200',
   }
   return variants[props.variant]

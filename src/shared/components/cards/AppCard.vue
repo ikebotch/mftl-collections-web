@@ -1,7 +1,8 @@
 <template>
   <div
     :class="[
-      'bg-white border border-slate-100/50 shadow-soft transition-all duration-500',
+      'border border-slate-100/50 shadow-soft transition-all duration-500 overflow-hidden',
+      !$attrs.class?.toString().includes('bg-') ? 'bg-white' : '',
       padded ? 'p-8' : '',
       rounded === '3xl' ? 'rounded-[2rem]' : 'rounded-[1.5rem]'
     ]"

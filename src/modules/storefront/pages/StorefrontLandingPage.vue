@@ -3,14 +3,14 @@
     <section class="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] items-start">
       <!-- Hero Section -->
       <div class="relative group">
-        <div class="absolute -inset-4 bg-gradient-to-tr from-brand-600/20 to-emerald-500/10 rounded-[2.5rem] blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000" />
+        <div class="absolute -inset-4 bg-gradient-to-tr from-violet-600/20 to-emerald-500/10 rounded-[2.5rem] blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000" />
         <AppCard class="relative overflow-hidden bg-slate-900 border-none shadow-2xl rounded-[2rem]">
-          <div class="absolute top-0 right-0 w-96 h-96 bg-brand-500/10 blur-3xl rounded-full -mr-48 -mt-48" />
+          <div class="absolute top-0 right-0 w-96 h-96 bg-violet-500/10 blur-3xl rounded-full -mr-48 -mt-48" />
           <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 blur-3xl rounded-full -ml-32 -mb-32" />
           
           <div class="relative p-8 md:p-14">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[10px] font-bold uppercase tracking-widest mb-8">
-              <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-[10px] font-bold uppercase tracking-widest mb-8">
+              <span class="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
               Support this event
             </div>
             
@@ -18,22 +18,23 @@
               {{ eventQuery.data.value?.title }}
             </h2>
             
-            <p class="text-lg md:text-xl text-slate-400 font-medium leading-relaxed mb-12 max-w-xl">
+            <p class="text-lg md:text-xl text-slate-200 font-medium leading-relaxed mb-12 max-w-xl">
               {{ eventQuery.data.value?.description }}
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4">
               <AppButton
+                variant="primary"
                 size="lg"
-                class="shadow-xl shadow-brand-600/20"
+                class="bg-violet-600 text-white shadow-xl shadow-violet-600/20"
                 @click="router.push(`/contribute/${eventSlug}/recipient`)"
               >
                 Start Contribution
               </AppButton>
               <AppButton
                 size="lg"
-                variant="ghost"
-                class="text-slate-300 hover:text-white border border-slate-700 hover:bg-slate-800"
+                variant="outline"
+                class="!text-slate-200 !border-slate-700 hover:!bg-slate-800 hover:!text-white hover:!border-slate-600"
                 @click="router.push(`/contribute/${eventSlug}/self`)"
               >
                 I am contributing for myself
@@ -49,7 +50,7 @@
           padded
           class="border-slate-100 shadow-xl"
         >
-          <div class="p-3 w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 mb-6 flex items-center justify-center shadow-sm">
+          <div class="p-3 w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 mb-6 flex items-center justify-center shadow-sm">
             🛡️
           </div>
           <h3 class="text-xl font-bold font-display text-slate-900 mb-4">
@@ -74,7 +75,7 @@
           padded
           class="bg-gradient-to-br from-slate-50 to-white border-slate-100"
         >
-          <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-slate-600 mb-6">
             Payment Methods
           </h3>
           <div class="grid grid-cols-4 gap-4 grayscale opacity-60">
@@ -84,7 +85,7 @@
               class="h-10 rounded-lg bg-slate-200 animate-pulse"
             />
           </div>
-          <p class="mt-6 text-xs text-slate-400 text-center font-medium italic">
+          <p class="mt-6 text-xs text-slate-500 text-center font-medium italic">
             "Supporting your community, one contribution at a time."
           </p>
         </AppCard>

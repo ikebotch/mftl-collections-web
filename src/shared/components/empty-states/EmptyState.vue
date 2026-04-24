@@ -5,14 +5,14 @@
     </div>
     <p
       v-if="eyebrow"
-      class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-2"
+      class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 mb-2"
     >
       {{ eyebrow }}
     </p>
     <h2 class="text-2xl font-bold text-slate-900 font-display">
       {{ title }}
     </h2>
-    <p class="mx-auto mt-3 max-w-sm text-sm text-slate-500 font-medium">
+    <p class="mx-auto mt-3 max-w-sm text-sm text-slate-600 font-medium">
       {{ description }}
     </p>
     <div
