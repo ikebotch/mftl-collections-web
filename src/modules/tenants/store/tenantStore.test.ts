@@ -2,10 +2,30 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useTenantStore } from './tenantStore'
 
+function createStorageMock() {
+  const store = new Map<string, string>()
+
+  return {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      store.set(key, value)
+    },
+    removeItem: (key: string) => {
+      store.delete(key)
+    },
+    clear: () => {
+      store.clear()
+    },
+  }
+}
+
 describe('tenantStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
-    window.localStorage.clear()
+    Object.defineProperty(window, 'localStorage', {
+      value: createStorageMock(),
+      configurable: true,
+    })
   })
 
   it('stores the selected tenant in pinia and localStorage', () => {

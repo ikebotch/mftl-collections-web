@@ -1,92 +1,129 @@
 <template>
-  <div class="space-y-10 max-w-lg mx-auto pb-20">
-    <div class="text-center space-y-4">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] shadow-sm border border-emerald-200">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        System Online
-      </div>
-      <h1 class="text-4xl font-black font-display tracking-tight text-slate-900 leading-tight">
-        Field Hub
-      </h1>
-      <p class="text-slate-600 font-medium">
-        Ready for today's collection shift, Isaac.
-      </p>
-    </div>
-
-    <div class="grid gap-6">
-      <MetricCard
-        label="Today's Total"
-        :value="query.data.value?.todayCollections ?? '$1,450.50'"
-        icon="Wallet"
-        color="purple"
-        trend="+12.5%"
-        trend-positive
-      />
-      <div class="grid grid-cols-2 gap-6">
-        <MetricCard
-          label="Receipts"
-          :value="query.data.value?.receiptsIssued ?? '12'"
-          icon="FileText"
-          color="green"
-        />
-        <MetricCard
-          label="Assignments"
-          :value="query.data.value?.assignedEvents ?? '3'"
-          icon="Calendar"
-          color="amber"
-        />
-      </div>
-    </div>
-
-    <!-- Premium Offline Sync Card -->
-    <div class="relative group overflow-hidden rounded-[2.5rem] bg-navy-950 p-8 shadow-premium border border-navy-900">
-      <div class="absolute -top-24 -right-24 w-64 h-64 bg-violet-500/20 blur-[80px] rounded-full group-hover:bg-violet-500/30 transition-all duration-700" />
-      
-      <div class="relative z-10">
-        <div class="flex items-center justify-between mb-6">
-          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
-            <ShieldCheck class="w-6 h-6 text-violet-400" />
-          </div>
-          <span class="px-3 py-1 rounded-full bg-violet-500/20 text-violet-400 text-[10px] font-black uppercase tracking-widest border border-violet-500/20">
-            Offline Ready
-          </span>
-        </div>
-        <h3 class="text-xl font-bold font-display text-white">
-          Always Connected
-        </h3>
-        <p class="text-slate-200 text-sm mt-3 leading-relaxed">
-          Your collections are automatically synced when the network is available. Keep impacting lives anywhere.
+  <div class="space-y-6">
+    <section class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div class="space-y-3">
+        <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+          Collector
         </p>
-        
+        <h2 class="text-3xl font-semibold tracking-tight text-white">
+          Field dashboard
+        </h2>
+        <p class="max-w-2xl text-sm leading-6 text-slate-300">
+          See live collection totals, recent receipts, and jump into the next contribution with one tap.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-3">
         <AppButton
-          variant="white"
-          class="mt-8 w-full py-4 text-sm font-black shadow-xl"
+          size="lg"
+          @click="$router.push('/collector/contributions/new')"
         >
-          Verify Sync (Last sync: 2m ago)
+          New contribution
+        </AppButton>
+        <AppButton
+          variant="secondary"
+          size="lg"
+          @click="$router.push('/collector/history')"
+        >
+          View history
         </AppButton>
       </div>
-    </div>
+    </section>
 
-    <div class="fixed bottom-8 left-0 right-0 px-6 max-w-lg mx-auto z-50">
-      <AppButton
-        class="w-full py-5 text-base font-black shadow-2xl shadow-violet-600/40"
-        @click="$router.push('/collector/events')"
-      >
-        <Plus class="w-5 h-5 mr-3" />
-        Start New Collection
-      </AppButton>
-    </div>
+    <LoadingState
+      v-if="query.isLoading.value"
+      text="Loading collector dashboard…"
+    />
+    <ErrorState
+      v-else-if="query.isError.value"
+      title="Could not load collector dashboard"
+      :message="query.error.value?.message ?? 'Try again later.'"
+      :correlation-id="query.error.value?.correlationId"
+      show-retry
+      @retry="query.refetch"
+    />
+    <template v-else>
+      <div class="grid gap-4 md:grid-cols-3">
+        <AppCard class="border-cyan-300/10 bg-white/95 shadow-2xl shadow-slate-950/20">
+          <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            Total collected
+          </p>
+          <p class="mt-3 text-3xl font-semibold text-slate-950">
+            {{ query.data.value?.totalCollected ?? 'GBP 0.00' }}
+          </p>
+        </AppCard>
+        <AppCard class="border-cyan-300/10 bg-white/95 shadow-2xl shadow-slate-950/20">
+          <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            Contributions
+          </p>
+          <p class="mt-3 text-3xl font-semibold text-slate-950">
+            {{ query.data.value?.contributionCount ?? '0' }}
+          </p>
+        </AppCard>
+        <AppCard class="border-cyan-300/10 bg-white/95 shadow-2xl shadow-slate-950/20">
+          <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            Assigned events
+          </p>
+          <p class="mt-3 text-3xl font-semibold text-slate-950">
+            {{ query.data.value?.assignedEvents ?? '0' }}
+          </p>
+        </AppCard>
+      </div>
+
+      <AppCard class="border-white/10 bg-white/95 shadow-2xl shadow-slate-950/30">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+              Recent activity
+            </p>
+            <h3 class="mt-1 text-xl font-semibold text-slate-950">
+              Latest receipts
+            </h3>
+          </div>
+          <AppButton
+            variant="secondary"
+            size="sm"
+            @click="$router.push('/collector/history')"
+          >
+            View all
+          </AppButton>
+        </div>
+
+        <EmptyState
+          v-if="(query.data.value?.recentReceipts.length ?? 0) === 0"
+          title="No contributions recorded yet"
+          description="Your first successful contribution will appear here immediately after receipt issuance."
+        />
+        <AppTable
+          v-else
+          caption="Recent collector receipts"
+          :columns="columns"
+          :rows="query.data.value?.recentReceipts ?? []"
+          row-key="id"
+        >
+          <template #cell:status="{ value }">
+            <ReceiptStatusBadge :status="String(value)" />
+          </template>
+        </AppTable>
+      </AppCard>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useCollectorDashboard } from '../composables/useCollector'
-import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import { 
-  ShieldCheck, 
-  Plus
-} from 'lucide-vue-next'
+import AppCard from '@/shared/components/cards/AppCard.vue'
+import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
+import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import AppTable from '@/shared/components/tables/AppTable.vue'
+import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
 
 const query = useCollectorDashboard()
+const columns = [
+  { key: 'receiptNumber', label: 'Receipt' },
+  { key: 'eventTitle', label: 'Event' },
+  { key: 'amount', label: 'Amount' },
+  { key: 'status', label: 'Receipt status' },
+]
 </script>

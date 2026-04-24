@@ -17,4 +17,20 @@ describe('collectorContributionSchema', () => {
 
     expect(result.success).toBe(false)
   })
+
+  it('allows anonymous contributions without name and phone', () => {
+    const result = collectorContributionSchema.safeParse({
+      eventId: 'event-1',
+      recipientFundId: 'fund-1',
+      contributorName: '',
+      contributorPhone: '',
+      amount: 20,
+      currency: 'GBP',
+      anonymous: true,
+      note: '',
+      paymentMethod: 'cash',
+    })
+
+    expect(result.success).toBe(true)
+  })
 })

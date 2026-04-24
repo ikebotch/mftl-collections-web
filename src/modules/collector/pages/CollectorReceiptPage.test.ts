@@ -26,7 +26,7 @@ vi.mock('@/modules/receipts/composables/useReceipts', () => ({
 }))
 
 describe('CollectorReceiptPage', () => {
-  it('renders receipt confirmation details', () => {
+  it('renders receipt confirmation details from live receipt data', () => {
     const router = createRouter({
       history: createWebHistory(),
       routes: [
@@ -44,5 +44,6 @@ describe('CollectorReceiptPage', () => {
     expect(wrapper.text()).toContain('Receipt confirmation')
     expect(wrapper.text()).toContain('Collector Donor')
     expect(wrapper.text()).toContain('Print receipt')
+    expect(wrapper.text()).toContain('Medical Fund')
   })
 })

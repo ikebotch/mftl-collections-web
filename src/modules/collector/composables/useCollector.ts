@@ -1,14 +1,10 @@
 import { useQuery } from '@tanstack/vue-query'
 import { getCollectorDashboard, listAssignedEvents, listCollectorHistory } from '../services/collectorService'
-import type { CollectorEventRow, CollectorReceipt } from '../types/collector'
+import type { CollectorDashboardSummary, CollectorEventRow, CollectorReceipt } from '../types/collector'
 import type { ApiError } from '@/core/api/apiError'
 
 export function useCollectorDashboard() {
-  return useQuery<{
-    todayCollections: string
-    receiptsIssued: string
-    assignedEvents: string
-  }, ApiError>({
+  return useQuery<CollectorDashboardSummary, ApiError>({
     queryKey: ['collector-dashboard'],
     queryFn: getCollectorDashboard,
   })
