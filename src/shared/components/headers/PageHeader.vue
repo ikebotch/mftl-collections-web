@@ -12,7 +12,7 @@
       </h1>
       <p
         v-if="description"
-        class="text-sm text-slate-400 font-medium max-w-xl"
+        class="text-sm text-slate-500 font-medium max-w-xl"
       >
         {{ description }}
       </p>

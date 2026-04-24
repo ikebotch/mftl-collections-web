@@ -13,7 +13,11 @@
         class="w-full bg-[#1e293b] border border-slate-800 text-slate-300 text-[11px] font-black uppercase tracking-widest rounded-xl py-3.5 pl-11 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all cursor-pointer hover:bg-slate-800 shadow-xl"
         @change="handleTenantChange"
       >
-        <option v-for="tenant in tenants" :key="tenant.id" :value="tenant.id">
+        <option
+          v-for="tenant in tenants"
+          :key="tenant.id"
+          :value="tenant.id"
+        >
           {{ tenant.name }}
         </option>
       </select>

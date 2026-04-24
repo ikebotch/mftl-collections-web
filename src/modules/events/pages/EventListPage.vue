@@ -75,7 +75,7 @@
               <p class="text-sm font-bold text-slate-900 truncate group-hover:text-brand-600 transition-colors">
                 {{ value }}
               </p>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
                 {{ row.eventType }}
               </p>
             </div>

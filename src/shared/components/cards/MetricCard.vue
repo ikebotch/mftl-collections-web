@@ -22,7 +22,7 @@
       </div>
 
       <div class="space-y-1">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] leading-none mb-2">
+        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] leading-none mb-2">
           {{ label }}
         </p>
         <h3 class="text-2xl font-black text-slate-900 font-display leading-none">
@@ -38,7 +38,7 @@
             :style="{ width: '65%' }"
           />
         </div>
-        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">vs last 7d</span>
+        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">vs last 7d</span>
       </div>
     </div>
   </AppCard>

@@ -14,9 +14,9 @@
       <div class="flex items-center gap-4">
         <!-- Date Picker Placeholder -->
         <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-soft cursor-pointer hover:border-brand-300 transition-all group">
-          <Calendar class="w-4 h-4 text-slate-400 group-hover:text-brand-500" />
+          <Calendar class="w-4 h-4 text-slate-500 group-hover:text-brand-500" />
           <span class="text-sm font-bold text-slate-700">Apr 17 - Apr 23, 2026</span>
-          <ChevronDown class="w-4 h-4 text-slate-400" />
+          <ChevronDown class="w-4 h-4 text-slate-500" />
         </div>
 
         <div class="flex items-center shadow-soft rounded-xl overflow-hidden">
@@ -112,7 +112,7 @@
               Collection Trend
             </h3>
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-2">Interval:</span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mr-2">Interval:</span>
               <select class="bg-slate-50 border border-slate-100 text-xs font-bold text-slate-600 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-brand-500/20 transition-all cursor-pointer">
                 <option>Daily</option>
                 <option>Weekly</option>
@@ -206,7 +206,7 @@
               </g>
             </svg>
             <!-- X-Axis Labels -->
-            <div class="flex justify-between mt-6 px-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+            <div class="flex justify-between mt-6 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
               <span>Apr 17</span>
               <span>Apr 18</span>
               <span>Apr 19</span>
@@ -255,7 +255,7 @@
                 <p class="text-sm font-bold text-slate-900 leading-tight">
                   {{ act.title }}
                 </p>
-                <p class="text-xs text-slate-400 mt-1">
+                <p class="text-xs text-slate-500 mt-1">
                   {{ act.subtitle }}
                 </p>
               </div>
@@ -371,7 +371,7 @@
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
                 <span class="text-xl font-bold text-slate-900">100%</span>
-                <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Processed</span>
+                <span class="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Processed</span>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-x-8 gap-y-4 mt-8 w-full">
@@ -387,7 +387,7 @@
                   />
                   <span class="text-xs font-bold text-slate-500">{{ method.label }}</span>
                 </div>
-                <span class="text-xs font-bold text-slate-400">{{ method.percent }}%</span>
+                <span class="text-xs font-bold text-slate-500">{{ method.percent }}%</span>
               </div>
             </div>
           </div>
@@ -422,7 +422,7 @@
                 <h4 class="text-sm font-bold text-slate-900 truncate group-hover:text-brand-600 transition-colors">
                   {{ event.name }}
                 </h4>
-                <div class="flex items-center gap-2 text-xs text-slate-400 mt-1 font-medium">
+                <div class="flex items-center gap-2 text-xs text-slate-500 mt-1 font-medium">
                   <Calendar class="w-3 h-3" />
                   <span>{{ event.date }}</span>
                 </div>
@@ -495,7 +495,7 @@
             <h3 class="text-xl font-bold font-display text-white leading-tight">
               Grow Your Impact
             </h3>
-            <p class="text-slate-400 text-sm mt-3 leading-relaxed">
+            <p class="text-slate-500 text-sm mt-3 leading-relaxed">
               Invite collectors and reach more people together.
             </p>
           </div>

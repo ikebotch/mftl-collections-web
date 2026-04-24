@@ -40,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   disabled: false,
   rounded: false,
+  ariaLabel: '',
 })
 
 defineEmits<{
@@ -59,10 +60,10 @@ const sizeClasses = computed(() => {
 const variantClasses = computed(() => {
   const variants = {
     primary: 'bg-brand-600 text-white shadow-lg shadow-brand-600/20 hover:bg-brand-700 hover:shadow-brand-600/30 focus:ring-brand-500/20',
-    secondary: 'bg-navy-900 text-white shadow-lg shadow-navy-900/20 hover:bg-navy-950 focus:ring-navy-900/20',
-    outline: 'bg-transparent border-2 border-slate-200 text-slate-700 hover:border-brand-500 hover:text-brand-600 focus:ring-brand-500/10',
+    secondary: 'bg-white border-2 border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 focus:ring-slate-200',
     ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-200',
     danger: 'bg-red-600 text-white shadow-lg shadow-red-600/20 hover:bg-red-700 focus:ring-red-500/20',
+    outline: 'bg-transparent border-2 border-slate-200 text-slate-700 hover:border-brand-500 hover:text-brand-600 focus:ring-brand-500/10',
     white: 'bg-white text-slate-900 shadow-premium hover:bg-slate-50 focus:ring-slate-200',
   }
   return variants[props.variant]
