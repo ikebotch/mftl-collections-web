@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { mount } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
+import { describe, expect, it, vi } from 'vitest'
 import CollectorReceiptPage from './CollectorReceiptPage.vue'
 
 vi.mock('@/modules/receipts/composables/useReceipts', () => ({
@@ -11,7 +11,11 @@ vi.mock('@/modules/receipts/composables/useReceipts', () => ({
       value: {
         receiptNumber: 'RCT-123',
         contributorName: 'Collector Donor',
-        amount: 'GBP 150.00',
+        contributorPhone: '+233241234567',
+        contributorEmail: 'collector@example.com',
+        collectorName: 'Abena Osei',
+        isAnonymous: false,
+        amount: 'GHS 150.00',
         eventTitle: 'Community Fundraiser',
         recipientFundName: 'Medical Fund',
         status: 'Issued',
@@ -26,14 +30,17 @@ vi.mock('@/modules/receipts/composables/useReceipts', () => ({
 }))
 
 describe('CollectorReceiptPage', () => {
-  it('renders receipt confirmation details from live receipt data', () => {
+  it('renders receipt details from live receipt data', async () => {
     const router = createRouter({
-      history: createWebHistory(),
+      history: createMemoryHistory(),
       routes: [
-        { path: '/collector/history', component: { template: '<div />' } },
+        { path: '/collector', component: { template: '<div />' } },
+        { path: '/collector/contributions/new', component: { template: '<div />' } },
         { path: '/collector/receipts/:id', component: CollectorReceiptPage },
       ],
     })
+
+    await router.push('/collector/receipts/receipt-1')
 
     const wrapper = mount(CollectorReceiptPage, {
       global: {
@@ -41,9 +48,10 @@ describe('CollectorReceiptPage', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Receipt confirmation')
+    expect(wrapper.text()).toContain('Receipt')
     expect(wrapper.text()).toContain('Collector Donor')
-    expect(wrapper.text()).toContain('Print receipt')
-    expect(wrapper.text()).toContain('Medical Fund')
+    expect(wrapper.text()).toContain('+233241234567')
+    expect(wrapper.text()).toContain('Abena Osei')
+    expect(wrapper.text()).toContain('Print placeholder')
   })
 })

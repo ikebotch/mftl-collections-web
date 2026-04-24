@@ -1,16 +1,14 @@
 <template>
-  <div class="space-y-6">
-    <section class="space-y-3">
-      <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-300">
-        Collector
-      </p>
-      <h2 class="text-3xl font-semibold tracking-tight text-white">
-        Receipt confirmation
+  <div class="space-y-5 pb-4">
+    <section>
+      <h2 class="text-2xl font-semibold text-white">
+        Receipt
       </h2>
-      <p class="max-w-2xl text-sm leading-6 text-slate-300">
-        Receipt details are loaded directly from the backend so you can confirm the collected amount before the donor leaves.
+      <p class="mt-2 text-sm text-slate-300">
+        Confirm the issued receipt before the donor leaves the collection point.
       </p>
     </section>
+
     <LoadingState
       v-if="query.isLoading.value"
       text="Loading receipt…"
@@ -23,98 +21,153 @@
       show-retry
       @retry="query.refetch"
     />
-    <AppCard
-      v-else-if="query.data.value"
-      class="max-w-4xl border-white/10 bg-white/95 shadow-2xl shadow-slate-950/30"
-    >
-      <SectionHeader
-        title="Receipt confirmation"
-        :description="`Receipt ${query.data.value.receiptNumber}`"
-      />
-      <div class="mt-6 grid gap-4 sm:grid-cols-2">
-        <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Contributor
-          </p>
-          <p class="mt-2 text-lg font-semibold text-slate-900">
-            {{ query.data.value.contributorName }}
-          </p>
+    <template v-else-if="query.data.value">
+      <section class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-5">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
+              Receipt number
+            </p>
+            <h3 class="mt-2 text-2xl font-semibold text-white">
+              {{ query.data.value.receiptNumber }}
+            </h3>
+          </div>
+          <ReceiptStatusBadge :status="query.data.value.status" />
         </div>
-        <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Amount
-          </p>
-          <p class="mt-2 text-lg font-semibold text-slate-900">
-            {{ query.data.value.amount }}
-          </p>
-        </div>
-        <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Event
-          </p>
-          <p class="mt-2 text-lg font-semibold text-slate-900">
-            {{ query.data.value.eventTitle }}
-          </p>
-        </div>
-        <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Recipient fund
-          </p>
-          <p class="mt-2 text-lg font-semibold text-slate-900">
-            {{ query.data.value.recipientFundName }}
-          </p>
-        </div>
-      </div>
 
-      <div class="mt-6 flex flex-wrap items-center gap-3">
-        <ReceiptStatusBadge :status="query.data.value.status" />
-        <ContributionStatusBadge :status="query.data.value.contributionStatus" />
-        <PaymentStatusBadge :status="query.data.value.paymentStatus" />
-      </div>
+        <div class="mt-5 grid gap-3">
+          <div class="rounded-[1.25rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+            <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+              Event
+            </p>
+            <p class="mt-2 text-base font-medium text-white">
+              {{ query.data.value.eventTitle }}
+            </p>
+          </div>
+          <div class="rounded-[1.25rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+            <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+              Fund
+            </p>
+            <p class="mt-2 text-base font-medium text-white">
+              {{ query.data.value.recipientFundName }}
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-[1.25rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+              <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+                Amount
+              </p>
+              <p class="mt-2 text-xl font-semibold text-white">
+                {{ query.data.value.amount }}
+              </p>
+            </div>
+            <div class="rounded-[1.25rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+              <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+                Collector
+              </p>
+              <p class="mt-2 text-base font-medium text-white">
+                {{ query.data.value.collectorName || 'Collector' }}
+              </p>
+            </div>
+          </div>
+          <div class="rounded-[1.25rem] border border-white/10 bg-[#0F172A] px-4 py-3">
+            <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+              Contributor
+            </p>
+            <p class="mt-2 text-base font-medium text-white">
+              {{ query.data.value.isAnonymous ? 'Anonymous' : query.data.value.contributorName }}
+            </p>
+            <p
+              v-if="query.data.value.contributorPhone"
+              class="mt-2 text-sm text-slate-300"
+            >
+              Phone: {{ query.data.value.contributorPhone }}
+            </p>
+            <p
+              v-if="query.data.value.contributorEmail"
+              class="mt-1 text-sm text-slate-300"
+            >
+              Email: {{ query.data.value.contributorEmail }}
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <div class="mt-6 rounded-2xl border border-slate-100 p-4 text-sm text-slate-600">
-        <p><span class="font-semibold text-slate-900">Issued:</span> {{ query.data.value.issuedAt }}</p>
-        <p class="mt-2">
-          <span class="font-semibold text-slate-900">Payment method:</span> {{ query.data.value.paymentMethod }}
+      <section class="grid grid-cols-2 gap-3">
+        <div class="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+            Contribution status
+          </p>
+          <div class="mt-3">
+            <ContributionStatusBadge :status="query.data.value.contributionStatus" />
+          </div>
+        </div>
+        <div class="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+            Payment status
+          </p>
+          <div class="mt-3">
+            <PaymentStatusBadge :status="query.data.value.paymentStatus" />
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-5">
+        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">
+          Date and time
+        </p>
+        <p class="mt-2 text-base text-white">
+          {{ query.data.value.issuedAt }}
+        </p>
+        <p class="mt-4 text-sm text-slate-300">
+          Method: {{ query.data.value.paymentMethod }}
         </p>
         <p
           v-if="query.data.value.note"
-          class="mt-2"
+          class="mt-2 text-sm text-slate-300"
         >
-          <span class="font-semibold text-slate-900">Note:</span> {{ query.data.value.note }}
+          Note: {{ query.data.value.note }}
         </p>
-      </div>
+      </section>
 
-      <div class="mt-6 flex flex-wrap gap-3">
-        <AppButton variant="secondary">
-          Print receipt
+      <div class="grid gap-3">
+        <AppButton
+          class="w-full !rounded-[1.25rem] !py-4"
+          @click="$router.push('/collector/contributions/new')"
+        >
+          New collection
         </AppButton>
-        <AppButton variant="secondary">
-          Download PDF
-        </AppButton>
-        <AppButton @click="router.push('/collector/history')">
-          View recent collections
+        <div class="grid grid-cols-2 gap-3">
+          <AppButton variant="secondary">
+            Print placeholder
+          </AppButton>
+          <AppButton variant="secondary">
+            Download placeholder
+          </AppButton>
+        </div>
+        <AppButton
+          variant="ghost"
+          @click="$router.push('/collector')"
+        >
+          Back to dashboard
         </AppButton>
       </div>
-    </AppCard>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useReceipt } from '@/modules/receipts/composables/useReceipts'
+import ContributionStatusBadge from '@/modules/contributions/components/ContributionStatusBadge.vue'
+import PaymentStatusBadge from '@/modules/payments/components/PaymentStatusBadge.vue'
+import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppCard from '@/shared/components/cards/AppCard.vue'
-import SectionHeader from '@/shared/components/headers/SectionHeader.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
-import PaymentStatusBadge from '@/modules/payments/components/PaymentStatusBadge.vue'
-import ContributionStatusBadge from '@/modules/contributions/components/ContributionStatusBadge.vue'
 
 const route = useRoute()
-const router = useRouter()
 const receiptId = computed(() => String(route.params.id ?? ''))
 const query = useReceipt(receiptId.value)
 </script>
