@@ -1,22 +1,34 @@
+import { eventsService } from '@/modules/events/services/eventsService'
 import type { CollectorEventRow, CollectorReceipt } from '../types/collector'
 
 export async function listAssignedEvents(): Promise<CollectorEventRow[]> {
-  return [
-    { id: 'event-1', title: 'Community fundraiser', location: 'Main hall', shift: '09:00 - 12:00' },
-    { id: 'event-2', title: 'Evening appeal', location: 'Reception desk', shift: '18:00 - 20:00' },
-  ]
+  // For now, collectors see all events until assigned events endpoint is ready
+  const events = await eventsService.list()
+  return events.map(e => ({
+    id: e.id,
+    title: e.title,
+    location: 'Main Site', // Placeholder
+    shift: 'All Day', // Placeholder
+  }))
 }
 
 export async function getCollectorDashboard() {
+  // This will eventually be a real endpoint
+  const events = await listAssignedEvents()
   return {
     todayCollections: 'GBP 0.00',
     receiptsIssued: '0',
-    assignedEvents: '2',
+    assignedEvents: String(events.length),
   }
 }
 
 export async function listCollectorHistory(): Promise<CollectorReceipt[]> {
-  return [
-    { id: 'receipt-22', amount: 'GBP 45.00', status: 'Printed placeholder' },
-  ]
+  // Placeholder until history endpoint is ready
+  return []
+}
+
+export const collectorService = {
+  listAssignedEvents,
+  getCollectorDashboard,
+  listCollectorHistory,
 }
