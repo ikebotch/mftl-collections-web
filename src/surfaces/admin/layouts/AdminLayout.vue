@@ -23,6 +23,9 @@
           </p>
         </div>
 
+        <!-- Tenant Selector -->
+        <TenantSelector />
+
         <!-- Navigation -->
         <nav class="flex-1 px-4 space-y-8 mt-2">
           <div
@@ -203,6 +206,7 @@
 import { useAuth0 } from '@auth0/auth0-vue'
 import { appConfig } from '@/core/config/appConfig'
 import { useCurrentUser } from '@/core/auth/currentUser'
+import TenantSelector from '@/modules/tenants/components/TenantSelector.vue'
 import { 
   LayoutDashboard, 
   Calendar, 
