@@ -23,7 +23,7 @@ const classes = computed(() => {
     success: 'bg-emerald-50 text-emerald-600 border border-emerald-100',
     warning: 'bg-amber-50 text-amber-600 border border-amber-100',
     danger: 'bg-rose-50 text-rose-600 border border-rose-100',
-    info: 'bg-brand-50 text-brand-600 border border-brand-100',
+    info: 'bg-violet-50 text-violet-600 border border-violet-100',
   }
 
   return `${base} ${toneMap[props.tone]}`

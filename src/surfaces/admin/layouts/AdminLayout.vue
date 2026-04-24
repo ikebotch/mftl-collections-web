@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-[#f8fafc] font-sans text-slate-900 selection:bg-brand-100 selection:text-brand-900">
+  <div class="min-h-screen bg-[#f8fafc] font-sans text-slate-900 selection:bg-violet-100 selection:text-violet-900">
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-[#060b13] text-white transition-all duration-300 transform lg:translate-x-0 -translate-x-full shadow-2xl overflow-y-auto border-r border-navy-900">
       <div class="flex flex-col h-full">
         <!-- Logo Section -->
         <div class="px-8 py-10">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center shadow-lg shadow-brand-500/20 rotate-3 shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-violet-500 flex items-center justify-center shadow-lg shadow-violet-500/20 rotate-3 shrink-0">
               <Heart class="text-white w-6 h-6 fill-current" />
             </div>
             <div>
@@ -18,7 +18,7 @@
               </p>
             </div>
           </div>
-          <p class="text-[10px] text-slate-500 mt-4 leading-relaxed font-medium">
+          <p class="text-[10px] text-slate-400 mt-4 leading-relaxed font-medium">
             Collect. Impact. Transform Lives.
           </p>
         </div>
@@ -34,7 +34,7 @@
           >
             <h3
               v-if="group.title"
-              class="px-4 text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-4"
+              class="px-4 text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold mb-4"
             >
               {{ group.title }}
             </h3>
@@ -44,19 +44,19 @@
                 :key="item.to"
                 :to="item.to"
                 class="group flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 hover:bg-white/5"
-                active-class="!bg-brand-600 text-white shadow-lg shadow-brand-600/40 border-l-4 border-white"
+                active-class="!bg-violet-600 text-white shadow-lg shadow-violet-600/40 border-l-4 border-white"
               >
                 <div class="flex items-center gap-3">
                   <component
                     :is="item.icon"
                     class="w-5 h-5 transition-colors duration-300"
-                    :class="[$route.path === item.to ? 'text-white' : 'text-slate-500 group-hover:text-slate-300']"
+                    :class="[$route.path === item.to ? 'text-white' : 'text-slate-400 group-hover:text-slate-300']"
                   />
                   <span>{{ item.label }}</span>
                 </div>
                 <div 
                   v-if="item.badge" 
-                  class="px-2 py-0.5 rounded-md bg-brand-500/20 text-brand-400 text-[10px] font-bold uppercase tracking-widest"
+                  class="px-2 py-0.5 rounded-md bg-violet-500/20 text-violet-400 text-[10px] font-bold uppercase tracking-widest"
                 >
                   {{ item.badge }}
                 </div>
@@ -97,16 +97,16 @@
           </div>
           
           <!-- Impact Summary Mini-Card -->
-          <div class="mt-4 p-4 rounded-2xl bg-brand-600/10 border border-brand-500/20">
-            <p class="text-[10px] text-brand-300 font-bold uppercase tracking-widest mb-2">
+          <div class="mt-4 p-4 rounded-2xl bg-violet-600/10 border border-violet-500/20">
+            <p class="text-[10px] text-violet-300 font-bold uppercase tracking-widest mb-2">
               Your impact this month
             </p>
             <div class="flex items-end justify-between">
               <span class="text-lg font-bold text-white">$24,582.50</span>
               <span class="text-[10px] text-emerald-400 font-bold">↑ 12.5%</span>
             </div>
-            <div class="mt-2 h-1 bg-brand-900/50 rounded-full overflow-hidden">
-              <div class="h-full bg-brand-500 w-3/4 rounded-full" />
+            <div class="mt-2 h-1 bg-violet-900/50 rounded-full overflow-hidden">
+              <div class="h-full bg-violet-500 w-3/4 rounded-full" />
             </div>
           </div>
         </div>
@@ -123,20 +123,20 @@
           <input 
             type="text" 
             placeholder="Search events, funds, donors, payments..." 
-            class="w-full bg-slate-100/50 border-none rounded-xl py-2.5 pl-11 pr-4 text-sm font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
+            class="w-full bg-slate-100/50 border-none rounded-xl py-2.5 pl-11 pr-4 text-sm font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-violet-500/20 transition-all"
           >
           <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 bg-white px-1.5 py-0.5 rounded border border-slate-200 shadow-sm">
-            <span class="text-[10px] font-bold text-slate-500">⌘K</span>
+            <span class="text-[10px] font-bold text-slate-600">⌘K</span>
           </div>
         </div>
 
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-2">
-            <button class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-brand-600 transition-all duration-300">
+            <button class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-violet-600 transition-all duration-300">
               <Bell class="w-5 h-5" />
-              <span class="absolute top-2 right-2 w-4 h-4 bg-brand-500 text-[9px] font-black text-white flex items-center justify-center rounded-full border-2 border-white">12</span>
+              <span class="absolute top-2 right-2 w-4 h-4 bg-violet-500 text-[9px] font-black text-white flex items-center justify-center rounded-full border-2 border-white">12</span>
             </button>
-            <button class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-brand-600 transition-all duration-300">
+            <button class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-violet-600 transition-all duration-300">
               <Settings class="w-5 h-5" />
             </button>
           </div>
@@ -160,9 +160,9 @@
             </div>
             <div class="hidden sm:flex flex-col items-start text-left">
               <span class="text-sm font-bold text-slate-900 leading-none">{{ currentUser.name || 'Isaac Botchway' }}</span>
-              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Admin</span>
+              <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mt-1">Admin</span>
             </div>
-            <ChevronDown class="w-4 h-4 text-slate-500 group-hover:text-brand-600 transition-colors" />
+            <ChevronDown class="w-4 h-4 text-slate-500 group-hover:text-violet-600 transition-colors" />
           </button>
         </div>
       </header>
@@ -185,16 +185,16 @@
       </main>
 
       <!-- Footer -->
-      <footer class="py-6 px-10 flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-widest border-t border-slate-100 bg-white/50">
+      <footer class="py-6 px-10 flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-widest border-t border-slate-100 bg-white/50">
         <div>&copy; 2026 {{ appName }}. Collect. Impact. Transform.</div>
         <div class="flex items-center gap-6">
           <a
             href="#"
-            class="hover:text-brand-600 transition-colors"
+            class="hover:text-violet-600 transition-colors"
           >Documentation</a>
           <a
             href="#"
-            class="hover:text-brand-600 transition-colors"
+            class="hover:text-violet-600 transition-colors"
           >Support</a>
         </div>
       </footer>

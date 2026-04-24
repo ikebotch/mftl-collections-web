@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="block text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] ml-1"
+      class="block text-[11px] font-bold text-slate-600 uppercase tracking-[0.15em] ml-1"
     >
       {{ label }}
     </label>
@@ -13,7 +13,7 @@
         :value="modelValue"
         :disabled="disabled"
         :required="required"
-        class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 pr-10 text-sm font-medium appearance-none transition-all duration-300 focus:bg-white focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 outline-none cursor-pointer"
+        class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 pr-10 text-sm font-medium appearance-none transition-all duration-300 focus:bg-white focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 outline-none cursor-pointer"
         @change="handleChange"
       >
         <option
@@ -31,7 +31,7 @@
           {{ option.label }}
         </option>
       </select>
-      <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-brand-500 transition-colors">
+      <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-violet-500 transition-colors">
         <ChevronDown class="w-4 h-4" />
       </div>
     </div>

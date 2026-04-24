@@ -1,14 +1,14 @@
 <template>
   <div class="max-w-4xl mx-auto py-12 px-6">
     <div class="mb-10">
-      <div class="flex items-center gap-2 text-brand-600 font-bold text-[10px] uppercase tracking-[0.2em] mb-3">
-        <span class="w-8 h-px bg-brand-600/30" />
+      <div class="flex items-center gap-2 text-violet-600 font-bold text-[10px] uppercase tracking-[0.2em] mb-3">
+        <span class="w-8 h-px bg-violet-600/30" />
         Admin Dashboard
       </div>
       <h1 class="text-4xl font-black font-display tracking-tight text-slate-900">
         Create New Event
       </h1>
-      <p class="text-slate-500 mt-3 font-medium text-lg">
+      <p class="text-slate-600 mt-3 font-medium text-lg">
         Set up the event details before you start collecting public contributions.
       </p>
     </div>
@@ -54,7 +54,7 @@
           />
         </div>
 
-        <div class="px-10 py-8 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+        <div class="px-10 py-8 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
           <AppButton
             variant="secondary"
             class="min-w-[120px]"

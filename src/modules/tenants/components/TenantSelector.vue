@@ -4,13 +4,13 @@
       Organization
     </label>
     <div class="relative group">
-      <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-brand-400 transition-colors">
+      <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
         <Building2 class="w-4 h-4" />
       </div>
       
       <select
         v-model="selectedId"
-        class="w-full bg-[#1e293b] border border-slate-800 text-slate-300 text-[11px] font-black uppercase tracking-widest rounded-xl py-3.5 pl-11 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all cursor-pointer hover:bg-slate-800 shadow-xl"
+        class="w-full bg-[#1e293b] border border-slate-800 text-slate-300 text-[11px] font-black uppercase tracking-widest rounded-xl py-3.5 pl-11 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-500 transition-all cursor-pointer hover:bg-slate-800 shadow-xl"
         @change="handleTenantChange"
       >
         <option

@@ -6,17 +6,17 @@
         <h1 class="text-3xl font-bold font-display tracking-tight text-slate-900">
           Overview
         </h1>
-        <p class="text-slate-500 mt-2 font-medium">
+        <p class="text-slate-600 mt-2 font-medium">
           Welcome back, Isaac! Here's what's happening with your ministry.
         </p>
       </div>
       
       <div class="flex items-center gap-4">
         <!-- Date Picker Placeholder -->
-        <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-soft cursor-pointer hover:border-brand-300 transition-all group">
-          <Calendar class="w-4 h-4 text-slate-500 group-hover:text-brand-500" />
+        <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-soft cursor-pointer hover:border-violet-300 transition-all group">
+          <Calendar class="w-4 h-4 text-slate-600 group-hover:text-violet-500" />
           <span class="text-sm font-bold text-slate-700">Apr 17 - Apr 23, 2026</span>
-          <ChevronDown class="w-4 h-4 text-slate-500" />
+          <ChevronDown class="w-4 h-4 text-slate-600" />
         </div>
 
         <div class="flex items-center shadow-soft rounded-xl overflow-hidden">
@@ -27,8 +27,8 @@
             <Plus class="w-4 h-4 mr-2" />
             New Event
           </AppButton>
-          <div class="w-px h-10 bg-brand-600" />
-          <button class="bg-brand-600 hover:bg-brand-700 text-white p-2.5 transition-colors">
+          <div class="w-px h-10 bg-violet-600" />
+          <button class="bg-violet-600 hover:bg-violet-700 text-white p-2.5 transition-colors">
             <ChevronDown class="w-4 h-4" />
           </button>
         </div>
@@ -112,8 +112,8 @@
               Collection Trend
             </h3>
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mr-2">Interval:</span>
-              <select class="bg-slate-50 border border-slate-100 text-xs font-bold text-slate-600 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-brand-500/20 transition-all cursor-pointer">
+              <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mr-2">Interval:</span>
+              <select class="bg-slate-50 border border-slate-100 text-xs font-bold text-slate-600 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-violet-500/20 transition-all cursor-pointer">
                 <option>Daily</option>
                 <option>Weekly</option>
                 <option>Monthly</option>
@@ -206,7 +206,7 @@
               </g>
             </svg>
             <!-- X-Axis Labels -->
-            <div class="flex justify-between mt-6 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+            <div class="flex justify-between mt-6 px-2 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">
               <span>Apr 17</span>
               <span>Apr 18</span>
               <span>Apr 19</span>
@@ -227,7 +227,7 @@
             <h3 class="text-lg font-bold font-display">
               Recent Activity
             </h3>
-            <button class="text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors uppercase tracking-widest">
+            <button class="text-xs font-bold text-violet-600 hover:text-violet-700 transition-colors uppercase tracking-widest">
               View all
             </button>
           </div>
@@ -255,7 +255,7 @@
                 <p class="text-sm font-bold text-slate-900 leading-tight">
                   {{ act.title }}
                 </p>
-                <p class="text-xs text-slate-500 mt-1">
+                <p class="text-xs text-slate-600 mt-1">
                   {{ act.subtitle }}
                 </p>
               </div>
@@ -278,7 +278,7 @@
             <h3 class="text-lg font-bold font-display">
               Top Events by Amount
             </h3>
-            <button class="text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors uppercase tracking-widest">
+            <button class="text-xs font-bold text-violet-600 hover:text-violet-700 transition-colors uppercase tracking-widest">
               View all
             </button>
           </div>
@@ -298,12 +298,12 @@
                 >
               </div>
               <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-bold text-slate-800 group-hover:text-brand-600 transition-colors truncate">
+                <h4 class="text-sm font-bold text-slate-800 group-hover:text-violet-600 transition-colors truncate">
                   {{ event.name }}
                 </h4>
                 <div class="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
                   <div
-                    class="bg-brand-500 h-full rounded-full transition-all duration-1000"
+                    class="bg-violet-500 h-full rounded-full transition-all duration-1000"
                     :style="{ width: event.percentage + '%' }"
                   />
                 </div>
@@ -371,7 +371,7 @@
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
                 <span class="text-xl font-bold text-slate-900">100%</span>
-                <span class="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Processed</span>
+                <span class="text-[8px] font-bold text-slate-600 uppercase tracking-widest">Processed</span>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-x-8 gap-y-4 mt-8 w-full">
@@ -385,9 +385,9 @@
                     class="w-2.5 h-2.5 rounded-full"
                     :style="{ backgroundColor: method.color }"
                   />
-                  <span class="text-xs font-bold text-slate-500">{{ method.label }}</span>
+                  <span class="text-xs font-bold text-slate-600">{{ method.label }}</span>
                 </div>
-                <span class="text-xs font-bold text-slate-500">{{ method.percent }}%</span>
+                <span class="text-xs font-bold text-slate-600">{{ method.percent }}%</span>
               </div>
             </div>
           </div>
@@ -402,7 +402,7 @@
             <h3 class="text-lg font-bold font-display">
               Upcoming Events
             </h3>
-            <button class="text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors uppercase tracking-widest">
+            <button class="text-xs font-bold text-violet-600 hover:text-violet-700 transition-colors uppercase tracking-widest">
               View all
             </button>
           </div>
@@ -419,10 +419,10 @@
                 >
               </div>
               <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-bold text-slate-900 truncate group-hover:text-brand-600 transition-colors">
+                <h4 class="text-sm font-bold text-slate-900 truncate group-hover:text-violet-600 transition-colors">
                   {{ event.name }}
                 </h4>
-                <div class="flex items-center gap-2 text-xs text-slate-500 mt-1 font-medium">
+                <div class="flex items-center gap-2 text-xs text-slate-600 mt-1 font-medium">
                   <Calendar class="w-3 h-3" />
                   <span>{{ event.date }}</span>
                 </div>
@@ -448,7 +448,7 @@
             <h3 class="text-lg font-bold font-display">
               Top Collectors
             </h3>
-            <button class="text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors uppercase tracking-widest">
+            <button class="text-xs font-bold text-violet-600 hover:text-violet-700 transition-colors uppercase tracking-widest">
               View all
             </button>
           </div>
@@ -456,7 +456,7 @@
             <div
               v-for="(col, i) in topCollectors"
               :key="i"
-              class="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 hover:border-brand-100 hover:bg-brand-50/30 transition-all group"
+              class="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 hover:border-violet-100 hover:bg-violet-50/30 transition-all group"
             >
               <div class="text-xs font-black text-slate-300 w-4">
                 {{ i + 1 }}
@@ -475,7 +475,7 @@
                 <div class="flex items-center gap-2 mt-1">
                   <div class="flex-1 bg-slate-100 h-1 rounded-full overflow-hidden">
                     <div
-                      class="h-full bg-brand-500"
+                      class="h-full bg-violet-500"
                       :style="{ width: col.progress + '%' }"
                     />
                   </div>
@@ -488,14 +488,14 @@
 
         <!-- CTA Card -->
         <div class="lg:col-span-4 relative group overflow-hidden rounded-[2rem] bg-navy-950 p-8 flex flex-col justify-between shadow-premium border border-navy-900">
-          <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand-500/20 blur-[80px] rounded-full group-hover:bg-brand-500/30 transition-all duration-700" />
+          <div class="absolute -top-24 -right-24 w-64 h-64 bg-violet-500/20 blur-[80px] rounded-full group-hover:bg-violet-500/30 transition-all duration-700" />
           <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full group-hover:bg-emerald-500/20 transition-all duration-700" />
           
           <div class="relative z-10">
             <h3 class="text-xl font-bold font-display text-white leading-tight">
               Grow Your Impact
             </h3>
-            <p class="text-slate-500 text-sm mt-3 leading-relaxed">
+            <p class="text-slate-300 text-sm mt-3 leading-relaxed">
               Invite collectors and reach more people together.
             </p>
           </div>
@@ -509,7 +509,7 @@
               >
                 <span
                   v-if="i === 4"
-                  class="text-[10px] font-bold text-brand-400"
+                  class="text-[10px] font-bold text-violet-400"
                 >+12</span>
                 <div
                   v-else
@@ -519,7 +519,7 @@
             </div>
             <AppButton
               variant="primary"
-              class="w-full py-3 shadow-xl shadow-brand-500/20"
+              class="w-full py-3 shadow-xl shadow-violet-500/20"
             >
               Invite Collectors
             </AppButton>
@@ -550,7 +550,7 @@ const query = useDashboard()
 
 const activities = [
   { title: 'Payment received for "Youth Conference"', subtitle: '$250.00 via Paystack', time: '2m ago', icon: Wallet, colorClass: 'bg-emerald-50 text-emerald-600' },
-  { title: 'New contribution recorded', subtitle: '$100.00 by John Doe', time: '15m ago', icon: Heart, colorClass: 'bg-brand-50 text-brand-600' },
+  { title: 'New contribution recorded', subtitle: '$100.00 by John Doe', time: '15m ago', icon: Heart, colorClass: 'bg-violet-50 text-violet-600' },
   { title: 'Settlement completed', subtitle: '$1,250.00 to Main Account', time: '1h ago', icon: ShieldCheck, colorClass: 'bg-blue-50 text-blue-600' },
   { title: 'Self donation received', subtitle: '$50.00 by Isaac Botchway', time: '2h ago', icon: Heart, colorClass: 'bg-red-50 text-red-600' },
   { title: 'New event created: "Missions Outreach"', subtitle: 'Added by Admin', time: '3h ago', icon: Calendar, colorClass: 'bg-amber-50 text-amber-600' },
