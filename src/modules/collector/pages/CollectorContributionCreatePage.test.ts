@@ -131,18 +131,25 @@ describe('CollectorContributionCreatePage', () => {
     await wrapper.find('form').trigger('submit.prevent')
     await flushPromises()
 
-    expect(recordCash).toHaveBeenCalledWith({
-      eventId: 'event-1',
-      recipientFundId: 'fund-1',
-      amount: 150,
-      currency: 'GHS',
-      contributorName: 'Ama Serwaa',
-      contributorPhone: '+233241234567',
-      contributorEmail: 'ama@example.com',
-      anonymous: false,
-      paymentMethod: 'cash',
-      note: '',
-    })
+    expect(recordCash).toHaveBeenCalledWith(
+      {
+        eventId: 'event-1',
+        recipientFundId: 'fund-1',
+        amount: 150,
+        currency: 'GHS',
+        contributorName: 'Ama Serwaa',
+        contributorPhone: '+233241234567',
+        contributorEmail: 'ama@example.com',
+        anonymous: false,
+        paymentMethod: 'cash',
+        note: '',
+      },
+      {
+        headers: {
+          'X-Dev-User-Id': 'dev-collector',
+        },
+      },
+    )
     expect(router.currentRoute.value.fullPath).toBe('/collector/receipts/receipt-1')
   })
 })
