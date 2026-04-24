@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-[#f8fafc] font-sans text-slate-900 selection:bg-brand-100 selection:text-brand-900">
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-navy-950 text-white transition-all duration-300 transform lg:translate-x-0 -translate-x-full shadow-2xl overflow-y-auto border-r border-navy-900">
+    <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-[#060b13] text-white transition-all duration-300 transform lg:translate-x-0 -translate-x-full shadow-2xl overflow-y-auto border-r border-navy-900">
       <div class="flex flex-col h-full">
         <!-- Logo Section -->
         <div class="px-8 py-10">
@@ -41,7 +41,7 @@
                 :key="item.to"
                 :to="item.to"
                 class="group flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 hover:bg-white/5"
-                active-class="bg-brand-600 text-white shadow-lg shadow-brand-600/20"
+                active-class="!bg-brand-600 text-white shadow-lg shadow-brand-600/40 border-l-4 border-white"
               >
                 <div class="flex items-center gap-3">
                   <component
