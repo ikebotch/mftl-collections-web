@@ -132,6 +132,22 @@
 
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-2">
+            <!-- Language Selector -->
+            <div class="flex items-center bg-slate-100 rounded-xl p-1 mr-2 border border-slate-200">
+              <div class="p-1.5 mr-1 text-slate-400">
+                <Globe class="w-3.5 h-3.5" />
+              </div>
+              <button 
+                v-for="loc in availableLocales" 
+                :key="loc"
+                @click="setLocale(loc)"
+                class="px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                :class="currentLocale === loc ? 'bg-white text-violet-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'"
+              >
+                {{ loc }}
+              </button>
+            </div>
+
             <button class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-violet-600 transition-all duration-300">
               <Bell class="w-5 h-5" />
               <span class="absolute top-2 right-2 w-4 h-4 bg-violet-500 text-[9px] font-black text-white flex items-center justify-center rounded-full border-2 border-white">12</span>
@@ -224,10 +240,11 @@ import {
   ChevronDown, 
   LogOut,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  Globe
 } from 'lucide-vue-next'
 
-const { copy } = useCopy()
+const { copy, setLocale, currentLocale, availableLocales } = useCopy()
 const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
 const { currentUser } = useCurrentUser()
 
