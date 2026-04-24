@@ -43,6 +43,7 @@
       v-else-if="query.isError.value"
       title="Dashboard Offline"
       :message="query.error.value?.message ?? 'We encountered a sync issue. Please retry.'"
+      :correlation-id="query.error.value?.correlationId"
       show-retry
       @retry="query.refetch"
     />

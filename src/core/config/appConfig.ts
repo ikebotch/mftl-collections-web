@@ -13,6 +13,7 @@ export const appConfig = {
     clientId: env.VITE_AUTH0_CLIENT_ID,
     audience: env.VITE_AUTH0_AUDIENCE,
     callbackUrl: env.VITE_AUTH0_CALLBACK_URL,
+    devBypass: env.VITE_AUTH_DEV_BYPASS,
   },
 } as const
 
