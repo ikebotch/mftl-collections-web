@@ -3,32 +3,35 @@
     <label
       v-if="label"
       :for="id"
-      :class="srOnly ? 'sr-only' : 'block text-sm font-medium text-slate-700'"
+      class="block text-[11px] font-bold text-slate-600 uppercase tracking-[0.15em] ml-1"
     >
       {{ label }}
     </label>
-    <input
-      :id="id"
-      :value="modelValue"
-      :type="type"
-      :placeholder="placeholder"
-      :autocomplete="autocomplete"
-      :aria-invalid="error ? 'true' : undefined"
-      :aria-describedby="error ? `${id}-error` : hint ? `${id}-hint` : undefined"
-      class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm transition focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-      @input="onInput"
-    >
-    <p
-      v-if="hint && !error"
-      :id="`${id}-hint`"
-      class="text-xs text-slate-500"
-    >
-      {{ hint }}
-    </p>
+    <div class="relative group">
+      <div
+        v-if="$slots.icon"
+        class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-violet-500 transition-colors"
+      >
+        <slot name="icon" />
+      </div>
+      <input
+        :id="id"
+        :type="type"
+        :value="modelValue"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :required="required"
+        :class="[
+          'w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm font-medium transition-all duration-300 placeholder:text-slate-500 focus:bg-white focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 outline-none',
+          $slots.icon ? 'pl-11' : '',
+          error ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''
+        ]"
+        @input="handleInput"
+      >
+    </div>
     <p
       v-if="error"
-      :id="`${id}-error`"
-      class="text-xs font-medium text-rose-600"
+      class="text-[10px] font-bold text-red-600 ml-1 uppercase tracking-widest"
     >
       {{ error }}
     </p>
@@ -36,33 +39,31 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    id: string
-    modelValue: string | number
-    label: string
-    type?: string
-    placeholder?: string
-    autocomplete?: string
-    hint?: string
-    error?: string
-    srOnly?: boolean
-  }>(),
-  {
-    type: 'text',
-    placeholder: '',
-    autocomplete: 'off',
-    hint: '',
-    error: '',
-    srOnly: false,
-  },
-)
+interface Props {
+  modelValue: string | number
+  label?: string
+  placeholder?: string
+  type?: string
+  id?: string
+  disabled?: boolean
+  required?: boolean
+  error?: string
+}
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string]
-}>()
+withDefaults(defineProps<Props>(), {
+  type: 'text',
+  id: () => `input-${Math.random().toString(36).substring(2, 9)}`,
+  disabled: false,
+  required: false,
+  label: '',
+  placeholder: '',
+  error: '',
+})
 
-function onInput(event: Event) {
-  emit('update:modelValue', (event.target as HTMLInputElement).value)
+const emit = defineEmits(['update:modelValue'])
+
+function handleInput(e: Event) {
+  const target = e.target as HTMLInputElement
+  emit('update:modelValue', target.value)
 }
 </script>

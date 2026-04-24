@@ -1,52 +1,70 @@
 <template>
-  <div class="space-y-6">
-    <PageHeader
-      eyebrow="Admin"
-      title="Create event"
-      description="Set up the event details before you start collecting public contributions."
-    />
+  <div class="max-w-4xl mx-auto py-12 px-6">
+    <div class="mb-10">
+      <div class="flex items-center gap-2 text-violet-600 font-bold text-[10px] uppercase tracking-[0.2em] mb-3">
+        <span class="w-8 h-px bg-violet-600/30" />
+        Admin Dashboard
+      </div>
+      <h1 class="text-4xl font-black font-display tracking-tight text-slate-900">
+        Create New Event
+      </h1>
+      <p class="text-slate-600 mt-3 font-medium text-lg">
+        Set up the event details before you start collecting public contributions.
+      </p>
+    </div>
 
-    <AppCard class="max-w-3xl">
+    <AppCard class="overflow-hidden border-none shadow-premium !p-0">
       <form
-        class="space-y-5"
+        class="flex flex-col h-full"
         @submit.prevent="onSubmit"
       >
-        <AppInput
-          id="event-title"
-          v-model="form.title"
-          label="Event title"
-          placeholder="Example: Family support concert"
-          :error="errors.title"
-        />
-        <AppTextarea
-          id="event-description"
-          v-model="form.description"
-          label="Description"
-          placeholder="Explain what the collection is for and who it supports."
-          :error="errors.description"
-        />
-        <AppInput
-          id="event-date"
-          v-model="form.eventDate"
-          label="Event date"
-          type="date"
-        />
+        <div class="p-10 space-y-10">
+          <div class="grid gap-10">
+            <AppInput
+              id="event-title"
+              v-model="form.title"
+              label="Event title"
+              placeholder="Example: Family support concert"
+              :error="errors.title"
+            />
+            
+            <AppTextarea
+              id="event-description"
+              v-model="form.description"
+              label="Description"
+              placeholder="Explain what the collection is for and who it supports."
+              :error="errors.description"
+              :rows="5"
+            />
 
-        <ErrorState
-          v-if="mutation.isError.value"
-          title="Event creation failed"
-          :message="mutation.error.value?.message ?? 'Please review the form and try again.'"
-        />
+            <div class="grid md:grid-cols-2 gap-8">
+              <AppInput
+                id="event-date"
+                v-model="form.eventDate"
+                label="Event date"
+                type="date"
+              />
+            </div>
+          </div>
 
-        <div class="flex flex-wrap justify-end gap-3">
+          <ErrorState
+            v-if="mutation.isError.value"
+            title="Event creation failed"
+            :message="mutation.error.value?.message ?? 'Please review the form and try again.'"
+          />
+        </div>
+
+        <div class="px-10 py-8 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
           <AppButton
             variant="secondary"
+            class="min-w-[120px]"
             @click="router.push('/admin/events')"
           >
             Cancel
           </AppButton>
           <AppButton
             native-type="submit"
+            class="min-w-[160px]"
             :loading="mutation.isPending.value"
           >
             Create event
@@ -63,7 +81,6 @@ import { useRouter } from 'vue-router'
 import { z } from 'zod'
 import { useCreateEvent } from '../composables/useEvents'
 import { createEventSchema } from '../validators/eventValidators'
-import PageHeader from '@/shared/components/headers/PageHeader.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'

@@ -1,25 +1,25 @@
 <template>
-  <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-    <div>
+  <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+    <div class="space-y-1">
       <p
         v-if="eyebrow"
-        class="text-xs font-semibold uppercase tracking-[0.16em] text-teal-600"
+        class="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-600 mb-1"
       >
         {{ eyebrow }}
       </p>
-      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-display">
         {{ title }}
       </h1>
       <p
         v-if="description"
-        class="mt-3 max-w-2xl text-sm text-slate-500"
+        class="text-sm text-slate-600 font-medium max-w-xl"
       >
         {{ description }}
       </p>
     </div>
     <div
       v-if="$slots.actions"
-      class="flex flex-wrap gap-3"
+      class="flex flex-wrap gap-3 mt-4 md:mt-0"
     >
       <slot name="actions" />
     </div>
