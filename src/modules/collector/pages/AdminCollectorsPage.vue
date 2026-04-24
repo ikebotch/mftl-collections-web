@@ -1,3 +1,47 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
+import AppTable from '@/shared/components/tables/AppTable.vue'
+import AppCard from '@/shared/components/cards/AppCard.vue'
+import AppInput from '@/shared/components/forms/AppInput.vue'
+import AppSelect from '@/shared/components/forms/AppSelect.vue'
+import AppToolbar from '@/shared/components/toolbars/AppToolbar.vue'
+import MetricCard from '@/shared/components/cards/MetricCard.vue'
+import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
+import { useCollectors } from '../composables/useCollector'
+import type { CollectorRow } from '../types/collector'
+import { 
+  Plus, 
+  Download, 
+  User, 
+  BarChart3,
+  Settings
+} from 'lucide-vue-next'
+
+const router = useRouter()
+const { data, isLoading, isError } = useCollectors()
+const collectors = computed(() => data.value || [])
+
+const columns = [
+  { key: 'name', label: 'Collector' },
+  { key: 'status', label: 'Status' },
+  { key: 'totalCollected', label: 'Collections (Month)' },
+  { key: 'lastActive', label: 'Last Active' },
+  { key: 'actions', label: '' },
+]
+
+const activeCount = computed(() => (data.value || []).filter(c => c.status === 'Active').length)
+
+const isDrawerOpen = ref(false)
+const selectedCollector = ref<CollectorRow | null>(null)
+
+function openDetail(row: CollectorRow) {
+  selectedCollector.value = row
+  isDrawerOpen.value = true
+}
+</script>
+
 <template>
   <div class="space-y-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -32,26 +76,28 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <MetricCard
         label="Active Collectors"
-        value="24"
+        :value="String(activeCount)"
         icon="Users"
-        trend="+2 this week"
+        :is-loading="isLoading"
       />
       <MetricCard
-        label="Raised Today"
-        value="GHS 12,450"
+        label="Monthly Collection"
+        value="GHS --"
         icon="Wallet"
         color="green"
+        :is-loading="isLoading"
       />
       <MetricCard
-        label="Avg. Per Agent"
-        value="GHS 518"
+        label="Performance Avg"
+        value="--"
         icon="Zap"
+        :is-loading="isLoading"
       />
       <MetricCard
-        label="Pending Cash"
-        value="GHS 3,100"
-        icon="Coins"
-        color="amber"
+        label="System Health"
+        value="Optimal"
+        icon="Activity"
+        color="green"
       />
     </div>
 
@@ -69,12 +115,6 @@
         label="Status"
         :options="[{ label: 'All Status', value: '' }, { label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }]"
       />
-      <AppSelect
-        id="collector-event"
-        model-value=""
-        label="Event"
-        :options="[{ label: 'All Events', value: '' }]"
-      />
       <template #actions>
         <AppButton
           variant="secondary"
@@ -90,6 +130,8 @@
         :columns="columns"
         :rows="collectors"
         row-key="id"
+        :is-loading="isLoading"
+        :is-error="isError"
       >
         <template #cell:name="{ value, row }">
           <div class="flex items-center gap-4">
@@ -120,7 +162,7 @@
           </div>
         </template>
 
-        <template #cell:collections="{ value }">
+        <template #cell:totalCollected="{ value }">
           <span class="font-black text-slate-900">{{ value }}</span>
         </template>
 
@@ -137,10 +179,6 @@
         </template>
       </AppTable>
     </AppCard>
-
-    <div class="flex items-center justify-center gap-2 px-6 py-4 bg-slate-50 border border-slate-200 rounded-3xl">
-      <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Live collector data is currently simulated - Backend API Pending</span>
-    </div>
 
     <!-- Detail Drawer -->
     <DetailDrawer
@@ -176,36 +214,19 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="p-4 bg-white border border-slate-100 rounded-2xl">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-              Today
+              Monthly Total
             </p>
             <p class="text-lg font-black text-slate-900">
-              {{ selectedCollector.collections }}
+              {{ selectedCollector.totalCollected }}
             </p>
           </div>
           <div class="p-4 bg-white border border-slate-100 rounded-2xl">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-              Donations
+              Assigned Events
             </p>
             <p class="text-lg font-black text-slate-900">
-              12
+              {{ selectedCollector.activeEvents }}
             </p>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <SectionHeader
-            title="Assignments"
-            description="Events assigned to this collector."
-          />
-          <div class="space-y-2">
-            <div 
-              v-for="i in 2" 
-              :key="i"
-              class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between"
-            >
-              <span class="text-sm font-bold text-slate-700">Community Support 2026</span>
-              <span class="text-[10px] font-black text-violet-600 uppercase">Primary</span>
-            </div>
           </div>
         </div>
 
@@ -229,49 +250,3 @@
     </DetailDrawer>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppTable from '@/shared/components/tables/AppTable.vue'
-import AppCard from '@/shared/components/cards/AppCard.vue'
-import AppInput from '@/shared/components/forms/AppInput.vue'
-import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import AppToolbar from '@/shared/components/toolbars/AppToolbar.vue'
-import MetricCard from '@/shared/components/cards/MetricCard.vue'
-import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
-import SectionHeader from '@/shared/components/headers/SectionHeader.vue'
-import { 
-  Plus, 
-  Download, 
-  User, 
-  BarChart3, 
-  Settings
-} from 'lucide-vue-next'
-
-const router = useRouter()
-
-const columns = [
-  { key: 'name', label: 'Collector' },
-  { key: 'status', label: 'Status' },
-  { key: 'collections', label: 'Collections (Today)' },
-  { key: 'lastActive', label: 'Last Active' },
-  { key: 'actions', label: '' },
-]
-
-const collectors = [
-  { id: 1, name: 'Kofi Mensah', email: 'kofi.mensah@mftl.com', status: 'Active', collections: 'GHS 1,200', lastActive: '2 mins ago' },
-  { id: 2, name: 'Ama Serwaa', email: 'ama.serwaa@mftl.com', status: 'Active', collections: 'GHS 950', lastActive: '15 mins ago' },
-  { id: 3, name: 'Kwame Appiah', email: 'kwame.appiah@mftl.com', status: 'Inactive', collections: 'GHS 0', lastActive: '2 days ago' },
-  { id: 4, name: 'Abena Osei', email: 'abena.osei@mftl.com', status: 'Active', collections: 'GHS 2,100', lastActive: 'Just now' },
-]
-
-const isDrawerOpen = ref(false)
-const selectedCollector = ref<any>(null)
-
-function openDetail(row: any) {
-  selectedCollector.value = row
-  isDrawerOpen.value = true
-}
-</script>

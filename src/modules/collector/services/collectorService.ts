@@ -1,6 +1,39 @@
+import { httpClient } from '@/core/api/httpClient'
 import { eventsService } from '@/modules/events/services/eventsService'
 import { listReceipts } from '@/modules/receipts/services/receiptsService'
-import type { CollectorEventRow, CollectorReceipt } from '../types/collector'
+import type { CollectorEventRow, CollectorReceipt, CollectorRow, CollectorDto, CreateCollectorInput } from '../types/collector'
+import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+
+export async function listCollectors(): Promise<CollectorRow[]> {
+  const response = await httpClient.get<CollectorDto[]>('/collectors')
+  const data = response.data || []
+  
+  return data.map(dto => ({
+    id: dto.id,
+    name: dto.name,
+    email: dto.email,
+    status: dto.status,
+    activeEvents: dto.assignedEventCount,
+    totalCollected: formatCurrency(dto.totalCollectedMonth, 'GHS'),
+    lastActive: dto.lastActiveAt ? formatDate(dto.lastActiveAt) : 'Never',
+    type: 'Staff' // Fixed for now
+  }))
+}
+
+export async function createCollector(payload: CreateCollectorInput): Promise<CollectorRow> {
+  const response = await httpClient.post<CollectorDto, CreateCollectorInput>('/collectors', payload)
+  const dto = response.data
+  return {
+    id: dto.id,
+    name: dto.name,
+    email: dto.email,
+    status: dto.status,
+    activeEvents: dto.assignedEventCount,
+    totalCollected: formatCurrency(dto.totalCollectedMonth, 'GHS'),
+    lastActive: dto.lastActiveAt ? formatDate(dto.lastActiveAt) : 'New',
+    type: 'Staff'
+  }
+}
 
 export async function listAssignedEvents(): Promise<CollectorEventRow[]> {
   // For now, collectors see all events until assigned events endpoint is ready
@@ -17,7 +50,7 @@ export async function getCollectorDashboard() {
   // This will eventually be a real endpoint
   const events = await listAssignedEvents()
   return {
-    todayCollections: 'GBP 0.00',
+    todayCollections: 'GHS 0.00',
     receiptsIssued: '0',
     assignedEvents: String(events.length),
   }
@@ -34,6 +67,8 @@ export async function listCollectorHistory(): Promise<CollectorReceipt[]> {
 }
 
 export const collectorService = {
+  list: listCollectors,
+  create: createCollector,
   listAssignedEvents,
   getCollectorDashboard,
   listCollectorHistory,

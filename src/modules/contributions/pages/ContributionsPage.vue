@@ -279,7 +279,11 @@ const columns = [
 ]
 
 const totalRaised = computed(() => {
-  return query.data.value?.reduce((acc, curr) => acc + Number(curr.amount || 0), 0) || 0
+  return query.data.value?.reduce((acc, curr) => {
+    // Extract numeric value from "GHS X.XX" format
+    const numericAmount = Number(String(curr.amount || '0').replace(/[^0-9.]/g, ''))
+    return acc + numericAmount
+  }, 0) || 0
 })
 
 const averageContribution = computed(() => {
@@ -290,7 +294,7 @@ const averageContribution = computed(() => {
 const isDrawerOpen = ref(false)
 const selectedContribution = ref<ContributionRow | null>(null)
 
-function openDetail(row: any) {
+function openDetail(row: ContributionRow) {
   selectedContribution.value = row
   isDrawerOpen.value = true
 }

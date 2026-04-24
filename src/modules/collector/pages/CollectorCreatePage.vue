@@ -1,3 +1,93 @@
+<script setup lang="ts">
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import AppCard from '@/shared/components/cards/AppCard.vue'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
+import AppInput from '@/shared/components/forms/AppInput.vue'
+import AppSelect from '@/shared/components/forms/AppSelect.vue'
+import SectionHeader from '@/shared/components/headers/SectionHeader.vue'
+import { useCreateCollector } from '../composables/useCollector'
+import { useEvents } from '@/modules/events/composables/useEvents'
+import { 
+  Check, 
+  User, 
+  Camera, 
+  Smartphone, 
+  Wallet, 
+  FileText, 
+  Users
+} from 'lucide-vue-next'
+
+const router = useRouter()
+const mutation = useCreateCollector()
+const { data: events = [] } = useEvents()
+
+const currentStep = ref(0)
+const steps = [
+  { label: 'Details', title: 'Collector Identity', description: 'Who are we inviting to the team?' },
+  { label: 'Access', title: 'Permissions', description: 'What can this agent do?' },
+  { label: 'Events', title: 'Assignments', description: 'Which events will they manage?' },
+  { label: 'Limits', title: 'Limits & Security', description: 'Set collection boundaries.' },
+  { label: 'Review', title: 'Final Invitation', description: 'Ready to send the invite?' },
+]
+
+const form = reactive({
+  name: '',
+  email: '',
+  phone: '',
+  type: 'collector',
+  dailyLimit: '5000',
+  maxCash: '1000',
+  assignedEventIds: [] as string[]
+})
+
+const permissions = [
+  { id: 'login', label: 'Login Access', description: 'Allow logging into the mobile app.', icon: Smartphone, enabled: true },
+  { id: 'cash', label: 'Cash Collection', description: 'Agent can record physical cash.', icon: Wallet, enabled: true },
+  { id: 'receipts', label: 'Issue Receipts', description: 'Generate and send digital receipts.', icon: FileText, enabled: true },
+  { id: 'reports', label: 'Field Reports', description: 'View performance and shift reports.', icon: Users, enabled: false },
+]
+
+function toggleEvent(eventId: string) {
+  const index = form.assignedEventIds.indexOf(eventId)
+  if (index === -1) {
+    form.assignedEventIds.push(eventId)
+  } else {
+    form.assignedEventIds.splice(index, 1)
+  }
+}
+
+function prevStep() {
+  if (currentStep.value === 0) {
+    router.push('/admin/collectors')
+  } else {
+    currentStep.value--
+  }
+}
+
+async function nextStep() {
+  if (currentStep.value < steps.length - 1) {
+    currentStep.value++
+  } else {
+    await onSubmit()
+  }
+}
+
+async function onSubmit() {
+  try {
+    await mutation.mutateAsync({
+      name: form.name,
+      email: form.email,
+      phoneNumber: form.phone,
+      assignedEventIds: form.assignedEventIds
+    })
+    router.push('/admin/collectors')
+  } catch (err) {
+    console.error('Collector invite failed:', err)
+  }
+}
+</script>
+
 <template>
   <div class="max-w-4xl mx-auto py-12 px-6">
     <!-- Wizard Header -->
@@ -137,17 +227,20 @@
         />
         <div class="grid gap-4">
           <div 
-            v-for="event in ['Community Support 2026', 'Education Fund Drive']" 
-            :key="event"
-            class="flex items-center gap-4 p-4 bg-white border-2 border-slate-100 rounded-2xl hover:border-violet-200 transition-all cursor-pointer group"
+            v-for="event in events" 
+            :key="event.id"
+            class="flex items-center gap-4 p-4 bg-white border-2 rounded-2xl hover:border-violet-200 transition-all cursor-pointer group"
+            :class="form.assignedEventIds.includes(event.id) ? 'border-violet-500 bg-violet-50/10' : 'border-slate-100'"
+            @click="toggleEvent(event.id)"
           >
-            <div class="w-5 h-5 rounded-md border-2 border-slate-200 group-hover:border-violet-400" />
-            <span class="text-sm font-bold text-slate-900">{{ event }}</span>
+            <div 
+              class="w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center"
+              :class="form.assignedEventIds.includes(event.id) ? 'border-violet-600 bg-violet-600 text-white' : 'border-slate-200 group-hover:border-violet-400'"
+            >
+              <Check v-if="form.assignedEventIds.includes(event.id)" class="w-3 h-3" />
+            </div>
+            <span class="text-sm font-bold text-slate-900">{{ event.title }}</span>
           </div>
-        </div>
-        <div class="p-4 bg-amber-50 text-amber-700 border border-amber-100 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-          <AlertCircle class="w-4 h-4" />
-          Assignment logic requires backend event link
         </div>
       </div>
 
@@ -257,86 +350,12 @@
         <AppButton
           variant="primary"
           class="min-w-[160px]"
+          :loading="mutation.isPending.value"
           @click="nextStep"
         >
           {{ currentStep === steps.length - 1 ? 'Send Invite' : 'Continue' }}
         </AppButton>
       </div>
     </AppCard>
-
-    <div
-      v-if="currentStep === steps.length - 1"
-      class="mt-8 text-center"
-    >
-      <p class="text-xs text-slate-400 font-bold uppercase tracking-tighter flex items-center justify-center gap-2">
-        <Lock class="w-3 h-3" />
-        Collector creation requires backend endpoint - Currently UI Only
-      </p>
-    </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import AppCard from '@/shared/components/cards/AppCard.vue'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppInput from '@/shared/components/forms/AppInput.vue'
-import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import SectionHeader from '@/shared/components/headers/SectionHeader.vue'
-import { 
-  Check, 
-  User, 
-  Camera, 
-  Lock, 
-  Smartphone, 
-  Wallet, 
-  FileText, 
-  Users,
-  AlertCircle
-} from 'lucide-vue-next'
-
-const router = useRouter()
-
-const currentStep = ref(0)
-const steps = [
-  { label: 'Details', title: 'Collector Identity', description: 'Who are we inviting to the team?' },
-  { label: 'Access', title: 'Permissions', description: 'What can this agent do?' },
-  { label: 'Events', title: 'Assignments', description: 'Which events will they manage?' },
-  { label: 'Limits', title: 'Limits & Security', description: 'Set collection boundaries.' },
-  { label: 'Review', title: 'Final Invitation', description: 'Ready to send the invite?' },
-]
-
-const form = reactive({
-  name: '',
-  email: '',
-  phone: '',
-  type: 'collector',
-  dailyLimit: '5000',
-  maxCash: '1000',
-})
-
-const permissions = [
-  { id: 'login', label: 'Login Access', description: 'Allow logging into the mobile app.', icon: Smartphone, enabled: true },
-  { id: 'cash', label: 'Cash Collection', description: 'Agent can record physical cash.', icon: Wallet, enabled: true },
-  { id: 'receipts', label: 'Issue Receipts', description: 'Generate and send digital receipts.', icon: FileText, enabled: true },
-  { id: 'reports', label: 'Field Reports', description: 'View performance and shift reports.', icon: Users, enabled: false },
-]
-
-function prevStep() {
-  if (currentStep.value === 0) {
-    router.push('/admin/collectors')
-  } else {
-    currentStep.value--
-  }
-}
-
-function nextStep() {
-  if (currentStep.value < steps.length - 1) {
-    currentStep.value++
-  } else {
-    alert('Collector creation backend pending. Redirecting to list.')
-    router.push('/admin/collectors')
-  }
-}
-</script>

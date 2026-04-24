@@ -1,3 +1,51 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
+import AppTable from '@/shared/components/tables/AppTable.vue'
+import AppCard from '@/shared/components/cards/AppCard.vue'
+import AppInput from '@/shared/components/forms/AppInput.vue'
+import AppToolbar from '@/shared/components/toolbars/AppToolbar.vue'
+import MetricCard from '@/shared/components/cards/MetricCard.vue'
+import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
+import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
+import { useDonors } from '../composables/useDonors'
+import type { DonorRow } from '../types/donor'
+import { 
+  Download, 
+  Mail, 
+  User
+} from 'lucide-vue-next'
+
+const query = useDonors()
+const donors = computed(() => query.data.value || [])
+
+const columns = [
+  { key: 'name', label: 'Supporter' },
+  { key: 'totalDonated', label: 'Total Contribution' },
+  { key: 'donationCount', label: 'Donations' },
+  { key: 'lastDonation', label: 'Last Donation' },
+  { key: 'frequency', label: 'Frequency' },
+  { key: 'actions', label: '' },
+]
+
+const totalDonors = computed(() => donors.value.length)
+const avgLtv = computed(() => {
+  if (donors.value.length === 0) return 'GHS 0.00'
+  // Simplified derivation for display
+  return 'GHS --'
+})
+
+const isDrawerOpen = ref(false)
+const selectedDonor = ref<DonorRow | null>(null)
+
+function openDetail(row: DonorRow) {
+  selectedDonor.value = row
+  isDrawerOpen.value = true
+}
+</script>
+
 <template>
   <div class="space-y-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -31,25 +79,28 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <MetricCard
         label="Total Donors"
-        value="128"
+        :value="String(totalDonors)"
         icon="Users"
-        trend="+12 this month"
+        :is-loading="query.isLoading.value"
       />
       <MetricCard
         label="New Supporters"
-        value="15"
+        value="--"
         icon="UserPlus"
         color="green"
+        :is-loading="query.isLoading.value"
       />
       <MetricCard
         label="Avg. Lifetime Value"
-        value="GHS 420"
+        :value="avgLtv"
         icon="TrendingUp"
+        :is-loading="query.isLoading.value"
       />
       <MetricCard
         label="Repeat Donors"
-        value="42%"
+        value="--"
         icon="Repeat"
+        :is-loading="query.isLoading.value"
       />
     </div>
 
@@ -60,12 +111,6 @@
         model-value=""
         label="Search"
         placeholder="Name, email, phone..."
-      />
-      <AppSelect
-        id="donor-type"
-        model-value=""
-        label="Donor Type"
-        :options="[{ label: 'All', value: '' }, { label: 'Individual', value: 'individual' }, { label: 'Organization', value: 'org' }]"
       />
       <template #actions>
         <AppButton
@@ -118,8 +163,18 @@
           </div>
         </template>
 
-        <template #cell:totalGiven="{ value }">
-          <span class="font-black text-slate-900">{{ formatCurrency(value, 'GHS') }}</span>
+        <template #cell:totalDonated="{ value }">
+          <span class="font-black text-slate-900">{{ value }}</span>
+        </template>
+
+        <template #cell:frequency="{ value }">
+          <div class="flex items-center gap-2">
+            <div 
+              class="w-2 h-2 rounded-full" 
+              :class="value === 'High' ? 'bg-violet-500' : 'bg-slate-300'"
+            />
+            <span class="text-xs font-bold text-slate-700">{{ value }}</span>
+          </div>
         </template>
 
         <template #cell:actions="{ row }">
@@ -133,10 +188,6 @@
         </template>
       </AppTable>
     </AppCard>
-
-    <div class="flex items-center justify-center gap-2 px-6 py-4 bg-slate-50 border border-slate-200 rounded-3xl">
-      <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Donor profiles are derived from receipt history - Backend API Pending</span>
-    </div>
 
     <!-- Detail Drawer -->
     <DetailDrawer
@@ -167,7 +218,7 @@
               Total Given
             </p>
             <p class="text-lg font-black text-slate-900">
-              {{ formatCurrency(selectedDonor.totalGiven, 'GHS') }}
+              {{ selectedDonor.totalDonated }}
             </p>
           </div>
           <div class="p-4 bg-white border border-slate-100 rounded-2xl">
@@ -175,32 +226,8 @@
               Donations
             </p>
             <p class="text-lg font-black text-slate-900">
-              {{ selectedDonor.count }}
+              {{ selectedDonor.donationCount }}
             </p>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <SectionHeader
-            title="Recent Activity"
-            description="Last contributions from this donor."
-          />
-          <div class="space-y-2">
-            <div 
-              v-for="i in 3" 
-              :key="i"
-              class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between"
-            >
-              <div>
-                <p class="text-sm font-bold text-slate-900">
-                  GHS 100.00
-                </p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase">
-                  Community Support Event
-                </p>
-              </div>
-              <span class="text-[10px] font-black text-slate-400 uppercase">12 Apr</span>
-            </div>
           </div>
         </div>
 
@@ -224,74 +251,3 @@
     </DetailDrawer>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useReceipts } from '@/modules/receipts/composables/useReceipts'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppTable from '@/shared/components/tables/AppTable.vue'
-import AppCard from '@/shared/components/cards/AppCard.vue'
-import AppInput from '@/shared/components/forms/AppInput.vue'
-import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import AppToolbar from '@/shared/components/toolbars/AppToolbar.vue'
-import MetricCard from '@/shared/components/cards/MetricCard.vue'
-import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
-import SectionHeader from '@/shared/components/headers/SectionHeader.vue'
-import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
-import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
-import { 
-  Download, 
-  Mail, 
-  User
-} from 'lucide-vue-next'
-
-const query = useReceipts()
-
-const columns = [
-  { key: 'name', label: 'Supporter' },
-  { key: 'totalGiven', label: 'Total Contribution' },
-  { key: 'count', label: 'Events Supported' },
-  { key: 'lastDate', label: 'Last Donation' },
-  { key: 'actions', label: '' },
-]
-
-// Derive donor data from receipts
-const donors = computed(() => {
-  if (!query.data.value) return []
-  
-  const donorMap = new Map<string, any>()
-  
-  query.data.value.forEach(receipt => {
-    // In a real app, we'd use a DonorId or email. For now, name is the key.
-    const key = receipt.contributorName || 'Anonymous'
-    const existing = donorMap.get(key) || { 
-      id: key, 
-      name: key, 
-      email: '', 
-      totalGiven: 0, 
-      count: 0, 
-      lastDate: receipt.issuedAt 
-    }
-    
-    existing.totalGiven += Number(receipt.amount)
-    existing.count += 1
-    if (new Date(receipt.issuedAt) > new Date(existing.lastDate)) {
-      existing.lastDate = receipt.issuedAt
-    }
-    
-    donorMap.set(key, existing)
-  })
-  
-  return Array.from(donorMap.values())
-})
-
-const isDrawerOpen = ref(false)
-const selectedDonor = ref<any>(null)
-
-function openDetail(row: any) {
-  selectedDonor.value = row
-  isDrawerOpen.value = true
-}
-</script>

@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/vue-query'
-import { getCollectorDashboard, listAssignedEvents, listCollectorHistory } from '../services/collectorService'
-import type { CollectorEventRow, CollectorReceipt } from '../types/collector'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
+import { listAssignedEvents, listCollectorHistory, collectorService, getCollectorDashboard } from '../services/collectorService'
+import type { CollectorEventRow, CollectorReceipt, CollectorRow, CreateCollectorInput } from '../types/collector'
 import type { ApiError } from '@/core/api/apiError'
 
 export function useCollectorDashboard() {
@@ -25,5 +25,22 @@ export function useCollectorHistory() {
   return useQuery<CollectorReceipt[], ApiError>({
     queryKey: ['collector-history'],
     queryFn: listCollectorHistory,
+  })
+}
+
+export function useCollectors() {
+  return useQuery<CollectorRow[], ApiError>({
+    queryKey: ['collectors'],
+    queryFn: collectorService.list,
+  })
+}
+
+export function useCreateCollector() {
+  const queryClient = useQueryClient()
+  return useMutation<CollectorRow, ApiError, CreateCollectorInput>({
+    mutationFn: collectorService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['collectors'] })
+    },
   })
 }
