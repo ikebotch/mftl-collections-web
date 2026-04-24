@@ -1,0 +1,1 @@
+export const selfDonationValidatorPlaceholder = true
