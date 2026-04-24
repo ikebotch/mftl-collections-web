@@ -1,67 +1,289 @@
 <template>
-  <div class="space-y-6">
-    <PageHeader
-      eyebrow="Admin"
-      title="Receipts"
-      description="Monitor receipts and prepare for print/download integration."
-    />
+  <div class="space-y-12">
+    <!-- Editorial Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-10 bg-slate-900" />
+          <h1 class="text-5xl font-black text-slate-900 tracking-tighter uppercase italic">
+            Audit Trail
+          </h1>
+        </div>
+        <p class="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] pl-5">
+          Receipt Management & Financial Verification
+        </p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <AppButton
+          variant="outline"
+          class="!rounded-2xl !py-6 !px-8 border-2 border-slate-200 hover:border-slate-900 transition-all"
+        >
+          <Download class="w-4 h-4 mr-3" />
+          <span class="font-black uppercase tracking-widest text-[10px]">Export Ledger</span>
+        </AppButton>
+      </div>
+    </div>
+
     <LoadingState
       v-if="query.isLoading.value"
-      text="Loading receipts…"
+      text="Syncing financial audit trail..."
+      class="py-32"
     />
-    <ErrorState
-      v-else-if="query.isError.value"
-      title="Could not load receipts"
-      :message="query.error.value?.message ?? 'Try again later.'"
-      :correlation-id="query.error.value?.correlationId"
-      show-retry
-      @retry="query.refetch"
-    />
-    <EmptyState
-      v-else-if="!query.data.value?.length"
-      title="No receipts available"
-      description="Receipts will appear here after contributions are settled."
-    />
-    <AppTable
-      v-else
-      caption="Receipts table"
-      :columns="columns"
-      :rows="query.data.value ?? []"
-      row-key="id"
+    
+    <template v-else-if="receipts">
+      <!-- Search & Filters -->
+      <div class="flex flex-col md:flex-row items-center gap-4">
+        <div class="flex-1 relative w-full">
+          <Search class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <AppInput
+            v-model="searchQuery"
+            placeholder="Search by receipt #, donor or event..."
+            class="!pl-14 !py-7 !rounded-3xl !bg-white border-2 border-slate-100 focus:border-slate-900 shadow-sm transition-all"
+          />
+        </div>
+        <AppSelect
+          v-model="methodFilter"
+          :options="methodOptions"
+          class="w-full md:w-64 !py-7 !rounded-3xl !bg-white border-2 border-slate-100 shadow-sm"
+        />
+      </div>
+
+      <!-- Audit Table -->
+      <AppCard class="!rounded-[3rem] overflow-hidden border-2 border-slate-100 shadow-2xl bg-white">
+        <AppTable
+          :columns="columns"
+          :rows="filteredReceipts"
+          row-key="id"
+          class="!border-none"
+          empty-message="No registered receipts found matching criteria."
+        >
+          <template #cell:receiptNumber="{ value }">
+            <div class="flex flex-col">
+              <span class="text-sm font-black text-slate-900 tracking-tight">#{{ value }}</span>
+              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Audit ID</span>
+            </div>
+          </template>
+
+          <template #cell:contributorName="{ value }">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0">
+                {{ getInitials(value) }}
+              </div>
+              <span class="text-sm font-bold text-slate-900 truncate max-w-[150px]">
+                {{ value }}
+              </span>
+            </div>
+          </template>
+
+          <template #cell:eventTitle="{ value, row }">
+            <div class="flex flex-col max-w-[200px]">
+              <span class="text-sm font-bold text-slate-900 truncate">{{ value }}</span>
+              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5 truncate">{{ row.recipientFundName }}</span>
+            </div>
+          </template>
+
+          <template #cell:amount="{ value }">
+            <span class="text-sm font-black text-slate-900">{{ value }}</span>
+          </template>
+
+          <template #cell:paymentMethod="{ value }">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ value }}</span>
+            </div>
+          </template>
+
+          <template #cell:status="{ value }">
+            <ReceiptStatusBadge
+              :status="value"
+              class="scale-90"
+            />
+          </template>
+
+          <template #cell:issuedAt="{ value }">
+            <div class="flex flex-col">
+              <span class="text-[10px] font-bold text-slate-600">{{ value }}</span>
+            </div>
+          </template>
+
+          <template #cell:actions="{ row }">
+            <div class="flex items-center gap-2">
+              <AppButton 
+                variant="ghost" 
+                size="sm" 
+                class="!p-2 hover:bg-slate-50"
+                @click="selectedReceipt = row"
+              >
+                <Eye class="w-4 h-4 text-slate-400 hover:text-slate-900" />
+              </AppButton>
+              <AppButton 
+                variant="ghost" 
+                size="sm"
+                class="!p-2 hover:bg-slate-50"
+              >
+                <Printer class="w-4 h-4 text-slate-400 hover:text-slate-900" />
+              </AppButton>
+              <AppButton 
+                variant="ghost" 
+                size="sm"
+                class="!p-2 hover:bg-slate-50"
+              >
+                <Download class="w-4 h-4 text-slate-400 hover:text-slate-900" />
+              </AppButton>
+            </div>
+          </template>
+        </AppTable>
+      </AppCard>
+    </template>
+
+    <!-- Detail Drawer Placeholder -->
+    <DetailDrawer
+      :is-open="!!selectedReceipt"
+      title="Receipt Details"
+      :subtitle="selectedReceipt?.receiptNumber"
+      @close="selectedReceipt = null"
     >
-      <template #cell:status="{ value }">
-        <ReceiptStatusBadge :status="String(value)" />
+      <div
+        v-if="selectedReceipt"
+        class="space-y-10"
+      >
+        <section class="p-8 rounded-[2rem] bg-slate-50 border-2 border-slate-100 flex flex-col items-center text-center">
+          <div class="w-20 h-20 rounded-3xl bg-white border-2 border-slate-100 flex items-center justify-center text-2xl font-black text-slate-900 shadow-premium mb-6">
+            {{ getInitials(selectedReceipt.contributorName) }}
+          </div>
+          <h3 class="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">
+            {{ selectedReceipt.contributorName }}
+          </h3>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
+            Verified Contribution
+          </p>
+          
+          <div class="mt-10 grid grid-cols-2 gap-4 w-full">
+            <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm">
+              <h4 class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                Amount
+              </h4>
+              <p class="text-xl font-black text-slate-900">
+                {{ selectedReceipt.amount }}
+              </p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm">
+              <h4 class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                Method
+              </h4>
+              <p class="text-xl font-black text-slate-900 uppercase tracking-tight italic">
+                {{ selectedReceipt.paymentMethod }}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="space-y-6">
+          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">
+            Audit Allocation
+          </h4>
+          <div class="p-8 rounded-[2.5rem] border-2 border-slate-100 bg-white space-y-6">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Event</span>
+              <span class="text-sm font-bold text-slate-900">{{ selectedReceipt.eventTitle }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Recipient Fund</span>
+              <span class="text-sm font-bold text-slate-900">{{ selectedReceipt.recipientFundName }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Issued On</span>
+              <span class="text-sm font-bold text-slate-900">{{ selectedReceipt.issuedAt }}</span>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+      <template #actions>
+        <AppButton
+          class="flex-1 !rounded-2xl !py-4"
+          variant="outline"
+        >
+          <Printer class="w-4 h-4 mr-3" />
+          <span class="font-black uppercase tracking-widest text-[10px]">Print</span>
+        </AppButton>
+        <AppButton
+          class="flex-1 !rounded-2xl !py-4 bg-slate-900 text-white"
+          variant="primary"
+        >
+          <Download class="w-4 h-4 mr-3" />
+          <span class="font-black uppercase tracking-widest text-[10px]">Download</span>
+        </AppButton>
       </template>
-      <template #cell:contributionStatus="{ value }">
-        <ContributionStatusBadge :status="String(value)" />
-      </template>
-      <template #cell:paymentStatus="{ value }">
-        <PaymentStatusBadge :status="String(value)" />
-      </template>
-    </AppTable>
+    </DetailDrawer>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useReceipts } from '../composables/useReceipts'
+import type { ReceiptRow } from '../types/receipt'
 import ReceiptStatusBadge from '../components/ReceiptStatusBadge.vue'
-import PaymentStatusBadge from '@/modules/payments/components/PaymentStatusBadge.vue'
-import ContributionStatusBadge from '@/modules/contributions/components/ContributionStatusBadge.vue'
-import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
-import PageHeader from '@/shared/components/headers/PageHeader.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
-import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppTable from '@/shared/components/tables/AppTable.vue'
+import AppCard from '@/shared/components/cards/AppCard.vue'
+import AppInput from '@/shared/components/forms/AppInput.vue'
+import AppSelect from '@/shared/components/forms/AppSelect.vue'
+import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
+import { 
+  Search, 
+  Download, 
+  Printer, 
+  Eye 
+} from 'lucide-vue-next'
 
 const query = useReceipts()
+const selectedReceipt = ref<ReceiptRow | null>(null)
+const searchQuery = ref('')
+const methodFilter = ref('')
+
 const columns = [
   { key: 'receiptNumber', label: 'Receipt' },
+  { key: 'contributorName', label: 'Contributor' },
+  { key: 'eventTitle', label: 'Event / Fund' },
+  { key: 'amount', label: 'Amount' },
+  { key: 'paymentMethod', label: 'Method' },
+  { key: 'status', label: 'Status' },
   { key: 'issuedAt', label: 'Issued' },
-      { key: 'eventTitle', label: 'Event' },
-      { key: 'recipientFundName', label: 'Recipient fund' },
-      { key: 'amount', label: 'Amount' },
-      { key: 'status', label: 'Receipt status' },
-      { key: 'contributionStatus', label: 'Contribution' },
-      { key: 'paymentStatus', label: 'Payment' },
-    ]
+  { key: 'actions', label: '' },
+]
+
+const methodOptions = [
+  { label: 'All Methods', value: '' },
+  { label: 'Cash', value: 'cash' },
+  { label: 'Card', value: 'card' },
+  { label: 'Mobile Money', value: 'momo' },
+]
+
+const receipts = computed(() => query.data.value || [])
+
+const filteredReceipts = computed(() => {
+  let list = receipts.value
+  
+  if (searchQuery.value) {
+    const s = searchQuery.value.toLowerCase()
+    list = list.filter(r => 
+      r.receiptNumber.toLowerCase().includes(s) || 
+      r.contributorName.toLowerCase().includes(s) ||
+      r.eventTitle.toLowerCase().includes(s)
+    )
+  }
+  
+  if (methodFilter.value) {
+    list = list.filter(r => r.paymentMethod.toLowerCase() === methodFilter.value.toLowerCase())
+  }
+  
+  return list
+})
+
+function getInitials(name?: string) {
+  if (!name) return '??'
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+}
 </script>
