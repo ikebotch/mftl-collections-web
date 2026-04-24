@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col items-center justify-center gap-3 rounded-3xl border border-slate-200 bg-white p-10 text-center">
-    <div
-      class="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-teal-500"
-      aria-hidden="true"
-    />
-    <p class="text-sm font-medium text-slate-600">
+  <div class="flex flex-col items-center justify-center py-20 px-6 text-center">
+    <div class="relative w-16 h-16 mb-6">
+      <div class="absolute inset-0 rounded-full border-4 border-brand-50 opacity-20" />
+      <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-brand-600 animate-spin" />
+    </div>
+    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 animate-pulse">
       {{ text }}
     </p>
   </div>

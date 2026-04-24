@@ -33,27 +33,27 @@
           :description="query.data.value.description"
         />
         <dl class="mt-6 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-2xl bg-slate-50 p-4">
-            <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+          <div class="rounded-xl bg-slate-50/50 p-5 border border-slate-100/50 transition-colors hover:bg-slate-50">
+            <dt class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
               Date
             </dt>
-            <dd class="mt-2 text-sm font-medium text-slate-950">
+            <dd class="text-sm font-bold text-slate-900">
               {{ formatDate(query.data.value.eventDate) }}
             </dd>
           </div>
-          <div class="rounded-2xl bg-slate-50 p-4">
-            <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+          <div class="rounded-xl bg-slate-50/50 p-5 border border-slate-100/50 transition-colors hover:bg-slate-50">
+            <dt class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
               Status
             </dt>
-            <dd class="mt-2">
+            <dd>
               <EventStatusBadge :status="query.data.value.status" />
             </dd>
           </div>
-          <div class="rounded-2xl bg-slate-50 p-4">
-            <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+          <div class="rounded-xl bg-slate-50/50 p-5 border border-slate-100/50 transition-colors hover:bg-slate-50">
+            <dt class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
               Currency
             </dt>
-            <dd class="mt-2 text-sm font-medium text-slate-950">
+            <dd class="text-sm font-bold text-slate-900">
               {{ query.data.value.currency }}
             </dd>
           </div>
