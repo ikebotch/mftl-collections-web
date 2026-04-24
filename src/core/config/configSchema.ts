@@ -5,7 +5,7 @@ const optionalString = z.string().trim().optional().default('')
 export const configSchema = z.object({
   VITE_APP_NAME: z.string().trim().min(1).default('MFTL Collections'),
   VITE_API_BASE_URL: z.string().trim().url().default('http://localhost:7072/api'),
-  VITE_API_VERSION: z.string().trim().min(1).default('v1'),
+  VITE_API_VERSION: z.string().trim().default('v1'),
   VITE_AUTH0_DOMAIN: optionalString,
   VITE_AUTH0_CLIENT_ID: optionalString,
   VITE_AUTH0_AUDIENCE: optionalString,
