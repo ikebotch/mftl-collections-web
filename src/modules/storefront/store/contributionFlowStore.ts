@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { ContributionDraft } from '../types/storefront'
+
+const STORAGE_KEY = 'mftl_contribution_draft'
 
 function createDefaultDraft(): ContributionDraft {
   return {
@@ -16,8 +18,23 @@ function createDefaultDraft(): ContributionDraft {
   }
 }
 
+function loadPersistedDraft(): ContributionDraft | null {
+  const data = localStorage.getItem(STORAGE_KEY)
+  if (!data) return null
+  try {
+    return JSON.parse(data)
+  } catch {
+    return null
+  }
+}
+
 export const useContributionFlowStore = defineStore('contribution-flow', () => {
-  const draft = ref<ContributionDraft>(createDefaultDraft())
+  const draft = ref<ContributionDraft>(loadPersistedDraft() || createDefaultDraft())
+
+  // Persist changes
+  watch(draft, (newDraft) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newDraft))
+  }, { deep: true })
 
   function initialise(eventSlug: string) {
     if (draft.value.eventSlug !== eventSlug) {
@@ -37,6 +54,7 @@ export const useContributionFlowStore = defineStore('contribution-flow', () => {
 
   function reset() {
     draft.value = createDefaultDraft()
+    localStorage.removeItem(STORAGE_KEY)
   }
 
   return {

@@ -36,6 +36,11 @@ export const storefrontRoutes: RouteRecordRaw[] = [
         component: () => import('./pages/ContributionSuccessPage.vue'),
       },
       {
+        path: 'mock-checkout',
+        name: 'storefront-mock-checkout',
+        component: () => import('./pages/MockCheckoutPage.vue'),
+      },
+      {
         path: 'self',
         name: 'storefront-self',
         component: () => import('@/modules/self-donations/pages/SelfDonationLandingPage.vue'),
