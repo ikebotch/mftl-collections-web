@@ -1,5 +1,6 @@
 import { httpClient } from '@/core/api/httpClient'
-import type { PaymentRow } from '../types/payment'
+import { mapPaymentDto } from '../mappers/paymentsMappers'
+import type { PaymentDto, PaymentRow } from '../types/payment'
 
 export interface InitiatePaymentInput {
   contributionId: string
@@ -7,8 +8,8 @@ export interface InitiatePaymentInput {
 }
 
 export async function listPayments(): Promise<PaymentRow[]> {
-  const response = await httpClient.get<PaymentRow[]>('/payments')
-  return response.data || []
+  const response = await httpClient.get<PaymentDto[]>('/payments')
+  return (response.data || []).map(mapPaymentDto)
 }
 
 export async function initiatePayment(payload: InitiatePaymentInput): Promise<{ paymentUrl: string }> {

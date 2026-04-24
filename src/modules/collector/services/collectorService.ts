@@ -1,4 +1,5 @@
 import { eventsService } from '@/modules/events/services/eventsService'
+import { listReceipts } from '@/modules/receipts/services/receiptsService'
 import type { CollectorEventRow, CollectorReceipt } from '../types/collector'
 
 export async function listAssignedEvents(): Promise<CollectorEventRow[]> {
@@ -23,8 +24,13 @@ export async function getCollectorDashboard() {
 }
 
 export async function listCollectorHistory(): Promise<CollectorReceipt[]> {
-  // Placeholder until history endpoint is ready
-  return []
+  const receipts = await listReceipts()
+  return receipts.map(receipt => ({
+    id: receipt.id,
+    amount: receipt.amount,
+    status: receipt.status,
+    receiptNumber: receipt.receiptNumber,
+  }))
 }
 
 export const collectorService = {
