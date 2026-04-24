@@ -1,68 +1,93 @@
 <template>
-  <AppCard class="group">
-    <div class="flex items-center justify-between mb-4">
-      <div class="p-3 rounded-2xl bg-brand-50 text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-all duration-500 shadow-sm">
-        <component
-          :is="icon"
-          v-if="icon"
-          class="w-6 h-6"
-        />
-        <div
-          v-else
-          class="w-6 h-6 rounded-full bg-current opacity-20"
-        />
-      </div>
-      <div
-        v-if="trend"
-        :class="[
-          'flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full',
-          trend.positive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-        ]"
-      >
-        <span v-if="trend.positive">↑</span>
-        <span v-else>↓</span>
-        {{ trend.value }}
-      </div>
-    </div>
-    
-    <div>
-      <h3 class="text-sm font-medium text-slate-500 mb-1 group-hover:text-brand-700 transition-colors duration-300">
-        {{ label }}
-      </h3>
-      <div class="flex items-baseline gap-2">
-        <p class="text-2xl font-bold text-slate-900 font-display">
-          {{ value }}
-        </p>
-        <p
-          v-if="hint"
-          class="text-xs text-slate-400"
+  <AppCard class="relative overflow-hidden group hover:shadow-premium transition-all duration-500 border border-slate-100/50">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-4">
+        <div 
+          class="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 shadow-soft"
+          :class="colorClasses"
         >
-          {{ hint }}
+          <component
+            :is="resolvedIcon"
+            class="w-6 h-6"
+          />
+        </div>
+        <div 
+          v-if="trend"
+          class="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest"
+          :class="trendPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'"
+        >
+          <span>{{ trendPositive ? '↑' : '↓' }}</span>
+          <span>{{ trend }}</span>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] leading-none mb-2">
+          {{ label }}
         </p>
+        <h3 class="text-2xl font-black text-slate-900 font-display leading-none">
+          {{ value }}
+        </h3>
+      </div>
+
+      <div class="mt-4 flex items-center gap-2">
+        <div class="h-1 flex-1 bg-slate-50 rounded-full overflow-hidden">
+          <div 
+            class="h-full rounded-full transition-all duration-1000"
+            :class="barColorClass"
+            :style="{ width: '65%' }"
+          />
+        </div>
+        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">vs last 7d</span>
       </div>
     </div>
   </AppCard>
 </template>
 
 <script setup lang="ts">
-import type { Component } from 'vue'
+import { computed } from 'vue'
 import AppCard from './AppCard.vue'
+import * as Icons from 'lucide-vue-next'
 
-withDefaults(
-  defineProps<{
-    label: string
-    value: string
-    hint?: string
-    icon?: Component
-    trend?: {
-      value: string
-      positive: boolean
-    }
-  }>(),
-  {
-    hint: '',
-    icon: undefined,
-    trend: undefined,
-  },
-)
+interface Props {
+  label: string
+  value: string
+  icon?: string
+  color?: 'purple' | 'green' | 'amber' | 'blue' | 'red' | 'slate'
+  trend?: string
+  trendPositive?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  icon: 'Activity',
+  color: 'purple',
+  trend: '',
+  trendPositive: true
+})
+
+const resolvedIcon = computed(() => (Icons as any)[props.icon] || Icons.Activity)
+
+const colorClasses = computed(() => {
+  const maps = {
+    purple: 'bg-brand-50 text-brand-600',
+    green: 'bg-emerald-50 text-emerald-600',
+    amber: 'bg-amber-50 text-amber-600',
+    blue: 'bg-blue-50 text-blue-600',
+    red: 'bg-red-50 text-red-600',
+    slate: 'bg-slate-50 text-slate-600',
+  }
+  return maps[props.color] || maps.purple
+})
+
+const barColorClass = computed(() => {
+  const maps = {
+    purple: 'bg-brand-500',
+    green: 'bg-emerald-500',
+    amber: 'bg-amber-500',
+    blue: 'bg-blue-500',
+    red: 'bg-red-500',
+    slate: 'bg-slate-500',
+  }
+  return maps[props.color] || maps.purple
+})
 </script>

@@ -1,68 +1,70 @@
 <template>
-  <component
-    :is="tag"
-    :type="tag === 'button' ? nativeType : undefined"
-    :class="classes"
-    :disabled="tag === 'button' ? disabled || loading : undefined"
+  <button
+    :type="type"
+    :disabled="disabled || loading"
+    :class="[
+      'inline-flex items-center justify-center font-bold transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]',
+      sizeClasses,
+      variantClasses,
+      rounded ? 'rounded-full' : 'rounded-[1rem]'
+    ]"
     :aria-busy="loading ? 'true' : undefined"
     :aria-label="ariaLabel"
+    @click="$emit('click', $event)"
   >
-    <span
+    <div
       v-if="loading"
-      class="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
-      aria-hidden="true"
+      class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
     />
     <slot />
-  </component>
+  </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'soft'
-type Size = 'sm' | 'md' | 'lg'
+interface Props {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'white'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
+  type?: 'button' | 'submit' | 'reset'
+  loading?: boolean
+  disabled?: boolean
+  rounded?: boolean
+  ariaLabel?: string
+}
 
-const props = withDefaults(
-  defineProps<{
-    variant?: Variant
-    size?: Size
-    disabled?: boolean
-    loading?: boolean
-    ariaLabel?: string
-    tag?: 'button' | 'span'
-    nativeType?: 'button' | 'submit' | 'reset'
-    fullWidth?: boolean
-  }>(),
-  {
-    variant: 'primary',
-    size: 'md',
-    disabled: false,
-    loading: false,
-    ariaLabel: '',
-    tag: 'button',
-    nativeType: 'button',
-    fullWidth: false,
-  },
-)
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'primary',
+  size: 'md',
+  type: 'button',
+  loading: false,
+  disabled: false,
+  rounded: false,
+})
 
-const classes = computed(() => {
-  const base =
-    'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-display active:scale-95'
-  const width = props.fullWidth ? 'w-full' : ''
-  const sizeMap: Record<Size, string> = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-5 py-2.5 text-sm',
+defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
+
+const sizeClasses = computed(() => {
+  const sizes = {
+    xs: 'px-3 py-1.5 text-[10px] uppercase tracking-widest',
+    sm: 'px-4 py-2 text-xs uppercase tracking-widest',
+    md: 'px-6 py-2.5 text-sm',
     lg: 'px-8 py-3.5 text-base',
   }
-  const variantMap: Record<Variant, string> = {
-    primary: 'bg-brand-600 text-white shadow-premium hover:bg-brand-700 hover:shadow-premium-hover focus-visible:ring-brand-500',
-    secondary:
-      'border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-brand-300 hover:text-brand-700 hover:bg-brand-50 focus-visible:ring-brand-500',
-    ghost: 'bg-transparent text-slate-600 hover:bg-brand-50 hover:text-brand-700 focus-visible:ring-brand-500',
-    danger: 'bg-rose-500 text-white shadow-premium hover:bg-rose-600 focus-visible:ring-rose-500',
-    soft: 'bg-brand-50 text-brand-700 hover:bg-brand-100 focus-visible:ring-brand-500',
-  }
+  return sizes[props.size]
+})
 
-  return [base, width, sizeMap[props.size], variantMap[props.variant]].join(' ')
+const variantClasses = computed(() => {
+  const variants = {
+    primary: 'bg-brand-600 text-white shadow-lg shadow-brand-600/20 hover:bg-brand-700 hover:shadow-brand-600/30 focus:ring-brand-500/20',
+    secondary: 'bg-navy-900 text-white shadow-lg shadow-navy-900/20 hover:bg-navy-950 focus:ring-navy-900/20',
+    outline: 'bg-transparent border-2 border-slate-200 text-slate-700 hover:border-brand-500 hover:text-brand-600 focus:ring-brand-500/10',
+    ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-200',
+    danger: 'bg-red-600 text-white shadow-lg shadow-red-600/20 hover:bg-red-700 focus:ring-red-500/20',
+    white: 'bg-white text-slate-900 shadow-premium hover:bg-slate-50 focus:ring-slate-200',
+  }
+  return variants[props.variant]
 })
 </script>

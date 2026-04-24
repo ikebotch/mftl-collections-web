@@ -11,12 +11,11 @@ export default {
           200: '#ddd6fe',
           300: '#c4b5fd',
           400: '#a78bfa',
-          500: '#8b5cf6', // Primary brand color
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
-          950: '#2e1065',
+          500: '#7c3aed', // Sharper purple
+          600: '#6d28d9',
+          700: '#5b21b6',
+          800: '#4c1d95',
+          900: '#2e1065',
         },
         slate: {
           50: '#f8fafc',
@@ -30,6 +29,12 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
           950: '#020617',
+        },
+        navy: {
+          700: '#1e293b',
+          800: '#0f172a',
+          900: '#0a121e',
+          950: '#060b13',
         }
       },
       fontFamily: {
@@ -37,13 +42,15 @@ export default {
         display: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
-        'xl': '1rem',
-        '2xl': '1.5rem',
-        '3xl': '2rem',
+        'xl': '0.75rem',
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+        '4xl': '2rem',
       },
       boxShadow: {
-        'premium': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
-        'premium-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'premium': '0 10px 40px -10px rgba(0, 0, 0, 0.08), 0 5px 15px -5px rgba(0, 0, 0, 0.03)',
+        'premium-hover': '0 20px 50px -12px rgba(0, 0, 0, 0.12), 0 10px 20px -8px rgba(0, 0, 0, 0.05)',
       }
     },
   },
