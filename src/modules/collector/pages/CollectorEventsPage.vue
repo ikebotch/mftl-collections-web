@@ -1,152 +1,170 @@
 <template>
-  <div class="space-y-5 pb-4">
-    <section>
-      <h2 class="text-2xl font-semibold text-white">
-        Assigned events
+  <div class="space-y-6 pb-20">
+    <header class="pt-2">
+      <h2 class="text-3xl font-black text-white tracking-tight">
+        Assigned Shifts
       </h2>
-      <p class="mt-2 text-sm text-slate-300">
-        Open an assigned event to start a new collection with the right recipient funds already filtered.
+      <p class="mt-2 text-sm text-slate-400 font-medium">
+        Select an event to start collecting contributions.
       </p>
-    </section>
+    </header>
 
     <LoadingState
       v-if="query.isLoading.value"
-      text="Loading assignments…"
+      text="Syncing assignments…"
+      variant="dark"
     />
     <ErrorState
       v-else-if="query.isError.value"
-      title="Could not load assignments"
-      :message="query.error.value?.message ?? 'Try again later.'"
-      :correlation-id="query.error.value?.correlationId"
+      title="Sync failed"
+      variant="dark"
+      :message="query.error.value?.message ?? 'Please check your connection.'"
       show-retry
       @retry="query.refetch"
     />
+    
     <template v-else-if="query.data.value">
-      <div class="grid grid-cols-2 gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1">
+      <!-- Tabs -->
+      <div class="grid grid-cols-2 gap-2 rounded-2xl border border-white/5 bg-white/[0.03] p-1.5">
         <button
+          v-for="tab in ['events', 'funds']"
+          :key="tab"
           type="button"
-          class="rounded-full px-4 py-2 text-sm font-medium transition"
-          :class="activeTab === 'events' ? 'bg-violet-500 text-white' : 'text-slate-300'"
-          @click="activeTab = 'events'"
+          class="rounded-xl py-3 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300"
+          :class="activeTab === tab ? 'bg-violet-600 text-white shadow-premium' : 'text-slate-500 hover:text-slate-300'"
+          @click="activeTab = tab as any"
         >
-          My Events
-        </button>
-        <button
-          type="button"
-          class="rounded-full px-4 py-2 text-sm font-medium transition"
-          :class="activeTab === 'funds' ? 'bg-violet-500 text-white' : 'text-slate-300'"
-          @click="activeTab = 'funds'"
-        >
-          My Funds
+          {{ tab }}
         </button>
       </div>
 
+      <!-- Assignments Status -->
       <div
         v-if="!query.data.value.hasAssignments"
-        class="rounded-[1.75rem] border border-amber-400/15 bg-amber-400/8 p-5"
+        class="rounded-3xl border border-amber-500/20 bg-amber-500/10 p-6 flex gap-4 items-start"
       >
-        <p class="text-sm text-slate-200">
-          {{ query.data.value.blockedReason || 'No assignments are active for this collector.' }}
-        </p>
+        <div class="w-10 h-10 rounded-2xl bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
+           <AlertTriangle class="w-6 h-6" />
+        </div>
+        <div>
+          <h4 class="text-amber-500 font-bold">No Active Assignments</h4>
+          <p class="text-sm text-slate-300 mt-1 leading-relaxed">
+            {{ query.data.value.blockedReason || 'You need to be assigned to an event before you can start collecting.' }}
+          </p>
+        </div>
       </div>
 
-      <template v-else-if="activeTab === 'events'">
+      <!-- Events List -->
+      <div v-else-if="activeTab === 'events'" class="space-y-4">
         <div
           v-if="query.data.value.events.length === 0"
-          class="rounded-[1.75rem] border border-dashed border-white/10 bg-white/[0.03] p-5 text-sm text-slate-300"
+          class="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
         >
-          No assigned events available.
+          <Calendar class="w-12 h-12 text-slate-700 mx-auto mb-4" />
+          <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">No Assigned Events</p>
         </div>
 
-        <template v-else>
-          <article
-            v-for="event in query.data.value.events"
-            :key="event.id"
-            class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-4"
-          >
-            <div class="flex gap-4">
-              <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.25rem] bg-[linear-gradient(135deg,_rgba(124,58,237,0.9),_rgba(34,211,238,0.5))] text-xl font-semibold text-white">
-                {{ event.title.slice(0, 1) }}
-              </div>
-              <div class="min-w-0 flex-1">
-                <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 class="text-lg font-semibold text-white">
-                      {{ event.title }}
-                    </h3>
-                    <div class="mt-2 flex items-center gap-2">
-                      <span
-                        class="h-2 w-2 rounded-full"
-                        :class="event.status.toLowerCase() === 'live' ? 'bg-emerald-400' : 'bg-amber-400'"
-                      />
-                      <span class="text-sm text-slate-300">{{ event.status }}</span>
-                    </div>
-                  </div>
-                  <AppButton
-                    size="sm"
-                    @click="router.push(`/collector/contributions/new?eventId=${event.id}`)"
-                  >
-                    Open
-                  </AppButton>
-                </div>
-                <p class="mt-3 text-sm text-slate-300">
-                  {{ event.dateLabel }} · {{ event.location }}
-                </p>
-                <p class="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">
-                  {{ event.assignedFundCount }} assigned fund{{ event.assignedFundCount === 1 ? '' : 's' }}
-                </p>
-              </div>
+        <article
+          v-for="event in query.data.value.events"
+          :key="event.id"
+          class="relative group active:scale-[0.98] transition-transform duration-200"
+          @click="router.push(`/collector/contributions/new?eventId=${event.id}`)"
+        >
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-cyan-500 rounded-[2rem] blur opacity-0 group-hover:opacity-20 transition duration-500" />
+          <div class="relative rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 flex gap-5 items-center">
+            <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-600 to-indigo-700 text-2xl font-black text-white shadow-premium">
+              {{ event.title.slice(0, 1) }}
             </div>
-          </article>
-        </template>
-      </template>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-black text-white truncate">
+                    {{ event.title }}
+                  </h3>
+                  <div class="mt-1.5 flex items-center gap-2">
+                    <span
+                      class="h-2 w-2 rounded-full animate-pulse"
+                      :class="event.status.toLowerCase() === 'live' ? 'bg-emerald-400' : 'bg-amber-400'"
+                    />
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ event.status }}</span>
+                  </div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40">
+                  <ChevronRight class="w-6 h-6" />
+                </div>
+              </div>
+              <p class="mt-3 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                {{ event.location }} · {{ event.dateLabel }}
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
 
-      <template v-else>
+      <!-- Funds List -->
+      <div v-else class="space-y-4">
         <div
           v-if="query.data.value.funds.length === 0"
-          class="rounded-[1.75rem] border border-dashed border-white/10 bg-white/[0.03] p-5 text-sm text-slate-300"
+          class="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
         >
-          No assigned funds available.
+          <LayoutGrid class="w-12 h-12 text-slate-700 mx-auto mb-4" />
+          <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">No Assigned Funds</p>
         </div>
 
-        <template v-else>
-          <article
-            v-for="fund in query.data.value.funds"
-            :key="fund.id"
-            class="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-4"
-          >
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <h3 class="text-lg font-semibold text-white">
-                  {{ fund.name }}
-                </h3>
-                <p class="mt-2 text-sm text-slate-300">
-                  {{ fund.description }}
-                </p>
-                <p class="mt-3 text-sm text-slate-300">
-                  Target: {{ formatCurrency(fund.targetAmount, fund.currency) }} · Raised:
-                  {{ formatCurrency(fund.collectedAmount, fund.currency) }} ({{ fund.progress }}%)
-                </p>
+        <article
+          v-for="fund in query.data.value.funds"
+          :key="fund.id"
+          class="relative group active:scale-[0.98] transition-transform duration-200"
+          @click="router.push(`/collector/contributions/new?eventId=${fund.eventId}&fundId=${fund.id}`)"
+        >
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2rem] blur opacity-0 group-hover:opacity-20 transition duration-500" />
+          <div class="relative rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+            <div class="flex items-center justify-between gap-4 mb-4">
+               <h3 class="text-xl font-black text-white truncate">
+                {{ fund.name }}
+              </h3>
+              <div class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">
+                {{ fund.progress }}%
               </div>
-              <AppButton
-                size="sm"
-                @click="router.push(`/collector/contributions/new?eventId=${fund.eventId}`)"
-              >
-                Open
-              </AppButton>
             </div>
-            <div class="mt-4 h-2 rounded-full bg-white/10">
-              <div
-                class="h-2 rounded-full bg-[linear-gradient(90deg,_#7C3AED,_#22D3EE)]"
-                :style="{ width: `${fund.progress}%` }"
-              />
+            
+            <div class="h-2 w-full bg-white/5 rounded-full overflow-hidden mb-4">
+               <div 
+                 class="h-full bg-gradient-to-r from-violet-600 to-cyan-400 rounded-full transition-all duration-1000"
+                 :style="{ width: `${fund.progress}%` }"
+               />
             </div>
-          </article>
-        </template>
-      </template>
+
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+              <span class="text-slate-500">Collected</span>
+              <span class="text-white">{{ formatCurrency(fund.collectedAmount, fund.currency) }}</span>
+            </div>
+          </div>
+        </article>
+      </div>
     </template>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useCollectorAssignments } from '../composables/useCollector'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
+import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import { formatCurrency } from '@/shared/utils/formatters'
+import { 
+  ChevronRight, 
+  AlertTriangle, 
+  Calendar, 
+  LayoutGrid 
+} from 'lucide-vue-next'
+
+const router = useRouter()
+const query = useCollectorAssignments()
+const activeTab = ref<'events' | 'funds'>('events')
+</script>
 
 <script setup lang="ts">
 import { ref } from 'vue'

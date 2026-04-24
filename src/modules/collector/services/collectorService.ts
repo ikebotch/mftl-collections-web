@@ -136,9 +136,21 @@ export async function getCollectorDashboard(): Promise<CollectorDashboardSummary
   }
 }
 
+export async function listAllCollectors(): Promise<CollectorProfile[]> {
+  const response = await httpClient.get<CollectorProfileDto[]>('/collector')
+  return (response.data ?? []).map(mapProfile)
+}
+
+export async function createCollector(payload: any): Promise<CollectorProfile> {
+  const response = await httpClient.post<CollectorProfileDto, any>('/collector', payload)
+  return mapProfile(response.data)
+}
+
 export const collectorService = {
   getCollectorProfile,
   getCollectorAssignments,
   getCollectorHistory,
   getCollectorDashboard,
+  listAll: listAllCollectors,
+  create: createCollector,
 }
