@@ -8,6 +8,7 @@ vi.mock('../composables/useEvents', () => ({
   useCreateEvent: () => ({
     isPending: { value: false },
     isError: { value: false },
+    isSuccess: { value: false },
     error: { value: null },
     mutateAsync: vi.fn(async () => ({ id: 'event-1' })),
   }),

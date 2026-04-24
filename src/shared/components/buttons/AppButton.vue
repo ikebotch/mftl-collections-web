@@ -1,6 +1,6 @@
 <template>
   <button
-    :type="type"
+    :type="buttonType"
     :disabled="disabled || loading"
     :class="[
       'inline-flex items-center justify-center font-bold transition-all duration-300 focus:outline-none focus:ring-4 active:scale-[0.98]',
@@ -28,6 +28,7 @@ interface Props {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'white'
   size?: 'xs' | 'sm' | 'md' | 'lg'
   type?: 'button' | 'submit' | 'reset'
+  nativeType?: 'button' | 'submit' | 'reset'
   loading?: boolean
   disabled?: boolean
   rounded?: boolean
@@ -38,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   size: 'md',
   type: 'button',
+  nativeType: undefined,
   loading: false,
   disabled: false,
   rounded: false,
@@ -57,6 +59,8 @@ const sizeClasses = computed(() => {
   }
   return sizes[props.size]
 })
+
+const buttonType = computed(() => props.nativeType ?? props.type)
 
 const variantClasses = computed(() => {
   const variants = {

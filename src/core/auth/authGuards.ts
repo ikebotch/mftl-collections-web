@@ -2,7 +2,7 @@ import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { watch } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { hasPermission, type AppPermission } from './permissions'
-import { isAuthConfigured } from './auth0'
+import { isAuthConfigured, shouldBypassAuth } from './auth0'
 
 type GuardContext = {
   app?: {
@@ -11,9 +11,9 @@ type GuardContext = {
 }
 
 function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext) {
-  return (auth0: ReturnType<typeof useAuth0>) => {
+  return (auth0: ReturnType<typeof useAuth0> | undefined) => {
     const finish = async () => {
-      if (auth0.isAuthenticated.value || !isAuthConfigured()) {
+      if (shouldBypassAuth() || !auth0 || auth0.isAuthenticated.value || !isAuthConfigured()) {
         next()
         return
       }
@@ -23,7 +23,7 @@ function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext)
       })
     }
 
-    if (!auth0.isLoading.value) {
+    if (!auth0 || !auth0.isLoading.value) {
       void finish()
       return
     }
@@ -41,6 +41,11 @@ export function requireAuth(
   _from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
+  if (shouldBypassAuth()) {
+    next()
+    return
+  }
+
   const auth0 = useAuth0()
   return redirectToLogin(to, next)(auth0)
 }
@@ -61,6 +66,10 @@ export function requirePermission(permission: AppPermission) {
 }
 
 export function installAuthTokenBridge(context: GuardContext) {
+  if (shouldBypassAuth()) {
+    return
+  }
+
   context.app?.runWithContext(() => {
     const auth0 = useAuth0()
     if (!auth0) {
