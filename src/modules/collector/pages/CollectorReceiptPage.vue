@@ -1,5 +1,16 @@
 <template>
   <div class="space-y-6">
+    <section class="space-y-3">
+      <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+        Collector
+      </p>
+      <h2 class="text-3xl font-semibold tracking-tight text-white">
+        Receipt confirmation
+      </h2>
+      <p class="max-w-2xl text-sm leading-6 text-slate-300">
+        Receipt details are loaded directly from the backend so you can confirm the collected amount before the donor leaves.
+      </p>
+    </section>
     <LoadingState
       v-if="query.isLoading.value"
       text="Loading receipt…"
@@ -14,7 +25,7 @@
     />
     <AppCard
       v-else-if="query.data.value"
-      class="max-w-3xl"
+      class="max-w-4xl border-white/10 bg-white/95 shadow-2xl shadow-slate-950/30"
     >
       <SectionHeader
         title="Receipt confirmation"

@@ -1,25 +1,47 @@
 import { eventsService } from '@/modules/events/services/eventsService'
 import { listReceipts } from '@/modules/receipts/services/receiptsService'
-import type { CollectorEventRow, CollectorReceipt } from '../types/collector'
+import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+import type { CollectorDashboardSummary, CollectorEventRow, CollectorReceipt } from '../types/collector'
+
+function parseDisplayedCurrencyAmount(value: string): { amount: number; currency: string } {
+  const currencyMatch = value.match(/[A-Z]{3}/)
+  const amount = Number.parseFloat(value.replace(/[^0-9.-]/g, ''))
+
+  return {
+    amount: Number.isFinite(amount) ? amount : 0,
+    currency: currencyMatch?.[0] ?? 'GBP',
+  }
+}
 
 export async function listAssignedEvents(): Promise<CollectorEventRow[]> {
-  // For now, collectors see all events until assigned events endpoint is ready
   const events = await eventsService.list()
   return events.map(e => ({
     id: e.id,
     title: e.title,
-    location: 'Main Site', // Placeholder
-    shift: 'All Day', // Placeholder
+    description: e.description || 'Ready for collection capture.',
+    eventDate: formatDate(e.eventDate),
+    status: e.status,
   }))
 }
 
-export async function getCollectorDashboard() {
-  // This will eventually be a real endpoint
-  const events = await listAssignedEvents()
+export async function getCollectorDashboard(): Promise<CollectorDashboardSummary> {
+  const [events, receipts] = await Promise.all([listAssignedEvents(), listCollectorHistory()])
+  const totals = receipts.reduce(
+    (accumulator, receipt) => {
+      const parsed = parseDisplayedCurrencyAmount(receipt.amount)
+      return {
+        amount: accumulator.amount + parsed.amount,
+        currency: accumulator.currency || parsed.currency,
+      }
+    },
+    { amount: 0, currency: 'GBP' },
+  )
+
   return {
-    todayCollections: 'GBP 0.00',
-    receiptsIssued: '0',
+    totalCollected: formatCurrency(totals.amount, totals.currency),
+    contributionCount: String(receipts.length),
     assignedEvents: String(events.length),
+    recentReceipts: receipts.slice(0, 5),
   }
 }
 
@@ -30,6 +52,12 @@ export async function listCollectorHistory(): Promise<CollectorReceipt[]> {
     amount: receipt.amount,
     status: receipt.status,
     receiptNumber: receipt.receiptNumber,
+    issuedAt: receipt.issuedAt,
+    contributorName: receipt.contributorName,
+    eventTitle: receipt.eventTitle,
+    paymentMethod: receipt.paymentMethod,
+    contributionStatus: receipt.contributionStatus,
+    paymentStatus: receipt.paymentStatus,
   }))
 }
 
