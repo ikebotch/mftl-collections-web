@@ -42,6 +42,7 @@
       :columns="columns"
       :rows="query.data.value ?? []"
       row-key="id"
+      empty-message="No contributions recorded yet"
     >
       <template #cell:status="{ value }">
         <ContributionStatusBadge :status="String(value)" />

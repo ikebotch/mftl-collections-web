@@ -1,5 +1,25 @@
 import { httpClient } from '@/core/api/httpClient'
 import type { ContributionRow } from '../types/contribution'
+import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+
+export interface ContributionListItemDto {
+  id?: string
+  createdAt?: string
+  eventTitle?: string
+  recipientFundName?: string
+  paymentMethod?: string
+  status?: string
+  amount?: number
+  currency?: string
+  Id?: string
+  CreatedAt?: string
+  EventTitle?: string
+  RecipientFundName?: string
+  PaymentMethod?: string
+  Status?: string
+  Amount?: number
+  Currency?: string
+}
 
 export interface CashContributionResult {
   contributionId: string
@@ -32,15 +52,24 @@ function mapCashContributionResult(dto: CashContributionResultDto): CashContribu
   }
 }
 
-export async function listContributions(): Promise<ContributionRow[]> {
-  try {
-    const response = await httpClient.get<ContributionRow[]>('/contributions')
-    return response.data || []
-  } catch (error) {
-    // Fallback for not implemented or missing endpoint
-    console.warn('Contributions list endpoint error:', error)
-    return []
+function mapContributionListItem(dto: ContributionListItemDto): ContributionRow {
+  const amount = dto.amount ?? dto.Amount ?? 0
+  const currency = dto.currency ?? dto.Currency ?? 'GBP'
+
+  return {
+    id: dto.id ?? dto.Id ?? '',
+    date: formatDate(dto.createdAt ?? dto.CreatedAt ?? null),
+    event: dto.eventTitle ?? dto.EventTitle ?? 'Unknown event',
+    recipientFund: dto.recipientFundName ?? dto.RecipientFundName ?? 'Unknown fund',
+    paymentMethod: dto.paymentMethod ?? dto.PaymentMethod ?? 'Unknown',
+    status: dto.status ?? dto.Status ?? 'Unknown',
+    amount: formatCurrency(amount, currency),
   }
+}
+
+export async function listContributions(): Promise<ContributionRow[]> {
+  const response = await httpClient.get<ContributionListItemDto[]>('/contributions')
+  return (response.data ?? []).map(mapContributionListItem)
 }
 
 export async function recordCashContribution(payload: RecordCashContributionInput): Promise<CashContributionResult> {
