@@ -6,4 +6,8 @@ export interface ContributionRow {
   paymentMethod: string
   status: string
   amount: string
+  amountValue: number
+  contributorName: string
+  contributorPhone: string
+  contributorEmail?: string
 }

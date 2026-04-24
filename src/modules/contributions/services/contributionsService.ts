@@ -58,7 +58,7 @@ function mapCashContributionResult(dto: CashContributionResultDto): CashContribu
   }
 }
 
-function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
+function mapContributionRow(dto: ContributionListItemDto & { ContributorName?: string, ContributorPhone?: string, ContributorEmail?: string, contributorName?: string, contributorPhone?: string, contributorEmail?: string }): ContributionRow {
   const amount = dto.amount ?? dto.Amount ?? 0
   const currency = dto.currency ?? dto.Currency ?? 'GHS'
 
@@ -70,6 +70,10 @@ function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
     paymentMethod: dto.paymentMethod ?? dto.PaymentMethod ?? 'Unknown',
     status: dto.status ?? dto.Status ?? 'Unknown',
     amount: formatCurrency(amount, currency),
+    amountValue: amount,
+    contributorName: dto.contributorName ?? dto.ContributorName ?? 'Anonymous',
+    contributorPhone: dto.contributorPhone ?? dto.ContributorPhone ?? '',
+    contributorEmail: dto.contributorEmail ?? dto.ContributorEmail,
   }
 }
 

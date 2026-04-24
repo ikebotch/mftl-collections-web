@@ -8,6 +8,10 @@ export function mapEventDto(dto: EventDto): Event {
   const eventDate =
     dto.eventDate ?? (dto as EventDto & { EventDate?: string | null }).EventDate ?? null
   const isActive = dto.isActive ?? (dto as EventDto & { IsActive?: boolean }).IsActive ?? false
+  
+  const totalRaised = dto.totalRaised ?? 0
+  const totalTarget = dto.totalTarget ?? 0
+  const progress = totalTarget > 0 ? Math.round((totalRaised / totalTarget) * 100) : 0
 
   return {
     id,
@@ -16,6 +20,11 @@ export function mapEventDto(dto: EventDto): Event {
     eventDate,
     status: isActive ? 'active' : 'draft',
     eventType: description.toLowerCase().includes('support') ? 'support' : 'community',
-    currency: 'GBP',
+    currency: 'GHS',
+    totalRaised,
+    totalTarget,
+    progress,
+    fundCount: dto.fundCount ?? 0,
+    slug: dto.slug ?? id.slice(0, 8),
   }
 }

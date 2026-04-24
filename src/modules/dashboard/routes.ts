@@ -62,6 +62,16 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/modules/collector/pages/AdminCollectorsPage.vue'),
       },
       {
+        path: 'collectors/new',
+        name: 'admin-collectors-new',
+        component: () => import('@/modules/collector/pages/CollectorCreatePage.vue'),
+      },
+      {
+        path: 'donors',
+        name: 'admin-donors',
+        component: () => import('@/modules/donors/pages/DonorsPage.vue'),
+      },
+      {
         path: 'settlements',
         name: 'admin-settlements',
         component: () => import('@/modules/settlements/pages/SettlementsPage.vue'),
