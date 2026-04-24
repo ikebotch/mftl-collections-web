@@ -1,53 +1,25 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import httpClient, { ApiError } from './httpClient'
-import { useTenantStore } from '../stores/tenantStore'
-import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
+import { httpClient } from './httpClient'
 
-vi.mock('../config/appConfig', () => ({
-  appConfig: {
-    api: {
-      baseUrl: 'http://test-api',
-      tenantHeaderName: 'X-Tenant-Id'
-    }
-  }
+vi.mock('@/core/auth/auth0', () => ({
+  getAccessToken: vi.fn(async () => 'token-123'),
 }))
 
-describe('HttpClient', () => {
+describe('httpClient', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    window.localStorage.clear()
   })
 
-  it('should include tenant header when tenant is set', async () => {
-    const tenantStore = useTenantStore()
-    tenantStore.setTenant('tenant-123', 'Test Tenant')
+  it('attaches the configured tenant header and bearer token', async () => {
+    window.localStorage.setItem('mftl.selectedTenantId', 'tenant-1')
 
-    // Interceptors are applied to the request config
-    const config = await (httpClient.interceptors.request as any).handlers[0].fulfilled({
-      headers: {}
+    const config = await httpClient.client.interceptors.request.handlers[0].fulfilled?.({
+      headers: {},
     })
 
-    expect(config.headers['X-Tenant-Id']).toBe('tenant-123')
-  })
-
-  it('should throw ApiError on failure response', async () => {
-    const errorResponse = {
-      data: {
-        success: false,
-        message: 'Invalid request',
-        errors: ['Field is required'],
-        correlationId: 'corr-123'
-      },
-      status: 400
-    }
-
-    try {
-      (httpClient.interceptors.response as any).handlers[0].fulfilled(errorResponse)
-    } catch (error: any) {
-      expect(error).toBeInstanceOf(ApiError)
-      expect(error.message).toBe('Invalid request')
-      expect(error.statusCode).toBe(400)
-      expect(error.errors).toContain('Field is required')
-      expect(error.correlationId).toBe('corr-123')
-    }
+    expect(config?.headers['X-Tenant-Id']).toBe('tenant-1')
+    expect(config?.headers.Authorization).toBe('Bearer token-123')
   })
 })

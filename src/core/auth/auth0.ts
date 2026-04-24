@@ -1,17 +1,46 @@
 import { createAuth0 } from '@auth0/auth0-vue'
-import { appConfig } from '../config/appConfig'
+import type { App } from 'vue'
+import { appConfig } from '@/core/config/appConfig'
 
-export const auth0 = createAuth0({
-  domain: appConfig.auth.domain,
-  clientId: appConfig.auth.clientId,
-  authorizationParams: {
-    redirect_uri: window.location.origin + '/auth/callback',
-    audience: appConfig.auth.audience,
-  },
-  cacheLocation: 'localstorage',
-  useRefreshTokens: true,
-})
+const authEnabled = Boolean(appConfig.auth.domain && appConfig.auth.clientId)
 
-export async function getAccessToken() {
-  return await auth0.getAccessTokenSilently()
+let tokenGetter: (() => Promise<string | undefined>) | undefined
+
+export const auth0Plugin = authEnabled
+  ? createAuth0({
+      domain: appConfig.auth.domain,
+      clientId: appConfig.auth.clientId,
+      authorizationParams: {
+        redirect_uri: appConfig.auth.callbackUrl,
+        audience: appConfig.auth.audience || undefined,
+      },
+      cacheLocation: 'localstorage',
+      useRefreshTokens: true,
+    })
+  : null
+
+export function installAuth(app: App<Element>) {
+  if (auth0Plugin) {
+    app.use(auth0Plugin)
+  }
+}
+
+export function registerAccessTokenProvider(provider: () => Promise<string | undefined>) {
+  tokenGetter = provider
+}
+
+export async function getAccessToken(): Promise<string | undefined> {
+  if (!tokenGetter) {
+    return undefined
+  }
+
+  try {
+    return await tokenGetter()
+  } catch {
+    return undefined
+  }
+}
+
+export function isAuthConfigured(): boolean {
+  return authEnabled
 }
