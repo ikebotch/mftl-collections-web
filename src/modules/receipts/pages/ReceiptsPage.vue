@@ -1,29 +1,19 @@
 <template>
   <div class="space-y-12">
-    <!-- Editorial Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
-      <div class="space-y-4">
-        <div class="flex items-center gap-3">
-          <div class="w-2 h-10 bg-slate-900" />
-          <h1 class="text-5xl font-black text-slate-900 tracking-tighter uppercase italic">
-            Audit Trail
-          </h1>
-        </div>
-        <p class="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] pl-5">
-          Receipt Management & Financial Verification
-        </p>
-      </div>
-      
-      <div class="flex items-center gap-3">
+    <AdminPageHeader
+      title="Receipts"
+      description="Review issued receipts and verify contribution records."
+    >
+      <template #actions>
         <AppButton
           variant="outline"
-          class="!rounded-2xl !py-6 !px-8 border-2 border-slate-200 hover:border-slate-900 transition-all"
+          class="!rounded-xl bg-white shadow-sm border-slate-200"
         >
-          <Download class="w-4 h-4 mr-3" />
-          <span class="font-black uppercase tracking-widest text-[10px]">Export Ledger</span>
+          <Download class="w-4 h-4 mr-2 text-slate-400" />
+          Export Ledger
         </AppButton>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <LoadingState
       v-if="query.isLoading.value"
@@ -223,6 +213,7 @@
 import { ref, computed } from 'vue'
 import { useReceipts } from '../composables/useReceipts'
 import type { ReceiptRow } from '../types/receipt'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import ReceiptStatusBadge from '../components/ReceiptStatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppTable from '@/shared/components/tables/AppTable.vue'

@@ -1,37 +1,29 @@
 <template>
   <div class="space-y-12">
-    <!-- Editorial Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
-      <div class="space-y-4">
+    <AdminPageHeader
+      title="Collectors"
+      description="Manage field collectors, assignments, performance, and cash collection access."
+    >
+      <template #actions>
         <div class="flex items-center gap-3">
-          <div class="w-2 h-10 bg-violet-600" />
-          <h1 class="text-5xl font-black text-slate-900 tracking-tighter uppercase italic">
-            Collectors
-          </h1>
+          <AppButton
+            variant="outline"
+            class="!rounded-xl bg-white shadow-sm border-slate-200"
+          >
+            <Download class="w-4 h-4 mr-2 text-slate-400" />
+            Export Database
+          </AppButton>
+          <AppButton 
+            variant="primary"
+            class="!rounded-xl shadow-premium"
+            @click="router.push('/admin/collectors/new')"
+          >
+            <Plus class="w-4 h-4 mr-2" />
+            Add Collector
+          </AppButton>
         </div>
-        <p class="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] pl-5">
-          Operational Intelligence & Field Management
-        </p>
-      </div>
-      
-      <div class="flex items-center gap-3">
-        <AppButton
-          variant="outline"
-          class="!rounded-2xl !py-6 !px-8 border-2 border-slate-200 hover:border-slate-900 transition-all"
-        >
-          <Download class="w-4 h-4 mr-3" />
-          <span class="font-black uppercase tracking-widest text-[10px]">Export Database</span>
-        </AppButton>
-        <AppButton 
-          variant="primary"
-          class="!rounded-2xl !py-6 !px-8 bg-slate-900 hover:bg-violet-600 shadow-2xl transition-all"
-          @click="router.push('/admin/collectors/new')"
-        >
-          <Plus class="w-4 h-4 mr-3" />
-          <span class="font-black uppercase tracking-widest text-[10px]">Add Collector</span>
-        </AppButton>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <LoadingState
       v-if="query.isLoading.value"
@@ -301,6 +293,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAllCollectors } from '../composables/useAllCollectors'
 import type { CollectorProfile } from '../types/collector'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import CollectorStatusBadge from '../components/CollectorStatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppTable from '@/shared/components/tables/AppTable.vue'

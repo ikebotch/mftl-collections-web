@@ -1,5 +1,5 @@
 import { httpClient } from '@/core/api/httpClient'
-import type { Event, EventDto, CreateEventInput } from '../types/event'
+import type { Event, EventDto, CreateEventInput, UpdateEventInput } from '../types/event'
 import { mapEventDto } from '../mappers/eventMappers'
 
 export const eventsService = {
@@ -14,6 +14,10 @@ export const eventsService = {
   },
   async create(payload: CreateEventInput): Promise<Event> {
     const response = await httpClient.post<EventDto, CreateEventInput>('/events', payload)
+    return mapEventDto(response.data)
+  },
+  async update(id: string, payload: UpdateEventInput): Promise<Event> {
+    const response = await httpClient.put<EventDto, UpdateEventInput>(`/events/${id}`, payload)
     return mapEventDto(response.data)
   },
 }

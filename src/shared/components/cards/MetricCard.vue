@@ -30,15 +30,23 @@
         </h3>
       </div>
 
-      <div class="mt-4 flex items-center gap-2">
+      <div
+        v-if="progress !== undefined"
+        class="mt-4 flex items-center gap-2"
+      >
         <div class="h-1 flex-1 bg-slate-50 rounded-full overflow-hidden">
           <div 
             class="h-full rounded-full transition-all duration-1000"
             :class="barColorClass"
-            :style="{ width: '65%' }"
+            :style="{ width: `${progress}%` }"
           />
         </div>
-        <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest">vs last 7d</span>
+        <span
+          v-if="progressLabel"
+          class="text-[9px] font-bold text-slate-600 uppercase tracking-widest"
+        >
+          {{ progressLabel }}
+        </span>
       </div>
     </div>
   </AppCard>
@@ -51,18 +59,22 @@ import * as Icons from 'lucide-vue-next'
 
 interface Props {
   label: string
-  value: string
+  value: string | number
   icon?: string
   color?: 'purple' | 'green' | 'amber' | 'blue' | 'red' | 'slate'
   trend?: string
   trendPositive?: boolean
+  progress?: number
+  progressLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   icon: 'Activity',
   color: 'purple',
   trend: '',
-  trendPositive: true
+  trendPositive: true,
+  progress: undefined,
+  progressLabel: 'vs last period'
 })
 
 const resolvedIcon = computed(() => (Icons as any)[props.icon] || Icons.Activity)

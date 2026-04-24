@@ -1,17 +1,10 @@
 <template>
   <div class="space-y-10 selection:bg-violet-500/30">
-    <!-- Page Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-      <div>
-        <h1 class="text-4xl font-black font-display tracking-tight text-slate-900">
-          Contributions Ledger
-        </h1>
-        <p class="text-slate-500 mt-2 font-medium">
-          Audit and manage real-time financial inflows across all events.
-        </p>
-      </div>
-      
-      <div class="flex items-center gap-3">
+    <AdminPageHeader
+      title="Contributions"
+      description="Review incoming collections, payment status, receipts, and donor activity."
+    >
+      <template #actions>
         <AppButton
           variant="outline"
           class="!rounded-xl bg-white shadow-sm border-slate-200"
@@ -19,8 +12,8 @@
           <Download class="w-4 h-4 mr-2 text-slate-400" />
           Export Audit Log
         </AppButton>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <LoadingState
       v-if="query.isLoading.value"
@@ -417,6 +410,7 @@ import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useContributions } from '../composables/useContributions'
 import type { ContributionRow } from '../types/contribution'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import ContributionStatusBadge from '../components/ContributionStatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'

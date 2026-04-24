@@ -1,105 +1,296 @@
 <template>
-  <div class="space-y-6">
-    <PageHeader
-      eyebrow="Admin"
-      title="Event details"
-      description="Review the event summary and move into recipient fund setup."
+  <div
+    v-if="query.isLoading.value"
+    class="py-32"
+  >
+    <LoadingState text="Loading event details..." />
+  </div>
+  <ErrorState
+    v-else-if="query.isError.value"
+    title="Failed to load event"
+    :message="query.error.value?.message ?? 'Sync failed'"
+    show-retry
+    @retry="query.refetch"
+  />
+  <div
+    v-else-if="event"
+    class="space-y-10"
+  >
+    <DetailPageHeader
+      :title="event.title"
+      description="Review campaign performance, recipient funds, contributions, and public visibility."
+      :back-to="{ name: 'admin-events' }"
     >
-      <template #actions>
-        <AppButton @click="router.push(`/admin/events/${eventId}/recipient-funds`)">
-          View recipient funds
-        </AppButton>
+      <template #meta>
+        <div class="flex items-center gap-4">
+          <StatusBadge
+            :status="event.status"
+            :variant="event.status === 'active' ? 'success' : 'neutral'"
+          />
+          <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+            {{ formatDate(event.eventDate) }} · {{ event.currency }}
+          </span>
+        </div>
       </template>
-    </PageHeader>
 
-    <LoadingState
-      v-if="query.isLoading.value"
-      text="Loading event details…"
-    />
-    <ErrorState
-      v-else-if="query.isError.value"
-      title="Could not load event"
-      :message="query.error.value?.message ?? 'Try again later.'"
-      show-retry
-      @retry="query.refetch"
-    />
-    <div
-      v-else-if="query.data.value"
-      class="grid gap-6 lg:grid-cols-[2fr_1fr]"
-    >
-      <AppCard>
-        <SectionHeader
-          :title="query.data.value.title"
-          :description="query.data.value.description"
-        />
-        <dl class="mt-6 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-xl bg-slate-50/50 p-5 border border-slate-100/50 transition-colors hover:bg-slate-50">
-            <dt class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-              Date
-            </dt>
-            <dd class="text-sm font-bold text-slate-900">
-              {{ formatDate(query.data.value.eventDate) }}
-            </dd>
-          </div>
-          <div class="rounded-xl bg-slate-50/50 p-5 border border-slate-100/50 transition-colors hover:bg-slate-50">
-            <dt class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-              Status
-            </dt>
-            <dd>
-              <EventStatusBadge :status="query.data.value.status" />
-            </dd>
-          </div>
-          <div class="rounded-xl bg-slate-50/50 p-5 border border-slate-100/50 transition-colors hover:bg-slate-50">
-            <dt class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-              Currency
-            </dt>
-            <dd class="text-sm font-bold text-slate-900">
-              {{ query.data.value.currency }}
-            </dd>
-          </div>
-        </dl>
-      </AppCard>
-
-      <AppCard>
-        <SectionHeader
-          title="Next step"
-          description="Recipient funds define the causes that contributors can support within this event."
-        />
-        <div class="mt-6 space-y-3">
+      <template #actions>
+        <div class="flex items-center gap-3">
           <AppButton
-            full-width
-            @click="router.push(`/admin/events/${eventId}/recipient-funds/new`)"
+            variant="outline"
+            class="!rounded-xl"
+            @click="router.push(`/admin/events/${event.id}/edit`)"
           >
-            Create recipient fund
+            <Edit3 class="w-4 h-4 mr-2" />
+            Edit
           </AppButton>
           <AppButton
-            full-width
-            variant="secondary"
-            @click="router.push(`/contribute/${eventId}`)"
+            variant="outline"
+            class="!rounded-xl"
+            @click="router.push(`/admin/events/${event.id}/recipient-funds`)"
           >
-            Preview storefront
+            <Target class="w-4 h-4 mr-2" />
+            Manage Funds
+          </AppButton>
+          <AppButton
+            variant="primary"
+            class="!rounded-xl shadow-premium"
+            @click="previewStorefront"
+          >
+            <ExternalLink class="w-4 h-4 mr-2" />
+            Preview Storefront
+          </AppButton>
+          <AppButton
+            variant="outline"
+            class="!rounded-xl"
+            @click="copyPublicLink"
+          >
+            <Link2 class="w-4 h-4 mr-2" />
+            Copy Link
           </AppButton>
         </div>
-      </AppCard>
+      </template>
+    </DetailPageHeader>
+
+    <AdminMetricGrid>
+      <MetricCard
+        label="Total Raised"
+        :value="formatCurrency(event.totalRaised, event.currency)"
+        icon="Wallet"
+        color="green"
+        :progress="event.progress"
+        progress-label="Goal Progress"
+      />
+      <MetricCard
+        label="Recipient Funds"
+        :value="event.fundCount.toString()"
+        icon="Target"
+        color="purple"
+      />
+      <MetricCard
+        label="Contributions"
+        value="0" 
+        icon="Gift"
+        color="blue"
+      />
+      <MetricCard
+        label="Collectors"
+        :value="event.collectorCount.toString()"
+        icon="Users"
+        color="amber"
+      />
+    </AdminMetricGrid>
+
+    <div class="space-y-8">
+      <DetailTabs
+        v-model="activeTab"
+        :tabs="tabs"
+      />
+
+      <div class="min-h-[400px]">
+        <!-- Overview Tab -->
+        <div
+          v-if="activeTab === 'overview'"
+          class="grid grid-cols-1 lg:grid-cols-12 gap-10"
+        >
+          <div class="lg:col-span-8 space-y-8">
+            <AppCard class="!p-8">
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
+                Event Description
+              </h3>
+              <p class="text-slate-600 leading-relaxed">
+                {{ event.description || 'No description provided for this event.' }}
+              </p>
+            </AppCard>
+
+            <div class="space-y-4">
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+                Fund Breakdown
+              </h3>
+              <EventRecipientFundsList :event-id="event.id" />
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 space-y-8">
+            <DetailSummaryCard 
+              title="Campaign Details"
+              :items="campaignSummaryItems"
+            />
+
+            <AppCard class="!p-6 bg-violet-600 text-white shadow-premium">
+              <h4 class="text-[10px] font-black uppercase tracking-widest opacity-70 mb-2">
+                Next Recommended Action
+              </h4>
+              <p class="text-sm font-bold mb-4">
+                Assign collectors to start gathering field contributions.
+              </p>
+              <AppButton
+                variant="primary"
+                size="sm"
+                class="w-full !bg-white !text-violet-600 !rounded-xl"
+                @click="activeTab = 'collectors'"
+              >
+                Assign Collectors
+              </AppButton>
+            </AppCard>
+          </div>
+        </div>
+
+        <!-- Recipient Funds Tab -->
+        <div
+          v-else-if="activeTab === 'funds'"
+          class="space-y-6"
+        >
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+              Assigned Recipient Funds
+            </h3>
+            <AppButton
+              variant="primary"
+              size="sm"
+              class="!rounded-xl"
+              @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)"
+            >
+              <Plus class="w-4 h-4 mr-2" />
+              Add Fund
+            </AppButton>
+          </div>
+          <EventRecipientFundsList :event-id="event.id" />
+        </div>
+
+        <!-- Activity Tab -->
+        <div
+          v-else-if="activeTab === 'activity'"
+          class="max-w-2xl"
+        >
+          <AppCard class="!p-8">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">
+              Event Audit Log
+            </h3>
+            <AuditTimeline :events="auditItems" />
+            
+            <div class="mt-10 p-4 rounded-xl bg-amber-50 border border-amber-100">
+              <p class="text-[10px] font-bold text-amber-700 uppercase tracking-widest">
+                Backend Notice
+              </p>
+              <p class="text-xs text-amber-600 mt-1">
+                Comprehensive audit logs are currently in development. Showing initial system events.
+              </p>
+            </div>
+          </AppCard>
+        </div>
+
+        <!-- Other tabs placeholder -->
+        <div
+          v-else
+          class="flex flex-col items-center justify-center py-20 text-slate-400"
+        >
+          <Inbox class="w-12 h-12 mb-4 opacity-20" />
+          <p class="text-[10px] font-black uppercase tracking-widest">
+            {{ activeTab }} content coming soon
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEvent } from '../composables/useEvents'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
+import DetailPageHeader from '@/shared/components/headers/DetailPageHeader.vue'
+import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
+import MetricCard from '@/shared/components/cards/MetricCard.vue'
+import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
+import DetailSummaryCard from '@/shared/components/cards/DetailSummaryCard.vue'
+import AuditTimeline from '@/shared/components/feedback/AuditTimeline.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
-import PageHeader from '@/shared/components/headers/PageHeader.vue'
-import SectionHeader from '@/shared/components/headers/SectionHeader.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
+import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import EventStatusBadge from '../components/EventStatusBadge.vue'
-import { formatDate } from '@/shared/utils/formatters'
+import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
+import { formatDate, formatCurrency } from '@/shared/utils/formatters'
+import { 
+  Edit3, 
+  Target, 
+  ExternalLink, 
+  Link2,
+  Plus,
+  Inbox
+} from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
-const eventId = computed(() => String(route.params.id ?? ''))
+const eventId = computed(() => route.params.id as string)
 const query = useEvent(eventId.value)
+const event = computed(() => query.data.value)
+
+const activeTab = ref('overview')
+const tabs = [
+  { key: 'overview', label: 'Overview' },
+  { key: 'funds', label: 'Recipient Funds' },
+  { key: 'contributions', label: 'Contributions' },
+  { key: 'collectors', label: 'Collectors' },
+  { key: 'activity', label: 'Activity / Audit' },
+  { key: 'settings', label: 'Settings' },
+]
+
+const campaignSummaryItems = computed(() => [
+  { key: 'slug', label: 'Public Slug', value: `/give/${event.value?.slug}` },
+  { key: 'currency', label: 'Base Currency', value: event.value?.currency },
+  { key: 'date', label: 'Created At', value: formatDate(event.value?.eventDate) },
+])
+
+const auditItems = computed(() => [
+  {
+    id: '1',
+    type: 'creation' as const,
+    content: 'Event Created',
+    target: event.value?.title || '',
+    description: `Event initialized by system`,
+    date: formatDate(event.value?.eventDate),
+    datetime: event.value?.eventDate || new Date().toISOString()
+  },
+  {
+    id: '2',
+    type: 'update' as const,
+    content: 'Status Updated',
+    target: event.value?.status || '',
+    description: `Event status moved to operational state`,
+    date: 'Today',
+    datetime: new Date().toISOString()
+  }
+])
+
+function copyPublicLink() {
+  if (!event.value) return
+  const url = `${window.location.origin}/give/${event.value.slug}`
+  navigator.clipboard.writeText(url)
+}
+
+function previewStorefront() {
+  if (!event.value) return
+  window.open(`/give/${event.value.slug}`, '_blank')
+}
 </script>

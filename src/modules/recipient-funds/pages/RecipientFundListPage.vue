@@ -1,16 +1,16 @@
 <template>
   <div class="space-y-6">
-    <PageHeader
+    <AdminPageHeader
       eyebrow="Admin"
-      title="Recipient funds"
-      description="Each event can raise money for one or more recipient funds."
+      title="Recipient Funds"
+      description="Manage designated funds, allocation targets, and distribution history."
     >
       <template #actions>
         <AppButton @click="router.push(`/admin/events/${eventId}/recipient-funds/new`)">
           Create recipient fund
         </AppButton>
       </template>
-    </PageHeader>
+    </AdminPageHeader>
 
     <LoadingState
       v-if="query.isLoading.value"
@@ -25,8 +25,8 @@
     />
     <EmptyState
       v-else-if="!query.data.value?.length"
-      title="No recipient funds yet"
-      description="Add the first recipient fund so contributors can choose where their money goes."
+      title="No recipient funds"
+      description="You haven't created any recipient funds for this event yet. Add your first fund to get started."
     >
       <template #action>
         <AppButton @click="router.push(`/admin/events/${eventId}/recipient-funds/new`)">
@@ -51,7 +51,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useRecipientFunds } from '../composables/useRecipientFunds'
-import PageHeader from '@/shared/components/headers/PageHeader.vue'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'

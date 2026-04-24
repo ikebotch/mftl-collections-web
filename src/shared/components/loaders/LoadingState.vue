@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-20 px-6 text-center">
-    <div class="relative w-16 h-16 mb-6">
-      <div class="absolute inset-0 rounded-full border-4 border-violet-50 opacity-20" />
-      <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-violet-600 animate-spin" />
+  <div class="flex flex-col items-center justify-center py-24 px-6 text-center">
+    <div class="relative w-12 h-12 mb-6">
+      <div class="absolute inset-0 rounded-full border-2 border-slate-100" />
+      <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-violet-600 animate-spin" />
     </div>
-    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 animate-pulse">
+    <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
       {{ text }}
     </p>
   </div>
@@ -16,7 +16,7 @@ withDefaults(
     text?: string
   }>(),
   {
-    text: 'Loading…',
+    text: 'Syncing…',
   },
 )
 </script>
