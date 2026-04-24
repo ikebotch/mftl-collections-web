@@ -20,19 +20,51 @@
         >
           {{ tenant.name }}
         </option>
+        <option
+          v-if="showCustomInput"
+          value="custom"
+        >
+          -- Use Custom ID --
+        </option>
       </select>
       
       <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500">
         <ChevronDown class="w-3 h-3" />
       </div>
     </div>
+
+    <!-- Custom ID Input (Dev Only) -->
+    <div
+      v-if="isCustom"
+      class="mt-3 flex gap-2"
+    >
+      <div class="relative flex-1">
+        <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-500">
+          <Edit2 class="w-3 h-3" />
+        </div>
+        <input
+          v-model="customId"
+          type="text"
+          placeholder="Enter UUID..."
+          class="w-full bg-[#1e293b] border border-slate-800 text-slate-300 text-[10px] font-mono rounded-lg py-2 pl-9 pr-3 focus:outline-none focus:border-violet-500 transition-all"
+          @keyup.enter="applyCustomId"
+        >
+      </div>
+      <button 
+        class="bg-violet-600 text-white p-2 rounded-lg hover:bg-violet-700 transition-colors"
+        @click="applyCustomId"
+      >
+        <Edit2 class="w-3 h-3" />
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { Building2, ChevronDown } from 'lucide-vue-next'
+import { ref, onMounted, computed } from 'vue'
+import { Building2, ChevronDown, Edit2 } from 'lucide-vue-next'
 import { useTenantStore } from '../store/tenantStore'
+import { appConfig } from '@/core/config/appConfig'
 
 const tenantStore = useTenantStore()
 
@@ -44,12 +76,28 @@ const tenants = [
 ]
 
 const selectedId = ref(tenantStore.selectedTenantId || tenants[0].id)
+const isCustom = ref(!tenants.some(t => t.id === selectedId.value) && !!selectedId.value)
+const customId = ref(isCustom.value ? selectedId.value : '')
+
+const showCustomInput = computed(() => appConfig.auth.devBypass)
 
 function handleTenantChange() {
+  if (selectedId.value === 'custom') {
+    isCustom.value = true
+    return
+  }
+  
+  isCustom.value = false
   const tenant = tenants.find(t => t.id === selectedId.value)
   if (tenant) {
     tenantStore.setTenant(tenant.id, tenant.name)
-    // Reload to apply tenant context across all queries
+    window.location.reload()
+  }
+}
+
+function applyCustomId() {
+  if (customId.value) {
+    tenantStore.setTenant(customId.value, 'Custom Org')
     window.location.reload()
   }
 }
