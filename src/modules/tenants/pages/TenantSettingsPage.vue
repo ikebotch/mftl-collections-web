@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-10">
     <AdminPageHeader
-      title="Settings"
-      description="Manage organization profile, branding, and system-wide configurations."
+      :title="copy.admin.pages.settings.title"
+      :description="copy.admin.pages.settings.description"
     />
 
     <div
@@ -115,7 +115,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useCopy } from '@/core/i18n/useCopy'
 import { useTenantSettings } from '../composables/useTenantSettings'
+
+const { copy } = useCopy()
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'

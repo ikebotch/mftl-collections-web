@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-10">
     <AdminPageHeader
-      title="Users"
-      description="Manage system access for admins, supervisors, and field collectors."
+      :title="copy.admin.pages.users.title"
+      :description="copy.admin.pages.users.description"
     >
       <template #actions>
         <AppButton variant="primary" class="!rounded-xl shadow-premium">
@@ -97,7 +97,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useCopy } from '@/core/i18n/useCopy'
 import { useUsers } from '../composables/useUsers'
+
+const { copy } = useCopy()
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
