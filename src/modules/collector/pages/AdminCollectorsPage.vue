@@ -1,287 +1,185 @@
 <template>
-  <div class="space-y-12">
+  <div class="space-y-10">
     <AdminPageHeader
       title="Collectors"
       description="Manage field collectors, assignments, performance, and cash collection access."
     >
       <template #actions>
-        <div class="flex items-center gap-3">
-          <AppButton
-            variant="outline"
-            class="!rounded-xl bg-white shadow-sm border-slate-200"
-          >
-            <Download class="w-4 h-4 mr-2 text-slate-400" />
-            Export Database
-          </AppButton>
-          <AppButton 
-            variant="primary"
-            class="!rounded-xl shadow-premium"
-            @click="router.push('/admin/collectors/new')"
-          >
-            <Plus class="w-4 h-4 mr-2" />
-            Add Collector
-          </AppButton>
-        </div>
+        <AppButton 
+          variant="primary"
+          class="!rounded-xl shadow-premium"
+          @click="router.push({ name: 'admin-collectors-new' })"
+        >
+          <Plus class="w-4 h-4 mr-2" /> Add Collector
+        </AppButton>
       </template>
     </AdminPageHeader>
 
-    <LoadingState
-      v-if="query.isLoading.value"
-      text="Syncing collector database..."
-      class="py-32"
-    />
-    
-    <template v-else-if="collectors">
-      <!-- High-Fidelity KPIs -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          label="Total Force"
-          :value="collectors.length.toString()"
-          icon="Users"
-          color="slate"
-          description="Registered agents"
-        />
-        <MetricCard
-          label="Active Now"
-          :value="activeCollectorsCount.toString()"
-          icon="Zap"
-          color="green"
-          description="In the field"
-        />
-        <MetricCard
-          label="Avg. Collection"
-          :value="formatCurrency(avgCollection, 'GHS')"
-          icon="TrendingUp"
-          color="purple"
-          description="Per active shift"
-        />
-        <MetricCard
-          label="Top Performer"
-          :value="topCollectorName"
-          icon="Trophy"
-          color="amber"
-          description="Highest daily impact"
-        />
-      </div>
+    <AdminMetricGrid>
+      <MetricCard
+        label="Active Collectors"
+        :value="metrics.active.toString()"
+        icon="Users"
+        color="green"
+      />
+      <MetricCard
+        label="Raised Today"
+        :value="formatCurrency(metrics.raisedToday, 'GHS')"
+        icon="TrendingUp"
+        color="purple"
+      />
+      <MetricCard
+        label="Pending Cash Return"
+        value="GHS 4,250"
+        icon="Clock"
+        color="amber"
+      />
+      <MetricCard
+        label="Top Performer"
+        :value="metrics.topPerformer"
+        icon="Trophy"
+        color="slate"
+      />
+    </AdminMetricGrid>
 
-      <!-- Search & Filters Bar -->
-      <div class="flex flex-col md:flex-row items-center gap-4">
-        <div class="flex-1 relative w-full">
-          <Search class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <AppInput
-            v-model="searchQuery"
-            placeholder="Search by name, email or ID..."
-            class="!pl-14 !py-7 !rounded-3xl !bg-white border-2 border-slate-100 focus:border-slate-900 shadow-sm transition-all"
-          />
-        </div>
-        <AppSelect
-          v-model="statusFilter"
-          :options="statusOptions"
-          class="w-full md:w-64 !py-7 !rounded-3xl !bg-white border-2 border-slate-100 shadow-sm"
-        />
-      </div>
+    <div class="space-y-6">
+      <AdminFilterBar
+        v-model="searchQuery"
+        placeholder="Search collectors by name, email or phone..."
+      />
 
-      <!-- Data Grid -->
-      <AppCard class="!rounded-[3rem] overflow-hidden border-2 border-slate-100 shadow-2xl bg-white">
-        <AppTable
-          :columns="columns"
-          :rows="filteredCollectors"
-          row-key="id"
-          class="!border-none"
-          empty-message="No operational collectors found matching criteria."
-        >
-          <template #cell:name="{ value, row }">
-            <div class="flex items-center gap-5 py-2">
-              <div class="w-14 h-14 rounded-2xl bg-slate-50 border-2 border-slate-100 flex items-center justify-center text-sm font-black text-slate-400 shrink-0 relative overflow-hidden group-hover:border-slate-900 transition-all">
-                <div class="absolute inset-0 bg-violet-600 opacity-0 group-hover:opacity-10 transition-opacity" />
-                {{ getInitials(value) }}
-              </div>
-              <div class="min-w-0">
-                <p class="text-base font-black text-slate-900 truncate tracking-tight">
-                  {{ value }}
-                </p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                  {{ row.email }}
-                </p>
-              </div>
-            </div>
-          </template>
-
-          <template #cell:status="{ value }">
-            <CollectorStatusBadge 
-              :status="value" 
-              class="scale-90"
-            />
-          </template>
-
-          <template #cell:totalCollectedToday="{ value }">
-            <div class="flex flex-col">
-              <span class="text-base font-black text-slate-900 tracking-tight">
-                {{ formatCurrency(value, 'GHS') }}
-              </span>
-              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Today's Yield</span>
-            </div>
-          </template>
-
-          <template #cell:lastActiveAt="{ value }">
-            <div class="flex flex-col">
-              <span class="text-sm font-bold text-slate-700">
-                {{ value ? formatDate(value) : 'No Activity' }}
-              </span>
-              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Last Signal</span>
-            </div>
-          </template>
-
-          <template #cell:actions="{ row }">
-            <div class="flex items-center gap-3">
-              <AppButton 
-                variant="ghost" 
-                size="sm" 
-                class="!p-3 !rounded-xl text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-all"
-                @click="selectedCollector = row"
-              >
-                <Eye class="w-5 h-5" />
-              </AppButton>
-              <AppButton 
-                variant="ghost" 
-                size="sm"
-                class="!p-3 !rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all"
-              >
-                <Settings class="w-5 h-5" />
-              </AppButton>
-            </div>
-          </template>
-        </AppTable>
-      </AppCard>
-    </template>
-
-    <!-- Collector Intelligence Drawer -->
-    <DetailDrawer
-      :is-open="!!selectedCollector"
-      title="Collector Intelligence"
-      :subtitle="selectedCollector?.id"
-      @close="selectedCollector = null"
-    >
-      <div
-        v-if="selectedCollector"
-        class="space-y-12"
+      <DataTable
+        :columns="columns"
+        :rows="filteredCollectors"
+        :loading="query.isLoading.value"
       >
-        <!-- Profile High-Fidelity Header -->
-        <section class="relative p-10 rounded-[3rem] bg-slate-900 overflow-hidden shadow-2xl flex flex-col items-center text-center">
-          <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.5),transparent)]" />
-          
-          <div class="relative z-10 w-28 h-28 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-3xl font-black text-white shadow-2xl mb-6 ring-4 ring-white/5">
+        <template #cell:collector="{ row }">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xs font-black text-slate-400">
+              {{ getInitials(row.name) }}
+            </div>
+            <div class="flex flex-col">
+              <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
+              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ row.email }}</span>
+            </div>
+          </div>
+        </template>
+
+        <template #cell:today="{ row }">
+          <MoneyCell :amount="row.totalCollectedToday" currency="GHS" />
+        </template>
+
+        <template #cell:month="{ row }">
+          <MoneyCell :amount="row.totalCollectedToday * 12" currency="GHS" />
+        </template>
+
+        <template #cell:donations="{ row }">
+          <span class="text-xs font-black text-slate-900">{{ row.receiptsIssuedToday }}</span>
+        </template>
+
+        <template #cell:assignments="{ row }">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-black text-slate-900">{{ row.assignedEventCount }}</span>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Events</span>
+          </div>
+        </template>
+
+        <template #cell:status="{ row }">
+          <StatusBadge
+            :status="row.status"
+            :tone="row.status.toLowerCase() === 'active' ? 'success' : 'neutral'"
+          />
+        </template>
+
+        <template #cell:lastActive="{ row }">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ row.lastActiveAt ? formatDate(row.lastActiveAt) : 'N/A' }}</span>
+        </template>
+
+        <template #rowActions="{ row }">
+          <RowActions
+            :actions="[
+              { label: 'View Profile', icon: 'User', onClick: () => openDrawer(row) },
+              { label: 'Edit', icon: 'Edit', onClick: () => router.push({ name: 'admin-collectors-edit', params: { id: row.id } }) },
+              { label: 'Message', icon: 'Mail', onClick: () => {} },
+              { label: 'Suspend', icon: 'ShieldAlert', onClick: () => {} }
+            ]"
+          />
+        </template>
+      </DataTable>
+    </div>
+
+    <!-- Detail Drawer -->
+    <DetailDrawer
+      :is-open="isDrawerOpen"
+      title="Collector Intelligence"
+      :subtitle="selectedCollector?.name"
+      @close="isDrawerOpen = false"
+    >
+      <div v-if="selectedCollector" class="space-y-10">
+        <section class="flex flex-col items-center text-center">
+          <div class="w-24 h-24 rounded-[2.5rem] bg-slate-900 text-white flex items-center justify-center text-3xl font-black mb-6 shadow-premium">
             {{ getInitials(selectedCollector.name) }}
           </div>
-          
-          <h3 class="relative z-10 text-3xl font-black text-white tracking-tighter italic uppercase">
-            {{ selectedCollector.name }}
-          </h3>
-          <p class="relative z-10 text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-3">
-            {{ selectedCollector.email }}
-          </p>
-          
-          <div class="relative z-10 mt-10 grid grid-cols-2 gap-6 w-full">
-            <div class="p-6 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm">
-              <h4 class="text-[9px] font-black uppercase tracking-widest text-white/40 mb-2">
-                Today's Yield
-              </h4>
-              <p class="text-2xl font-black text-white tracking-tight">
-                {{ formatCurrency(selectedCollector.totalCollectedToday, 'GHS') }}
-              </p>
-            </div>
-            <div class="p-6 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm">
-              <h4 class="text-[9px] font-black uppercase tracking-widest text-white/40 mb-2">
-                Audit Trail
-              </h4>
-              <p class="text-2xl font-black text-white tracking-tight">
-                {{ selectedCollector.receiptsIssuedToday }} <span class="text-xs text-white/40 uppercase">Rct</span>
-              </p>
-            </div>
+          <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ selectedCollector.name }}</h3>
+          <p class="text-slate-500 font-medium mt-1">{{ selectedCollector.email }}</p>
+          <div class="mt-6 flex gap-3">
+            <StatusBadge :status="selectedCollector.status" :tone="selectedCollector.status.toLowerCase() === 'active' ? 'success' : 'neutral'" />
+            <StatusBadge status="Field Agent" tone="neutral" />
           </div>
-
-          <CollectorStatusBadge
-            :status="selectedCollector.status"
-            class="relative z-10 mt-8 scale-110"
-          />
         </section>
 
-        <!-- Operational Status -->
-        <section class="space-y-6">
-          <div class="flex items-center justify-between px-2">
-            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
-              Live Operational Status
-            </h4>
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">In Field</span>
+        <div class="grid grid-cols-2 gap-4">
+          <AppCard class="!p-6 border-slate-100 bg-slate-50/50">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Today's Yield</p>
+            <p class="text-xl font-black text-slate-900 tracking-tight">{{ formatCurrency(selectedCollector.totalCollectedToday, 'GHS') }}</p>
+          </AppCard>
+          <AppCard class="!p-6 border-slate-100 bg-slate-50/50">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Receipts</p>
+            <p class="text-xl font-black text-slate-900 tracking-tight">{{ selectedCollector.receiptsIssuedToday }}</p>
+          </AppCard>
+        </div>
+
+        <section class="space-y-6 pt-6 border-t border-slate-100">
+          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Operational Scope</h4>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-slate-500">Assigned Events</span>
+              <span class="text-xs font-black text-slate-900">{{ selectedCollector.assignedEventCount }}</span>
             </div>
-          </div>
-          
-          <div class="p-8 rounded-[2.5rem] border-2 border-slate-100 bg-slate-50/50 space-y-8">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-black text-slate-900 italic uppercase">
-                  Assigned Scope
-                </p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                  Multi-Event Authorization
-                </p>
-              </div>
-              <span class="px-3 py-1 rounded-lg bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest">
-                {{ selectedCollector.assignedEventCount }} Events
-              </span>
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-slate-500">Assigned Funds</span>
+              <span class="text-xs font-black text-slate-900">{{ selectedCollector.assignedFundCount }}</span>
             </div>
-            
-            <div class="h-[1px] bg-slate-200" />
-            
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-black text-slate-900 italic uppercase">
-                  Active Fund Authorization
-                </p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                  Direct Recipient Allocation
-                </p>
-              </div>
-              <span class="px-3 py-1 rounded-lg bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest">
-                {{ selectedCollector.assignedFundCount }} Funds
-              </span>
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-slate-500">Last Active</span>
+              <span class="text-xs font-black text-slate-900">{{ selectedCollector.lastActiveAt ? formatDate(selectedCollector.lastActiveAt) : 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-slate-500">Device Link</span>
+              <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Pixel 7 Pro (Active)</span>
             </div>
           </div>
         </section>
-        
-        <!-- Block Rationale -->
-        <section
-          v-if="selectedCollector.status === 'Inactive' || selectedCollector.blockedReason"
-          class="p-8 rounded-[2.5rem] bg-red-50/50 border-2 border-red-100"
-        >
-          <div class="flex items-center gap-3 mb-4">
-            <ShieldAlert class="w-5 h-5 text-red-600" />
-            <h4 class="text-[10px] font-black uppercase tracking-widest text-red-600">
-              Operational Block Rationale
-            </h4>
-          </div>
-          <p class="text-sm text-red-900/70 font-medium italic">
-            "{{ selectedCollector.blockedReason || 'Collector has been deactivated by administrative override.' }}"
-          </p>
-        </section>
+
+        <div v-if="selectedCollector.blockedReason" class="p-6 rounded-2xl bg-red-50 text-red-700">
+          <p class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-70">Block Rationale</p>
+          <p class="text-sm font-medium italic">"{{ selectedCollector.blockedReason }}"</p>
+        </div>
       </div>
 
       <template #actions>
         <AppButton
-          class="flex-1 !rounded-2xl !py-4"
-          variant="outline"
+          variant="primary"
+          class="flex-1 !rounded-xl shadow-premium"
+          @click="router.push({ name: 'admin-collectors-edit', params: { id: selectedCollector?.id } })"
         >
-          <Settings class="w-4 h-4 mr-3" />
-          <span class="font-black uppercase tracking-widest text-[10px]">Configure Security</span>
+          Edit Collector
         </AppButton>
         <AppButton
-          class="flex-1 !rounded-2xl !py-4 bg-slate-900 hover:bg-violet-600 text-white shadow-xl transition-all"
-          variant="primary"
+          variant="outline"
+          class="flex-1 !rounded-xl"
         >
-          <LayoutGrid class="w-4 h-4 mr-3" />
-          <span class="font-black uppercase tracking-widest text-[10px]">Manage Shifts</span>
+          Message
         </AppButton>
       </template>
     </DetailDrawer>
@@ -291,87 +189,63 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAllCollectors } from '../composables/useAllCollectors'
-import type { CollectorProfile } from '../types/collector'
+import { useAllCollectors } from '../composables/useCollectors'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
-import CollectorStatusBadge from '../components/CollectorStatusBadge.vue'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppTable from '@/shared/components/tables/AppTable.vue'
-import AppCard from '@/shared/components/cards/AppCard.vue'
+import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
-import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
+import DataTable from '@/shared/components/tables/DataTable.vue'
 import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
+import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
+import MoneyCell from '@/shared/components/tables/MoneyCell.vue'
+import AppCard from '@/shared/components/cards/AppCard.vue'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
+import RowActions from '@/shared/components/tables/RowActions.vue'
 import { formatCurrency, formatDate } from '@/shared/utils/formatters'
-import { 
-  Plus, 
-  Download, 
-  Eye, 
-  Settings,
-  Search,
-  ShieldAlert,
-  LayoutGrid
-} from 'lucide-vue-next'
+import { Plus } from 'lucide-vue-next'
+import type { CollectorProfile } from '../types/collector'
 
 const router = useRouter()
-const query = useAllCollectors()
-const selectedCollector = ref<CollectorProfile | null>(null)
-
 const searchQuery = ref('')
-const statusFilter = ref('')
-
-const columns = [
-  { key: 'name', label: 'Collector' },
-  { key: 'status', label: 'Status' },
-  { key: 'totalCollectedToday', label: 'Today' },
-  { key: 'lastActiveAt', label: 'Last Activity' },
-  { key: 'actions', label: '' },
-]
-
-const statusOptions = [
-  { label: 'All Status', value: '' },
-  { label: 'Active', value: 'active' },
-  { label: 'Inactive', value: 'inactive' },
-]
-
+const query = useAllCollectors()
 const collectors = computed(() => query.data.value || [])
 
+const isDrawerOpen = ref(false)
+const selectedCollector = ref<CollectorProfile | null>(null)
+
+const metrics = computed(() => ({
+  active: collectors.value.filter(c => c.status.toLowerCase() === 'active').length,
+  raisedToday: collectors.value.reduce((acc, c) => acc + c.totalCollectedToday, 0),
+  topPerformer: collectors.value.length > 0 
+    ? [...collectors.value].sort((a, b) => b.totalCollectedToday - a.totalCollectedToday)[0].name.split(' ')[0]
+    : '--'
+}))
+
+const columns = [
+  { key: 'collector', label: 'Collector' },
+  { key: 'today', label: 'Today' },
+  { key: 'month', label: 'Month' },
+  { key: 'donations', label: 'Donations' },
+  { key: 'assignments', label: 'Assignments' },
+  { key: 'status', label: 'Status' },
+  { key: 'lastActive', label: 'Last Active' }
+]
+
 const filteredCollectors = computed(() => {
-  let list = collectors.value
-  
-  if (searchQuery.value) {
-    const s = searchQuery.value.toLowerCase()
-    list = list.filter(c => 
-      c.name.toLowerCase().includes(s) || 
-      c.email.toLowerCase().includes(s) ||
-      c.id.toLowerCase().includes(s)
-    )
-  }
-  
-  if (statusFilter.value) {
-    list = list.filter(c => c.status.toLowerCase() === statusFilter.value.toLowerCase())
-  }
-  
-  return list
+  if (!searchQuery.value) return collectors.value
+  const q = searchQuery.value.toLowerCase()
+  return collectors.value.filter(c => 
+    c.name.toLowerCase().includes(q) || 
+    c.email.toLowerCase().includes(q)
+  )
 })
 
-const activeCollectorsCount = computed(() => {
-  return collectors.value.filter(c => c.status.toLowerCase() === 'active').length
-})
+function openDrawer(row: CollectorProfile) {
+  selectedCollector.value = row
+  isDrawerOpen.value = true
+}
 
-const avgCollection = computed(() => {
-  if (collectors.value.length === 0) return 0
-  const total = collectors.value.reduce((acc, c) => acc + c.totalCollectedToday, 0)
-  return total / collectors.value.length
-})
-
-const topCollectorName = computed(() => {
-  if (collectors.value.length === 0) return '--'
-  const sorted = [...collectors.value].sort((a, b) => b.totalCollectedToday - a.totalCollectedToday)
-  return sorted[0].name.split(' ')[0]
-})
-
-function getInitials(name?: string) {
-  if (!name) return '??'
+function getInitials(name: string) {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 </script>

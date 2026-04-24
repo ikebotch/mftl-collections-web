@@ -2,13 +2,23 @@ import type { RouteRecordRaw } from 'vue-router'
 
 export const recipientFundRoutes: RouteRecordRaw[] = [
   {
-    path: 'events/:id/recipient-funds',
-    name: 'admin-recipient-funds',
+    path: 'funds',
+    name: 'admin-funds',
     component: () => import('./pages/RecipientFundListPage.vue'),
   },
   {
-    path: 'events/:id/recipient-funds/new',
-    name: 'admin-recipient-funds-new',
+    path: 'funds/new',
+    name: 'admin-funds-new',
     component: () => import('./pages/RecipientFundCreatePage.vue'),
+  },
+  {
+    path: 'funds/:id',
+    name: 'admin-funds-detail',
+    component: () => import('./pages/RecipientFundDetailPage.vue'),
+  },
+  {
+    path: 'funds/:id/edit',
+    name: 'admin-funds-edit',
+    component: () => import('./pages/RecipientFundEditPage.vue'),
   },
 ]

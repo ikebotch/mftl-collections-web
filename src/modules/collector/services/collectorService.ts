@@ -137,13 +137,22 @@ export async function getCollectorDashboard(): Promise<CollectorDashboardSummary
 }
 
 export async function listAllCollectors(): Promise<CollectorProfile[]> {
-  const response = await httpClient.get<CollectorProfileDto[]>('/collector')
+  const response = await httpClient.get<CollectorProfileDto[]>('/collectors')
   return (response.data ?? []).map(mapProfile)
 }
 
-export async function createCollector(payload: any): Promise<CollectorProfile> {
-  const response = await httpClient.post<CollectorProfileDto, any>('/collector', payload)
+export async function getCollectorById(id: string): Promise<CollectorProfile> {
+  const response = await httpClient.get<CollectorProfileDto>(`/collectors/${id}`)
   return mapProfile(response.data)
+}
+
+export async function createCollector(payload: any): Promise<CollectorProfile> {
+  const response = await httpClient.post<CollectorProfileDto, any>('/collectors', payload)
+  return mapProfile(response.data)
+}
+
+export async function updateCollector(id: string, payload: any): Promise<void> {
+  await httpClient.put(`/collectors/${id}`, payload)
 }
 
 export const collectorService = {
@@ -152,5 +161,7 @@ export const collectorService = {
   getCollectorHistory,
   getCollectorDashboard,
   listAll: listAllCollectors,
+  getById: getCollectorById,
   create: createCollector,
+  update: updateCollector,
 }

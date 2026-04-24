@@ -54,10 +54,10 @@
 
     <div class="space-y-6">
       <AdminFilterBar
-        v-model:search="searchQuery"
+        v-model="searchQuery"
         placeholder="Search events by title or slug..."
       >
-        <template #filters>
+        <template #extra>
           <AppSelect
             v-model="statusFilter"
             :options="statusOptions"
@@ -70,7 +70,6 @@
         :columns="columns"
         :rows="filteredEvents"
         :loading="query.isLoading.value"
-        :error="query.error.value?.message"
         expandable
         @retry="query.refetch"
       >
@@ -84,7 +83,7 @@
                 {{ value }}
               </p>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-                {{ formatDate(row.eventDate) }} · /give/{{ row.slug }}
+                {{ row.eventDate ? formatDate(row.eventDate) : 'No date' }} · /give/{{ row.slug }}
               </p>
             </div>
           </div>
@@ -109,49 +108,19 @@
         <template #cell:status="{ value }">
           <StatusBadge
             :status="value"
-            :variant="value === 'active' ? 'success' : 'neutral'"
+            :tone="value === 'active' ? 'success' : 'neutral'"
           />
         </template>
 
         <template #rowActions="{ row }">
-          <RowActions>
-            <AppButton
-              variant="ghost"
-              size="sm"
-              class="!p-2 hover:bg-violet-50 hover:text-violet-600"
-              title="View Details"
-              @click="router.push(`/admin/events/${row.id}`)"
-            >
-              <Eye class="w-4 h-4" />
-            </AppButton>
-            <AppButton
-              variant="ghost"
-              size="sm"
-              class="!p-2 hover:bg-violet-50 hover:text-violet-600"
-              title="Edit Event"
-              @click="router.push(`/admin/events/${row.id}/edit`)"
-            >
-              <Edit3 class="w-4 h-4" />
-            </AppButton>
-            <AppButton
-              variant="ghost"
-              size="sm"
-              class="!p-2 hover:bg-violet-50 hover:text-violet-600"
-              title="Manage Funds"
-              @click="router.push(`/admin/events/${row.id}/recipient-funds`)"
-            >
-              <Target class="w-4 h-4" />
-            </AppButton>
-            <AppButton
-              variant="ghost"
-              size="sm"
-              class="!p-2 hover:bg-violet-50 hover:text-violet-600"
-              title="Copy Public Link"
-              @click="copyPublicLink(row.slug)"
-            >
-              <Link2 class="w-4 h-4" />
-            </AppButton>
-          </RowActions>
+          <RowActions
+            :actions="[
+              { label: 'View Details', icon: 'Eye', onClick: () => router.push(`/admin/events/${row.id}`) },
+              { label: 'Edit Event', icon: 'Edit3', onClick: () => router.push(`/admin/events/${row.id}/edit`) },
+              { label: 'Manage Funds', icon: 'Target', onClick: () => router.push(`/admin/events/${row.id}/recipient-funds`) },
+              { label: 'Copy Link', icon: 'Link2', onClick: () => copyPublicLink(row.slug) }
+            ]"
+          />
         </template>
 
         <template #expansion="{ row }">
@@ -193,7 +162,7 @@ import { useEvents } from '../composables/useEvents'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
-import AdminFilterBar from '@/shared/components/toolbars/AdminFilterBar.vue'
+import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
@@ -205,11 +174,7 @@ import { formatDate, formatCurrency } from '@/shared/utils/formatters'
 import { 
   Plus, 
   Download, 
-  Calendar, 
-  Eye,
-  Edit3,
-  Target,
-  Link2
+  Calendar 
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -235,7 +200,7 @@ const filteredEvents = computed(() => {
     const s = searchQuery.value.toLowerCase()
     list = list.filter(e => 
       e.title.toLowerCase().includes(s) || 
-      e.slug.toLowerCase().includes(s)
+      (e.slug && e.slug.toLowerCase().includes(s))
     )
   }
   
@@ -267,6 +232,5 @@ const statusOptions = [
 function copyPublicLink(slug: string) {
   const url = `${window.location.origin}/give/${slug}`
   navigator.clipboard.writeText(url)
-  // TODO: Add toast notification if available
 }
 </script>

@@ -1,65 +1,145 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-10">
     <AdminPageHeader
-      eyebrow="Admin"
-      title="Recipient Funds"
-      description="Manage designated funds, allocation targets, and distribution history."
+      title="Funds"
+      description="Track recipient funds, targets, collections, and currency-specific balances."
     >
       <template #actions>
-        <AppButton @click="router.push(`/admin/events/${eventId}/recipient-funds/new`)">
-          Create recipient fund
+        <AppButton
+          variant="primary"
+          class="!rounded-xl shadow-premium"
+          @click="router.push({ name: 'admin-funds-new' })"
+        >
+          <Plus class="w-4 h-4 mr-2" /> New Fund
         </AppButton>
       </template>
     </AdminPageHeader>
 
-    <LoadingState
-      v-if="query.isLoading.value"
-      text="Loading recipient funds…"
-    />
-    <ErrorState
-      v-else-if="query.isError.value"
-      title="Could not load recipient funds"
-      :message="query.error.value?.message ?? 'Please retry.'"
-      show-retry
-      @retry="query.refetch"
-    />
-    <EmptyState
-      v-else-if="!query.data.value?.length"
-      title="No recipient funds"
-      description="You haven't created any recipient funds for this event yet. Add your first fund to get started."
-    >
-      <template #action>
-        <AppButton @click="router.push(`/admin/events/${eventId}/recipient-funds/new`)">
-          Add recipient fund
-        </AppButton>
-      </template>
-    </EmptyState>
-    <div
-      v-else
-      class="grid gap-4"
-    >
-      <RecipientFundSummaryCard
-        v-for="fund in query.data.value"
-        :key="fund.id"
-        :fund="fund"
+    <AdminMetricGrid>
+      <MetricCard
+        label="Total Funds"
+        :value="funds.length.toString()"
+        icon="LayoutGrid"
+        color="slate"
+        trend="+2 this week"
       />
+      <MetricCard
+        label="Fully Funded"
+        :value="funds.filter(f => f.receivedAmount >= f.targetAmount).length.toString()"
+        icon="CheckCircle"
+        color="green"
+        trend="10% of total"
+      />
+      <MetricCard
+        label="Active Targets"
+        :value="funds.filter(f => f.receivedAmount < f.targetAmount).length.toString()"
+        icon="Target"
+        color="amber"
+      />
+      <MetricCard
+        label="Total Target"
+        value="GHS 45.2k"
+        icon="TrendingUp"
+        color="purple"
+      />
+    </AdminMetricGrid>
+
+    <div class="space-y-6">
+      <AdminFilterBar
+        v-model="searchQuery"
+        placeholder="Search funds..."
+      />
+
+      <DataTable
+        :columns="columns"
+        :rows="filteredFunds"
+        :loading="query.isLoading.value"
+      >
+        <template #cell:fund="{ row }">
+          <div class="flex flex-col">
+            <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ row.id.split('-')[0] }}</span>
+          </div>
+        </template>
+
+        <template #cell:event="{ row }">
+          <span class="text-xs font-bold text-slate-600">#{{ row.eventId.slice(0, 8) }}</span>
+        </template>
+
+        <template #cell:raised="{ row }">
+          <div class="flex flex-col">
+            <MoneyCell
+              :amount="row.receivedAmount"
+              :currency="row.currency"
+            />
+            <div class="mt-2 w-24">
+              <ProgressBar
+                :value="row.receivedAmount"
+                :max="row.targetAmount"
+                color="emerald"
+              />
+            </div>
+          </div>
+        </template>
+
+        <template #cell:currency="{ row }">
+          <span class="text-[10px] font-black text-slate-900 tracking-widest">{{ row.currency }}</span>
+        </template>
+
+        <template #cell:status="{ row }">
+          <StatusBadge
+            :status="row.receivedAmount >= row.targetAmount ? 'completed' : 'active'"
+            :tone="row.receivedAmount >= row.targetAmount ? 'success' : 'neutral'"
+          />
+        </template>
+
+        <template #rowActions="{ row }">
+          <RowActions
+            :actions="[
+              { label: 'View', icon: 'Eye', onClick: () => router.push({ name: 'admin-funds-detail', params: { id: row.id } }) },
+              { label: 'Edit', icon: 'Edit', onClick: () => router.push({ name: 'admin-funds-edit', params: { id: row.id } }) }
+            ]"
+          />
+        </template>
+      </DataTable>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useRecipientFunds } from '../composables/useRecipientFunds'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAllRecipientFunds } from '../composables/useRecipientFunds'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
+import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
+import MetricCard from '@/shared/components/cards/MetricCard.vue'
+import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
+import DataTable from '@/shared/components/tables/DataTable.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
-import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import RecipientFundSummaryCard from '../components/RecipientFundSummaryCard.vue'
+import MoneyCell from '@/shared/components/tables/MoneyCell.vue'
+import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
+import ProgressBar from '@/shared/components/feedback/ProgressBar.vue'
+import RowActions from '@/shared/components/tables/RowActions.vue'
+import { Plus } from 'lucide-vue-next'
 
-const route = useRoute()
 const router = useRouter()
-const eventId = computed(() => String(route.params.id ?? ''))
-const query = useRecipientFunds(eventId.value)
+const searchQuery = ref('')
+const query = useAllRecipientFunds()
+const funds = computed(() => query.data.value || [])
+
+const columns = [
+  { key: 'fund', label: 'Fund' },
+  { key: 'event', label: 'Event ID' },
+  { key: 'raised', label: 'Raised' },
+  { key: 'currency', label: 'Currency' },
+  { key: 'status', label: 'Status' }
+]
+
+const filteredFunds = computed(() => {
+  if (!searchQuery.value) return funds.value
+  const q = searchQuery.value.toLowerCase()
+  return funds.value.filter(f => 
+    f.name.toLowerCase().includes(q)
+  )
+})
 </script>

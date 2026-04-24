@@ -9,3 +9,11 @@ export function useDonors() {
     queryFn: () => donorsService.list(),
   })
 }
+
+export function useDonor(id: string) {
+  return useQuery<Donor, ApiError>({
+    queryKey: ['donors', id],
+    queryFn: () => donorsService.getById(id),
+    enabled: Boolean(id),
+  })
+}

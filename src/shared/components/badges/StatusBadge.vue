@@ -8,7 +8,7 @@
       class="w-1.5 h-1.5 rounded-full"
       :class="dotClasses"
     />
-    <slot />
+    <slot>{{ status }}</slot>
   </span>
 </template>
 
@@ -18,10 +18,12 @@ import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
     tone?: 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple'
+    status?: string
     dot?: boolean
   }>(),
   {
     tone: 'neutral',
+    status: '',
     dot: false
   },
 )

@@ -48,10 +48,10 @@
         </div>
         <div>
           <h4 class="text-amber-500 font-bold">
-            No Active Assignments
+            No active assignments.
           </h4>
           <p class="text-sm text-slate-300 mt-1 leading-relaxed">
-            {{ query.data.value.blockedReason || 'You need to be assigned to an event before you can start collecting.' }}
+            Contact your administrator to be assigned to a collection shift.
           </p>
         </div>
       </div>
