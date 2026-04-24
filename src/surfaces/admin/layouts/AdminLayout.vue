@@ -221,7 +221,6 @@ import {
   Search, 
   ChevronDown, 
   LogOut,
-  Building,
   ShieldCheck,
   UserCheck
 } from 'lucide-vue-next'
@@ -242,7 +241,6 @@ const navGroups = [
     title: 'Management',
     items: [
       { label: 'Events', to: '/admin/events', icon: Calendar },
-      { label: 'Recipient Funds', to: '/admin/events/1/recipient-funds', icon: Building },
     ]
   },
   {
@@ -258,7 +256,7 @@ const navGroups = [
     items: [
       { label: 'Collectors', to: '/admin/collectors', icon: UserCheck, badge: 'NEW' },
       { label: 'Dashboards', to: '/admin/reports', icon: BarChart3 },
-      { label: 'Reports', to: '/admin/reports-list', icon: FileText },
+      { label: 'Reports', to: '/admin/reports', icon: FileText },
     ]
   },
   {

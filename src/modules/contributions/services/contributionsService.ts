@@ -10,8 +10,14 @@ export interface RecordCashContributionInput {
 }
 
 export async function listContributions(): Promise<ContributionRow[]> {
-  const response = await httpClient.get<ContributionRow[]>('/contributions')
-  return response.data || []
+  try {
+    const response = await httpClient.get<ContributionRow[]>('/contributions')
+    return response.data || []
+  } catch (error) {
+    // Fallback for not implemented or missing endpoint
+    console.warn('Contributions list endpoint error:', error)
+    return []
+  }
 }
 
 export async function recordCashContribution(payload: RecordCashContributionInput): Promise<string> {
