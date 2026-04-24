@@ -5,8 +5,11 @@ export const appConfig = {
   api: {
     baseUrl: env.VITE_API_BASE_URL,
     version: env.VITE_API_VERSION,
-    versionedBaseUrl: `${env.VITE_API_BASE_URL.replace(/\/$/, '')}/${env.VITE_API_VERSION}`,
+    versionedBaseUrl: env.VITE_API_VERSION 
+      ? `${env.VITE_API_BASE_URL.replace(/\/$/, '')}/${env.VITE_API_VERSION.replace(/^\//, '')}`
+      : env.VITE_API_BASE_URL.replace(/\/$/, ''),
     tenantHeaderName: env.VITE_TENANT_HEADER_NAME,
+    debug: env.VITE_DEBUG_API,
   },
   auth: {
     domain: env.VITE_AUTH0_DOMAIN,

@@ -21,7 +21,7 @@ export function useEvent(eventId: string) {
 export function useCreateEvent() {
   const queryClient = useQueryClient()
 
-  return useMutation({
+  return useMutation<Event, ApiError, CreateEventInput>({
     mutationFn: (payload: CreateEventInput) => eventsService.create(payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['events'] })

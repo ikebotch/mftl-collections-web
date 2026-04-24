@@ -34,10 +34,21 @@
           :error="errors.targetAmount"
         />
 
+        <div
+          v-if="mutation.isSuccess.value"
+          class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-800"
+        >
+          <Check class="w-5 h-5 text-emerald-500" />
+          <p class="text-sm font-bold">
+            Recipient fund created successfully!
+          </p>
+        </div>
+
         <ErrorState
           v-if="mutation.isError.value"
           title="Recipient fund creation failed"
           :message="mutation.error.value?.message ?? 'Please try again.'"
+          :correlation-id="mutation.error.value?.correlationId"
         />
 
         <div class="flex flex-wrap justify-end gap-3">
@@ -71,6 +82,7 @@ import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import PageHeader from '@/shared/components/headers/PageHeader.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import { Check } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()

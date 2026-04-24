@@ -7,7 +7,7 @@
     />
     <AppCard>
       <form
-        class="grid gap-4 md:grid-cols-2"
+        class="grid gap-6 md:grid-cols-2"
         @submit.prevent="onSubmit"
       >
         <AppSelect
@@ -23,18 +23,14 @@
           label="Recipient fund"
           :options="fundOptions"
           :error="errors.recipientFundId"
+          :disabled="!form.eventId"
         />
         <AppInput
           id="collector-name"
           v-model="form.contributorName"
           label="Contributor name"
+          placeholder="Anonymous"
           :error="errors.contributorName"
-        />
-        <AppInput
-          id="collector-phone"
-          v-model="form.contributorPhone"
-          label="Contributor phone"
-          :error="errors.contributorPhone"
         />
         <AppInput
           id="collector-amount"
@@ -43,37 +39,55 @@
           label="Amount"
           :error="errors.amount"
         />
-        <AppInput
-          id="collector-currency"
-          v-model="form.currency"
-          label="Currency"
-        />
-        <AppSelect
-          id="collector-method"
-          v-model="form.paymentMethod"
-          label="Payment method"
-          :options="paymentOptions"
-        />
-        <label class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm md:col-span-2">
-          <input
-            v-model="anonymous"
-            type="checkbox"
-            class="h-4 w-4 rounded border-slate-300 text-cyan-300"
-          >
-          Anonymous contribution
-        </label>
+        
         <div class="md:col-span-2">
           <AppTextarea
             id="collector-note"
             v-model="form.note"
-            label="Note"
+            label="Note (Optional)"
+            placeholder="Add a special note about this contribution..."
           />
         </div>
-        <div class="md:col-span-2 flex justify-end">
+
+        <ErrorState
+          v-if="mutation.isError.value"
+          class="md:col-span-2"
+          title="Contribution failed"
+          :message="mutation.error.value?.message ?? 'Please check the details and try again.'"
+          :correlation-id="mutation.error.value?.correlationId"
+        />
+
+        <div
+          v-if="mutation.isSuccess.value"
+          class="md:col-span-2 p-6 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-4 text-emerald-800"
+        >
+          <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+            <Check class="w-6 h-6" />
+          </div>
+          <div>
+            <p class="font-bold text-lg">
+              Contribution recorded!
+            </p>
+            <p class="text-sm opacity-90">
+              The receipt has been issued and metrics updated.
+            </p>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 flex justify-end gap-3 mt-4">
+          <AppButton
+            variant="secondary"
+            @click="router.push('/collector')"
+          >
+            Cancel
+          </AppButton>
           <AppButton
             native-type="submit"
             size="lg"
+            :loading="mutation.isPending.value"
+            :disabled="mutation.isSuccess.value"
           >
+            <CircleDollarSign class="w-5 h-5 mr-2" />
             Issue receipt
           </AppButton>
         </div>
@@ -83,9 +97,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { z } from 'zod'
+import { useAssignedEvents } from '../composables/useCollector'
+import { useRecipientFunds } from '@/modules/recipient-funds/composables/useRecipientFunds'
+import { useRecordCashContribution } from '@/modules/contributions/composables/useContributions'
 import { collectorContributionSchema } from '../validators/collectorValidators'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
@@ -93,42 +110,54 @@ import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import PageHeader from '@/shared/components/headers/PageHeader.vue'
+import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import { Check, CircleDollarSign } from 'lucide-vue-next'
 
 const router = useRouter()
-const anonymous = ref(false)
-const errors = ref<Record<string, string>>({})
+const mutation = useRecordCashContribution()
+const eventsQuery = useAssignedEvents()
+
 const form = reactive({
   eventId: '',
   recipientFundId: '',
   contributorName: '',
-  contributorPhone: '',
   amount: '0',
-  currency: 'GBP',
   note: '',
-  paymentMethod: 'cash',
 })
 
-const eventOptions = [
-  { label: 'Select event', value: '' },
-  { label: 'Community fundraiser', value: 'event-1' },
-  { label: 'Evening appeal', value: 'event-2' },
-]
-const fundOptions = [
-  { label: 'Select recipient fund', value: '' },
-  { label: 'Medical support', value: 'fund-1' },
-  { label: 'Education costs', value: 'fund-2' },
-]
-const paymentOptions = [
-  { label: 'Cash', value: 'cash' },
-  { label: 'Mobile money assisted', value: 'momo' },
-  { label: 'Card assisted', value: 'card' },
-]
+const errors = ref<Record<string, string>>({})
 
-function onSubmit() {
+// Fetch funds when event changes
+const fundsQuery = useRecipientFunds(computed(() => form.eventId))
+
+watch(() => form.eventId, () => {
+  form.recipientFundId = ''
+})
+
+const eventOptions = computed(() => [
+  { label: 'Select assigned event', value: '' },
+  ...(eventsQuery.data.value?.map(e => ({ label: e.title, value: e.id })) ?? [])
+])
+
+const fundOptions = computed(() => [
+  { label: 'Select recipient fund', value: '' },
+  ...(fundsQuery.data.value?.map(f => ({ label: f.name, value: f.id })) ?? [])
+])
+
+async function onSubmit() {
   errors.value = {}
+  
+  // Basic validation using the local schema first for UX
   const result = collectorContributionSchema.safeParse({
-    ...form,
-    anonymous: anonymous.value,
+    eventId: form.eventId,
+    recipientFundId: form.recipientFundId,
+    contributorName: form.contributorName || 'Anonymous',
+    contributorPhone: '0000000000', // Mocking phone as it's required by local schema but not backend
+    amount: form.amount,
+    currency: 'GBP',
+    anonymous: !form.contributorName,
+    note: form.note,
+    paymentMethod: 'cash',
   })
 
   if (!result.success) {
@@ -136,7 +165,17 @@ function onSubmit() {
     return
   }
 
-  void router.push('/collector/receipts/preview')
+  // Map to backend contract
+  await mutation.mutateAsync({
+    eventId: result.data.eventId,
+    recipientFundId: result.data.recipientFundId,
+    amount: result.data.amount,
+    contributorName: result.data.contributorName,
+    note: result.data.note,
+  })
+
+  // Optional: navigate away after success
+  // setTimeout(() => router.push('/collector'), 2000)
 }
 
 function applyZodErrors(error: z.ZodError) {

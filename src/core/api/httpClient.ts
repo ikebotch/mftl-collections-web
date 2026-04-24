@@ -81,8 +81,18 @@ export class HttpClient {
   }
 
   async request<T>(config: AxiosRequestConfig): Promise<ApiEnvelope<T>> {
+    const startTime = Date.now()
     try {
       const response = await this.client.request<ApiEnvelope<T> | T>(config)
+      
+      if (appConfig.api.debug) {
+        const duration = Date.now() - startTime
+        console.group(`[API] ${config.method?.toUpperCase()} ${config.url} (${response.status}) [${duration}ms]`)
+        console.log('Response:', response.data)
+        console.log('Correlation ID:', response.headers[CORRELATION_HEADER_NAME])
+        console.groupEnd()
+      }
+
       if (isApiEnvelope<T>(response.data)) {
         const envelope = unwrapApiEnvelope(response.data)
         if (!envelope.success) {
@@ -105,6 +115,19 @@ export class HttpClient {
         correlationId: String(response.headers[CORRELATION_HEADER_NAME] ?? ''),
       }
     } catch (error) {
+      if (appConfig.api.debug) {
+        const duration = Date.now() - startTime
+        const axiosError = axios.isAxiosError(error) ? error : null
+        console.group(`[API Error] ${config.method?.toUpperCase()} ${config.url} [${duration}ms]`)
+        if (axiosError) {
+          console.error('Status:', axiosError.response?.status)
+          console.error('Data:', axiosError.response?.data)
+          console.error('Correlation ID:', axiosError.response?.headers?.[CORRELATION_HEADER_NAME])
+        } else {
+          console.error('Error:', error)
+        }
+        console.groupEnd()
+      }
       throw mapApiError(error)
     }
   }

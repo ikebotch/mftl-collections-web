@@ -47,10 +47,28 @@
             </div>
           </div>
 
+          <div
+            v-if="mutation.isSuccess.value"
+            class="p-6 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-4 text-emerald-800"
+          >
+            <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+              <Check class="w-6 h-6" />
+            </div>
+            <div>
+              <p class="font-bold">
+                Event created successfully!
+              </p>
+              <p class="text-sm opacity-90">
+                Redirecting you to the event details...
+              </p>
+            </div>
+          </div>
+
           <ErrorState
             v-if="mutation.isError.value"
             title="Event creation failed"
             :message="mutation.error.value?.message ?? 'Please review the form and try again.'"
+            :correlation-id="mutation.error.value?.correlationId"
           />
         </div>
 
@@ -86,6 +104,7 @@ import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import { Check } from 'lucide-vue-next'
 
 const router = useRouter()
 const mutation = useCreateEvent()

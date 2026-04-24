@@ -53,34 +53,34 @@
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <MetricCard
           label="Total Collected"
-          :value="query.data.value?.totalCollected ?? '$24,582.50'"
+          :value="query.data.value?.totalCollected ?? '$0.00'"
           icon="Wallet"
           color="purple"
-          trend="+12.5%"
+          trend="+0%"
           trend-positive
         />
         <MetricCard
           label="Total Contributions"
-          :value="query.data.value?.totalContributions ?? '152'"
+          :value="query.data.value?.totalContributions ?? '0'"
           icon="Heart"
           color="green"
-          trend="+18.7%"
+          trend="+0%"
           trend-positive
         />
         <MetricCard
           label="Active Events"
-          :value="query.data.value?.totalEvents ?? '7'"
+          :value="query.data.value?.totalEvents ?? '0'"
           icon="Calendar"
           color="amber"
-          trend="+7.1%"
+          trend="+0%"
           trend-positive
         />
         <MetricCard
           label="Recipient Funds"
-          :value="query.data.value?.activeRecipientFunds ?? '9'"
+          :value="query.data.value?.activeRecipientFunds ?? '0'"
           icon="Building"
           color="blue"
-          trend="+12.5%"
+          trend="+0%"
           trend-positive
         />
         <MetricCard
@@ -541,46 +541,14 @@ import AppCard from '@/shared/components/cards/AppCard.vue'
 import { 
   Calendar, 
   Plus, 
-  ChevronDown, 
-  Wallet, 
-  Heart, 
-  ShieldCheck
+  ChevronDown
 } from 'lucide-vue-next'
 
 const query = useDashboard()
 
-const activities = [
-  { title: 'Payment received for "Youth Conference"', subtitle: '$250.00 via Paystack', time: '2m ago', icon: Wallet, colorClass: 'bg-emerald-50 text-emerald-600' },
-  { title: 'New contribution recorded', subtitle: '$100.00 by John Doe', time: '15m ago', icon: Heart, colorClass: 'bg-violet-50 text-violet-600' },
-  { title: 'Settlement completed', subtitle: '$1,250.00 to Main Account', time: '1h ago', icon: ShieldCheck, colorClass: 'bg-blue-50 text-blue-600' },
-  { title: 'Self donation received', subtitle: '$50.00 by Isaac Botchway', time: '2h ago', icon: Heart, colorClass: 'bg-red-50 text-red-600' },
-  { title: 'New event created: "Missions Outreach"', subtitle: 'Added by Admin', time: '3h ago', icon: Calendar, colorClass: 'bg-amber-50 text-amber-600' },
-]
-
-const topEvents = [
-  { name: 'Youth Conference 2026', amount: '8,450.00', percentage: 85, image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=100&h=100&fit=crop' },
-  { name: 'Easter Retreat', amount: '6,220.50', percentage: 65, image: 'https://images.unsplash.com/photo-1467307983825-619715426c70?w=100&h=100&fit=crop' },
-  { name: 'Missions Outreach', amount: '4,310.00', percentage: 45, image: 'https://images.unsplash.com/photo-1541976535033-44701cd71512?w=100&h=100&fit=crop' },
-  { name: 'Building Project', amount: '2,890.00', percentage: 30, image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=100&h=100&fit=crop' },
-]
-
-const paymentMethods = [
-  { label: 'Card Payments', percent: 50.6, color: '#7c3aed' },
-  { label: 'Mobile Money', percent: 33.0, color: '#10b981' },
-  { label: 'Bank Transfer', percent: 14.0, color: '#f59e0b' },
-  { label: 'Cash', percent: 2.4, color: '#3b82f6' },
-]
-
-const upcomingEvents = [
-  { name: 'Youth Conference 2026', date: 'May 15 - May 18, 2026', daysLeft: 22, image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=200&h=200&fit=crop' },
-  { name: 'Missions Outreach', date: 'Jun 5 - Jun 12, 2026', daysLeft: 43, image: 'https://images.unsplash.com/photo-1541976535033-44701cd71512?w=200&h=200&fit=crop' },
-  { name: 'Community Outreach', date: 'Jul 20 - Jul 25, 2026', daysLeft: 88, image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=200&h=200&fit=crop' },
-]
-
-const topCollectors = [
-  { name: 'Sarah Johnson', amount: '3,450.00', progress: 85, avatar: 'https://i.pravatar.cc/100?u=sarah' },
-  { name: 'Michael Addo', amount: '2,890.50', progress: 70, avatar: 'https://i.pravatar.cc/100?u=michael' },
-  { name: 'Grace Mensah', amount: '2,340.00', progress: 55, avatar: 'https://i.pravatar.cc/100?u=grace' },
-  { name: 'David Osei', amount: '1,980.00', progress: 45, avatar: 'https://i.pravatar.cc/100?u=david' },
-]
+const activities: any[] = []
+const topEvents: any[] = []
+const paymentMethods: any[] = []
+const upcomingEvents: any[] = []
+const topCollectors: any[] = []
 </script>
