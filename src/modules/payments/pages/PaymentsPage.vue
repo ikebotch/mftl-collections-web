@@ -1,29 +1,19 @@
 <template>
   <div class="space-y-12">
-    <!-- Editorial Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
-      <div class="space-y-4">
-        <div class="flex items-center gap-3">
-          <div class="w-2 h-10 bg-emerald-600" />
-          <h1 class="text-5xl font-black text-slate-900 tracking-tighter uppercase italic">
-            Payments
-          </h1>
-        </div>
-        <p class="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] pl-5">
-          Transaction Monitoring & Provider Reconciliation
-        </p>
-      </div>
-      
-      <div class="flex items-center gap-3">
+    <AdminPageHeader
+      title="Payments"
+      description="Monitor payment attempts, provider references, and transaction status."
+    >
+      <template #actions>
         <AppButton
           variant="outline"
-          class="!rounded-2xl !py-6 !px-8 border-2 border-slate-200 hover:border-slate-900 transition-all"
+          class="!rounded-xl bg-white shadow-sm border-slate-200"
         >
-          <Download class="w-4 h-4 mr-3" />
-          <span class="font-black uppercase tracking-widest text-[10px]">Export Ledger</span>
+          <Download class="w-4 h-4 mr-2 text-slate-400" />
+          Export Ledger
         </AppButton>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <LoadingState
       v-if="query.isLoading.value"
@@ -125,6 +115,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { usePayments } from '../composables/usePayments'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import PaymentStatusBadge from '../components/PaymentStatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppTable from '@/shared/components/tables/AppTable.vue'

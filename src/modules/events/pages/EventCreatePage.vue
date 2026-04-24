@@ -2,10 +2,10 @@
   <div class="max-w-5xl mx-auto py-12 px-6">
     <header class="mb-12 text-center">
       <h1 class="text-4xl font-black font-display tracking-tight text-slate-900">
-        {{ currentStep === 5 ? 'Review your event' : 'Create new event' }}
+        {{ currentStep === 5 ? 'Review your event' : 'Create Event' }}
       </h1>
       <p class="text-slate-500 mt-3 font-medium text-lg">
-        {{ stepDescriptions[currentStep - 1] }}
+        {{ currentStep === 5 ? 'Check campaign details before publishing.' : 'Set up campaign details, recipient funds, and collection settings.' }}
       </p>
     </header>
 
@@ -300,13 +300,6 @@ const currentStep = ref(1)
 const isSubmitting = ref(false)
 const submissionError = ref<string | null>(null)
 
-const stepDescriptions = [
-  'Set up the basic details for your collection event.',
-  'Define which causes or funds the money will be collected for.',
-  'Choose your primary currency and accepted payment methods.',
-  'Assign your field collectors to this event.',
-  'Review everything before publishing the event live.'
-]
 
 const paymentMethods = [
   { id: 'cash', label: 'Cash', description: 'Offline physical currency' },

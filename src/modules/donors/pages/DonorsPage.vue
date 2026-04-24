@@ -1,17 +1,10 @@
 <template>
   <div class="space-y-10 selection:bg-violet-500/30">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-      <div>
-        <h1 class="text-4xl font-black font-display tracking-tight text-slate-900">
-          Donor Intelligence
-        </h1>
-        <p class="text-slate-500 mt-2 font-medium">
-          Identify and nurture your most impactful contributors through data-driven insights.
-        </p>
-      </div>
-      
-      <div class="flex items-center gap-3">
+    <AdminPageHeader
+      title="Donors"
+      description="Understand contributor history, giving patterns, and receipt activity."
+    >
+      <template #actions>
         <AppButton 
           variant="outline"
           class="!rounded-xl bg-white shadow-sm border-slate-200"
@@ -19,8 +12,8 @@
           <Download class="w-4 h-4 mr-2 text-slate-400" />
           Export Database
         </AppButton>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <LoadingState
       v-if="query.isLoading.value"
@@ -361,6 +354,7 @@
 import { ref, computed, reactive } from 'vue'
 import { useDonors } from '../composables/useDonors'
 import type { Donor } from '../types/donor'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'

@@ -5,7 +5,7 @@
       class="flex items-center gap-3 py-4"
     >
       <Loader2 class="w-4 h-4 animate-spin text-slate-400" />
-      <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading funds...</span>
+      <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Syncing funds...</span>
     </div>
     <div
       v-else-if="isError"
@@ -15,70 +15,56 @@
     </div>
     <div
       v-else-if="funds.length === 0"
-      class="py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 italic"
+      class="py-8 text-center rounded-2xl border border-dashed border-slate-100"
     >
-      No funds defined for this event.
+      <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">
+        No recipient funds defined
+      </p>
     </div>
     <div
       v-else
-      class="overflow-hidden rounded-2xl border border-slate-100 bg-white"
+      class="grid grid-cols-1 md:grid-cols-2 gap-3"
     >
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="bg-slate-50/50">
-            <th class="px-5 py-3 text-[9px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
-              Fund Name
-            </th>
-            <th class="px-5 py-3 text-[9px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
-              Target
-            </th>
-            <th class="px-5 py-3 text-[9px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 text-right">
-              Raised
-            </th>
-            <th class="px-5 py-3 text-[9px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 w-32">
-              Progress
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="fund in funds"
-            :key="fund.id"
-            class="group hover:bg-slate-50/30 transition-colors"
-          >
-            <td class="px-5 py-4 border-b border-slate-50">
-              <p class="text-sm font-bold text-slate-900">
-                {{ fund.name }}
-              </p>
-              <p
-                v-if="fund.description"
-                class="text-[10px] text-slate-400 mt-0.5 line-clamp-1"
-              >
-                {{ fund.description }}
-              </p>
-            </td>
-            <td class="px-5 py-4 border-b border-slate-50 text-xs font-bold text-slate-500">
-              {{ fund.targetAmount > 0 ? formatCurrency(fund.targetAmount, 'GHS') : 'No target' }}
-            </td>
-            <td class="px-5 py-4 border-b border-slate-50 text-sm font-black text-slate-900 text-right">
+      <div
+        v-for="fund in funds"
+        :key="fund.id"
+        class="p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-violet-100 transition-colors"
+      >
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <p class="text-xs font-black text-slate-900 tracking-tight">
+              {{ fund.name }}
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs font-black text-slate-900">
               {{ formatCurrency(fund.receivedAmount, 'GHS') }}
-            </td>
-            <td class="px-5 py-4 border-b border-slate-50">
-              <div class="flex items-center gap-3">
-                <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                  <div 
-                    class="h-full bg-emerald-500 rounded-full transition-all duration-1000"
-                    :style="{ width: `${fund.targetAmount > 0 ? Math.min(100, Math.round((fund.receivedAmount / fund.targetAmount) * 100)) : 0}%` }"
-                  />
-                </div>
-                <span class="text-[9px] font-black text-slate-900 min-w-[2rem] text-right">
-                  {{ fund.targetAmount > 0 ? Math.round((fund.receivedAmount / fund.targetAmount) * 100) : 0 }}%
-                </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </p>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+              Raised
+            </p>
+          </div>
+        </div>
+
+        <div v-if="fund.targetAmount > 0">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target Progress</span>
+            <span class="text-[9px] font-black text-slate-900">{{ Math.round((fund.receivedAmount / fund.targetAmount) * 100) }}%</span>
+          </div>
+          <div class="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
+            <div 
+              class="h-full bg-emerald-500 rounded-full transition-all duration-1000"
+              :style="{ width: `${Math.min(100, Math.round((fund.receivedAmount / fund.targetAmount) * 100))}%` }"
+            />
+          </div>
+        </div>
+        <div 
+          v-else 
+          class="pt-2 border-t border-slate-50 mt-2"
+        >
+          <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">No target set</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>

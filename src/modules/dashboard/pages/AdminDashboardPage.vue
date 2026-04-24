@@ -1,39 +1,34 @@
 <template>
   <div class="space-y-10">
-    <!-- Header with Action -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-      <div>
-        <h1 class="text-3xl font-bold font-display tracking-tight text-slate-900">
-          Overview
-        </h1>
-        <p class="text-slate-600 mt-2 font-medium">
-          Welcome back, Isaac! Here's what's happening with your ministry.
-        </p>
-      </div>
-      
-      <div class="flex items-center gap-4">
-        <!-- Date Picker Placeholder -->
-        <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-soft cursor-pointer hover:border-violet-300 transition-all group">
-          <Calendar class="w-4 h-4 text-slate-600 group-hover:text-violet-500" />
-          <span class="text-sm font-bold text-slate-700">Apr 17 - Apr 23, 2026</span>
-          <ChevronDown class="w-4 h-4 text-slate-600" />
-        </div>
+    <AdminPageHeader
+      title="Overview"
+      description="Monitor collections, events, funds, collectors, and payment activity."
+    >
+      <template #actions>
+        <div class="flex items-center gap-4">
+          <!-- Date Picker Placeholder -->
+          <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-soft cursor-pointer hover:border-violet-300 transition-all group">
+            <Calendar class="w-4 h-4 text-slate-600 group-hover:text-violet-500" />
+            <span class="text-sm font-bold text-slate-700">Apr 17 - Apr 23, 2026</span>
+            <ChevronDown class="w-4 h-4 text-slate-600" />
+          </div>
 
-        <div class="flex items-center shadow-soft rounded-xl overflow-hidden">
-          <AppButton
-            variant="primary"
-            class="rounded-none rounded-l-xl px-5 py-2.5"
-          >
-            <Plus class="w-4 h-4 mr-2" />
-            New Event
-          </AppButton>
-          <div class="w-px h-10 bg-violet-600" />
-          <button class="bg-violet-600 hover:bg-violet-700 text-white p-2.5 transition-colors">
-            <ChevronDown class="w-4 h-4" />
-          </button>
+          <div class="flex items-center shadow-soft rounded-xl overflow-hidden">
+            <AppButton
+              variant="primary"
+              class="rounded-none rounded-l-xl px-5 py-2.5"
+            >
+              <Plus class="w-4 h-4 mr-2" />
+              New Event
+            </AppButton>
+            <div class="w-px h-10 bg-violet-600" />
+            <button class="bg-violet-600 hover:bg-violet-700 text-white p-2.5 transition-colors">
+              <ChevronDown class="w-4 h-4" />
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <LoadingState
       v-if="query.isLoading.value"
@@ -533,6 +528,7 @@
 
 <script setup lang="ts">
 import { useDashboard } from '../composables/useDashboard'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'

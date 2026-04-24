@@ -33,3 +33,11 @@ export interface CreateEventInput {
   eventDate: string | null
   slug: string
 }
+
+export interface UpdateEventInput {
+  title: string
+  description: string
+  eventDate: string
+  isActive: boolean
+  slug: string
+}
