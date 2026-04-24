@@ -28,7 +28,11 @@ export class HttpClient {
       const headers = config.headers ?? {}
       headers[CORRELATION_HEADER_NAME] = createCorrelationId()
 
-      const tenantId = readSelectedTenantId()
+      let tenantId = readSelectedTenantId()
+      if (!tenantId && appConfig.auth.devBypass) {
+        tenantId = '00000000-0000-0000-0000-000000000000'
+      }
+
       if (tenantId) {
         headers[appConfig.api.tenantHeaderName] = tenantId
       }

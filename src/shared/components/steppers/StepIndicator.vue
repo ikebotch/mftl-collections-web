@@ -25,7 +25,10 @@
           'bg-white text-slate-400 border-slate-100'
         ]"
       >
-        <Check v-if="index + 1 < currentStep" class="w-5 h-5" />
+        <Check
+          v-if="index + 1 < currentStep"
+          class="w-5 h-5"
+        />
         <span v-else>{{ index + 1 }}</span>
       </div>
 

@@ -1,7 +1,7 @@
 import { httpClient } from '@/core/api/httpClient'
 import type { RequestOptions } from '@/core/api/types'
-import type { ContributionRow } from '../types/contribution'
 import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+import type { ContributionRow } from '../types/contribution'
 
 export interface CashContributionResult {
   contributionId: string
@@ -48,6 +48,18 @@ interface ContributionListItemDto {
   Amount?: number
   currency?: string
   Currency?: string
+  contributorName?: string
+  ContributorName?: string
+  contributorPhone?: string
+  ContributorPhone?: string
+  contributorEmail?: string
+  ContributorEmail?: string
+  receiptId?: string | null
+  ReceiptId?: string | null
+  collectorName?: string | null
+  CollectorName?: string | null
+  note?: string | null
+  Note?: string | null
 }
 
 function mapCashContributionResult(dto: CashContributionResultDto): CashContributionResult {
@@ -58,7 +70,7 @@ function mapCashContributionResult(dto: CashContributionResultDto): CashContribu
   }
 }
 
-function mapContributionRow(dto: ContributionListItemDto & { ContributorName?: string, ContributorPhone?: string, ContributorEmail?: string, contributorName?: string, contributorPhone?: string, contributorEmail?: string }): ContributionRow {
+function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
   const amount = dto.amount ?? dto.Amount ?? 0
   const currency = dto.currency ?? dto.Currency ?? 'GHS'
 
@@ -74,6 +86,9 @@ function mapContributionRow(dto: ContributionListItemDto & { ContributorName?: s
     contributorName: dto.contributorName ?? dto.ContributorName ?? 'Anonymous',
     contributorPhone: dto.contributorPhone ?? dto.ContributorPhone ?? '',
     contributorEmail: dto.contributorEmail ?? dto.ContributorEmail,
+    receiptId: dto.receiptId ?? dto.ReceiptId ?? null,
+    collectorName: dto.collectorName ?? dto.CollectorName ?? null,
+    note: dto.note ?? dto.Note ?? null,
   }
 }
 

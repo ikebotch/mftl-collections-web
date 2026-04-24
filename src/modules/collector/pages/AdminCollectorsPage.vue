@@ -86,9 +86,9 @@
           </template>
 
           <template #cell:totalCollectedToday="{ value }">
-             <div class="font-black text-slate-900">
-               {{ formatCurrency(value, 'GHS') }}
-             </div>
+            <div class="font-black text-slate-900">
+              {{ formatCurrency(value, 'GHS') }}
+            </div>
           </template>
 
           <template #cell:status="{ value }">
@@ -128,56 +128,93 @@
       subtitle="Operational Intelligence"
       @close="selectedCollector = null"
     >
-      <div v-if="selectedCollector" class="space-y-10">
+      <div
+        v-if="selectedCollector"
+        class="space-y-10"
+      >
         <section class="p-8 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col items-center text-center">
           <div class="w-20 h-20 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-2xl font-black text-slate-900 shadow-premium mb-4">
-             {{ getInitials(selectedCollector.name) }}
+            {{ getInitials(selectedCollector.name) }}
           </div>
-          <h3 class="text-xl font-bold text-slate-900">{{ selectedCollector.name }}</h3>
-          <p class="text-slate-500 font-medium mt-1">{{ selectedCollector.email }}</p>
+          <h3 class="text-xl font-bold text-slate-900">
+            {{ selectedCollector.name }}
+          </h3>
+          <p class="text-slate-500 font-medium mt-1">
+            {{ selectedCollector.email }}
+          </p>
           
           <div class="mt-8 grid grid-cols-2 gap-4 w-full">
             <div class="p-4 rounded-xl bg-white border border-slate-100 shadow-sm">
-               <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Today</h4>
-               <p class="text-lg font-black text-slate-900">{{ formatCurrency(selectedCollector.totalCollectedToday, 'GHS') }}</p>
+              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                Today
+              </h4>
+              <p class="text-lg font-black text-slate-900">
+                {{ formatCurrency(selectedCollector.totalCollectedToday, 'GHS') }}
+              </p>
             </div>
-             <div class="p-4 rounded-xl bg-white border border-slate-100 shadow-sm">
-               <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Receipts</h4>
-               <p class="text-lg font-black text-slate-900">{{ selectedCollector.receiptsIssuedToday }}</p>
+            <div class="p-4 rounded-xl bg-white border border-slate-100 shadow-sm">
+              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                Receipts
+              </h4>
+              <p class="text-lg font-black text-slate-900">
+                {{ selectedCollector.receiptsIssuedToday }}
+              </p>
             </div>
           </div>
-          <CollectorStatusBadge :status="selectedCollector.status" class="mt-6 scale-110" />
+          <CollectorStatusBadge
+            :status="selectedCollector.status"
+            class="mt-6 scale-110"
+          />
         </section>
 
         <section>
           <div class="flex items-center justify-between mb-4">
-            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Current Assignments</h4>
+            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              Current Assignments
+            </h4>
             <span class="text-[10px] font-bold text-violet-600 uppercase tracking-widest">{{ selectedCollector.assignedEventCount }} Events</span>
           </div>
           <div class="space-y-3">
-             <div class="p-4 rounded-xl border border-slate-100 flex items-center justify-between bg-white shadow-sm">
-                <div>
-                   <p class="text-sm font-bold text-slate-900">Active Shift Assignment</p>
-                   <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Assigned via Dashboard</p>
-                </div>
-                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-             </div>
+            <div class="p-4 rounded-xl border border-slate-100 flex items-center justify-between bg-white shadow-sm">
+              <div>
+                <p class="text-sm font-bold text-slate-900">
+                  Active Shift Assignment
+                </p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
+                  Assigned via Dashboard
+                </p>
+              </div>
+              <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            </div>
           </div>
         </section>
         
-        <section v-if="selectedCollector.blockedReason" class="p-4 rounded-xl bg-red-50 border border-red-100">
-           <h4 class="text-[10px] font-black uppercase tracking-widest text-red-600 mb-1">Block Reason</h4>
-           <p class="text-sm text-red-700 font-medium">{{ selectedCollector.blockedReason }}</p>
+        <section
+          v-if="selectedCollector.blockedReason"
+          class="p-4 rounded-xl bg-red-50 border border-red-100"
+        >
+          <h4 class="text-[10px] font-black uppercase tracking-widest text-red-600 mb-1">
+            Block Reason
+          </h4>
+          <p class="text-sm text-red-700 font-medium">
+            {{ selectedCollector.blockedReason }}
+          </p>
         </section>
       </div>
 
       <template #actions>
-        <AppButton class="flex-1" variant="outline">
-           <Settings class="w-4 h-4 mr-2" />
-           Configure
+        <AppButton
+          class="flex-1"
+          variant="outline"
+        >
+          <Settings class="w-4 h-4 mr-2" />
+          Configure
         </AppButton>
-        <AppButton class="flex-1" variant="primary">
-           Manage Shifts
+        <AppButton
+          class="flex-1"
+          variant="primary"
+        >
+          Manage Shifts
         </AppButton>
       </template>
     </DetailDrawer>
@@ -201,11 +238,7 @@ import {
   Plus, 
   Download, 
   Eye, 
-  Settings,
-  Users,
-  Zap,
-  TrendingUp,
-  Trophy
+  Settings
 } from 'lucide-vue-next'
 
 const router = useRouter()

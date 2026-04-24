@@ -7,6 +7,7 @@ export interface EventDto {
   totalRaised?: number
   totalTarget?: number
   fundCount?: number
+  collectorCount?: number
   slug?: string
 }
 
@@ -22,6 +23,7 @@ export interface Event {
   totalTarget: number
   progress: number
   fundCount: number
+  collectorCount: number
   slug: string
 }
 
@@ -30,9 +32,4 @@ export interface CreateEventInput {
   description: string
   eventDate: string | null
   slug: string
-  recipientFunds: {
-    name: string
-    description: string
-    targetAmount: number
-  }[]
 }

@@ -19,10 +19,10 @@
           :error="errors.name"
         />
         <AppTextarea
-          id="recipient-description"
+          id="description"
           v-model="form.description"
           label="Description"
-          placeholder="Tell contributors how this fund helps."
+          placeholder="Briefly describe what this fund is for..."
           :error="errors.description"
         />
         <AppInput
