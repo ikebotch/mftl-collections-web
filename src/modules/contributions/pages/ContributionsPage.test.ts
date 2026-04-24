@@ -4,6 +4,8 @@ import ContributionsPage from './ContributionsPage.vue'
 
 vi.mock('../composables/useContributions', () => ({
   useContributions: () => ({
+    isLoading: { value: false },
+    isError: { value: false },
     data: {
       value: [
         {
@@ -13,7 +15,7 @@ vi.mock('../composables/useContributions', () => ({
           recipientFund: 'Medical support',
           paymentMethod: 'cash',
           status: 'Recorded',
-          amount: 'GBP 50.00',
+          amount: '50.00',
         },
       ],
     },

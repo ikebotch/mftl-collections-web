@@ -42,6 +42,11 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/modules/contributions/pages/ContributionsPage.vue'),
       },
       {
+        path: 'donors',
+        name: 'admin-donors',
+        component: () => import('@/modules/donors/pages/DonorsPage.vue'),
+      },
+      {
         path: 'payments',
         name: 'admin-payments',
         component: () => import('@/modules/payments/pages/PaymentsPage.vue'),
@@ -58,8 +63,18 @@ export const adminRoutes: RouteRecordRaw[] = [
       },
       {
         path: 'collectors',
-        name: 'admin-collectors',
-        component: () => import('@/modules/collector/pages/AdminCollectorsPage.vue'),
+        children: [
+          {
+            path: '',
+            name: 'admin-collectors',
+            component: () => import('@/modules/collector/pages/AdminCollectorsPage.vue'),
+          },
+          {
+            path: 'new',
+            name: 'admin-collectors-new',
+            component: () => import('@/modules/collector/pages/CollectorCreatePage.vue'),
+          }
+        ]
       },
       {
         path: 'settlements',

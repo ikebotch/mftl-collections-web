@@ -11,6 +11,9 @@ vi.mock('@auth0/auth0-vue', () => ({
     isAuthenticated: { value: true },
     isLoading: { value: false },
   }),
+  createAuth0: vi.fn(() => ({
+    install: vi.fn(),
+  })),
 }))
 
 describe('AdminLayout', () => {
@@ -29,8 +32,8 @@ describe('AdminLayout', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Dashboard')
+    expect(wrapper.text()).toContain('Overview')
     expect(wrapper.text()).toContain('Events')
-    expect(wrapper.text()).toContain('Contributions')
+    expect(wrapper.text()).toContain('Field Team')
   })
 })

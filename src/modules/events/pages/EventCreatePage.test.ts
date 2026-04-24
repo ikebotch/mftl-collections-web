@@ -14,11 +14,19 @@ vi.mock('../composables/useEvents', () => ({
   }),
 }))
 
+vi.mock('@/modules/recipient-funds/composables/useRecipientFunds', () => ({
+  useCreateRecipientFund: () => ({
+    mutateAsync: vi.fn(async () => ({ id: 'fund-1' })),
+    isPending: { value: false },
+    isError: { value: false },
+  }),
+}))
+
 describe('EventCreatePage', () => {
   it('renders the create event form', () => {
     const router = createRouter({
       history: createWebHistory(),
-      routes: [{ path: '/admin/events/:id', component: { template: '<div />' } }],
+      routes: [{ path: '/admin/events', component: { template: '<div />' } }],
     })
 
     const wrapper = mount(EventCreatePage, {
@@ -27,7 +35,7 @@ describe('EventCreatePage', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Create event')
-    expect(wrapper.find('form').exists()).toBe(true)
+    expect(wrapper.text()).toContain('New Collection Event')
+    expect(wrapper.text()).toContain('Basic Details')
   })
 })

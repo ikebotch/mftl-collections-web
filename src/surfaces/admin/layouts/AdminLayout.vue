@@ -255,7 +255,7 @@ const navGroups = [
   {
     title: 'Operations',
     items: [
-      { label: 'Collectors', to: '/admin/collectors', icon: UserCheck, badge: 'NEW' },
+      { label: 'Field Team', to: '/admin/collectors', icon: UserCheck, badge: 'NEW' },
       { label: 'Dashboards', to: '/admin/reports', icon: BarChart3 },
       { label: 'Reports', to: '/admin/reports', icon: FileText },
     ]
@@ -264,8 +264,9 @@ const navGroups = [
     title: 'System',
     items: [
       { label: 'Settlements', to: '/admin/settlements', icon: ShieldCheck },
-      { label: 'Donors', to: '/admin/users', icon: Users },
-      { label: 'Settings', to: '/admin/settings', icon: Settings },
+      { label: 'Supporters', to: '/admin/donors', icon: Users },
+      { label: 'User Access', to: '/admin/users', icon: Settings },
+      { label: 'Tenant Settings', to: '/admin/settings', icon: Settings },
     ]
   },
 ]

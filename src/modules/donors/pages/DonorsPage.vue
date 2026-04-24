@@ -3,10 +3,10 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
         <h1 class="text-3xl font-bold font-display tracking-tight text-slate-900">
-          Field Team
+          Supporters & Donors
         </h1>
         <p class="text-slate-500 mt-2 font-medium">
-          Manage collectors, supervisors, and their field performance.
+          View and manage the people supporting your causes.
         </p>
       </div>
       
@@ -16,14 +16,13 @@
           class="hidden sm:flex"
         >
           <Download class="w-4 h-4 mr-2" />
-          Performance Export
+          Export Donors
         </AppButton>
         <AppButton 
           variant="primary"
-          @click="router.push('/admin/collectors/new')"
         >
-          <Plus class="w-4 h-4 mr-2" />
-          Invite Collector
+          <Mail class="w-4 h-4 mr-2" />
+          Bulk Message
         </AppButton>
       </div>
     </div>
@@ -31,49 +30,42 @@
     <!-- KPI Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <MetricCard
-        label="Active Collectors"
-        value="24"
+        label="Total Donors"
+        value="128"
         icon="Users"
-        trend="+2 this week"
+        trend="+12 this month"
       />
       <MetricCard
-        label="Raised Today"
-        value="GHS 12,450"
-        icon="Wallet"
+        label="New Supporters"
+        value="15"
+        icon="UserPlus"
         color="green"
       />
       <MetricCard
-        label="Avg. Per Agent"
-        value="GHS 518"
-        icon="Zap"
+        label="Avg. Lifetime Value"
+        value="GHS 420"
+        icon="TrendingUp"
       />
       <MetricCard
-        label="Pending Cash"
-        value="GHS 3,100"
-        icon="Coins"
-        color="amber"
+        label="Repeat Donors"
+        value="42%"
+        icon="Repeat"
       />
     </div>
 
     <!-- Smart Filter Toolbar -->
     <AppToolbar>
       <AppInput
-        id="collector-search"
+        id="donor-search"
         model-value=""
         label="Search"
-        placeholder="Name, email, ID..."
+        placeholder="Name, email, phone..."
       />
       <AppSelect
-        id="collector-status"
+        id="donor-type"
         model-value=""
-        label="Status"
-        :options="[{ label: 'All Status', value: '' }, { label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }]"
-      />
-      <AppSelect
-        id="collector-event"
-        model-value=""
-        label="Event"
-        :options="[{ label: 'All Events', value: '' }]"
+        label="Donor Type"
+        :options="[{ label: 'All', value: '' }, { label: 'Individual', value: 'individual' }, { label: 'Organization', value: 'org' }]"
       />
       <template #actions>
         <AppButton
@@ -85,10 +77,29 @@
       </template>
     </AppToolbar>
 
-    <AppCard class="overflow-hidden">
+    <LoadingState
+      v-if="query.isLoading.value"
+      text="Deriving donor insights..."
+    />
+    <ErrorState
+      v-else-if="query.isError.value"
+      title="Failed to load donor data"
+      :message="query.error.value?.message ?? 'Retry sync.'"
+      @retry="query.refetch"
+    />
+    <EmptyState
+      v-else-if="!donors.length"
+      title="No donors found"
+      description="Donors appear here automatically when they contribute to your events."
+    />
+
+    <AppCard
+      v-else
+      class="overflow-hidden"
+    >
       <AppTable
         :columns="columns"
-        :rows="collectors"
+        :rows="donors"
         row-key="id"
       >
         <template #cell:name="{ value, row }">
@@ -101,85 +112,62 @@
                 {{ value }}
               </p>
               <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
-                {{ row.email }}
+                {{ row.email || 'No contact provided' }}
               </p>
             </div>
           </div>
         </template>
 
-        <template #cell:status="{ value }">
-          <div 
-            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest"
-            :class="value === 'Active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-50 text-slate-600 border border-slate-200'"
-          >
-            <span
-              class="w-1.5 h-1.5 rounded-full"
-              :class="value === 'Active' ? 'bg-emerald-500' : 'bg-slate-400'"
-            />
-            {{ value }}
-          </div>
-        </template>
-
-        <template #cell:collections="{ value }">
-          <span class="font-black text-slate-900">{{ value }}</span>
+        <template #cell:totalGiven="{ value }">
+          <span class="font-black text-slate-900">{{ formatCurrency(value, 'GHS') }}</span>
         </template>
 
         <template #cell:actions="{ row }">
-          <div class="flex items-center gap-2">
-            <AppButton
-              variant="secondary"
-              size="sm"
-              @click="openDetail(row)"
-            >
-              Profile
-            </AppButton>
-          </div>
+          <AppButton
+            variant="secondary"
+            size="sm"
+            @click="openDetail(row)"
+          >
+            History
+          </AppButton>
         </template>
       </AppTable>
     </AppCard>
 
     <div class="flex items-center justify-center gap-2 px-6 py-4 bg-slate-50 border border-slate-200 rounded-3xl">
-      <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Live collector data is currently simulated - Backend API Pending</span>
+      <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Donor profiles are derived from receipt history - Backend API Pending</span>
     </div>
 
     <!-- Detail Drawer -->
     <DetailDrawer
       :is-open="isDrawerOpen"
-      title="Collector Profile"
-      :subtitle="selectedCollector?.name"
+      title="Donor Profile"
+      :subtitle="selectedDonor?.name"
       @close="isDrawerOpen = false"
     >
       <div
-        v-if="selectedCollector"
+        v-if="selectedDonor"
         class="space-y-8"
       >
         <div class="flex flex-col items-center py-8 bg-slate-50 rounded-3xl border border-slate-100">
-          <div class="w-24 h-24 rounded-3xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-300 mb-4">
-            <User class="w-12 h-12" />
+          <div class="w-24 h-24 rounded-3xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-300 mb-4 font-display text-2xl font-black">
+            {{ selectedDonor.name.charAt(0) }}
           </div>
           <h3 class="text-xl font-bold text-slate-900">
-            {{ selectedCollector.name }}
+            {{ selectedDonor.name }}
           </h3>
           <p class="text-sm font-medium text-slate-500">
-            {{ selectedCollector.email }}
+            {{ selectedDonor.email || 'No email' }}
           </p>
-          <div class="mt-4">
-            <span 
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border"
-              :class="selectedCollector.status === 'Active' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-100 text-slate-600 border-slate-200'"
-            >
-              {{ selectedCollector.status }}
-            </span>
-          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div class="p-4 bg-white border border-slate-100 rounded-2xl">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-              Today
+              Total Given
             </p>
             <p class="text-lg font-black text-slate-900">
-              {{ selectedCollector.collections }}
+              {{ formatCurrency(selectedDonor.totalGiven, 'GHS') }}
             </p>
           </div>
           <div class="p-4 bg-white border border-slate-100 rounded-2xl">
@@ -187,24 +175,31 @@
               Donations
             </p>
             <p class="text-lg font-black text-slate-900">
-              12
+              {{ selectedDonor.count }}
             </p>
           </div>
         </div>
 
         <div class="space-y-4">
           <SectionHeader
-            title="Assignments"
-            description="Events assigned to this collector."
+            title="Recent Activity"
+            description="Last contributions from this donor."
           />
           <div class="space-y-2">
             <div 
-              v-for="i in 2" 
+              v-for="i in 3" 
               :key="i"
-              class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between"
+              class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between"
             >
-              <span class="text-sm font-bold text-slate-700">Community Support 2026</span>
-              <span class="text-[10px] font-black text-violet-600 uppercase">Primary</span>
+              <div>
+                <p class="text-sm font-bold text-slate-900">
+                  GHS 100.00
+                </p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase">
+                  Community Support Event
+                </p>
+              </div>
+              <span class="text-[10px] font-black text-slate-400 uppercase">12 Apr</span>
             </div>
           </div>
         </div>
@@ -214,15 +209,15 @@
             variant="outline"
             class="w-full"
           >
-            <BarChart3 class="w-4 h-4 mr-2" />
-            Performance Report
+            <Download class="w-4 h-4 mr-2" />
+            Tax Receipt History
           </AppButton>
           <AppButton
             variant="secondary"
             class="w-full"
           >
-            <Settings class="w-4 h-4 mr-2" />
-            Edit Access
+            <Mail class="w-4 h-4 mr-2" />
+            Send Thank You
           </AppButton>
         </div>
       </div>
@@ -231,8 +226,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useReceipts } from '@/modules/receipts/composables/useReceipts'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppTable from '@/shared/components/tables/AppTable.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
@@ -242,36 +237,61 @@ import AppToolbar from '@/shared/components/toolbars/AppToolbar.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
 import SectionHeader from '@/shared/components/headers/SectionHeader.vue'
+import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import EmptyState from '@/shared/components/empty-states/EmptyState.vue'
+import { formatCurrency } from '@/shared/utils/formatters'
 import { 
-  Plus, 
   Download, 
-  User, 
-  BarChart3, 
-  Settings
+  Mail, 
+  User
 } from 'lucide-vue-next'
 
-const router = useRouter()
+const query = useReceipts()
 
 const columns = [
-  { key: 'name', label: 'Collector' },
-  { key: 'status', label: 'Status' },
-  { key: 'collections', label: 'Collections (Today)' },
-  { key: 'lastActive', label: 'Last Active' },
+  { key: 'name', label: 'Supporter' },
+  { key: 'totalGiven', label: 'Total Contribution' },
+  { key: 'count', label: 'Events Supported' },
+  { key: 'lastDate', label: 'Last Donation' },
   { key: 'actions', label: '' },
 ]
 
-const collectors = [
-  { id: 1, name: 'Kofi Mensah', email: 'kofi.mensah@mftl.com', status: 'Active', collections: 'GHS 1,200', lastActive: '2 mins ago' },
-  { id: 2, name: 'Ama Serwaa', email: 'ama.serwaa@mftl.com', status: 'Active', collections: 'GHS 950', lastActive: '15 mins ago' },
-  { id: 3, name: 'Kwame Appiah', email: 'kwame.appiah@mftl.com', status: 'Inactive', collections: 'GHS 0', lastActive: '2 days ago' },
-  { id: 4, name: 'Abena Osei', email: 'abena.osei@mftl.com', status: 'Active', collections: 'GHS 2,100', lastActive: 'Just now' },
-]
+// Derive donor data from receipts
+const donors = computed(() => {
+  if (!query.data.value) return []
+  
+  const donorMap = new Map<string, any>()
+  
+  query.data.value.forEach(receipt => {
+    // In a real app, we'd use a DonorId or email. For now, name is the key.
+    const key = receipt.contributorName || 'Anonymous'
+    const existing = donorMap.get(key) || { 
+      id: key, 
+      name: key, 
+      email: '', 
+      totalGiven: 0, 
+      count: 0, 
+      lastDate: receipt.issuedAt 
+    }
+    
+    existing.totalGiven += Number(receipt.amount)
+    existing.count += 1
+    if (new Date(receipt.issuedAt) > new Date(existing.lastDate)) {
+      existing.lastDate = receipt.issuedAt
+    }
+    
+    donorMap.set(key, existing)
+  })
+  
+  return Array.from(donorMap.values())
+})
 
 const isDrawerOpen = ref(false)
-const selectedCollector = ref<any>(null)
+const selectedDonor = ref<any>(null)
 
 function openDetail(row: any) {
-  selectedCollector.value = row
+  selectedDonor.value = row
   isDrawerOpen.value = true
 }
 </script>
