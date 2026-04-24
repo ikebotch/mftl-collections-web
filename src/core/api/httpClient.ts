@@ -33,11 +33,14 @@ export class HttpClient {
         headers[appConfig.api.tenantHeaderName] = tenantId
       }
 
-      if (!config.skipAuth) {
+      if (!config.skipAuth && !appConfig.auth.devBypass) {
         const accessToken = await getAccessToken()
         if (accessToken) {
           headers.Authorization = `Bearer ${accessToken}`
         }
+      } else if (appConfig.auth.devBypass) {
+        // In dev bypass mode, we might want to log or attach a mock token
+        console.debug('[HttpClient] Auth0 bypass enabled. Skipping token attachment.')
       }
 
       config.headers = headers

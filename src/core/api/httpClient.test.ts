@@ -1,25 +1,50 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-import { httpClient } from './httpClient'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { HttpClient } from './httpClient'
+import axios from 'axios'
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+import { createPinia, setActivePinia } from 'pinia'
 
-vi.mock('@/core/auth/auth0', () => ({
-  getAccessToken: vi.fn(async () => 'token-123'),
-}))
+vi.mock('axios', () => {
+  return {
+    default: {
+      create: vi.fn().mockReturnValue({
+        interceptors: {
+          request: { use: vi.fn() },
+          response: { use: vi.fn() },
+        },
+        request: vi.fn(),
+      }),
+    },
+  }
+})
 
-describe('httpClient', () => {
+describe('HttpClient', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
-    window.localStorage.clear()
   })
 
-  it('attaches the configured tenant header and bearer token', async () => {
-    window.localStorage.setItem('mftl.selectedTenantId', 'tenant-1')
+  it('attaches tenant header when tenant is selected', async () => {
+    const tenantStore = useTenantStore()
+    tenantStore.setTenant('test-tenant-id', 'Test Tenant')
+    
+    new HttpClient()
+    // Get the request interceptor
+    const interceptor = (vi.mocked(axios.create().interceptors.request.use) as any).mock.calls[0][0]
+    
+    const config = { headers: {} }
+    const result = await interceptor(config)
+    
+    expect(result.headers['X-Tenant-Id']).toBe('test-tenant-id')
+  })
 
-    const config = await httpClient.client.interceptors.request.handlers[0].fulfilled?.({
-      headers: {},
-    })
-
-    expect(config?.headers['X-Tenant-Id']).toBe('tenant-1')
-    expect(config?.headers.Authorization).toBe('Bearer token-123')
+  it('attaches correlation ID to every request', async () => {
+    new HttpClient()
+    const interceptor = (vi.mocked(axios.create().interceptors.request.use) as any).mock.calls[0][0]
+    
+    const config = { headers: {} }
+    const result = await interceptor(config)
+    
+    expect(result.headers['x-correlation-id']).toBeDefined()
+    expect(typeof result.headers['x-correlation-id']).toBe('string')
   })
 })

@@ -36,6 +36,7 @@
       v-else-if="query.isError.value"
       title="Could not load events"
       :message="query.error.value?.message ?? 'Please retry.'"
+      :correlation-id="query.error.value?.correlationId"
       show-retry
       @retry="query.refetch"
     />
