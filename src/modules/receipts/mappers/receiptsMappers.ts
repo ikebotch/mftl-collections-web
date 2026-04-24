@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import type { ReceiptDetail, ReceiptDto, ReceiptListItemDto, ReceiptRow } from '../types/receipt'
 
 export function mapReceiptStatus(status: string): string {

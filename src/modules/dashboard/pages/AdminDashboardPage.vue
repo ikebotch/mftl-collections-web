@@ -42,7 +42,7 @@
       <AdminMetricGrid>
         <MetricCard
           label="Total Collected"
-          :value="formatCurrency(query.data.value?.totalCollected ?? 0, 'GHS')"
+          :value="formattedTotals"
           icon="Wallet"
           color="purple"
         />
@@ -91,8 +91,8 @@
           
           <div v-else class="space-y-6">
             <div
-              v-for="contribution in query.data.value?.recentContributions"
-              :key="contribution.id"
+              v-for="(contribution, index) in query.data.value?.recentContributions"
+              :key="index"
               class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-slate-900 transition-all cursor-pointer"
             >
               <div class="flex items-center gap-4">
@@ -104,7 +104,7 @@
                     {{ contribution.contributorName }}
                   </p>
                   <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    {{ contribution.event }} · {{ contribution.paymentMethod }}
+                    {{ contribution.eventTitle }} · {{ contribution.paymentMethod }}
                   </p>
                 </div>
               </div>
@@ -167,6 +167,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCopy } from '@/core/i18n/useCopy'
 import { useDashboard } from '../composables/useDashboard'
@@ -174,6 +175,12 @@ import { useDashboard } from '../composables/useDashboard'
 const { copy } = useCopy()
 const router = useRouter()
 const query = useDashboard()
+
+const formattedTotals = computed(() => {
+  const totals = query.data.value?.totals ?? []
+  if (totals.length === 0) return 'GHS 0.00'
+  return totals.map(t => formatCurrency(t.amount, t.currency)).join(' • ')
+})
 
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
@@ -183,7 +190,7 @@ import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 import { 
   Calendar,
   Plus, 

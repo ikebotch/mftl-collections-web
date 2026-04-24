@@ -38,7 +38,7 @@
 import type { RecipientFund } from '../types/recipientFund'
 import AppBadge from '@/shared/components/badges/AppBadge.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 
 defineProps<{
   fund: RecipientFund

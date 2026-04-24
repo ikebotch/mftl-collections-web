@@ -1,6 +1,6 @@
 import { httpClient } from '@/core/api/httpClient'
 import type { RequestOptions } from '@/core/api/types'
-import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import type { ContributionRow } from '../types/contribution'
 
 export interface CashContributionResult {

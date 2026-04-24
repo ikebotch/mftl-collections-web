@@ -67,7 +67,7 @@ import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import PageHeader from '@/shared/components/headers/PageHeader.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 
 const route = useRoute()
 const router = useRouter()

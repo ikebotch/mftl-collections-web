@@ -184,7 +184,7 @@ import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
-import { formatDate } from '@/shared/utils/formatters'
+import { formatDate } from '@/core/formatting/formatters'
 
 const route = useRoute()
 const router = useRouter()

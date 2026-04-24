@@ -1,6 +1,6 @@
 import { httpClient } from '@/core/api/httpClient'
 import { shouldBypassAuth } from '@/core/auth/auth0'
-import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import type {
   CollectorAssignedEvent,
   CollectorAssignedEventDto,

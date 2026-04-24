@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate } from '@/shared/utils/formatters'
+import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import type { PaymentDto, PaymentRow } from '../types/payment'
 
 export function mapPaymentStatus(status: string): string {

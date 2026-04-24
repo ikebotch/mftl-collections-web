@@ -37,9 +37,12 @@
             </p>
           </div>
           <div class="text-right">
-            <p class="text-xs font-black text-slate-900">
-              {{ formatCurrency(fund.receivedAmount, 'GHS') }}
-            </p>
+            <div class="flex flex-col items-end">
+              <p v-for="t in fund.totals" :key="t.currency" class="text-xs font-black text-slate-900">
+                {{ formatCurrency(t.amount, t.currency) }}
+              </p>
+              <p v-if="!fund.totals?.length" class="text-xs font-black text-slate-900">GHS 0.00</p>
+            </div>
             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
               Raised
             </p>
@@ -49,12 +52,12 @@
         <div v-if="fund.targetAmount > 0">
           <div class="flex items-center justify-between mb-1.5">
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target Progress</span>
-            <span class="text-[9px] font-black text-slate-900">{{ Math.round((fund.receivedAmount / fund.targetAmount) * 100) }}%</span>
+            <span class="text-[9px] font-black text-slate-900">{{ calculateProgress(fund) }}%</span>
           </div>
           <div class="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
             <div 
               class="h-full bg-emerald-500 rounded-full transition-all duration-1000"
-              :style="{ width: `${Math.min(100, Math.round((fund.receivedAmount / fund.targetAmount) * 100))}%` }"
+              :style="{ width: `${calculateProgress(fund)}%` }"
             />
           </div>
         </div>
@@ -74,7 +77,7 @@ import { onMounted, ref } from 'vue'
 import { Loader2 } from 'lucide-vue-next'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
 import type { RecipientFund } from '@/modules/recipient-funds/types/recipientFund'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 
 const props = defineProps<{
   eventId: string
@@ -94,4 +97,9 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+function calculateProgress(fund: RecipientFund) {
+  if (!fund.targetAmount || !fund.totals?.length) return 0
+  const ghsTotal = fund.totals.find(t => t.currency === 'GHS')?.amount ?? 0
+  return Math.min(100, Math.round((ghsTotal / fund.targetAmount) * 100))
+}
 </script>

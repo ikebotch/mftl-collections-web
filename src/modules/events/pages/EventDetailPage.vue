@@ -28,7 +28,7 @@
             :variant="event.status === 'active' ? 'success' : 'neutral'"
           />
           <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-            {{ formatDate(event.eventDate) }} · {{ event.currency }}
+            {{ formatDate(event.eventDate) }}
           </span>
         </div>
       </template>
@@ -74,11 +74,11 @@
     <AdminMetricGrid>
       <MetricCard
         label="Total Raised"
-        :value="formatCurrency(event.totalRaised, event.currency)"
+        :value="formattedTotals"
         icon="Wallet"
         color="green"
-        :progress="event.progress"
-        progress-label="Goal Progress"
+        :progress="calculateProgress(event)"
+        progress-label="Goal Progress (GHS)"
       />
       <MetricCard
         label="Recipient Funds"
@@ -230,7 +230,7 @@ import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
-import { formatDate, formatCurrency } from '@/shared/utils/formatters'
+import { formatDate, formatCurrency } from '@/core/formatting/formatters'
 import { 
   Edit3, 
   Target, 
@@ -242,6 +242,17 @@ import {
 
 const route = useRoute()
 const router = useRouter()
+const formattedTotals = computed(() => {
+  if (!event.value?.totals?.length) return 'GHS 0.00'
+  return event.value.totals.map(t => formatCurrency(t.amount, t.currency)).join(' • ')
+})
+
+function calculateProgress(e: any) {
+  if (!e?.totalTarget || !e?.totals?.length) return 0
+  const ghsTotal = e.totals.find((t: any) => t.currency === 'GHS')?.amount ?? 0
+  return Math.min(100, Math.round((ghsTotal / e.totalTarget) * 100))
+}
+
 const eventId = computed(() => route.params.id as string)
 const query = useEvent(eventId.value)
 const event = computed(() => query.data.value)
@@ -258,7 +269,7 @@ const tabs = [
 
 const campaignSummaryItems = computed(() => [
   { key: 'slug', label: 'Public Slug', value: `/give/${event.value?.slug}` },
-  { key: 'currency', label: 'Base Currency', value: event.value?.currency },
+  { key: 'currency', label: 'Currencies', value: event.value?.totals?.map(t => t.currency).join(', ') || 'GHS' },
   { key: 'date', label: 'Created At', value: formatDate(event.value?.eventDate) },
 ])
 

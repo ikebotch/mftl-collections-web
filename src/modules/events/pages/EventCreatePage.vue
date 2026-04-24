@@ -460,7 +460,7 @@ import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import StepIndicator from '@/shared/components/steppers/StepIndicator.vue'
-import { formatDate, formatCurrency } from '@/shared/utils/formatters'
+import { formatDate, formatCurrency } from '@/core/formatting/formatters'
 import { Plus, Trash2, Users, AlertCircle } from 'lucide-vue-next'
 
 const router = useRouter()

@@ -82,9 +82,8 @@ import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
-import { formatCurrency } from '@/shared/utils/formatters'
+import { formatCurrency } from '@/core/formatting/formatters'
 
-const query = useSelfDonations()
 const searchQuery = ref('')
 
 const columns = [

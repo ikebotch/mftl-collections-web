@@ -25,20 +25,20 @@
       />
       <MetricCard
         label="Fully Funded"
-        :value="funds.filter(f => f.receivedAmount >= f.targetAmount).length.toString()"
+        :value="funds.filter(f => calculateProgressValue(f) >= f.targetAmount).length.toString()"
         icon="CheckCircle"
         color="green"
         trend="10% of total"
       />
       <MetricCard
         label="Active Targets"
-        :value="funds.filter(f => f.receivedAmount < f.targetAmount).length.toString()"
+        :value="funds.filter(f => calculateProgressValue(f) < f.targetAmount).length.toString()"
         icon="Target"
         color="amber"
       />
       <MetricCard
-        label="Total Target"
-        value="GHS 45.2k"
+        label="Total Raised"
+        :value="aggregateTotals(funds)"
         icon="TrendingUp"
         color="purple"
       />
@@ -67,14 +67,19 @@
         </template>
 
         <template #cell:raised="{ row }">
-          <div class="flex flex-col">
-            <MoneyCell
-              :amount="row.receivedAmount"
-              :currency="row.currency"
-            />
+          <div class="flex flex-col gap-1">
+            <div v-for="t in row.totals" :key="t.currency">
+              <MoneyCell
+                :amount="t.amount"
+                :currency="t.currency"
+              />
+            </div>
+            <div v-if="!row.totals?.length">
+              <MoneyCell :amount="0" currency="GHS" />
+            </div>
             <div class="mt-2 w-24">
               <ProgressBar
-                :value="row.receivedAmount"
+                :value="calculateProgressValue(row)"
                 :max="row.targetAmount"
                 color="emerald"
               />
@@ -83,13 +88,13 @@
         </template>
 
         <template #cell:currency="{ row }">
-          <span class="text-[10px] font-black text-slate-900 tracking-widest">{{ row.currency }}</span>
+          <span class="text-[10px] font-black text-slate-900 tracking-widest">{{ row.totals?.map((t: any) => t.currency).join(', ') || 'GHS' }}</span>
         </template>
 
         <template #cell:status="{ row }">
           <StatusBadge
-            :status="row.receivedAmount >= row.targetAmount ? 'completed' : 'active'"
-            :tone="row.receivedAmount >= row.targetAmount ? 'success' : 'neutral'"
+            :status="calculateProgressValue(row) >= row.targetAmount ? 'completed' : 'active'"
+            :tone="calculateProgressValue(row) >= row.targetAmount ? 'success' : 'neutral'"
           />
         </template>
 
@@ -121,6 +126,7 @@ import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import ProgressBar from '@/shared/components/feedback/ProgressBar.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
 import { Plus } from 'lucide-vue-next'
+import { formatCurrency } from '@/core/formatting/formatters'
 
 const router = useRouter()
 const searchQuery = ref('')
@@ -142,4 +148,20 @@ const filteredFunds = computed(() => {
     f.name.toLowerCase().includes(q)
   )
 })
+
+function aggregateTotals(list: any[]) {
+  const map: Record<string, number> = {}
+  list.forEach(f => {
+    f.totals?.forEach((t: any) => {
+      map[t.currency] = (map[t.currency] || 0) + t.amount
+    })
+  })
+  const entries = Object.entries(map)
+  if (entries.length === 0) return 'GHS 0.00'
+  return entries.map(([curr, amt]) => formatCurrency(amt, curr)).join(' • ')
+}
+
+function calculateProgressValue(fund: any) {
+  return fund.totals?.find((t: any) => t.currency === 'GHS')?.amount ?? 0
+}
 </script>
