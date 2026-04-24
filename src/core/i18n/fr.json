@@ -1,0 +1,76 @@
+{
+  "admin": {
+    "sidebar": {
+      "groups": {
+        "general": "Général",
+        "management": "Gestion",
+        "finance": "Finance",
+        "operations": "Opérations",
+        "system": "Système"
+      },
+      "nav": {
+        "overview": "Aperçu",
+        "events": "Événements",
+        "contributions": "Contributions",
+        "selfDonations": "Auto-dons",
+        "payments": "Paiements",
+        "donors": "Donateurs",
+        "collectors": "Collecteurs",
+        "reports": "Rapports",
+        "settlements": "Règlements",
+        "users": "Utilisateurs",
+        "settings": "Paramètres"
+      }
+    },
+    "pages": {
+      "dashboard": {
+        "title": "Aperçu",
+        "description": "Surveillez les collectes, les événements, les fonds, les collecteurs et l'activité des paiements."
+      },
+      "events": {
+        "title": "Événements",
+        "description": "Gérez les campagnes de financement, les objectifs de collecte et les calendriers d'événements."
+      },
+      "contributions": {
+        "title": "Contributions",
+        "description": "Audit complet de tous les fonds reçus pour chaque événement et canal."
+      },
+      "selfDonations": {
+        "title": "Auto-dons",
+        "description": "Surveillez et auditez les contributions directes faites par les utilisateurs enregistrés."
+      },
+      "payments": {
+        "title": "Paiements",
+        "description": "Surveillez les tentatives de paiement, les références des fournisseurs et l'état des transactions en temps réel."
+      },
+      "receipts": {
+        "title": "Reçus",
+        "description": "Registre numérique de tous les reçus de donateurs générés et des statuts de vérification."
+      },
+      "reports": {
+        "title": "Rapports",
+        "description": "Analyses de performance, tendances financières et rapports de collecte par événement."
+      },
+      "collectors": {
+        "title": "Collecteurs",
+        "description": "Gérez les collecteurs de terrain, les affectations, les performances et les opérations de terrain."
+      },
+      "donors": {
+        "title": "Donateurs",
+        "description": "Comprenez l'historique des contributeurs, les modèles de dons et l'activité des reçus."
+      },
+      "users": {
+        "title": "Utilisateurs",
+        "description": "Gérez l'accès au système pour les administrateurs, les superviseurs et les collecteurs de terrain."
+      },
+      "settings": {
+        "title": "Paramètres",
+        "description": "Gérez le profil de l'organisation, l'image de marque et les configurations à l'échelle du système."
+      },
+      "settlements": {
+        "title": "Règlements",
+        "description": "Gérez le rapprochement des espèces, les transferts des agents de terrain et les règlements de trésorerie."
+      }
+    }
+  }
+}

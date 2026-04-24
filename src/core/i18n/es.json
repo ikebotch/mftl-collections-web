@@ -1,0 +1,76 @@
+{
+  "admin": {
+    "sidebar": {
+      "groups": {
+        "general": "General",
+        "management": "Gestión",
+        "finance": "Finanzas",
+        "operations": "Operaciones",
+        "system": "Sistema"
+      },
+      "nav": {
+        "overview": "Resumen",
+        "events": "Eventos",
+        "contributions": "Contribuciones",
+        "selfDonations": "Auto-donaciones",
+        "payments": "Pagos",
+        "donors": "Donantes",
+        "collectors": "Recolectores",
+        "reports": "Informes",
+        "settlements": "Liquidaciones",
+        "users": "Usuarios",
+        "settings": "Ajustes"
+      }
+    },
+    "pages": {
+      "dashboard": {
+        "title": "Resumen",
+        "description": "Monitoree colecciones, eventos, fondos, recolectores y actividad de pagos."
+      },
+      "events": {
+        "title": "Eventos",
+        "description": "Gestione campañas de recaudación de fondos, objetivos de colección y cronogramas de eventos."
+      },
+      "contributions": {
+        "title": "Contribuciones",
+        "description": "Auditoría completa de todos los fondos recibidos a través de cada evento y canal."
+      },
+      "selfDonations": {
+        "title": "Auto-donaciones",
+        "description": "Monitoree y audite las contribuciones directas realizadas por usuarios registrados."
+      },
+      "payments": {
+        "title": "Pagos",
+        "description": "Monitoree intentos de pago, referencias de proveedores y estado de transacciones en tiempo real."
+      },
+      "receipts": {
+        "title": "Recibos",
+        "description": "Libro digital de todos los recibos de donantes generados y estados de verificación."
+      },
+      "reports": {
+        "title": "Informes",
+        "description": "Análisis de rendimiento, tendencias financieras e informes de colección basados en eventos."
+      },
+      "collectors": {
+        "title": "Recolectores",
+        "description": "Gestione recolectores de campo, asignaciones, rendimiento y operaciones de campo."
+      },
+      "donors": {
+        "title": "Donantes",
+        "description": "Entienda el historial de contribuyentes, patrones de donación y actividad de recibos."
+      },
+      "users": {
+        "title": "Usuarios",
+        "description": "Gestione el acceso al sistema para administradores, supervisores y recolectores de campo."
+      },
+      "settings": {
+        "title": "Ajustes",
+        "description": "Gestione el perfil de la organización, la marca y las configuraciones de todo el sistema."
+      },
+      "settlements": {
+        "title": "Liquidaciones",
+        "description": "Gestione la conciliación de efectivo, las entregas de agentes de campo y las liquidaciones de tesorería."
+      }
+    }
+  }
+}
