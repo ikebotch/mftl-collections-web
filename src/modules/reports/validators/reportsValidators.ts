@@ -1,0 +1,1 @@
+export const reportsValidatorPlaceholder = true
