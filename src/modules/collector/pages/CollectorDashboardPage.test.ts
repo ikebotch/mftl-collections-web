@@ -18,7 +18,7 @@ describe('CollectorDashboardPage', () => {
   it('renders collector dashboard metrics', () => {
     const wrapper = mount(CollectorDashboardPage)
 
-    expect(wrapper.text()).toContain("Today's collections")
-    expect(wrapper.text()).toContain('Assigned events')
+    expect(wrapper.text()).toContain("Today's Total")
+    expect(wrapper.text()).toContain('Assignments')
   })
 })

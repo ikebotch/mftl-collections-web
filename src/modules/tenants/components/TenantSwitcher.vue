@@ -1,10 +1,10 @@
 <template>
-  <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+  <div class="relative min-w-[240px]">
     <label
-      class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-500"
+      class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1"
       for="tenant-switcher"
     >
-      Tenant context
+      Active Ministry
     </label>
     <AppSelect
       id="tenant-switcher"
@@ -14,9 +14,6 @@
       :options="tenantOptions"
       @update:model-value="handleSelect"
     />
-    <p class="mt-2 text-sm text-slate-500">
-      {{ helperText }}
-    </p>
   </div>
 </template>
 
@@ -40,12 +37,6 @@ const selectedValue = computed({
     handleSelect(value)
   },
 })
-
-const helperText = computed(() =>
-  tenantStore.selectedTenantName
-    ? `Requests will include the configured tenant header for ${tenantStore.selectedTenantName}.`
-    : 'Choose a tenant to simulate tenant-aware admin requests.',
-)
 
 function handleSelect(value: string) {
   const match = tenantOptions.find((option) => option.value === value)
