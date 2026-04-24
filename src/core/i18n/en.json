@@ -1,0 +1,76 @@
+{
+  "admin": {
+    "sidebar": {
+      "groups": {
+        "general": "General",
+        "management": "Management",
+        "finance": "Finance",
+        "operations": "Operations",
+        "system": "System"
+      },
+      "nav": {
+        "overview": "Overview",
+        "events": "Events",
+        "contributions": "Contributions",
+        "selfDonations": "Self-Donations",
+        "payments": "Payments",
+        "donors": "Donors",
+        "collectors": "Collectors",
+        "reports": "Reports",
+        "settlements": "Settlements",
+        "users": "Users",
+        "settings": "Settings"
+      }
+    },
+    "pages": {
+      "dashboard": {
+        "title": "Overview",
+        "description": "Monitor collections, events, funds, collectors, and payment activity."
+      },
+      "events": {
+        "title": "Events",
+        "description": "Manage fundraising campaigns, collection goals, and event timelines."
+      },
+      "contributions": {
+        "title": "Contributions",
+        "description": "Comprehensive audit of all funds received across every event and channel."
+      },
+      "selfDonations": {
+        "title": "Self-Donations",
+        "description": "Monitor and audit direct contributions made by registered users."
+      },
+      "payments": {
+        "title": "Payments",
+        "description": "Monitor payment attempts, provider references, and real-time transaction status."
+      },
+      "receipts": {
+        "title": "Receipts",
+        "description": "Digital ledger of all generated donor receipts and verification statuses."
+      },
+      "reports": {
+        "title": "Reports",
+        "description": "Performance analytics, financial trends, and event-based collection reporting."
+      },
+      "collectors": {
+        "title": "Collectors",
+        "description": "Manage field collectors, assignments, performance, and field operations."
+      },
+      "donors": {
+        "title": "Donors",
+        "description": "Understand contributor history, giving patterns, and receipt activity."
+      },
+      "users": {
+        "title": "Users",
+        "description": "Manage system access for admins, supervisors, and field collectors."
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Manage organization profile, branding, and system-wide configurations."
+      },
+      "settlements": {
+        "title": "Settlements",
+        "description": "Manage cash reconciliation, field agent handovers, and treasury settlements."
+      }
+    }
+  }
+}

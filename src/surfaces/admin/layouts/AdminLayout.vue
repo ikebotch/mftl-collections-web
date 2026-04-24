@@ -203,11 +203,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { appConfig } from '@/core/config/appConfig'
 import { useCurrentUser } from '@/core/auth/currentUser'
 import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
 import { useAuth0 } from '@auth0/auth0-vue'
 import TenantSelector from '@/modules/tenants/components/TenantSelector.vue'
+import { useCopy } from '@/core/i18n/useCopy'
 import { 
   LayoutDashboard, 
   Calendar, 
@@ -215,7 +217,6 @@ import {
   CircleDollarSign, 
   Wallet, 
   BarChart3, 
-  FileText, 
   Users, 
   Settings, 
   Bell, 
@@ -226,49 +227,50 @@ import {
   UserCheck
 } from 'lucide-vue-next'
 
+const { copy } = useCopy()
 const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
 const { currentUser } = useCurrentUser()
 
 const appName = appConfig.appName
 
-const navGroups = [
+const navGroups = computed(() => [
   {
-    title: 'General',
+    title: copy.value.admin.sidebar.groups.general,
     items: [
-      { label: 'Overview', to: '/admin', icon: LayoutDashboard },
+      { label: copy.value.admin.sidebar.nav.overview, to: '/admin', icon: LayoutDashboard },
     ]
   },
   {
-    title: 'Management',
+    title: copy.value.admin.sidebar.groups.management,
     items: [
-      { label: 'Events', to: '/admin/events', icon: Calendar },
+      { label: copy.value.admin.sidebar.nav.events, to: '/admin/events', icon: Calendar },
     ]
   },
   {
-    title: 'Finance',
+    title: copy.value.admin.sidebar.groups.finance,
     items: [
-      { label: 'Contributions', to: '/admin/contributions', icon: CircleDollarSign },
-      { label: 'Self-Donations', to: '/admin/self-donations', icon: Heart, badge: 'NEW' },
-      { label: 'Payments', to: '/admin/payments', icon: Wallet },
-      { label: 'Donors', to: '/admin/donors', icon: Users },
+      { label: copy.value.admin.sidebar.nav.contributions, to: '/admin/contributions', icon: CircleDollarSign },
+      { label: copy.value.admin.sidebar.nav.selfDonations, to: '/admin/self-donations', icon: Heart, badge: 'NEW' },
+      { label: copy.value.admin.sidebar.nav.payments, to: '/admin/payments', icon: Wallet },
+      { label: copy.value.admin.sidebar.nav.donors, to: '/admin/donors', icon: Users },
     ]
   },
   {
-    title: 'Operations',
+    title: copy.value.admin.sidebar.groups.operations,
     items: [
-      { label: 'Collectors', to: '/admin/collectors', icon: UserCheck, badge: 'NEW' },
-      { label: 'Reports', to: '/admin/reports', icon: BarChart3 },
+      { label: copy.value.admin.sidebar.nav.collectors, to: '/admin/collectors', icon: UserCheck, badge: 'NEW' },
+      { label: copy.value.admin.sidebar.nav.reports, to: '/admin/reports', icon: BarChart3 },
     ]
   },
   {
-    title: 'System',
+    title: copy.value.admin.sidebar.groups.system,
     items: [
-      { label: 'Settlements', to: '/admin/settlements', icon: ShieldCheck },
-      { label: 'Users', to: '/admin/users', icon: UserCheck },
-      { label: 'Settings', to: '/admin/settings', icon: Settings },
+      { label: copy.value.admin.sidebar.nav.settlements, to: '/admin/settlements', icon: ShieldCheck },
+      { label: copy.value.admin.sidebar.nav.users, to: '/admin/users', icon: UserCheck },
+      { label: copy.value.admin.sidebar.nav.settings, to: '/admin/settings', icon: Settings },
     ]
   },
-]
+])
 
 function handleLogout() {
   if (!auth0) {

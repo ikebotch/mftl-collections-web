@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-10">
     <AdminPageHeader
-      title="Overview"
-      description="Monitor collections, events, funds, collectors, and payment activity."
+      :title="copy.admin.pages.dashboard.title"
+      :description="copy.admin.pages.dashboard.description"
     >
       <template #actions>
         <div class="flex items-center gap-3">
@@ -168,7 +168,13 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useCopy } from '@/core/i18n/useCopy'
 import { useDashboard } from '../composables/useDashboard'
+
+const { copy } = useCopy()
+const router = useRouter()
+const query = useDashboard()
+
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
@@ -183,7 +189,4 @@ import {
   Plus, 
   Heart
 } from 'lucide-vue-next'
-
-const router = useRouter()
-const query = useDashboard()
 </script>

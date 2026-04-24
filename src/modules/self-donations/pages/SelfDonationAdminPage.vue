@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-10">
     <AdminPageHeader
-      title="Self-Donations"
-      description="Monitor and audit direct contributions made by registered users."
+      :title="copy.admin.pages.selfDonations.title"
+      :description="copy.admin.pages.selfDonations.description"
     />
 
     <AdminMetricGrid>
@@ -70,7 +70,11 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useCopy } from '@/core/i18n/useCopy'
 import { useSelfDonations } from '../composables/useSelfDonations'
+
+const { copy } = useCopy()
+const query = useSelfDonations()
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
