@@ -179,12 +179,9 @@ import AppCard from '@/shared/components/cards/AppCard.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import { formatCurrency } from '@/shared/utils/formatters'
 import { 
-  Calendar, 
+  Calendar,
   Plus, 
-  Wallet, 
-  Heart, 
-  ShieldCheck,
-  Target
+  Heart
 } from 'lucide-vue-next'
 
 const router = useRouter()

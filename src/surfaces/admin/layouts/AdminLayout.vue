@@ -248,23 +248,23 @@ const navGroups = [
     title: 'Finance',
     items: [
       { label: 'Contributions', to: '/admin/contributions', icon: CircleDollarSign },
-      { label: 'Self Donations', to: '/admin/self-donations', icon: Heart, badge: 'NEW' },
+      { label: 'Self-Donations', to: '/admin/self-donations', icon: Heart, badge: 'NEW' },
       { label: 'Payments', to: '/admin/payments', icon: Wallet },
+      { label: 'Donors', to: '/admin/donors', icon: Users },
     ]
   },
   {
     title: 'Operations',
     items: [
       { label: 'Collectors', to: '/admin/collectors', icon: UserCheck, badge: 'NEW' },
-      { label: 'Dashboards', to: '/admin/reports', icon: BarChart3 },
-      { label: 'Reports', to: '/admin/reports', icon: FileText },
+      { label: 'Reports', to: '/admin/reports', icon: BarChart3 },
     ]
   },
   {
     title: 'System',
     items: [
       { label: 'Settlements', to: '/admin/settlements', icon: ShieldCheck },
-      { label: 'Donors', to: '/admin/users', icon: Users },
+      { label: 'Users', to: '/admin/users', icon: UserCheck },
       { label: 'Settings', to: '/admin/settings', icon: Settings },
     ]
   },

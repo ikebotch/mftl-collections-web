@@ -26,7 +26,7 @@
         label="Success Rate"
         value="98.4%"
         icon="CheckCircle"
-        color="emerald"
+        color="green"
       />
       <MetricCard
         label="Volume (24h)"
@@ -138,11 +138,7 @@ import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import { 
-  Download,
-  CreditCard,
-  CheckCircle,
-  TrendingUp,
-  Zap
+  Download
 } from 'lucide-vue-next'
 
 const query = usePayments()
@@ -186,11 +182,11 @@ const filteredPayments = computed(() => {
   return list
 })
 
-function getStatusTone(status: string) {
+function getStatusTone(status: string): 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple' {
   const s = status.toLowerCase()
   if (s === 'completed' || s === 'success') return 'success'
-  if (s === 'pending') return 'amber'
-  if (s === 'failed') return 'red'
+  if (s === 'pending') return 'warning'
+  if (s === 'failed') return 'danger'
   return 'neutral'
 }
 </script>

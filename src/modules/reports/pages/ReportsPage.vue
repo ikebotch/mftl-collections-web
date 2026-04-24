@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-10">
     <AdminPageHeader
-      title="Intelligence"
+      title="Reports"
       description="Performance analytics, financial trends, and event-based collection reporting."
     >
       <template #actions>
@@ -149,11 +149,7 @@ import { formatCurrency } from '@/shared/utils/formatters'
 import { 
   Download, 
   Share2, 
-  Calendar,
-  TrendingUp,
-  DollarSign,
-  Users,
-  AlertTriangle
+  Calendar
 } from 'lucide-vue-next'
 
 const query = useContributions()

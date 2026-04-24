@@ -142,10 +142,10 @@ function getInitials(name?: string) {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
-function getStatusTone(status: string) {
-  if (status.includes('Handover')) return 'amber'
+function getStatusTone(status: string): 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple' {
+  if (status.includes('Handover')) return 'warning'
   if (status.includes('Completed')) return 'success'
-  if (status.includes('Review')) return 'blue'
+  if (status.includes('Review')) return 'info'
   return 'neutral'
 }
 </script>
