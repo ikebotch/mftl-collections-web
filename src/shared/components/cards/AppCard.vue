@@ -1,21 +1,23 @@
 <template>
-  <section
+  <div
     :class="[
-      'rounded-2xl bg-white p-6 shadow-premium transition-all duration-300 hover:shadow-premium-hover ring-1 ring-slate-900/5',
-      padded ? '' : 'p-0',
+      'bg-white border border-slate-100/50 shadow-soft transition-all duration-500',
+      padded ? 'p-8' : '',
+      rounded === '3xl' ? 'rounded-[2rem]' : 'rounded-[1.5rem]'
     ]"
   >
     <slot />
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    padded?: boolean
-  }>(),
-  {
-    padded: true,
-  },
-)
+interface Props {
+  padded?: boolean
+  rounded?: '2xl' | '3xl'
+}
+
+withDefaults(defineProps<Props>(), {
+  padded: false,
+  rounded: '2xl',
+})
 </script>

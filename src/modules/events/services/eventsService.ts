@@ -5,7 +5,8 @@ import { mapEventDto } from '../mappers/eventMappers'
 export const eventsService = {
   async list(): Promise<Event[]> {
     const response = await httpClient.get<EventDto[]>('/events')
-    return response.data.map(mapEventDto)
+    const data = response.data || []
+    return Array.isArray(data) ? data.map(mapEventDto) : []
   },
   async getById(id: string): Promise<Event> {
     const response = await httpClient.get<EventDto>(`/events/${id}`)
