@@ -119,14 +119,14 @@
       <header class="h-20 bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-40 px-8 flex items-center justify-between">
         <!-- Search bar -->
         <div class="flex-1 max-w-xl relative">
-          <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input 
             type="text" 
             placeholder="Search events, funds, donors, payments..." 
-            class="w-full bg-slate-100/50 border-none rounded-xl py-2.5 pl-11 pr-4 text-sm font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-brand-500/20 transition-all"
+            class="w-full bg-slate-100/50 border-none rounded-xl py-2.5 pl-11 pr-4 text-sm font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
           >
           <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 bg-white px-1.5 py-0.5 rounded border border-slate-200 shadow-sm">
-            <span class="text-[10px] font-bold text-slate-400">⌘K</span>
+            <span class="text-[10px] font-bold text-slate-500">⌘K</span>
           </div>
         </div>
 
@@ -160,9 +160,9 @@
             </div>
             <div class="hidden sm:flex flex-col items-start text-left">
               <span class="text-sm font-bold text-slate-900 leading-none">{{ currentUser.name || 'Isaac Botchway' }}</span>
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Admin</span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Admin</span>
             </div>
-            <ChevronDown class="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors" />
+            <ChevronDown class="w-4 h-4 text-slate-500 group-hover:text-brand-600 transition-colors" />
           </button>
         </div>
       </header>
@@ -185,7 +185,7 @@
       </main>
 
       <!-- Footer -->
-      <footer class="py-6 px-10 flex items-center justify-between text-xs font-bold text-slate-400 uppercase tracking-widest border-t border-slate-100 bg-white/50">
+      <footer class="py-6 px-10 flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-widest border-t border-slate-100 bg-white/50">
         <div>&copy; 2026 {{ appName }}. Collect. Impact. Transform.</div>
         <div class="flex items-center gap-6">
           <a

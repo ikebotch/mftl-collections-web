@@ -65,7 +65,7 @@
               <p class="text-sm font-bold text-slate-900">
                 {{ value }}
               </p>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                 {{ row.email }}
               </p>
             </div>
@@ -87,10 +87,10 @@
 
         <template #cell:actions>
           <div class="flex items-center gap-2">
-            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-brand-600 transition-all">
+            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-brand-600 transition-all">
               <Eye class="w-4 h-4" />
             </button>
-            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-brand-600 transition-all">
+            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-brand-600 transition-all">
               <Settings class="w-4 h-4" />
             </button>
           </div>

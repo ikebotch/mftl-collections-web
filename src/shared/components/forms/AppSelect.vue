@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="block text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1"
+      class="block text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] ml-1"
     >
       {{ label }}
     </label>
@@ -13,7 +13,7 @@
         :value="modelValue"
         :disabled="disabled"
         :required="required"
-        class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 pr-10 text-sm font-medium appearance-none transition-all duration-300 focus:bg-white focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none cursor-pointer"
+        class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 pr-10 text-sm font-medium appearance-none transition-all duration-300 focus:bg-white focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 outline-none cursor-pointer"
         @change="handleChange"
       >
         <option

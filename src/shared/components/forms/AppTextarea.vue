@@ -14,7 +14,7 @@
       :placeholder="placeholder"
       :aria-invalid="error ? 'true' : undefined"
       :aria-describedby="error ? `${id}-error` : undefined"
-      class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm transition focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+      class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 placeholder:text-slate-500 focus:bg-white focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
       @input="onInput"
     />
     <p
