@@ -1,43 +1,40 @@
 <template>
-  <div class="relative pl-10 py-6 animate-in fade-in slide-in-from-left-2 duration-500">
-    <!-- Continuity Border -->
-    <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-violet-500/30" />
-    <div class="absolute left-0 top-0 h-24 w-[1px] bg-violet-600 shadow-[0_0_15px_rgba(124,58,237,0.3)]" />
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+  <div class="py-10 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-24 relative">
       <!-- 1. Fund Distribution -->
-      <div class="space-y-6">
-        <div class="flex items-center justify-between">
-          <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2.5">
-            <Target class="w-3.5 h-3.5 text-violet-500" />
+      <div class="relative pl-10 space-y-8">
+        <!-- Vertical Continuity Line -->
+        <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-violet-500/20" />
+        <div class="absolute left-0 top-0 h-16 w-[1px] bg-violet-600 shadow-[0_0_12px_rgba(124,58,237,0.4)]" />
+
+        <div class="flex items-center justify-between pr-4">
+          <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
+            <div class="w-1.5 h-1.5 rounded-full bg-violet-500" />
             Fund Distribution
           </h4>
           <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ funds.length }} Active Targets</span>
         </div>
         
-        <div class="divide-y divide-slate-100/60 border-t border-slate-100/60">
+        <div class="divide-y divide-slate-100/60">
           <div 
             v-for="fund in funds" 
             :key="fund.id"
-            class="group py-5 flex items-center justify-between"
+            class="group py-6 flex items-center justify-between pr-4"
           >
             <div class="flex-1">
               <p class="text-xs font-black text-slate-900 tracking-tight uppercase leading-none">{{ fund.name }}</p>
               <div class="flex items-center gap-3 mt-3">
-                <div class="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                <div class="w-1 h-1 rounded-full bg-slate-200" />
                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
-                  {{ collectorMapping[fund.id]?.length || 0 }} Field Agents Assigned
+                  {{ collectorMapping[fund.id]?.length || 0 }} Field Staff Assigned
                 </span>
               </div>
             </div>
             
-            <div class="flex flex-col items-end gap-3 min-w-[140px]">
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-[12px] font-black text-slate-900 tracking-tighter italic">
-                  {{ formatCurrency(getGhsTotal(fund), 'GHS') }}
-                </span>
-              </div>
-              <!-- Progress bar with high-end silhouette -->
+            <div class="flex flex-col items-end gap-3 min-w-[150px]">
+              <span class="text-[12px] font-black text-slate-900 tracking-tighter italic">
+                {{ formatCurrency(getGhsTotal(fund), 'GHS') }}
+              </span>
               <div
                 v-if="fund.targetAmount > 0"
                 class="h-0.5 w-full bg-slate-50 overflow-hidden"
@@ -51,49 +48,51 @@
             </div>
           </div>
           
-          <div v-if="!funds.length" class="py-12 flex items-center gap-4 opacity-40">
-            <div class="w-8 h-8 bg-slate-100 flex items-center justify-center border border-slate-200">
-              <Target class="w-4 h-4 text-slate-400" />
-            </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-relaxed">No strategic funds defined for this stream.</p>
+          <div v-if="!funds.length" class="py-16 flex items-center gap-4 opacity-30">
+            <Target class="w-5 h-5 text-slate-300" />
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Zero strategic allocations defined.</p>
           </div>
         </div>
       </div>
 
-      <!-- 2. Field Operations (Combined View) -->
-      <div class="space-y-6">
-        <div class="flex items-center justify-between">
-          <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2.5">
-            <Users class="w-3.5 h-3.5 text-amber-500" />
+      <!-- 2. Field Operations -->
+      <div class="relative pl-10 space-y-8">
+        <!-- Vertical Continuity Line (Mirrored) -->
+        <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-violet-500/20" />
+        <div class="absolute left-0 top-0 h-16 w-[1px] bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.3)]" />
+
+        <div class="flex items-center justify-between pr-4">
+          <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-500" />
             Field Operations
           </h4>
           <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ combinedOperations.length }} Active Channels</span>
         </div>
         
-        <div class="divide-y divide-slate-100/60 border-t border-slate-100/60">
+        <div class="divide-y divide-slate-100/60">
           <div 
             v-for="op in combinedOperations" 
             :key="op.id"
-            class="py-5 flex items-center justify-between group"
+            class="py-6 flex items-center justify-between pr-4 group"
           >
-            <div class="flex items-center gap-4">
-              <!-- Identity Dot -->
+            <div class="flex items-center gap-5">
+              <!-- Intensity Dot -->
               <div 
-                class="w-2.5 h-2.5 rounded-full"
+                class="w-2.5 h-2.5 rounded-full shrink-0"
                 :class="[
                   op.type === 'staff' 
                     ? (op.status === 'Active' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]' : 'bg-slate-300')
-                    : 'bg-violet-500 shadow-[0_0_12px_rgba(139,92,246,0.5)]'
+                    : 'bg-violet-600 shadow-[0_0_12px_rgba(124,58,237,0.5)]'
                 ]"
               />
               <div>
-                <div class="flex items-center gap-2.5">
+                <div class="flex items-center gap-3">
                   <p class="text-[11px] font-black text-slate-900 tracking-tight uppercase leading-none">{{ op.name }}</p>
                   <span 
                     v-if="op.type !== 'staff'"
                     class="px-1.5 py-0.5 bg-violet-600 text-white text-[7px] font-black uppercase tracking-[0.2em]"
                   >
-                    {{ op.type }}
+                    {{ op.type }} flow
                   </span>
                 </div>
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-2 leading-none">
@@ -116,35 +115,20 @@
             v-if="!combinedOperations.length && !loading"
             class="py-12 flex flex-col items-start gap-8"
           >
-            <div class="flex items-center gap-4 opacity-40">
-              <div class="w-8 h-8 bg-slate-100 flex items-center justify-center border border-slate-200">
-                <Users class="w-4 h-4 text-slate-400" />
-              </div>
-              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-relaxed">
-                Zero field activity recorded for this period.
-              </p>
-            </div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] opacity-40">
+              Zero field activity recorded for this period.
+            </p>
             <div class="flex items-center gap-3">
-              <AppButton 
-                variant="primary" 
-                size="sm" 
-                @click="showDeployModal = true"
-              >
-                <template #icon><UserPlus class="w-3.5 h-3.5 mr-2.5" /></template>
+              <AppButton variant="primary" size="sm" @click="showDeployModal = true">
                 Assign Existing
               </AppButton>
-              <AppButton 
-                variant="secondary" 
-                size="sm" 
-                @click="router.push('/admin/collectors/new')"
-              >
-                <template #icon><Plus class="w-3.5 h-3.5 mr-2.5" /></template>
+              <AppButton variant="secondary" size="sm" @click="router.push('/admin/collectors/new')">
                 Onboard New
               </AppButton>
             </div>
           </div>
 
-          <div v-if="loading" class="py-12">
+          <div v-if="loading" class="py-12 flex justify-center lg:justify-start">
             <div class="h-4 w-4 animate-spin border-2 border-slate-200 border-t-violet-600" />
           </div>
         </div>
@@ -156,7 +140,7 @@
       v-if="showDeployModal"
       :event-id="eventId"
       @close="showDeployModal = false"
-      @deployed="handleDeployed"
+      @deployed="fetchData"
     />
   </div>
 </template>
@@ -184,7 +168,6 @@ const loading = ref(true)
 const showDeployModal = ref(false)
 const collectorMapping = ref<Record<string, string[]>>({})
 
-// Combined operations view to handle "Online" and "Direct" residuals
 const combinedOperations = computed(() => {
   const ops = collectors.value.map(c => ({
     id: c.id,
@@ -195,19 +178,16 @@ const combinedOperations = computed(() => {
     status: c.status
   }))
 
-  // Calculate residuals (Online/Direct)
-  // We check if the total raised in funds exceeds what staff have recorded.
-  // This accounts for "Online" ($50 case) and "System" entries.
   const fundTotals = funds.value.reduce((acc, f) => acc + (f.totals?.find(t => t.currency === 'GHS')?.amount || 0), 0)
   const staffTotals = collectors.value.reduce((acc, c) => acc + c.totalCollectedToday, 0)
   const residual = fundTotals - staffTotals
 
-  if (residual > 0.01) { // Floating point buffer
+  if (residual > 0.01) {
     ops.unshift({
       id: 'online-residual',
       type: 'online',
       name: 'System / Online Flow',
-      meta: 'ECOMMERCE & DIRECT PAYMENT GATEWAYS',
+      meta: 'STRIPE & DIRECT GATEWAY',
       amount: residual,
       status: 'Active'
     })
@@ -229,8 +209,6 @@ async function fetchData() {
     ])
     funds.value = fundList
     collectors.value = collectorList
-    
-    // Derived mapping based on recent contributions or manual assignments
     collectorMapping.value = fundList.reduce((acc, f) => ({
       ...acc,
       [f.id]: collectorList.filter(c => c.totalCollectedToday > 0).map(c => c.id) 
@@ -240,11 +218,6 @@ async function fetchData() {
   } finally {
     loading.value = false
   }
-}
-
-function handleDeployed() {
-  showDeployModal.value = false
-  fetchData()
 }
 
 function getGhsTotal(fund: RecipientFund) {
