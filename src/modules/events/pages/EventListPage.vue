@@ -74,75 +74,105 @@
         @retry="query.refetch"
       >
         <template #cell:title="{ row }">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 shrink-0 overflow-hidden group-hover:border-violet-200 transition-all">
+          <div class="flex items-center gap-5 group/item py-1">
+            <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 shrink-0 overflow-hidden group-hover/item:border-violet-200 group-hover/item:shadow-soft transition-all duration-500">
               <img
                 v-if="row.displayImageUrl"
                 :src="row.displayImageUrl"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-700"
               >
-              <Calendar
-                v-else
-                class="w-5 h-5"
-              />
+              <div v-else class="w-full h-full bg-slate-50 flex items-center justify-center">
+                <ImageIcon class="w-5 h-5 text-slate-300" />
+              </div>
             </div>
             <div class="min-w-0">
-              <p class="text-sm font-black text-slate-900 truncate tracking-tight">
+              <p class="text-[15px] font-black text-slate-900 truncate tracking-tight leading-none mb-1.5">
                 {{ row.title }}
               </p>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-                /give/{{ row.slug }}
-              </p>
+              <div class="flex items-center gap-2">
+                <span class="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500 uppercase tracking-widest border border-slate-200/50">
+                  /give/{{ row.slug }}
+                </span>
+              </div>
             </div>
           </div>
         </template>
 
         <template #cell:totalRaised="{ row }">
-          <div class="flex flex-col">
+          <div class="flex flex-col gap-1 py-1">
             <span
               v-for="t in row.totals"
               :key="t.currency"
-              class="text-xs font-black text-slate-900 italic"
+              class="text-sm font-black text-slate-900 italic"
             >
               {{ formatCurrency(t.amount, t.currency) }}
             </span>
             <span
               v-if="!row.totals?.length"
-              class="text-xs font-bold text-slate-400"
+              class="text-sm font-black text-slate-400 italic"
             >GHS 0.00</span>
           </div>
         </template>
 
         <template #cell:fundCount="{ value }">
-          <span class="text-sm font-black text-slate-900">{{ value || 0 }}</span>
+          <div class="py-1">
+            <span class="text-sm font-black text-slate-900 leading-none">{{ value || 0 }}</span>
+          </div>
         </template>
 
         <template #cell:collectorCount="{ value }">
-          <span class="text-sm font-black text-slate-900">{{ value || 0 }}</span>
+          <div class="py-1">
+            <span class="text-sm font-black text-slate-900 leading-none">{{ value || 0 }}</span>
+          </div>
         </template>
 
         <template #cell:status="{ value }">
-          <StatusBadge
-            :status="value"
-            :tone="value === 'active' ? 'success' : 'neutral'"
-          />
+          <div class="py-1">
+            <StatusBadge
+              :status="value"
+              :tone="value === 'active' ? 'success' : 'neutral'"
+              dot
+            />
+          </div>
         </template>
 
         <template #cell:dates="{ row }">
-          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            {{ row.eventDate ? formatDate(row.eventDate) : 'No date' }}
-          </span>
+          <div class="flex flex-col gap-1 py-1">
+            <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-none">
+              {{ row.eventDate ? formatDate(row.eventDate, 'MMM d, yyyy') : 'No date set' }}
+            </span>
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+              Operational Period
+            </span>
+          </div>
         </template>
 
         <template #rowActions="{ row }">
-          <RowActions
-            :actions="[
-              { label: 'View Details', icon: 'Eye', onClick: () => router.push(`/admin/events/${row.id}`) },
-              { label: 'Edit Event', icon: 'Edit3', onClick: () => router.push(`/admin/events/${row.id}/edit`) },
-              { label: 'Manage Funds', icon: 'Target', onClick: () => router.push(`/admin/events/${row.id}/recipient-funds`) },
-              { label: 'Copy Link', icon: 'Link2', onClick: () => copyPublicLink(row.slug) }
-            ]"
-          />
+          <div class="flex items-center justify-end gap-1">
+            <AppButton
+              variant="ghost"
+              size="sm"
+              class="!rounded-xl hover:bg-violet-50 hover:text-violet-600"
+              @click="router.push(`/admin/events/${row.id}`)"
+            >
+              <Eye class="w-4 h-4" />
+            </AppButton>
+            <AppButton
+              variant="ghost"
+              size="sm"
+              class="!rounded-xl hover:bg-slate-100"
+              @click="copyPublicLink(row.slug)"
+            >
+              <Link2 class="w-4 h-4" />
+            </AppButton>
+            <RowActions
+              :actions="[
+                { label: 'Edit Event', icon: 'Edit3', onClick: () => router.push(`/admin/events/${row.id}/edit`) },
+                { label: 'Manage Funds', icon: 'Target', onClick: () => router.push(`/admin/events/${row.id}/recipient-funds`) },
+                { label: 'View Analytics', icon: 'BarChart2', onClick: () => router.push(`/admin/events/${row.id}/analytics`) }
+              ]"
+            />
+          </div>
         </template>
 
         <template #expansion="{ row }">
@@ -171,7 +201,11 @@ import { formatDate, formatCurrency } from '@/core/formatting/formatters'
 import { 
   Plus, 
   Download, 
-  Calendar 
+  Calendar,
+  Image as ImageIcon,
+  Eye,
+  Link2,
+  BarChart2
 } from 'lucide-vue-next'
 
 const router = useRouter()
