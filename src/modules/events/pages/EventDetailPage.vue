@@ -214,14 +214,13 @@
                 <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
                   Recipient Funds
                 </h3>
-                <AppButton
-                  variant="primary"
-                  size="xs"
-                  class="px-5 shadow-sm border-violet-200"
-                  @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)"
+                <RouterLink
+                  :to="`/admin/funds/new?eventId=${event.id}`"
+                  class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
                 >
-                  <Plus class="w-3 h-3 mr-2" /> Add Fund
-                </AppButton>
+                  <Plus class="w-4 h-4" />
+                  <span class="text-[10px] font-black uppercase tracking-[0.2em]">Add Fund</span>
+                </RouterLink>
               </div>
               <EventRecipientFundsList :event-id="event.id" />
             </AppCard>
@@ -255,9 +254,13 @@
         <div v-else-if="activeTab === 'funds'" class="space-y-12">
           <div class="flex justify-between items-center mb-12">
             <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Recipient Funds</h3>
-            <AppButton variant="primary" @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)">
-              <Plus class="w-4 h-4 mr-2" /> Add Fund
-            </AppButton>
+            <RouterLink
+              :to="`/admin/funds/new?eventId=${event.id}`"
+              class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
+            >
+              <Plus class="w-4 h-4" />
+              <span class="text-[10px] font-black uppercase tracking-[0.2em]">Add Fund</span>
+            </RouterLink>
           </div>
           <EventRecipientFundsList :event-id="event.id" />
         </div>
@@ -265,9 +268,14 @@
         <div v-else-if="activeTab === 'collectors'" class="space-y-12">
           <div class="flex justify-between items-center mb-12">
             <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Assigned Field Staff</h3>
-            <AppButton variant="primary" @click="router.push('/admin/collectors/new')">
-              <Plus class="w-4 h-4 mr-2" /> Onboard Collector
-            </AppButton>
+            <button
+              type="button"
+              class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
+              @click="router.push('/admin/collectors/new')"
+            >
+              <Plus class="w-4 h-4" />
+              <span class="text-[10px] font-black uppercase tracking-[0.2em]">Onboard Collector</span>
+            </button>
           </div>
           <EventCollectorsList :event-id="event.id" />
         </div>
@@ -295,7 +303,14 @@
                   <p class="text-[13px] font-black text-rose-900 tracking-tighter uppercase">Archive Campaign</p>
                   <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Permanently remove this campaign from the active operational stream</p>
                 </div>
-                <AppButton variant="ghost" class="text-rose-600 hover:bg-rose-100 border border-transparent hover:border-rose-200 px-6 font-black uppercase tracking-widest text-[9px]">Delete Campaign</AppButton>
+                <button
+                  type="button"
+                  class="flex items-center gap-2 text-rose-600 hover:text-rose-700 transition-colors group"
+                  @click="handleArchive"
+                >
+                  <Trash2 class="w-3.5 h-3.5" />
+                  <span class="text-[10px] font-black uppercase tracking-[0.2em]">Delete Campaign</span>
+                </button>
               </div>
             </div>
           </AppCard>
@@ -351,7 +366,8 @@ import {
   LayoutDashboard,
   Users,
   Settings,
-  Pencil
+  Pencil,
+  Trash2
 } from 'lucide-vue-next'
 import type { UpdateEventInput } from '../types/event'
 
