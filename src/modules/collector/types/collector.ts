@@ -10,6 +10,7 @@ export interface CollectorProfileDto {
   lastActiveAt: string | null
   hasAssignments: boolean
   blockedReason?: string | null
+  eventIds: string[]
 }
 
 export interface CollectorAssignedEventDto {
@@ -66,6 +67,7 @@ export interface CollectorProfile {
   lastActiveAt: string | null
   hasAssignments: boolean
   blockedReason: string
+  eventIds: string[]
 }
 
 export interface CollectorAssignedEvent {

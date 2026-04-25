@@ -15,7 +15,7 @@
     </div>
     <div
       v-else-if="funds.length === 0"
-      class="py-8 text-center rounded-2xl border border-dashed border-slate-100"
+      class="py-8 text-center rounded-none border border-dashed border-slate-200"
     >
       <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">
         No recipient funds defined
@@ -28,53 +28,56 @@
       <div
         v-for="fund in funds"
         :key="fund.id"
-        class="p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:border-violet-100 transition-colors"
+        class="p-5 rounded-none border border-slate-100 bg-white hover:border-violet-100 transition-colors"
       >
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-4">
           <div>
-            <p class="text-xs font-black text-slate-900 tracking-tight">
+            <p class="text-xs font-black text-slate-900 tracking-tight uppercase leading-none">
               {{ fund.name }}
+            </p>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 leading-none">
+              Financial Target
             </p>
           </div>
           <div class="text-right">
-            <div class="flex flex-col items-end">
+            <div class="flex flex-col items-end gap-1">
               <p
                 v-for="t in fund.totals"
                 :key="t.currency"
-                class="text-xs font-black text-slate-900"
+                class="text-xs font-black text-slate-900 italic tracking-tight leading-none"
               >
                 {{ formatCurrency(t.amount, t.currency) }}
               </p>
               <p
                 v-if="!fund.totals?.length"
-                class="text-xs font-black text-slate-900"
+                class="text-xs font-black text-slate-900 italic leading-none"
               >
                 GHS 0.00
               </p>
             </div>
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 leading-none">
               Raised
             </p>
           </div>
         </div>
 
         <div v-if="fund.targetAmount > 0">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target Progress</span>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
             <span class="text-[9px] font-black text-slate-900">{{ calculateProgress(fund) }}%</span>
           </div>
-          <div class="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
+          <div class="h-1 w-full bg-slate-50 border border-slate-100 overflow-hidden">
             <div 
-              class="h-full bg-emerald-500 rounded-full transition-all duration-1000"
+              class="h-full bg-emerald-500 transition-all duration-1000"
               :style="{ width: `${calculateProgress(fund)}%` }"
             />
           </div>
         </div>
         <div 
           v-else 
-          class="pt-2 border-t border-slate-50 mt-2"
+          class="pt-3 border-t border-slate-50 mt-1"
         >
-          <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">No target set</span>
+          <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">Open Target Scope</span>
         </div>
       </div>
     </div>

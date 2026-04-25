@@ -25,7 +25,7 @@
         <div class="flex items-center gap-3">
           <AppButton
             variant="outline"
-            class="!rounded-xl"
+            class="bg-transparent border-slate-200"
             @click="activeTab = 'funds'"
           >
             <Target class="w-4 h-4 mr-2" />
@@ -33,7 +33,7 @@
           </AppButton>
           <AppButton
             variant="outline"
-            class="!rounded-xl"
+            class="bg-transparent border-slate-200"
             @click="previewStorefront"
           >
             <ExternalLink class="w-4 h-4 mr-2" />
@@ -41,7 +41,7 @@
           </AppButton>
           <AppButton
             variant="outline"
-            class="!rounded-xl"
+            class="bg-transparent border-slate-200"
             @click="copyPublicLink"
           >
             <Link2 class="w-4 h-4 mr-2" />
@@ -49,7 +49,7 @@
           </AppButton>
           <AppButton
             variant="ghost"
-            class="!rounded-xl"
+            class="border border-slate-200"
           >
             <MoreVertical class="w-4 h-4" />
           </AppButton>
@@ -65,65 +65,17 @@
 
       <div class="min-h-[400px]">
         <!-- Overview Tab -->
-        <div
-          v-if="activeTab === 'overview'"
-          class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-16 items-start"
-        >
-          <!-- Left Sidebar: Overview Sections -->
-          <aside class="sticky top-10 space-y-8 hidden lg:block">
-            <div class="space-y-6">
-              <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">
-                Overview Sections
-              </h3>
-              
-              <nav class="relative">
-                <!-- Connecting Line -->
-                <div class="absolute left-[19px] top-4 bottom-4 w-[1px] bg-slate-100 z-0" />
-                
-                <ul class="space-y-4 relative z-10">
-                  <li 
-                    v-for="(section, index) in overviewSections" 
-                    :key="section.id"
-                  >
-                    <button
-                      class="w-full flex items-center gap-4 p-2 rounded-2xl transition-all duration-300 group text-left"
-                      :class="activeSection === section.id ? 'bg-violet-50' : 'hover:bg-slate-50'"
-                      @click="scrollToSection(section.id)"
-                    >
-                      <div 
-                        class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all duration-300"
-                        :class="activeSection === section.id 
-                          ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/20' 
-                          : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'"
-                      >
-                        {{ index + 1 }}
-                      </div>
-                      <div class="min-w-0">
-                        <p 
-                          class="text-xs font-black tracking-tight transition-colors duration-300"
-                          :class="activeSection === section.id ? 'text-violet-600' : 'text-slate-900'"
-                        >
-                          {{ section.title }}
-                        </p>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate">
-                          {{ section.subtitle }}
-                        </p>
-                      </div>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </aside>
-
-          <!-- Right Column: Stacked Cards -->
-          <div class="flex flex-col gap-12">
+        <div v-if="activeTab === 'overview'">
+          <AdminWizardLayout 
+            :sections="overviewSections" 
+            title="Overview Sections"
+          >
             <!-- Event Details -->
             <AppCard 
               id="section-detail"
-              class="!p-8 border-none shadow-soft bg-white relative scroll-mt-10"
+              class="!p-10 scroll-mt-10 border-slate-200"
             >
-              <div class="flex items-center justify-between mb-8">
+              <div class="flex items-center justify-between mb-10">
                 <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
                   Event Detail
                 </h3>
@@ -131,7 +83,7 @@
                   v-if="!isEditing"
                   variant="outline"
                   size="sm"
-                  class="!rounded-lg !text-[10px] uppercase tracking-widest font-black"
+                  class="!text-[10px] uppercase tracking-widest font-black bg-transparent border-slate-200"
                   @click="startEditing"
                 >
                   Edit Details
@@ -140,14 +92,14 @@
 
               <div
                 v-if="!isEditing"
-                class="space-y-8"
+                class="space-y-10"
               >
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                   <div class="space-y-1">
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       Title
                     </p>
-                    <p class="text-sm font-black text-slate-900 tracking-tight">
+                    <p class="text-lg font-black text-slate-900 tracking-tight leading-none uppercase">
                       {{ event.title }}
                     </p>
                   </div>
@@ -155,7 +107,7 @@
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       Public Slug
                     </p>
-                    <p class="text-sm font-bold text-violet-600 tracking-tight font-mono">
+                    <p class="text-lg font-black text-slate-900 tracking-tight leading-none italic underline decoration-slate-200">
                       /give/{{ event.slug }}
                     </p>
                   </div>
@@ -165,39 +117,33 @@
                   <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Description
                   </p>
-                  <p class="text-sm font-medium text-slate-600 leading-relaxed">
+                  <p class="text-sm font-medium text-slate-600 leading-relaxed max-w-2xl">
                     {{ event.description || 'No description provided.' }}
                   </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                   <div class="space-y-1">
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       Start Date
                     </p>
-                    <p class="text-sm font-black text-slate-900 tracking-tight">
+                    <p class="text-sm font-black text-slate-900 uppercase">
                       {{ formatDate(event.eventDate) }}
                     </p>
                   </div>
                   <div class="space-y-1">
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      End Date
+                      Operational Status
                     </p>
-                    <p class="text-sm font-black text-slate-900 tracking-tight">
-                      31 May 2026
-                    </p>
-                  </div>
-                </div>
-
-                <div class="space-y-1">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Status
-                  </p>
-                  <div class="pt-1">
-                    <StatusBadge
-                      :status="event.status"
-                      :tone="event.status === 'active' ? 'success' : 'neutral'"
-                    />
+                    <div class="pt-2 flex items-center gap-2">
+                      <div 
+                        class="w-2 h-2 rounded-full"
+                        :class="event.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
+                      />
+                      <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                        {{ event.isActive ? 'Active' : 'Draft' }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -205,24 +151,26 @@
               <!-- Edit Mode -->
               <div
                 v-else
-                class="space-y-6"
+                class="space-y-8"
               >
-                <AppInput
-                  v-model="form!.title"
-                  label="Title"
-                  placeholder="Event title"
-                  required
-                />
-                <AppInput
-                  v-model="form!.slug"
-                  label="Public Slug"
-                  placeholder="url-slug"
-                  required
-                >
-                  <template #prefix>
-                    <span class="text-slate-400">/give/</span>
-                  </template>
-                </AppInput>
+                <div class="grid md:grid-cols-2 gap-8">
+                  <AppInput
+                    v-model="form!.title"
+                    label="Title"
+                    placeholder="Event title"
+                    required
+                  />
+                  <AppInput
+                    v-model="form!.slug"
+                    label="Public Slug"
+                    placeholder="url-slug"
+                    required
+                  >
+                    <template #prefix>
+                      <span class="text-slate-400">/give/</span>
+                    </template>
+                  </AppInput>
+                </div>
                 <AppTextarea
                   id="event-description"
                   v-model="form!.description"
@@ -230,43 +178,37 @@
                   placeholder="Event purpose..."
                   :rows="4"
                 />
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-2 gap-8">
                   <AppInput
                     v-model="form!.eventDate as string"
                     type="date"
                     label="Start Date"
                   />
-                  <AppInput
-                    label="End Date"
-                    type="date"
-                    :model-value="'2026-05-31'"
-                    disabled
+                  <AppSelect
+                    v-model="form!.isActive"
+                    label="Status"
+                    :options="[
+                      { label: 'Active', value: true },
+                      { label: 'Inactive / Draft', value: false }
+                    ]"
                   />
                 </div>
-                <AppSelect
-                  v-model="form!.isActive"
-                  label="Status"
-                  :options="[
-                    { label: 'Active', value: true },
-                    { label: 'Inactive / Draft', value: false }
-                  ]"
-                />
               </div>
             </AppCard>
 
             <!-- Recipient Funds -->
             <AppCard 
               id="section-funds"
-              class="!p-8 border-none shadow-soft bg-white scroll-mt-10"
+              class="!p-10 scroll-mt-10 border-slate-200"
             >
-              <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center justify-between mb-8">
                 <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
                   Recipient Funds
                 </h3>
                 <AppButton
                   variant="outline"
                   size="sm"
-                  class="!rounded-lg !text-[10px] uppercase tracking-widest font-black"
+                  class="!text-[10px] uppercase tracking-widest font-black bg-transparent border-slate-200"
                   @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)"
                 >
                   <Plus class="w-3 h-3 mr-2" /> Add Fund
@@ -275,125 +217,57 @@
               <EventRecipientFundsList :event-id="event.id" />
             </AppCard>
 
-            <!-- Event Images -->
+            <!-- Event Images (Modern) -->
             <AppCard 
               id="section-images"
-              class="!p-8 border-none shadow-soft bg-white scroll-mt-10"
+              class="!p-10 scroll-mt-10 border-slate-200"
             >
-              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">
-                Event Images
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10">
+                Media & Branding
               </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                <div class="space-y-4">
-                  <div
-                    class="aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group"
-                  >
-                    <img
-                      v-if="event.displayImageUrl"
-                      :src="event.displayImageUrl"
-                      class="w-full h-full object-cover"
-                    >
-                    <div
-                      v-else
-                      class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-300"
-                    >
-                      <ImageIcon class="w-8 h-8" />
-                    </div>
-                  </div>
-                  <div class="text-center space-y-3">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      System / Display Image
-                    </p>
-                    <AppButton
-                      variant="outline"
-                      size="sm"
-                      class="w-full !text-[10px] uppercase tracking-widest font-black"
-                      @click="startEditing"
-                    >
-                      Change Image
-                    </AppButton>
-                  </div>
-                </div>
-
-                <div class="space-y-4">
-                  <div
-                    class="aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group"
-                  >
-                    <img
-                      v-if="event.receiptLogoUrl"
-                      :src="event.receiptLogoUrl"
-                      class="w-full h-full object-contain p-4"
-                    >
-                    <div
-                      v-else
-                      class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-300"
-                    >
-                      <Printer class="w-8 h-8" />
-                    </div>
-                  </div>
-                  <div class="text-center space-y-3">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Receipt / POS Image
-                    </p>
-                    <AppButton
-                      variant="outline"
-                      size="sm"
-                      class="w-full !text-[10px] uppercase tracking-widest font-black"
-                      @click="startEditing"
-                    >
-                      Change Image
-                    </AppButton>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Inline image editing inputs if editing -->
-              <div
-                v-if="isEditing"
-                class="mt-8 pt-8 border-t border-slate-100 space-y-6"
-              >
-                <AppInput
-                  v-model="form!.displayImageUrl"
-                  label="Display Image URL"
-                  placeholder="https://..."
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-12">
+                <ModernImageInput 
+                  v-model="displayImageUrlProxy"
+                  label="System / Display Image"
+                  :icon="ImageIcon"
                 />
-                <AppInput
-                  v-model="form!.receiptLogoUrl"
-                  label="Receipt Logo URL"
-                  placeholder="https://..."
+                <ModernImageInput 
+                  v-model="receiptLogoUrlProxy"
+                  label="Receipt / POS Logo"
+                  :icon="Printer"
                 />
               </div>
             </AppCard>
 
             <!-- Campaign Metadata -->
             <AppCard
-              v-if="!isEditing"
               id="section-metadata"
-              class="!p-8 border-none shadow-soft bg-white scroll-mt-10"
+              class="!p-10 scroll-mt-10 border-slate-200"
             >
-              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">
                 Campaign Metadata
               </h3>
-              <div class="grid grid-cols-2 gap-8">
+              <div class="grid grid-cols-2 gap-10">
                 <div class="space-y-1">
                   <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    ID
+                    Event Identifier
                   </p>
-                  <p class="text-[11px] font-mono font-bold text-slate-900">
-                    {{ event.id.slice(0, 8) }}...
+                  <p class="text-xs font-mono font-bold text-slate-900 bg-slate-100 px-2 py-1 inline-block border border-slate-200">
+                    {{ event.id }}
                   </p>
                 </div>
                 <div class="space-y-1">
                   <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Created By
                   </p>
-                  <p class="text-[11px] font-bold text-slate-900">
-                    System Admin
+                  <p class="text-sm font-black text-slate-900 uppercase">
+                    System Administrator
                   </p>
                 </div>
               </div>
             </AppCard>
-          </div>
+          </AdminWizardLayout>
         </div>
 
         <!-- Recipient Funds Tab -->
@@ -401,14 +275,12 @@
           v-else-if="activeTab === 'funds'"
           class="space-y-6"
         >
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-center mb-8">
             <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
               Assigned Recipient Funds
             </h3>
             <AppButton
               variant="primary"
-              size="sm"
-              class="!rounded-xl shadow-premium"
               @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)"
             >
               <Plus class="w-4 h-4 mr-2" />
@@ -418,64 +290,115 @@
           <EventRecipientFundsList :event-id="event.id" />
         </div>
 
+        <!-- Collectors Tab -->
+        <div
+          v-else-if="activeTab === 'collectors'"
+          class="space-y-8"
+        >
+          <div class="flex justify-between items-center mb-8">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+              Assigned Field Staff
+            </h3>
+            <AppButton
+              variant="primary"
+              @click="router.push('/admin/collectors/new')"
+            >
+              <Plus class="w-4 h-4 mr-2" />
+              Onboard Collector
+            </AppButton>
+          </div>
+          <EventCollectorsList :event-id="event.id" />
+        </div>
+
         <!-- Activity Tab -->
         <div
           v-else-if="activeTab === 'activity'"
           class="space-y-8"
         >
-          <AppCard class="!p-8 max-w-3xl border-none shadow-soft bg-white">
-            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">
+          <AppCard class="!p-10 max-w-4xl border-slate-200">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10">
               Event Audit Log
             </h3>
             <AuditTimeline :events="auditItems" />
           </AppCard>
         </div>
 
-        <!-- Default Placeholder for other tabs -->
+        <!-- Settings Tab -->
         <div
-          v-else
-          class="bg-slate-50 border border-slate-100 rounded-[2rem] p-20 flex flex-col items-center justify-center text-center animate-in fade-in duration-500"
+          v-else-if="activeTab === 'settings'"
+          class="space-y-10"
         >
-          <div class="w-16 h-16 rounded-[1.5rem] bg-white shadow-soft flex items-center justify-center text-slate-300 mb-6 border border-slate-50">
-            <Zap class="w-8 h-8" />
-          </div>
-          <p class="text-sm font-black text-slate-900 uppercase tracking-widest mb-2">
-            Module Sync Pending
-          </p>
-          <p class="text-xs font-bold text-slate-400 uppercase tracking-[0.15em] max-w-sm">
-            The {{ activeTab }} interface is currently being wired to the live stream.
-          </p>
+          <AppCard class="!p-10 max-w-4xl border-slate-200">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10">
+              Operational Settings
+            </h3>
+            <div class="space-y-8">
+              <div class="flex items-center justify-between p-8 bg-slate-50/50 border border-slate-200">
+                <div class="space-y-1.5">
+                  <p class="text-sm font-black text-slate-900 tracking-tight leading-none uppercase">
+                    Collection Visibility
+                  </p>
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                    Toggle whether this event is visible on the public storefront
+                  </p>
+                </div>
+                <AppSelect
+                  v-model="visibilityProxy"
+                  :options="[
+                    { label: 'Public', value: true },
+                    { label: 'Hidden / Draft', value: false }
+                  ]"
+                  class="w-48"
+                  @update:model-value="saveVisibility"
+                />
+              </div>
+              
+              <div class="flex items-center justify-between p-8 bg-rose-50/30 border border-rose-100">
+                <div class="space-y-1.5">
+                  <p class="text-sm font-black text-rose-900 tracking-tight leading-none uppercase">
+                    Archive Event
+                  </p>
+                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest mt-1">
+                    Permanently remove this event and all associated assignments from the active stream
+                  </p>
+                </div>
+                <AppButton variant="ghost" class="text-rose-600 hover:bg-rose-100 border border-transparent hover:border-rose-200 px-6 font-black uppercase tracking-widest text-[10px]">
+                  Delete Event
+                </AppButton>
+              </div>
+            </div>
+          </AppCard>
         </div>
       </div>
     </div>
 
     <!-- Inline Edit Actions -->
-    <StickyFormActions v-if="isEditing">
+    <StickyFormActions v-if="isEditing || hasMediaChanges">
       <template #left>
         <div class="flex items-center gap-3">
           <div
             v-if="updateMutation.isPending.value"
             class="flex items-center gap-2"
           >
-            <div class="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-            <span class="text-[10px] font-black text-violet-600 uppercase tracking-widest">Saving changes...</span>
+            <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
+            <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Saving changes...</span>
           </div>
           <span
             v-else
             class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic"
-          >Editing Event: {{ event.title }}</span>
+          >You have unsaved changes</span>
         </div>
       </template>
       <AppButton
         variant="outline"
-        class="!rounded-xl"
+        class="bg-transparent border-slate-200"
         @click="cancelEditing"
       >
         Cancel
       </AppButton>
       <AppButton
         variant="primary"
-        class="!rounded-xl shadow-premium"
+        class="px-10"
         :loading="updateMutation.isPending.value"
         @click="handleSave"
       >
@@ -486,9 +409,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEvent, useUpdateEvent } from '../composables/useEvents'
+import { useToastStore } from '@/shared/stores/useToastStore'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
 import AuditTimeline from '@/shared/components/feedback/AuditTimeline.vue'
@@ -498,10 +422,12 @@ import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
-import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
+import EventCollectorsList from '../components/EventCollectorsList.vue'
+import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
+import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
 import { formatDate } from '@/core/formatting/formatters'
 import { 
   Target, 
@@ -509,9 +435,12 @@ import {
   Link2,
   Plus,
   MoreVertical,
-  Zap,
   Image as ImageIcon,
-  Printer
+  Printer,
+  History,
+  LayoutDashboard,
+  Users,
+  Settings
 } from 'lucide-vue-next'
 import type { UpdateEventInput } from '../types/event'
 
@@ -521,64 +450,50 @@ const eventId = computed(() => route.params.id as string)
 const query = useEvent(eventId.value)
 const event = computed(() => query.data.value)
 const updateMutation = useUpdateEvent()
+const toast = useToastStore()
 
 const activeTab = ref('overview')
+const visibilityProxy = ref(false)
+
 const tabs = [
-  { key: 'overview', label: 'Overview' },
-  { key: 'funds', label: 'Recipient Funds' },
-  { key: 'contributions', label: 'Contributions' },
-  { key: 'collectors', label: 'Collectors' },
-  { key: 'activity', label: 'Activity / Audit' },
-  { key: 'settings', label: 'Settings' },
+  { key: 'overview', label: 'Overview', icon: 'LayoutDashboard' },
+  { key: 'funds', label: 'Recipient Funds', icon: 'Target' },
+  { key: 'collectors', label: 'Collectors', icon: 'Users' },
+  { key: 'activity', label: 'Activity / Audit', icon: 'History' },
+  { key: 'settings', label: 'Settings', icon: 'Settings' },
 ]
 
-// Overview Navigation Logic
-const activeSection = ref('section-detail')
+// Overview Sections
 const overviewSections = [
-  { id: 'section-detail', title: 'Event Detail', subtitle: 'Basic information and key details' },
-  { id: 'section-funds', title: 'Recipient Funds', subtitle: 'Manage fund distribution' },
-  { id: 'section-images', title: 'Event Images', subtitle: 'System and receipt images' },
-  { id: 'section-metadata', title: 'Campaign Purpose', subtitle: 'Audit and tracking data' },
+  { id: 'section-detail', title: 'Event Detail', subtitle: 'Identity & Status' },
+  { id: 'section-funds', title: 'Recipient Funds', subtitle: 'Fund Management' },
+  { id: 'section-images', title: 'Media & Branding', subtitle: 'Images & Logos' },
+  { id: 'section-metadata', title: 'Campaign Purpose', subtitle: 'Audit Metadata' },
 ]
-
-let observer: IntersectionObserver | null = null
-
-onMounted(() => {
-  observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-        activeSection.value = entry.target.id
-      }
-    })
-  }, { threshold: [0.5], rootMargin: '-80px 0px -50% 0px' })
-
-  overviewSections.forEach(section => {
-    const el = document.getElementById(section.id)
-    if (el) observer?.observe(el)
-  })
-})
-
-onUnmounted(() => {
-  observer?.disconnect()
-})
-
-function scrollToSection(id: string) {
-  const el = document.getElementById(id)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' })
-    activeSection.value = id
-  }
-}
-
 
 // Inline Editing Logic
 const isEditing = ref(route.query.edit === 'true')
 const form = ref<UpdateEventInput | null>(null)
 
+// Proxy for media inputs so we can track changes independently of edit mode
+const displayImageUrlProxy = ref('')
+const receiptLogoUrlProxy = ref('')
+
 watchEffect(() => {
-  if (event.value && !form.value) {
-    resetForm()
+  if (event.value) {
+    if (!form.value) resetForm()
+    displayImageUrlProxy.value = event.value.displayImageUrl || ''
+    receiptLogoUrlProxy.value = event.value.receiptLogoUrl || ''
+    visibilityProxy.value = event.value.isActive
   }
+})
+
+const hasMediaChanges = computed(() => {
+  if (!event.value) return false
+  return (
+    displayImageUrlProxy.value !== (event.value.displayImageUrl || '') ||
+    receiptLogoUrlProxy.value !== (event.value.receiptLogoUrl || '')
+  )
 })
 
 function resetForm() {
@@ -601,22 +516,58 @@ function startEditing() {
 
 function cancelEditing() {
   isEditing.value = false
-  // Remove edit query param without refreshing
+  displayImageUrlProxy.value = event.value?.displayImageUrl || ''
+  receiptLogoUrlProxy.value = event.value?.receiptLogoUrl || ''
   router.replace({ query: { ...route.query, edit: undefined } })
 }
 
 async function handleSave() {
-  if (!form.value) return
+  const payload = isEditing.value ? { ...form.value } : {
+    title: event.value?.title,
+    description: event.value?.description,
+    eventDate: event.value?.eventDate,
+    isActive: event.value?.isActive,
+    slug: event.value?.slug,
+    displayImageUrl: displayImageUrlProxy.value,
+    receiptLogoUrl: receiptLogoUrlProxy.value
+  }
+
+  // Ensure media is included even if not in "edit" mode for details
+  if (!isEditing.value) {
+    payload.displayImageUrl = displayImageUrlProxy.value
+    payload.receiptLogoUrl = receiptLogoUrlProxy.value
+  }
+
+  try {
+    await updateMutation.mutateAsync({
+      id: eventId.value,
+      payload: payload as UpdateEventInput
+    })
+    isEditing.value = false
+    router.replace({ query: { ...route.query, edit: undefined } })
+    toast.success('Event details updated successfully')
+  } catch (err) {
+    console.error('Failed to update event:', err)
+    toast.error('Failed to save changes')
+  }
+}
+
+async function saveVisibility(val: boolean) {
+  if (!event.value) return
   
   try {
     await updateMutation.mutateAsync({
       id: eventId.value,
-      payload: form.value
+      payload: {
+        ...event.value,
+        isActive: val
+      } as UpdateEventInput
     })
-    isEditing.value = false
-    router.replace({ query: { ...route.query, edit: undefined } })
+    toast.success(`Event visibility updated to ${val ? 'Public' : 'Hidden'}`)
   } catch (err) {
-    console.error('Failed to update event:', err)
+    console.error('Failed to update visibility:', err)
+    toast.error('Failed to update settings')
+    visibilityProxy.value = event.value.isActive
   }
 }
 
@@ -634,7 +585,7 @@ const auditItems = computed(() => [
     id: '2',
     type: 'update' as const,
     content: 'Status Updated',
-    target: event.value?.status || '',
+    target: event.value?.isActive ? 'Active' : 'Draft',
     description: `Event status moved to operational state`,
     date: 'Today',
     datetime: new Date().toISOString()
@@ -645,6 +596,7 @@ function copyPublicLink() {
   if (!event.value) return
   const url = `${window.location.origin}/give/${event.value.slug}`
   navigator.clipboard.writeText(url)
+  toast.success('Public link copied to clipboard')
 }
 
 function previewStorefront() {

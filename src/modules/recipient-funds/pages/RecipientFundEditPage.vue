@@ -17,19 +17,21 @@
     class="space-y-10"
     @submit.prevent="handleSave"
   >
-    <DetailPageHeader
+    <AdminPageHeader
       :title="`Edit ${fund?.name}`"
       description="Manage fund targets, visibility, and allocation settings."
-      :back-to="{ name: 'admin-funds-detail', params: { id: fundId } }"
     >
       <template #meta>
         <div class="flex items-center gap-4">
-          <StatusBadge
-            :status="form.isActive ? 'active' : 'draft'"
-            :tone="form.isActive ? 'success' : 'neutral'"
-          />
+          <div class="flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200">
+            <div 
+              class="w-1.5 h-1.5 rounded-full"
+              :class="form.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
+            />
+            <span class="text-[9px] font-black text-slate-600 uppercase tracking-widest">{{ form.isActive ? 'Active' : 'Draft' }}</span>
+          </div>
           <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Editing operational fund
+            Strategic Allocation
           </span>
         </div>
       </template>
@@ -38,14 +40,14 @@
         <div class="flex items-center gap-3">
           <AppButton
             variant="outline"
-            class="!rounded-xl"
+            class="bg-transparent border-slate-200"
             @click="router.push({ name: 'admin-funds-detail', params: { id: fundId } })"
           >
-            Cancel
+            Discard
           </AppButton>
           <AppButton
             variant="primary"
-            class="!rounded-xl shadow-premium"
+            class="px-10"
             type="submit"
             :loading="updateMutation.isPending.value"
           >
@@ -53,15 +55,16 @@
           </AppButton>
         </div>
       </template>
-    </DetailPageHeader>
+    </AdminPageHeader>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-      <div class="lg:col-span-8 space-y-8">
-        <AppCard class="!p-8 space-y-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-32">
+      <div class="lg:col-span-8 space-y-10">
+        <!-- Fund Information -->
+        <AppCard class="!p-10 space-y-10 border-slate-200">
           <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-            Fund Information
+            Fund Definition
           </h3>
-          <div class="space-y-6">
+          <div class="space-y-8">
             <AppInput
               v-model="form.name"
               label="Fund Name"
@@ -71,64 +74,69 @@
             <AppTextarea
               id="fund-description"
               v-model="form.description"
-              label="Description"
-              placeholder="What will these contributions be used for?"
+              label="Operational Purpose"
+              placeholder="Describe the utilization of these funds..."
               :rows="5"
             />
           </div>
         </AppCard>
 
-        <AppCard class="!p-8 space-y-8">
+        <!-- Financial Targets -->
+        <AppCard class="!p-10 space-y-10 border-slate-200">
           <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-            Target & Currency
+            Financial Guardrails
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
             <AppInput
               v-model="form.targetAmount"
               type="number"
-              label="Target Amount"
+              label="Target Goal"
               placeholder="0.00"
               required
             >
               <template #prefix>
-                <span class="text-slate-400 font-bold">GHS</span>
+                <span class="text-slate-400 font-bold tracking-tighter">GHS</span>
               </template>
             </AppInput>
           </div>
-          <p class="text-[10px] text-slate-400 font-medium leading-relaxed italic">
-            Currency conversion is handled at the transaction level based on the event's primary currency.
-          </p>
+          <div class="p-6 bg-slate-50 border border-slate-100">
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed italic">
+              Conversion Note: Financial targets are tracked in GHS but support multi-currency contribution flows.
+            </p>
+          </div>
         </AppCard>
       </div>
 
       <div class="lg:col-span-4 space-y-8">
+        <!-- Visibility -->
         <DetailSummaryCard 
-          title="Visibility"
+          title="Lifecycle Management"
           :items="[]"
         >
           <div class="space-y-6">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-500">Fund Active</span>
+            <div class="flex items-center justify-between p-4 bg-white border border-slate-100">
+              <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Fund Active</span>
               <AppSwitch v-model="form.isActive" />
             </div>
-            <p class="text-[10px] text-slate-400 italic leading-relaxed">
-              When inactive, this fund will no longer appear as an option for new contributions.
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed italic">
+              Inactive funds are restricted from receiving new contributions.
             </p>
           </div>
         </DetailSummaryCard>
 
-        <AppCard class="!p-6 border-slate-100 bg-slate-50/30">
-          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
-            Operational Info
+        <!-- Audit Meta -->
+        <AppCard class="!p-8 border-slate-200 bg-white">
+          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
+            System Metadata
           </h4>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Fund ID</span>
-              <span class="text-[9px] font-mono text-slate-500">{{ fundId.split('-')[0] }}...</span>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center py-2 border-b border-slate-50">
+              <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Identifier</span>
+              <span class="text-[9px] font-mono text-slate-500 uppercase">{{ fundId.split('-')[0] }}...</span>
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Last Updated</span>
-              <span class="text-[9px] font-black text-slate-900 tracking-tight">Today</span>
+            <div class="flex justify-between items-center py-2">
+              <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Last Modified</span>
+              <span class="text-[9px] font-black text-slate-900 tracking-tight uppercase">Today</span>
             </div>
           </div>
         </AppCard>
@@ -137,22 +145,29 @@
 
     <StickyFormActions>
       <template #left>
-        <span
-          v-if="updateMutation.isPending.value"
-          class="text-xs font-bold text-violet-600 animate-pulse"
-        >
-          Updating record...
-        </span>
+        <div class="flex items-center gap-2">
+          <div 
+            v-if="updateMutation.isPending.value"
+            class="w-2 h-2 rounded-full bg-violet-600 animate-pulse"
+          />
+          <span
+            v-if="updateMutation.isPending.value"
+            class="text-[10px] font-black text-violet-600 uppercase tracking-widest"
+          >
+            Syncing record...
+          </span>
+        </div>
       </template>
       <AppButton
         variant="outline"
+        class="bg-transparent border-slate-200"
         @click="router.push({ name: 'admin-funds-detail', params: { id: fundId } })"
       >
         Discard
       </AppButton>
       <AppButton
         variant="primary"
-        class="!rounded-xl shadow-premium px-10"
+        class="px-12"
         type="submit"
         :loading="updateMutation.isPending.value"
       >
@@ -166,7 +181,8 @@
 import { ref, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useRecipientFund, useUpdateRecipientFund } from '../composables/useRecipientFunds'
-import DetailPageHeader from '@/shared/components/headers/DetailPageHeader.vue'
+import { useToastStore } from '@/shared/stores/useToastStore'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import DetailSummaryCard from '@/shared/components/cards/DetailSummaryCard.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
@@ -174,12 +190,12 @@ import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
-import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 
 const route = useRoute()
 const router = useRouter()
+const toast = useToastStore()
 const fundId = computed(() => route.params.id as string)
 
 const query = useRecipientFund(fundId.value)
@@ -199,7 +215,7 @@ watchEffect(() => {
       name: fund.value.name,
       description: fund.value.description || '',
       targetAmount: fund.value.targetAmount,
-      isActive: true // Fallback since we don't have this in DTO yet
+      isActive: true
     }
   }
 })
@@ -217,9 +233,11 @@ async function handleSave() {
         targetAmount: form.value.targetAmount
       }
     })
+    toast.success('Fund details synchronized successfully')
     router.push({ name: 'admin-funds-detail', params: { id: fundId.value } })
   } catch (err) {
     console.error('Failed to update fund:', err)
+    toast.error('Failed to update fund')
   }
 }
 </script>
