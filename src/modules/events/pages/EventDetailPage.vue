@@ -18,63 +18,76 @@
   >
     <!-- Page Header -->
     <DetailPageHeader
-      :title="event.title"
+      :title="`${event.title} ${event.id.slice(0, 8)}`"
       description="Operational management, fund allocation, and contribution auditing."
       back-to="/admin/events"
       back-label="Events List"
       :image-url="event.displayImageUrl"
     >
       <template #status>
-        <div class="flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-200">
+        <div class="flex items-center gap-2.5 px-3 py-1.5 bg-white border border-slate-100 shadow-sm shrink-0">
           <div 
             class="w-1.5 h-1.5 rounded-full"
             :class="event.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
           />
-          <span class="text-[9px] font-black text-slate-900 uppercase tracking-widest">
+          <span class="text-[9px] font-black text-slate-900 uppercase tracking-[0.2em]">
             {{ event.isActive ? 'Active' : 'Draft' }}
           </span>
         </div>
       </template>
 
       <template #actions>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
           <AppButton
             variant="secondary"
             size="sm"
-            class="bg-white border-slate-200"
+            class="bg-white border-slate-100 px-6 whitespace-nowrap"
             @click="previewStorefront"
           >
-            <template #icon><ExternalLink class="w-3.5 h-3.5 mr-2" /></template>
-            Preview Storefront
+            <template #icon><ExternalLink class="w-3.5 h-3.5 mr-2.5 text-slate-400" /></template>
+            Preview
           </AppButton>
           
           <AppButton
             variant="secondary"
             size="sm"
-            class="bg-white border-slate-200"
+            class="bg-white border-slate-100 px-6 whitespace-nowrap"
             @click="copyPublicLink"
           >
-            <template #icon><Link2 class="w-3.5 h-3.5 mr-2" /></template>
-            Copy Link
+            <template #icon><Link2 class="w-3.5 h-3.5 mr-2.5 text-slate-400" /></template>
+            Copy
           </AppButton>
 
-          <RowActions
-            :actions="[
-              { label: 'Manage Recipient Funds', icon: 'Target', onClick: () => activeTab = 'funds' },
-              { label: 'Event Analytics', icon: 'BarChart2', onClick: () => {} },
-              { label: 'Archive Event', icon: 'Trash2', onClick: () => {}, variant: 'danger' }
-            ]"
-          >
-            <template #trigger>
-              <AppButton
-                variant="ghost"
-                size="sm"
-                class="border border-slate-200 w-10 p-0"
-              >
-                <MoreVertical class="w-4 h-4" />
-              </AppButton>
-            </template>
-          </RowActions>
+          <!-- Icon Only Actions -->
+          <div class="flex items-center gap-1.5 ml-4 pl-4 border-l border-slate-100 shrink-0">
+            <AppButton
+              variant="ghost"
+              size="sm"
+              class="w-10 p-0 text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-colors"
+              title="Manage Recipient Funds"
+              @click="activeTab = 'funds'"
+            >
+              <Target class="w-4 h-4" />
+            </AppButton>
+            <AppButton
+              variant="ghost"
+              size="sm"
+              class="w-10 p-0 text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+              title="Event Analytics"
+              @click="router.push(`/admin/events/${event.id}/analytics`)"
+            >
+              <BarChart2 class="w-4 h-4" />
+            </AppButton>
+            <AppButton
+              variant="ghost"
+              size="sm"
+              class="w-10 p-0 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+              title="Archive Event"
+              @click="handleArchive"
+            >
+              <Trash2 class="w-4 h-4" />
+            </AppButton>
+          </div>
         </div>
       </template>
     </DetailPageHeader>
@@ -423,14 +436,12 @@ import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
 import EventCollectorsList from '../components/EventCollectorsList.vue'
 import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
 import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
-import RowActions from '@/shared/components/tables/RowActions.vue'
 import { formatDate } from '@/core/formatting/formatters'
 import { 
   Target, 
   ExternalLink, 
   Link2,
   Plus,
-  MoreVertical,
   Image as ImageIcon,
   Printer,
   History,
@@ -585,8 +596,11 @@ function copyPublicLink() {
 
 function previewStorefront() {
   if (!event.value) return
-  // Correct absolute URL for storefront
   const url = `${window.location.origin}/give/${event.value.slug}`
   window.open(url, '_blank')
+}
+
+function handleArchive() {
+  toast.info('Archiving event...')
 }
 </script>
