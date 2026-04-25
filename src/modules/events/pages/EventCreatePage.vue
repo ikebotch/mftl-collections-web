@@ -66,6 +66,33 @@
               />
             </div>
 
+            <div class="grid md:grid-cols-2 gap-10">
+              <div class="space-y-4">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">System/Display Image</label>
+                <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
+                  <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
+                    <ImageIcon class="w-6 h-6" />
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">No file chosen</p>
+                  </div>
+                  <AppButton variant="ghost" size="xs" class="!rounded-lg text-[9px] font-black uppercase tracking-widest">Choose</AppButton>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Receipt/POS Logo</label>
+                <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
+                  <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
+                    <Printer class="w-6 h-6" />
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Default active</p>
+                  </div>
+                  <AppButton variant="ghost" size="xs" class="!rounded-lg text-[9px] font-black uppercase tracking-widest">Choose</AppButton>
+                </div>
+              </div>
+            </div>
+
             <div class="pt-4">
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 block">
                 Initial Visibility
@@ -461,7 +488,7 @@ import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import StepIndicator from '@/shared/components/steppers/StepIndicator.vue'
 import { formatDate, formatCurrency } from '@/core/formatting/formatters'
-import { Plus, Trash2, Users, AlertCircle } from 'lucide-vue-next'
+import { Plus, Trash2, Users, AlertCircle, Image as ImageIcon, Printer } from 'lucide-vue-next'
 
 const router = useRouter()
 const createEventMutation = useCreateEvent()

@@ -48,6 +48,8 @@
         :columns="columns"
         :rows="filteredUsers"
         :loading="query.isLoading.value"
+        exportable
+        title="System Access Control"
       >
         <template #cell:user="{ row }">
           <div class="flex items-center gap-4">

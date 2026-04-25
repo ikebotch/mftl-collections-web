@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-10">
     <AdminPageHeader
-      :title="copy.admin.pages.selfDonations.title"
-      :description="copy.admin.pages.selfDonations.description"
+      title="Self-Donation Log"
+      description="Monitor and audit direct contributions made by registered users."
     />
 
     <AdminMetricGrid>
@@ -14,7 +14,7 @@
       />
       <MetricCard
         label="Total Volume"
-        :value="formatCurrency(totalVolume, 'GHS')"
+        :value="formattedTotalVolume"
         icon="TrendingUp"
         color="purple"
       />
@@ -42,6 +42,8 @@
         :columns="columns"
         :rows="filteredItems"
         :loading="query.isLoading.value"
+        exportable
+        title="Self-Donation Ledger"
       >
         <template #cell:id="{ value }">
           <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">#{{ value.slice(0, 8) }}</span>
@@ -92,12 +94,22 @@ const columns = [
   { key: 'status', label: 'Status' }
 ]
 
-const totalVolume = computed(() => {
+const formattedTotalVolume = computed(() => {
   const items = query.data.value ?? []
-  return items.reduce((acc, item) => {
-    const val = parseFloat(item.amount.replace(/[^0-9.]/g, ''))
-    return acc + (isNaN(val) ? 0 : val)
-  }, 0)
+  const currencyGroups: Record<string, number> = {}
+  
+  items.forEach(item => {
+    const amt = parseFloat(item.amount.replace(/[^0-9.]/g, ''))
+    const cur = item.amount.split(' ')[0] || 'GHS'
+    if (!isNaN(amt)) {
+      currencyGroups[cur] = (currencyGroups[cur] || 0) + amt
+    }
+  })
+  
+  if (Object.keys(currencyGroups).length === 0) return 'GHS 0.00'
+  return Object.entries(currencyGroups)
+    .map(([cur, amt]) => formatCurrency(amt, cur))
+    .join(' • ')
 })
 
 const filteredItems = computed(() => {

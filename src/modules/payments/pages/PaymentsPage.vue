@@ -24,19 +24,19 @@
       />
       <MetricCard
         label="Success Rate"
-        value="98.4%"
+        :value="successRate"
         icon="CheckCircle"
         color="green"
       />
       <MetricCard
-        label="Volume (24h)"
-        value="GHS 4,200"
+        label="Total Volume"
+        :value="totalVolume"
         icon="TrendingUp"
         color="blue"
       />
       <MetricCard
-        label="Avg Processing"
-        value="1.2s"
+        label="Failed Log"
+        :value="String(payments.filter(p => p.status.toLowerCase() === 'failed').length)"
         icon="Zap"
         color="amber"
       />
@@ -60,6 +60,8 @@
         :columns="columns"
         :rows="filteredPayments"
         :loading="query.isLoading.value"
+        exportable
+        title="Transaction Ledger"
       >
         <template #cell:providerReference="{ value }">
           <div class="flex flex-col">
@@ -144,6 +146,26 @@ import {
 const query = usePayments()
 const searchQuery = ref('')
 const statusFilter = ref('')
+
+const successRate = computed(() => {
+  if (payments.value.length === 0) return '0%'
+  const success = payments.value.filter(p => p.status.toLowerCase() === 'completed' || p.status.toLowerCase() === 'success').length
+  return `${Math.round((success / payments.value.length) * 100)}%`
+})
+
+const totalVolume = computed(() => {
+  const currencyGroups: Record<string, number> = {}
+  payments.value.forEach(p => {
+    const amt = parseFloat(String(p.amount).replace(/[^0-9.]/g, ''))
+    const cur = p.amount.split(' ')[0] || 'GHS'
+    currencyGroups[cur] = (currencyGroups[cur] || 0) + amt
+  })
+  
+  if (Object.keys(currencyGroups).length === 0) return 'GHS 0.00'
+  return Object.entries(currencyGroups)
+    .map(([cur, amt]) => `${cur} ${amt.toLocaleString()}`)
+    .join(' • ')
+})
 
 const columns = [
   { key: 'providerReference', label: 'Reference', sortable: true },

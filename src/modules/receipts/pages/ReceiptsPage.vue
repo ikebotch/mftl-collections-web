@@ -60,6 +60,8 @@
         :columns="columns"
         :rows="filteredReceipts"
         :loading="query.isLoading.value"
+        exportable
+        title="Digital Receipt Archive"
       >
         <template #cell:receiptNumber="{ value }">
           <div class="flex flex-col">

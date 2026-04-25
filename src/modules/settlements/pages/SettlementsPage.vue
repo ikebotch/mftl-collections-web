@@ -15,45 +15,27 @@
       </template>
     </AdminPageHeader>
 
-    <!-- Operational State Alert -->
-    <section class="p-8 rounded-[2rem] bg-amber-50 border border-amber-100 flex items-start gap-6 relative overflow-hidden">
-      <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-amber-500 shadow-sm shrink-0">
-        <Database class="w-6 h-6" />
-      </div>
-      <div class="space-y-2">
-        <h2 class="text-lg font-black text-slate-900 tracking-tight uppercase italic">
-          Settlement Engine Pending
-        </h2>
-        <p class="text-xs font-bold text-amber-900/60 uppercase tracking-widest">
-          API Bridge Not Active
-        </p>
-        <p class="text-slate-600 font-medium max-w-2xl text-xs leading-relaxed">
-          The settlement engine is currently being finalized. This module will allow finance teams to reconcile physical cash collected in the field with digital audit logs once the backend orchestration is complete.
-        </p>
-      </div>
-    </section>
-
     <AdminMetricGrid>
       <MetricCard
         label="Pending Reconciliation"
-        value="GHS 5,290.50"
+        :value="pendingReconciliation"
         icon="Wallet"
         color="amber"
       />
       <MetricCard
         label="Awaiting Handover"
-        value="3 Collectors"
+        :value="awaitingHandover"
         icon="UserCheck"
         color="blue"
       />
       <MetricCard
-        label="Completed Today"
-        value="1"
+        label="Completed Records"
+        :value="String((query.data.value ?? []).filter(s => s.status.includes('Completed')).length)"
         icon="CheckCircle"
         color="green"
       />
       <MetricCard
-        label="Treasury Status"
+        label="System Integrity"
         value="Normal"
         icon="ShieldCheck"
         color="purple"
@@ -68,8 +50,11 @@
 
       <DataTable
         :columns="columns"
-        :rows="mockSettlements"
-        @retry="() => {}"
+        :rows="query.data.value ?? []"
+        :loading="query.isLoading.value"
+        exportable
+        title="Settlement Reconciliation"
+        @retry="query.refetch"
       >
         <template #cell:collectorName="{ value }">
           <div class="flex items-center gap-4">
@@ -80,8 +65,8 @@
           </div>
         </template>
 
-        <template #cell:amount="{ value }">
-          <span class="text-sm font-black text-slate-900 italic">{{ formatCurrency(value, 'GHS') }}</span>
+        <template #cell:amount="{ row }">
+          <span class="text-sm font-black text-slate-900 italic">{{ formatCurrency(row.amount, row.currency) }}</span>
         </template>
 
         <template #cell:status="{ value }">
@@ -92,7 +77,7 @@
         </template>
 
         <template #cell:date="{ value }">
-          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ value }}</span>
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ formatDate(value) }}</span>
         </template>
 
         <template #rowActions>
@@ -110,7 +95,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatCurrency } from '@/core/formatting/formatters'
+import { formatCurrency, formatDate } from '@/core/formatting/formatters'
+import { useSettlements } from '../composables/useSettlements'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
@@ -119,8 +105,9 @@ import DataTable from '@/shared/components/tables/DataTable.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import { Database, Download } from 'lucide-vue-next'
+import { Download } from 'lucide-vue-next'
 
+const query = useSettlements()
 const searchQuery = ref('')
 
 const columns = [
@@ -130,12 +117,17 @@ const columns = [
   { key: 'date', label: 'Collection Date' },
 ]
 
-const mockSettlements = [
-  { id: '1', collectorName: 'Samuel Osei', amount: 1250.00, status: 'Awaiting Handover', date: 'Oct 24, 2023' },
-  { id: '2', collectorName: 'Grace Mensah', amount: 840.50, status: 'In Review', date: 'Oct 24, 2023' },
-  { id: '3', collectorName: 'Isaac Boateng', amount: 3200.00, status: 'Awaiting Handover', date: 'Oct 23, 2023' },
-  { id: '4', collectorName: 'Akosua Serwaa', amount: 150.00, status: 'Completed', date: 'Oct 22, 2023' },
-]
+const pendingReconciliation = computed(() => {
+  const list = query.data.value ?? []
+  const total = list.filter(s => !s.status.includes('Completed')).reduce((acc, s) => acc + s.amount, 0)
+  return formatCurrency(total, 'GHS')
+})
+
+const awaitingHandover = computed(() => {
+  const list = query.data.value ?? []
+  const count = list.filter(s => s.status.includes('Handover')).length
+  return `${count} Collector${count !== 1 ? 's' : ''}`
+})
 
 function getInitials(name?: string) {
   if (!name) return '??'

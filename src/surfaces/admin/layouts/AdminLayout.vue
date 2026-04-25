@@ -5,26 +5,12 @@
       <div class="flex flex-col h-full">
         <!-- Logo Section -->
         <div class="px-8 py-10">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-violet-500 flex items-center justify-center shadow-lg shadow-violet-500/20 rotate-3 shrink-0">
-              <Heart class="text-white w-6 h-6 fill-current" />
-            </div>
-            <div>
-              <h1 class="text-xl font-bold font-display tracking-tight leading-none text-white">
-                MFTL
-              </h1>
-              <p class="text-[10px] uppercase tracking-[0.2em] text-slate-400 mt-1 font-bold">
-                Collections
-              </p>
-            </div>
-          </div>
+          <TenantSwitcher />
           <p class="text-[10px] text-slate-400 mt-4 leading-relaxed font-medium">
             Collect. Impact. Transform Lives.
           </p>
         </div>
 
-        <!-- Tenant Selector -->
-        <TenantSelector />
 
         <!-- Navigation -->
         <nav class="flex-1 px-4 space-y-8 mt-2">
@@ -224,8 +210,8 @@ import { appConfig } from '@/core/config/appConfig'
 import { useCurrentUser } from '@/core/auth/currentUser'
 import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
 import { useAuth0 } from '@auth0/auth0-vue'
-import TenantSelector from '@/modules/tenants/components/TenantSelector.vue'
 import { useCopy } from '@/core/i18n/useCopy'
+import TenantSwitcher from '@/modules/tenants/components/TenantSwitcher.vue'
 import { 
   LayoutDashboard, 
   Calendar, 

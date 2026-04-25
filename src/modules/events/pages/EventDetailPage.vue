@@ -71,34 +71,38 @@
       </template>
     </DetailPageHeader>
 
-    <AdminMetricGrid>
-      <MetricCard
-        label="Total Raised"
-        :value="formattedTotals"
-        icon="Wallet"
-        color="green"
-        :progress="calculateProgress(event)"
-        progress-label="Goal Progress (GHS)"
-      />
-      <MetricCard
-        label="Recipient Funds"
-        :value="event.fundCount.toString()"
-        icon="Target"
-        color="purple"
-      />
-      <MetricCard
-        label="Contributions"
-        value="0" 
-        icon="Gift"
-        color="blue"
-      />
-      <MetricCard
-        label="Collectors"
-        :value="event.collectorCount.toString()"
-        icon="Users"
-        color="amber"
-      />
-    </AdminMetricGrid>
+    <!-- Status Bar / Performance Overview -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-wrap items-center gap-x-12 gap-y-6">
+      <div class="space-y-1">
+        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Collections</p>
+        <p class="text-xl font-black text-slate-900 italic leading-none">{{ formattedTotals }}</p>
+      </div>
+      
+      <div class="space-y-1">
+        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Recipient Funds</p>
+        <div class="flex items-center gap-2">
+          <p class="text-xl font-black text-slate-900 leading-none">{{ event.fundCount }}</p>
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Active targets</span>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Goal Progress (GHS)</p>
+        <div class="flex items-center gap-3">
+          <div class="w-32 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-violet-600 rounded-full" :style="{ width: `${calculateProgress(event)}%` }" />
+          </div>
+          <span class="text-xs font-black text-slate-900">{{ calculateProgress(event) }}%</span>
+        </div>
+      </div>
+
+      <div class="ml-auto flex items-center gap-8">
+        <div class="text-right space-y-1">
+          <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Collectors</p>
+          <p class="text-sm font-black text-slate-900">{{ event.collectorCount }} Assigned</p>
+        </div>
+      </div>
+    </div>
 
     <div class="space-y-8">
       <DetailTabs
