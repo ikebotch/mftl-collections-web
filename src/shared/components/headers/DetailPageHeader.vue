@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
+  <div class="w-full mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
     <!-- Breadcrumb -->
     <button
       v-if="backTo"
@@ -11,9 +11,10 @@
       Back to {{ backLabel || 'list' }}
     </button>
 
-    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
-      <div class="flex items-start gap-5 min-w-0 flex-1">
-        <!-- Optional Image/Icon Prefix -->
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-center">
+      <!-- Title Section -->
+      <div class="flex items-center gap-6 min-w-0">
+        <!-- Modern Image Prefix -->
         <div 
           v-if="imageUrl || $slots.prefix"
           class="w-14 h-14 shrink-0 rounded-none bg-slate-50 border border-slate-200 overflow-hidden flex items-center justify-center shadow-sm"
@@ -26,10 +27,10 @@
           <slot v-else name="prefix" />
         </div>
 
-        <div class="space-y-2 min-w-0 flex-1">
-          <div class="flex items-center gap-4 flex-wrap">
+        <div class="min-w-0">
+          <div class="flex items-center gap-4">
             <h1 
-              class="text-3xl font-black tracking-tighter text-slate-900 leading-none truncate max-w-full"
+              class="text-3xl font-black tracking-tighter text-slate-900 leading-tight truncate"
               :title="title"
             >
               {{ title }}
@@ -38,7 +39,7 @@
           </div>
           <p
             v-if="description"
-            class="text-xs font-medium text-slate-400 max-w-3xl leading-relaxed uppercase tracking-widest opacity-80 truncate"
+            class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] opacity-80 truncate mt-1"
             :title="description"
           >
             {{ description }}
@@ -46,9 +47,10 @@
         </div>
       </div>
 
+      <!-- Actions Section - Forced to the far right -->
       <div
         v-if="$slots.actions"
-        class="flex shrink-0 items-center gap-3 pt-1"
+        class="flex shrink-0 items-center gap-3 ml-auto"
       >
         <slot name="actions" />
       </div>
