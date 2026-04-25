@@ -1,83 +1,83 @@
 <template>
-  <div class="space-y-4">
+  <div class="space-y-6">
     <div
       v-if="isLoading"
-      class="flex items-center gap-3 py-4"
+      class="flex items-center gap-4 py-8"
     >
       <Loader2 class="w-4 h-4 animate-spin text-slate-400" />
-      <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Syncing funds...</span>
+      <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Syncing Strategic Streams...</span>
     </div>
     <div
       v-else-if="isError"
-      class="py-4 text-[10px] font-black uppercase tracking-widest text-red-500"
+      class="py-8 text-[10px] font-black uppercase tracking-[0.2em] text-rose-500"
     >
-      Failed to load funds.
+      Failed to establish connection to fund service.
     </div>
     <div
       v-else-if="funds.length === 0"
-      class="py-8 text-center rounded-none border border-dashed border-slate-200"
+      class="py-16 text-center border border-dashed border-slate-100"
     >
-      <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">
-        No recipient funds defined
+      <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 italic">
+        Zero strategic allocations defined
       </p>
     </div>
     <div
       v-else
-      class="grid grid-cols-1 md:grid-cols-2 gap-3"
+      class="grid grid-cols-1 md:grid-cols-2 gap-6"
     >
       <div
         v-for="fund in funds"
         :key="fund.id"
-        class="p-5 rounded-none border border-slate-100 bg-white hover:border-violet-100 transition-colors"
+        class="p-8 bg-white border border-slate-50 hover:border-violet-100 transition-all duration-300 group shadow-sm hover:shadow-md"
       >
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <p class="text-xs font-black text-slate-900 tracking-tight uppercase leading-none">
+        <div class="flex items-start justify-between mb-8">
+          <div class="space-y-3">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">
+              Strategic Target
+            </p>
+            <p class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none max-w-[200px] truncate" :title="fund.name">
               {{ fund.name }}
             </p>
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 leading-none">
-              Financial Target
-            </p>
           </div>
-          <div class="text-right">
-            <div class="flex flex-col items-end gap-1">
+          <div class="text-right space-y-3">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">
+              Raised Today
+            </p>
+            <div class="flex flex-col items-end gap-1.5">
               <p
                 v-for="t in fund.totals"
                 :key="t.currency"
-                class="text-xs font-black text-slate-900 italic tracking-tight leading-none"
+                class="text-sm font-black text-slate-900 italic tracking-tighter leading-none"
               >
                 {{ formatCurrency(t.amount, t.currency) }}
               </p>
               <p
                 v-if="!fund.totals?.length"
-                class="text-xs font-black text-slate-900 italic leading-none"
+                class="text-sm font-black text-slate-900 italic leading-none"
               >
                 GHS 0.00
               </p>
             </div>
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 leading-none">
-              Raised
-            </p>
           </div>
         </div>
 
         <div v-if="fund.targetAmount > 0">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
-            <span class="text-[9px] font-black text-slate-900">{{ calculateProgress(fund) }}%</span>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Deployment Progress</span>
+            <span class="text-[10px] font-black text-slate-900 tabular-nums">{{ calculateProgress(fund) }}%</span>
           </div>
-          <div class="h-1 w-full bg-slate-50 border border-slate-100 overflow-hidden">
+          <div class="h-0.5 w-full bg-slate-50 overflow-hidden">
             <div 
-              class="h-full bg-emerald-500 transition-all duration-1000"
+              class="h-full bg-slate-900 group-hover:bg-violet-600 transition-all duration-1000"
               :style="{ width: `${calculateProgress(fund)}%` }"
             />
           </div>
         </div>
         <div 
           v-else 
-          class="pt-3 border-t border-slate-50 mt-1"
+          class="pt-6 border-t border-slate-50"
         >
-          <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">Open Target Scope</span>
+          <span class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] italic">Open Target Scope</span>
         </div>
       </div>
     </div>
@@ -109,6 +109,7 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+
 function calculateProgress(fund: RecipientFund) {
   if (!fund.targetAmount || !fund.totals?.length) return 0
   const ghsTotal = fund.totals.find(t => t.currency === 'GHS')?.amount ?? 0

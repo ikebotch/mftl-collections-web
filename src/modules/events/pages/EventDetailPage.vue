@@ -16,7 +16,7 @@
     v-else-if="event"
     class="space-y-10 pb-20"
   >
-    <!-- Page Header -->
+    <!-- 1. Page Header (Pixel Standard) -->
     <DetailPageHeader
       :title="`${event.title} ${event.id.slice(0, 8)}`"
       description="Operational management, fund allocation, and contribution auditing."
@@ -25,7 +25,7 @@
       :image-url="event.displayImageUrl"
     >
       <template #status>
-        <div class="flex items-center gap-2.5 px-3 py-1.5 bg-white border border-slate-100 shadow-sm shrink-0">
+        <div class="flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
           <div 
             class="w-1.5 h-1.5 rounded-full"
             :class="event.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
@@ -37,7 +37,7 @@
       </template>
 
       <template #actions>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
           <AppButton
             variant="secondary"
             size="sm"
@@ -57,42 +57,11 @@
             <template #icon><Link2 class="w-3.5 h-3.5 mr-2.5 text-slate-400" /></template>
             Copy
           </AppButton>
-
-          <!-- Icon Only Actions -->
-          <div class="flex items-center gap-1.5 ml-4 pl-4 border-l border-slate-100 shrink-0">
-            <AppButton
-              variant="ghost"
-              size="sm"
-              class="w-10 p-0 text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-colors"
-              title="Manage Recipient Funds"
-              @click="activeTab = 'funds'"
-            >
-              <Target class="w-4 h-4" />
-            </AppButton>
-            <AppButton
-              variant="ghost"
-              size="sm"
-              class="w-10 p-0 text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
-              title="Event Analytics"
-              @click="router.push(`/admin/events/${event.id}/analytics`)"
-            >
-              <BarChart2 class="w-4 h-4" />
-            </AppButton>
-            <AppButton
-              variant="ghost"
-              size="sm"
-              class="w-10 p-0 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-              title="Archive Event"
-              @click="handleArchive"
-            >
-              <Trash2 class="w-4 h-4" />
-            </AppButton>
-          </div>
         </div>
       </template>
     </DetailPageHeader>
 
-    <div class="space-y-8">
+    <div class="space-y-12">
       <DetailTabs
         v-model="activeTab"
         :tabs="tabs"
@@ -108,11 +77,11 @@
             <!-- Event Details -->
             <AppCard 
               id="section-detail"
-              class="!p-10 scroll-mt-10 border-slate-200"
+              class="!p-12 scroll-mt-10 border-slate-100"
             >
-              <div class="flex items-center justify-between mb-10">
-                <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-                  Event Detail
+              <div class="flex items-center justify-between mb-12">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                  Event Identity
                 </h3>
                 <AppButton
                   v-if="!isEditing"
@@ -121,61 +90,61 @@
                   class="bg-transparent border-slate-200"
                   @click="startEditing"
                 >
-                  Edit Details
+                  Edit Identity
                 </AppButton>
               </div>
 
               <div
                 v-if="!isEditing"
-                class="space-y-10"
+                class="space-y-12"
               >
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div class="space-y-1.5">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div class="space-y-3">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]">
                       Campaign Title
                     </p>
-                    <p class="text-lg font-black text-slate-900 tracking-tight leading-none uppercase">
+                    <p class="text-xl font-black text-slate-900 tracking-tighter uppercase leading-none">
                       {{ event.title }}
                     </p>
                   </div>
-                  <div class="space-y-1.5">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                  <div class="space-y-3">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]">
                       Public Path
                     </p>
-                    <p class="text-lg font-black text-slate-900 tracking-tight leading-none italic underline decoration-slate-200">
+                    <p class="text-lg font-black text-slate-900 tracking-tighter italic decoration-slate-200 leading-none">
                       /give/{{ event.slug }}
                     </p>
                   </div>
                 </div>
 
-                <div class="space-y-1.5">
-                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
-                    Operational Description
+                <div class="space-y-3">
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]">
+                    Operational Narrative
                   </p>
-                  <p class="text-sm font-medium text-slate-600 leading-relaxed max-w-2xl">
-                    {{ event.description || 'No description provided.' }}
+                  <p class="text-[13px] font-medium text-slate-500 leading-relaxed max-w-3xl">
+                    {{ event.description || 'No operational narrative provided for this campaign.' }}
                   </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div class="space-y-1.5">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div class="space-y-3">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]">
                       Launch Date
                     </p>
-                    <p class="text-sm font-black text-slate-900 uppercase">
+                    <p class="text-sm font-black text-slate-900 uppercase tracking-widest leading-none">
                       {{ formatDate(event.eventDate) }}
                     </p>
                   </div>
-                  <div class="space-y-1.5">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
-                      Administrative Status
+                  <div class="space-y-3">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]">
+                      System Status
                     </p>
-                    <div class="pt-1 flex items-center gap-2">
+                    <div class="flex items-center gap-2.5">
                       <div 
                         class="w-1.5 h-1.5 rounded-full"
                         :class="event.isActive ? 'bg-emerald-500' : 'bg-slate-300'"
                       />
-                      <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                      <span class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">
                         {{ event.isActive ? 'Active / Visible' : 'Inactive / Draft' }}
                       </span>
                     </div>
@@ -186,12 +155,12 @@
               <!-- Edit Mode -->
               <div
                 v-else
-                class="space-y-8"
+                class="space-y-10"
               >
-                <div class="grid md:grid-cols-2 gap-8">
+                <div class="grid md:grid-cols-2 gap-10">
                   <AppInput
                     v-model="form!.title"
-                    label="Title"
+                    label="Campaign Title"
                     placeholder="Event title"
                     required
                   />
@@ -207,21 +176,20 @@
                   </AppInput>
                 </div>
                 <AppTextarea
-                  id="event-description"
                   v-model="form!.description"
-                  label="Description"
+                  label="Operational Narrative"
                   placeholder="Event purpose..."
                   :rows="4"
                 />
-                <div class="grid grid-cols-2 gap-8">
+                <div class="grid grid-cols-2 gap-10">
                   <AppInput
                     v-model="form!.eventDate as string"
                     type="date"
-                    label="Start Date"
+                    label="Launch Date"
                   />
                   <AppSelect
                     v-model="form!.isActive"
-                    label="Status"
+                    label="Deployment Status"
                     :options="[
                       { label: 'Active', value: true },
                       { label: 'Inactive / Draft', value: false },
@@ -235,11 +203,11 @@
             <!-- Recipient Funds -->
             <AppCard 
               id="section-funds"
-              class="!p-10 scroll-mt-10 border-slate-200"
+              class="!p-12 scroll-mt-10 border-slate-100"
             >
-              <div class="flex items-center justify-between mb-8">
-                <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-                  Recipient Funds
+              <div class="flex items-center justify-between mb-10">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                  Strategic Allocations
                 </h3>
                 <AppButton
                   variant="secondary"
@@ -256,21 +224,21 @@
             <!-- Event Images (Modern) -->
             <AppCard 
               id="section-images"
-              class="!p-10 scroll-mt-10 border-slate-200"
+              class="!p-12 scroll-mt-10 border-slate-100"
             >
-              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10">
+              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-12">
                 Media & Branding
               </h3>
               
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-12">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-16">
                 <ModernImageInput 
                   v-model="displayImageUrlProxy"
-                  label="System / Display Image"
+                  label="System Image"
                   :icon="ImageIcon"
                 />
                 <ModernImageInput 
                   v-model="receiptLogoUrlProxy"
-                  label="Receipt / POS Logo"
+                  label="Receipt Logo"
                   :icon="Printer"
                 />
               </div>
@@ -281,11 +249,11 @@
         <!-- Recipient Funds Tab -->
         <div
           v-else-if="activeTab === 'funds'"
-          class="space-y-6"
+          class="space-y-8"
         >
-          <div class="flex justify-between items-center mb-8">
-            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-              Assigned Recipient Funds
+          <div class="flex justify-between items-center mb-10">
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+              Strategic Allocations
             </h3>
             <AppButton
               variant="primary"
@@ -303,8 +271,8 @@
           v-else-if="activeTab === 'collectors'"
           class="space-y-8"
         >
-          <div class="flex justify-between items-center mb-8">
-            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+          <div class="flex justify-between items-center mb-10">
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
               Assigned Field Staff
             </h3>
             <AppButton
@@ -323,9 +291,9 @@
           v-else-if="activeTab === 'activity'"
           class="space-y-8"
         >
-          <AppCard class="!p-10 max-w-4xl border-slate-200">
-            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10">
-              Event Audit Log
+          <AppCard class="!p-12 max-w-4xl border-slate-100">
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-12">
+              Audit Stream
             </h3>
             <AuditTimeline :events="auditItems" />
           </AppCard>
@@ -334,19 +302,19 @@
         <!-- Settings Tab -->
         <div
           v-else-if="activeTab === 'settings'"
-          class="space-y-10"
+          class="space-y-12"
         >
-          <AppCard class="!p-10 max-w-4xl border-slate-200">
-            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10">
+          <AppCard class="!p-12 max-w-4xl border-slate-100">
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-12">
               Operational Settings
             </h3>
-            <div class="space-y-8">
-              <div class="flex items-center justify-between p-8 bg-slate-50/50 border border-slate-200">
-                <div class="space-y-1.5">
-                  <p class="text-sm font-black text-slate-900 tracking-tight leading-none uppercase">
+            <div class="space-y-10">
+              <div class="flex items-center justify-between p-10 bg-slate-50/50 border border-slate-100">
+                <div class="space-y-2">
+                  <p class="text-sm font-black text-slate-900 tracking-tighter uppercase">
                     Collection Visibility
                   </p>
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Toggle whether this event is visible on the public storefront
                   </p>
                 </div>
@@ -361,17 +329,17 @@
                 />
               </div>
               
-              <div class="flex items-center justify-between p-8 bg-rose-50/30 border border-rose-100">
-                <div class="space-y-1.5">
-                  <p class="text-sm font-black text-rose-900 tracking-tight leading-none uppercase">
-                    Archive Event
+              <div class="flex items-center justify-between p-10 bg-rose-50/30 border border-rose-100">
+                <div class="space-y-2">
+                  <p class="text-sm font-black text-rose-900 tracking-tighter uppercase">
+                    Archive Campaign
                   </p>
-                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest mt-1">
-                    Permanently remove this event and all associated assignments from the active stream
+                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest">
+                    Permanently remove this campaign from the active operational stream
                   </p>
                 </div>
-                <AppButton variant="ghost" class="text-rose-600 hover:bg-rose-100 border border-transparent hover:border-rose-200 px-6 font-black uppercase tracking-widest text-[10px]">
-                  Delete Event
+                <AppButton variant="ghost" class="text-rose-600 hover:bg-rose-100 border border-transparent hover:border-rose-200 px-6 font-black uppercase tracking-widest text-[9px]">
+                  Delete Campaign
                 </AppButton>
               </div>
             </div>
@@ -389,24 +357,24 @@
             class="flex items-center gap-2"
           >
             <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
-            <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Saving changes...</span>
+            <span class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Saving changes...</span>
           </div>
           <span
             v-else
-            class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic"
+            class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic"
           >You have unsaved changes</span>
         </div>
       </template>
       <AppButton
         variant="outline"
-        class="bg-transparent border-slate-200"
+        class="bg-transparent border-slate-200 px-10"
         @click="cancelEditing"
       >
         Cancel
       </AppButton>
       <AppButton
         variant="primary"
-        class="px-10"
+        class="px-12"
         :loading="updateMutation.isPending.value"
         @click="handleSave"
       >
@@ -438,7 +406,6 @@ import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue
 import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
 import { formatDate } from '@/core/formatting/formatters'
 import { 
-  Target, 
   ExternalLink, 
   Link2,
   Plus,
@@ -447,9 +414,7 @@ import {
   History,
   LayoutDashboard,
   Users,
-  Settings,
-  Trash2,
-  BarChart2
+  Settings
 } from 'lucide-vue-next'
 import type { UpdateEventInput } from '../types/event'
 
