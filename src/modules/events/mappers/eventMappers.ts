@@ -22,5 +22,7 @@ export function mapEventDto(dto: EventDto): Event {
     fundCount: dto.fundCount ?? 0,
     collectorCount: dto.collectorCount ?? 0,
     slug: dto.slug ?? id.slice(0, 8),
+    displayImageUrl: dto.displayImageUrl,
+    receiptLogoUrl: dto.receiptLogoUrl,
   }
 }

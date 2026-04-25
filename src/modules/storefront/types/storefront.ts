@@ -2,8 +2,8 @@ export interface StorefrontEvent {
   slug: string
   title: string
   description: string
-  heroImageLabel: string
-  trustNote: string
+  displayImageUrl?: string
+  trustNote?: string
 }
 
 export interface ContributionDraft {

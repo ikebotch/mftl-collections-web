@@ -167,7 +167,6 @@
             </AppButton>
             <RowActions
               :actions="[
-                { label: 'Edit Event', icon: 'Edit3', onClick: () => router.push(`/admin/events/${row.id}/edit`) },
                 { label: 'Manage Funds', icon: 'Target', onClick: () => router.push(`/admin/events/${row.id}/recipient-funds`) },
                 { label: 'View Analytics', icon: 'BarChart2', onClick: () => router.push(`/admin/events/${row.id}/analytics`) }
               ]"
