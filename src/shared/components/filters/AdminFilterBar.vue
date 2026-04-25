@@ -1,24 +1,25 @@
 <template>
-  <div class="flex flex-col gap-4 md:flex-row md:items-center justify-between mb-6 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+  <div class="flex flex-col gap-4 md:flex-row md:items-center justify-between mb-8 bg-slate-50/10 p-5 rounded-none border border-slate-200">
     <div class="flex-1 max-w-md">
-      <div class="relative">
-        <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+      <div class="relative group">
+        <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 group-focus-within:text-violet-500 transition-colors" />
         <input
           type="text"
-          :value="search"
-          :placeholder="searchPlaceholder"
-          class="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none"
-          @input="$emit('update:search', ($event.target as HTMLInputElement).value)"
+          :value="modelValue"
+          :placeholder="placeholder"
+          class="w-full pl-11 pr-4 py-2.5 bg-transparent border border-slate-200 rounded-none text-sm font-medium placeholder:text-slate-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none"
+          @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         >
       </div>
     </div>
     
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-4">
+      <slot name="extra" />
       <slot />
       <button
         v-if="showClear"
         type="button"
-        class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-rose-600 transition-colors"
+        class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-rose-600 transition-colors italic"
         @click="$emit('clear')"
       >
         Clear Filters
@@ -31,17 +32,17 @@
 import { Search } from 'lucide-vue-next'
 
 withDefaults(defineProps<{
-  search?: string
-  searchPlaceholder?: string
+  modelValue?: string
+  placeholder?: string
   showClear?: boolean
 }>(), {
-  search: '',
-  searchPlaceholder: 'Search...',
+  modelValue: '',
+  placeholder: 'Search...',
   showClear: false
 })
 
 defineEmits<{
-  'update:search': [value: string]
+  'update:modelValue': [value: string]
   clear: []
 }>()
 </script>

@@ -1,29 +1,35 @@
 <template>
   <div class="min-h-screen bg-slate-50/50 pb-32">
     <!-- Centered Header Area -->
-    <div class="max-w-4xl mx-auto pt-16 pb-12 px-6">
-      <header class="text-center mb-12">
+    <div class="max-w-[1200px] mx-auto pt-16 pb-12 px-8">
+      <header class="mb-16">
         <h1 class="text-4xl font-black font-display tracking-tight text-slate-900 mb-4">
-          {{ currentStep === 5 ? 'Review & Publish' : 'Create Event' }}
+          Create New Event
         </h1>
-        <p class="text-slate-500 font-medium text-lg max-w-xl mx-auto leading-relaxed">
-          {{ stepDescriptions[currentStep - 1] }}
+        <p class="text-slate-500 font-medium text-lg max-w-xl leading-relaxed">
+          Set up a new collection campaign, define target funds, and configure payment methods.
         </p>
       </header>
 
-      <StepIndicator 
-        :steps="['Basics', 'Funds', 'Payments', 'Collectors', 'Review']"
-        :current-step="currentStep"
-      />
+      <AdminWizardLayout 
+        :sections="steps" 
+        title="Creation Steps"
+      >
+        <!-- Step 1: Basics -->
+        <AppCard 
+          id="section-basics"
+          class="!p-10 scroll-mt-10"
+        >
+          <div class="mb-10">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+              Step 01
+            </h3>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+              Event Basics
+            </h2>
+          </div>
 
-      <!-- Main Creation Card -->
-      <AppCard class="shadow-premium border-none !p-0 overflow-hidden bg-white rounded-[2rem]">
-        <div class="p-10 md:p-12">
-          <!-- Step 1: Basics -->
-          <div
-            v-if="currentStep === 1"
-            class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
-          >
+          <div class="space-y-10">
             <div class="grid md:grid-cols-2 gap-10">
               <AppInput 
                 v-model="form.title"
@@ -66,65 +72,6 @@
               />
             </div>
 
-            <div class="grid md:grid-cols-2 gap-10">
-              <div class="space-y-4">
-                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">System/Display Image</label>
-                <div class="space-y-3">
-                  <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
-                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
-                      <img
-                        v-if="form.displayImageUrl"
-                        :src="form.displayImageUrl"
-                        class="w-full h-full object-cover rounded-lg"
-                      >
-                      <ImageIcon
-                        v-else
-                        class="w-6 h-6"
-                      />
-                    </div>
-                    <div class="flex-1">
-                      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        {{ form.displayImageUrl ? 'External URL Set' : 'No file chosen' }}
-                      </p>
-                    </div>
-                  </div>
-                  <AppInput
-                    v-model="form.displayImageUrl"
-                    placeholder="https://image-url.com/event.jpg"
-                    class="!bg-white"
-                  />
-                </div>
-              </div>
-              <div class="space-y-4">
-                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Receipt/POS Logo</label>
-                <div class="space-y-3">
-                  <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
-                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
-                      <img
-                        v-if="form.receiptLogoUrl"
-                        :src="form.receiptLogoUrl"
-                        class="w-full h-full object-contain p-1"
-                      >
-                      <Printer
-                        v-else
-                        class="w-6 h-6"
-                      />
-                    </div>
-                    <div class="flex-1">
-                      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        {{ form.receiptLogoUrl ? 'External URL Set' : 'Default active' }}
-                      </p>
-                    </div>
-                  </div>
-                  <AppInput
-                    v-model="form.receiptLogoUrl"
-                    placeholder="https://image-url.com/logo.png"
-                    class="!bg-white"
-                  />
-                </div>
-              </div>
-            </div>
-
             <div class="pt-4">
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 block">
                 Initial Visibility
@@ -134,8 +81,8 @@
                   v-for="status in ['Draft', 'Live', 'Closed']"
                   :key="status"
                   type="button"
-                  class="flex-1 py-4 px-6 rounded-2xl border-2 transition-all font-bold text-sm"
-                  :class="form.status === status ? 'border-violet-600 bg-violet-50 text-violet-700' : 'border-slate-100 text-slate-500 hover:border-slate-200'"
+                  class="flex-1 py-4 px-6 rounded-none border-2 transition-all font-bold text-sm"
+                  :class="form.status === status ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 text-slate-500 hover:border-slate-400'"
                   @click="form.status = status"
                 >
                   {{ status }}
@@ -143,365 +90,185 @@
               </div>
             </div>
           </div>
+        </AppCard>
 
-          <!-- Step 2: Recipient Funds -->
-          <div
-            v-if="currentStep === 2"
-            class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
-          >
-            <div class="flex items-center justify-between border-b border-slate-100 pb-6">
-              <div>
-                <h3 class="text-xl font-bold text-slate-900">
-                  Allocation Funds
-                </h3>
-                <p class="text-sm text-slate-500 font-medium">
-                  Define where the collected contributions will go.
-                </p>
-              </div>
-              <AppButton
-                size="sm"
-                variant="outline"
-                class="!rounded-xl"
-                @click="addFund"
-              >
-                <Plus class="w-4 h-4 mr-2" /> Add Fund
-              </AppButton>
-            </div>
-
-            <div class="space-y-6">
-              <div 
-                v-for="(fund, index) in form.recipientFunds" 
-                :key="index"
-                class="p-8 rounded-[1.5rem] border border-slate-100 bg-slate-50/30 flex gap-8 items-start relative group transition-all hover:bg-slate-50/50"
-              >
-                <div class="flex-1 space-y-6">
-                  <div class="grid md:grid-cols-2 gap-6">
-                    <AppInput
-                      v-model="fund.name"
-                      label="Fund Name"
-                      placeholder="e.g. Clean Water Wells"
-                      required
-                    />
-                    <AppInput
-                      v-model="fund.targetAmount"
-                      type="number"
-                      label="Target Amount"
-                      placeholder="0.00"
-                      required
-                    >
-                      <template #prefix>
-                        <span class="text-slate-400 font-bold">{{ form.currency }}</span>
-                      </template>
-                    </AppInput>
-                  </div>
-                  <AppInput
-                    v-model="fund.description"
-                    label="Description"
-                    placeholder="Short summary of this fund's purpose..."
-                  />
-                  <div class="flex items-center justify-between pt-2">
-                    <div class="flex items-center gap-2">
-                      <AppSwitch v-model="fund.isActive" />
-                      <span class="text-xs font-bold text-slate-600">Fund Active</span>
-                    </div>
-                  </div>
-                </div>
-                <button 
-                  v-if="form.recipientFunds.length > 1"
-                  class="p-2 text-slate-300 hover:text-red-500 transition-colors"
-                  @click="removeFund(index)"
-                >
-                  <Trash2 class="w-5 h-5" />
-                </button>
-              </div>
-              
-              <div
-                v-if="form.recipientFunds.length === 0"
-                class="text-center py-20 border-2 border-dashed border-slate-100 rounded-[2rem] bg-slate-50/20"
-              >
-                <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
-                  <Plus class="w-8 h-8" />
-                </div>
-                <p class="text-slate-500 font-bold text-lg">
-                  No funds added yet
-                </p>
-                <p class="text-slate-400 text-sm mb-8">
-                  Every event needs at least one target fund.
-                </p>
-                <AppButton
-                  variant="primary"
-                  class="!rounded-xl"
-                  @click="addFund"
-                >
-                  Add Recipient Fund
-                </AppButton>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 3: Payments & Currency -->
-          <div
-            v-if="currentStep === 3"
-            class="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
-          >
-            <div class="grid md:grid-cols-2 gap-12">
-              <div class="space-y-8">
-                <div>
-                  <h3 class="text-lg font-bold text-slate-900 mb-2">
-                    Currency Settings
-                  </h3>
-                  <p class="text-sm text-slate-500 mb-6 font-medium">
-                    Define the base and accepted currencies for this campaign.
-                  </p>
-                </div>
-                <AppSelect 
-                  v-model="form.currency"
-                  label="Primary Currency"
-                  :options="[{ label: 'GHS - Ghana Cedi', value: 'GHS' }, { label: 'USD - US Dollar', value: 'USD' }, { label: 'GBP - British Pound', value: 'GBP' }]"
-                />
-                
-                <div class="p-6 rounded-2xl bg-violet-50/50 border border-violet-100">
-                  <p class="text-[10px] font-black uppercase tracking-widest text-violet-600 mb-2">
-                    Notice
-                  </p>
-                  <p class="text-xs text-violet-700 leading-relaxed font-medium">
-                    Payment and currency settings are pending backend support. These selections will be saved as metadata.
-                  </p>
-                </div>
-              </div>
-
-              <div class="space-y-8">
-                <div>
-                  <h3 class="text-lg font-bold text-slate-900 mb-2">
-                    Payment Methods
-                  </h3>
-                  <p class="text-sm text-slate-500 mb-6 font-medium">
-                    Select the methods donors can use to contribute.
-                  </p>
-                </div>
-                <div class="space-y-3">
-                  <label
-                    v-for="method in paymentMethods"
-                    :key="method.id"
-                    class="flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer"
-                    :class="form.acceptedMethods.includes(method.id) ? 'border-violet-600 bg-violet-50/30' : 'border-slate-100 bg-white hover:border-slate-200'"
-                  >
-                    <input
-                      v-model="form.acceptedMethods"
-                      type="checkbox"
-                      :value="method.id"
-                      class="w-5 h-5 rounded-md border-slate-300 text-violet-600 focus:ring-violet-500"
-                    >
-                    <div class="flex-1">
-                      <p class="text-sm font-bold text-slate-900">{{ method.label }}</p>
-                      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ method.description }}</p>
-                    </div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-10 border-t border-slate-100 pt-10">
-              <AppInput 
-                v-model="form.minContribution"
-                type="number"
-                label="Minimum Contribution"
-                placeholder="1.00"
-              />
-              <AppInput 
-                v-model="form.suggestedAmounts"
-                label="Suggested Amounts"
-                placeholder="10, 25, 50, 100"
-              />
-            </div>
-          </div>
-
-          <!-- Step 4: Collectors -->
-          <div
-            v-if="currentStep === 4"
-            class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
-          >
-            <div class="flex flex-col items-center justify-center py-12 text-center">
-              <div class="w-20 h-20 rounded-[2rem] bg-violet-50 flex items-center justify-center text-violet-600 mb-8">
-                <Users class="w-10 h-10" />
-              </div>
-              <h3 class="text-2xl font-bold text-slate-900">
-                Collector Configuration
+        <!-- Step 2: Recipient Funds -->
+        <AppCard 
+          id="section-funds"
+          class="!p-10 scroll-mt-10"
+        >
+          <div class="flex items-center justify-between mb-10">
+            <div>
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+                Step 02
               </h3>
-              <p class="text-slate-500 mt-4 max-w-sm font-medium leading-relaxed">
-                Management of assigned collectors is currently pending backend support.
-              </p>
-              <div class="mt-8 px-6 py-2 rounded-full bg-amber-50 text-amber-700 text-[10px] font-black uppercase tracking-[0.2em] border border-amber-100">
-                Backend Pending
-              </div>
+              <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+                Allocation Funds
+              </h2>
             </div>
-
-            <div class="grid md:grid-cols-2 gap-10 border-t border-slate-100 pt-10">
-              <div class="flex items-center justify-between p-6 rounded-2xl bg-slate-50/50">
-                <div class="space-y-1">
-                  <p class="font-bold text-slate-900">
-                    Allow Cash Collection
-                  </p>
-                  <p class="text-xs text-slate-500 font-medium">
-                    Collectors can record physical cash.
-                  </p>
-                </div>
-                <AppSwitch v-model="form.allowCash" />
-              </div>
-              <div class="flex items-center justify-between p-6 rounded-2xl bg-slate-50/50">
-                <div class="space-y-1">
-                  <p class="font-bold text-slate-900">
-                    Auto-issue Receipts
-                  </p>
-                  <p class="text-xs text-slate-500 font-medium">
-                    Send email receipts immediately.
-                  </p>
-                </div>
-                <AppSwitch v-model="form.autoReceipt" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 5: Review & Publish -->
-          <div
-            v-if="currentStep === 5"
-            class="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
-          >
-            <div class="grid md:grid-cols-12 gap-12">
-              <div class="md:col-span-8 space-y-12">
-                <section>
-                  <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
-                    Campaign Details
-                  </h4>
-                  <div class="space-y-2">
-                    <p class="text-3xl font-black text-slate-900 tracking-tight">
-                      {{ form.title }}
-                    </p>
-                    <p class="text-slate-500 font-medium leading-relaxed">
-                      {{ form.description }}
-                    </p>
-                  </div>
-                  <div class="mt-6 flex items-center gap-4">
-                    <div class="px-4 py-2 rounded-xl bg-slate-100 text-[10px] font-black text-slate-600 uppercase tracking-widest">
-                      {{ form.slug }}
-                    </div>
-                    <div class="px-4 py-2 rounded-xl bg-emerald-100 text-[10px] font-black text-emerald-700 uppercase tracking-widest">
-                      {{ form.status }}
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
-                    Recipient Allocation
-                  </h4>
-                  <div class="grid gap-4">
-                    <div 
-                      v-for="fund in form.recipientFunds"
-                      :key="fund.name"
-                      class="p-6 rounded-2xl border border-slate-100 bg-white flex justify-between items-center"
-                    >
-                      <div>
-                        <p class="font-bold text-slate-900">
-                          {{ fund.name }}
-                        </p>
-                        <p class="text-xs text-slate-500">
-                          {{ fund.description || 'No description' }}
-                        </p>
-                      </div>
-                      <p class="text-lg font-black text-slate-900">
-                        {{ formatCurrency(fund.targetAmount, form.currency) }}
-                      </p>
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              <div class="md:col-span-4 space-y-8">
-                <div class="p-8 rounded-[2rem] bg-slate-900 text-white space-y-6">
-                  <h4 class="text-[10px] font-black uppercase tracking-widest opacity-50">
-                    Configuration Summary
-                  </h4>
-                  <div class="space-y-4">
-                    <div class="flex justify-between items-center pb-4 border-b border-white/10">
-                      <span class="text-xs font-bold opacity-60">Currency</span>
-                      <span class="text-xs font-black">{{ form.currency }}</span>
-                    </div>
-                    <div class="flex justify-between items-center pb-4 border-b border-white/10">
-                      <span class="text-xs font-bold opacity-60">Payments</span>
-                      <span class="text-xs font-black">{{ form.acceptedMethods.length }} enabled</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                      <span class="text-xs font-bold opacity-60">Start Date</span>
-                      <span class="text-xs font-black">{{ formatDate(form.startDate) }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div 
-              v-if="submissionError"
-              class="p-6 rounded-2xl bg-red-50 border border-red-100 flex gap-4 items-start"
+            <AppButton
+              size="sm"
+              variant="outline"
+              @click="addFund"
             >
-              <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600 flex-shrink-0">
-                <AlertCircle class="w-5 h-5" />
+              <Plus class="w-4 h-4 mr-2" /> Add Fund
+            </AppButton>
+          </div>
+
+          <div class="space-y-6">
+            <div 
+              v-for="(fund, index) in form.recipientFunds" 
+              :key="index"
+              class="p-8 rounded-none border border-slate-200 bg-slate-50/20 flex gap-8 items-start relative group transition-all"
+            >
+              <div class="flex-1 space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                  <AppInput
+                    v-model="fund.name"
+                    label="Fund Name"
+                    placeholder="e.g. Clean Water Wells"
+                    required
+                  />
+                  <AppInput
+                    v-model="fund.targetAmount"
+                    type="number"
+                    label="Target Amount"
+                    placeholder="0.00"
+                    required
+                  >
+                    <template #prefix>
+                      <span class="text-slate-400 font-bold">{{ form.currency }}</span>
+                    </template>
+                  </AppInput>
+                </div>
+                <AppInput
+                  v-model="fund.description"
+                  label="Description"
+                  placeholder="Short summary of this fund's purpose..."
+                />
+                <div class="flex items-center justify-between pt-2">
+                  <div class="flex items-center gap-2">
+                    <AppSwitch v-model="fund.isActive" />
+                    <span class="text-xs font-bold text-slate-600">Fund Active</span>
+                  </div>
+                </div>
               </div>
-              <div class="flex-1">
-                <p class="font-bold text-red-900">
-                  Partial Success Notice
-                </p>
-                <p class="text-sm text-red-700 leading-relaxed">
-                  {{ submissionError }}
-                </p>
-              </div>
+              <button 
+                v-if="form.recipientFunds.length > 1"
+                class="p-2 text-slate-300 hover:text-red-500 transition-colors"
+                @click="removeFund(index)"
+              >
+                <Trash2 class="w-5 h-5" />
+              </button>
             </div>
           </div>
-        </div>
-      </AppCard>
+        </AppCard>
+
+        <!-- Step 3: Modern Images -->
+        <AppCard 
+          id="section-images"
+          class="!p-10 scroll-mt-10"
+        >
+          <div class="mb-10">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+              Step 03
+            </h3>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+              Media & Branding
+            </h2>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-12">
+            <ModernImageInput 
+              v-model="form.displayImageUrl"
+              label="System / Display Image"
+              :icon="ImageIcon"
+            />
+            <ModernImageInput 
+              v-model="form.receiptLogoUrl"
+              label="Receipt / POS Logo"
+              :icon="Printer"
+            />
+          </div>
+        </AppCard>
+
+        <!-- Step 4: Payments -->
+        <AppCard 
+          id="section-payments"
+          class="!p-10 scroll-mt-10"
+        >
+          <div class="mb-10">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+              Step 04
+            </h3>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+              Payments & Currency
+            </h2>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-12">
+            <div class="space-y-8">
+              <AppSelect 
+                v-model="form.currency"
+                label="Primary Currency"
+                :options="[{ label: 'GHS - Ghana Cedi', value: 'GHS' }, { label: 'USD - US Dollar', value: 'USD' }, { label: 'GBP - British Pound', value: 'GBP' }]"
+              />
+              
+              <div class="p-6 border border-slate-200 bg-slate-50 italic text-xs text-slate-500">
+                Notice: Extended payment configuration will be available in the campaign settings after creation.
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <label
+                v-for="method in paymentMethods"
+                :key="method.id"
+                class="flex items-center gap-4 p-5 border transition-all cursor-pointer"
+                :class="form.acceptedMethods.includes(method.id) ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white hover:border-slate-400'"
+              >
+                <input
+                  v-model="form.acceptedMethods"
+                  type="checkbox"
+                  :value="method.id"
+                  class="w-5 h-5 rounded-none border-slate-300 text-violet-600 focus:ring-violet-500"
+                >
+                <div class="flex-1 text-left">
+                  <p class="text-sm font-bold">{{ method.label }}</p>
+                  <p class="text-[10px] font-bold uppercase tracking-widest opacity-60">{{ method.description }}</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </AppCard>
+      </AdminWizardLayout>
     </div>
 
     <!-- Sticky Bottom Bar -->
     <StickyFormActions>
       <template #left>
-        <AppButton 
-          variant="outline" 
-          class="!rounded-xl"
-          :disabled="isSubmitting"
-          @click="handleCancel"
-        >
-          Cancel
-        </AppButton>
+        <div class="flex items-center gap-4">
+          <AppButton 
+            variant="outline" 
+            :disabled="isSubmitting"
+            @click="handleCancel"
+          >
+            Cancel
+          </AppButton>
+          <div v-if="isSubmitting" class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
+            <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Publishing Event...</span>
+          </div>
+        </div>
       </template>
 
-      <div class="flex items-center gap-4">
-        <AppButton 
-          v-if="currentStep > 1"
-          variant="secondary" 
-          class="!rounded-xl"
-          :disabled="isSubmitting"
-          @click="prevStep"
-        >
-          Back
-        </AppButton>
-        <AppButton 
-          v-if="currentStep < 5"
-          variant="primary" 
-          class="!rounded-xl shadow-premium px-10"
-          @click="nextStep"
-        >
-          Continue
-        </AppButton>
-        <AppButton 
-          v-else
-          variant="primary" 
-          class="!rounded-xl shadow-premium px-10"
-          :loading="isSubmitting"
-          @click="submit"
-        >
-          {{ form.status === 'Live' ? 'Create & Publish' : 'Save Event' }}
-        </AppButton>
-      </div>
+      <AppButton 
+        variant="primary" 
+        class="px-12"
+        :loading="isSubmitting"
+        @click="submit"
+      >
+        {{ form.status === 'Live' ? 'Create & Publish' : 'Save Event' }}
+      </AppButton>
     </StickyFormActions>
   </div>
 </template>
@@ -511,37 +278,35 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCreateEvent } from '../composables/useEvents'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
+import { useToastStore } from '@/shared/stores/useToastStore'
+import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
+import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
-import StepIndicator from '@/shared/components/steppers/StepIndicator.vue'
-import { formatDate, formatCurrency } from '@/core/formatting/formatters'
-import { Plus, Trash2, Users, AlertCircle, Image as ImageIcon, Printer } from 'lucide-vue-next'
+import { Plus, Trash2, Image as ImageIcon, Printer } from 'lucide-vue-next'
 
 const router = useRouter()
+const toast = useToastStore()
 const createEventMutation = useCreateEvent()
 
-const currentStep = ref(1)
-const isSubmitting = ref(false)
-const submissionError = ref<string | null>(null)
-
-const stepDescriptions = [
-  'Set up the core identity of your campaign, including its public identity and duration.',
-  'Define specific funds where contributors can allocate their support.',
-  'Configure accepted currencies and payment methods for this event.',
-  'Set up collection preferences and collector-specific behaviors.',
-  'Check your configuration carefully before launching the campaign.'
+const steps = [
+  { id: 'section-basics', title: 'Basics', subtitle: 'Title & Identity' },
+  { id: 'section-funds', title: 'Funds', subtitle: 'Target Allocation' },
+  { id: 'section-images', title: 'Branding', subtitle: 'Images & Logos' },
+  { id: 'section-payments', title: 'Payments', subtitle: 'Financial Config' },
 ]
+
+const isSubmitting = ref(false)
 
 const paymentMethods = [
   { id: 'cash', label: 'Cash', description: 'Offline physical currency' },
   { id: 'momo', label: 'Mobile Money', description: 'MTN, Vodafone, Telecel' },
   { id: 'card', label: 'Card / Online', description: 'Credit and Debit cards' },
-  { id: 'bank', label: 'Bank Transfer', description: 'Direct wire transfer' }
 ]
 
 const form = reactive({
@@ -564,14 +329,6 @@ const form = reactive({
   ]
 })
 
-function nextStep() {
-  if (currentStep.value < 5) currentStep.value++
-}
-
-function prevStep() {
-  if (currentStep.value > 1) currentStep.value--
-}
-
 function addFund() {
   form.recipientFunds.push({ name: '', description: '', targetAmount: 0, isActive: true })
 }
@@ -585,11 +342,14 @@ function handleCancel() {
 }
 
 async function submit() {
+  if (!form.title || !form.slug) {
+    toast.error('Please complete the basic event information')
+    return
+  }
+
   isSubmitting.value = true
-  submissionError.value = null
   
   try {
-    // 1. Create the event
     const event = await createEventMutation.mutateAsync({
       title: form.title,
       description: form.description,
@@ -599,10 +359,9 @@ async function submit() {
       receiptLogoUrl: form.receiptLogoUrl
     })
     
-    // 2. Create recipient funds
     const validFunds = form.recipientFunds.filter(f => f.name.trim())
     if (validFunds.length > 0) {
-      const results = await Promise.allSettled(
+      await Promise.all(
         validFunds.map(f => recipientFundsService.create({
           eventId: event.id,
           name: f.name,
@@ -610,22 +369,13 @@ async function submit() {
           targetAmount: f.targetAmount
         }))
       )
-
-      const failures = results.filter(r => r.status === 'rejected')
-      if (failures.length > 0) {
-        submissionError.value = `The event was created successfully, but ${failures.length} of your target funds failed to save. You can manually add them in the event detail page.`
-        // Wait a bit so they can read the warning
-        setTimeout(() => {
-          router.push(`/admin/events/${event.id}`)
-        }, 5000)
-        return
-      }
     }
     
-    // 3. Navigate to detail
+    toast.success('Event created successfully')
     router.push(`/admin/events/${event.id}`)
   } catch (err: any) {
-    submissionError.value = err.message || 'Failed to create event. Please verify your details and try again.'
+    console.error('Submission failed:', err)
+    toast.error(err.message || 'Failed to create event')
   } finally {
     isSubmitting.value = false
   }

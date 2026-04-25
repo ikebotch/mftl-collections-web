@@ -7,7 +7,7 @@
       'disabled:opacity-40 disabled:cursor-not-allowed disabled:saturate-50',
       sizeClasses,
       variantClasses,
-      rounded ? 'rounded-full' : 'rounded-[1.25rem]'
+      rounded ? 'rounded-full' : 'rounded-none'
     ]"
     :aria-busy="loading ? 'true' : undefined"
     :aria-label="ariaLabel"

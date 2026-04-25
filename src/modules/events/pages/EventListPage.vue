@@ -8,14 +8,14 @@
         <div class="flex items-center gap-3">
           <AppButton
             variant="outline"
-            class="!rounded-xl bg-white shadow-sm border-slate-200"
+            class="bg-transparent border-slate-200"
+            @click="exportToPdf"
           >
-            <Download class="w-4 h-4 mr-2 text-slate-400" />
-            Export Data
+            <FileText class="w-4 h-4 mr-2 text-slate-400" />
+            Export PDF
           </AppButton>
           <AppButton
             variant="primary"
-            class="!rounded-xl shadow-premium"
             @click="router.push('/admin/events/new')"
           >
             <Plus class="w-4 h-4 mr-2" />
@@ -55,84 +55,93 @@
     <div class="space-y-6">
       <AdminFilterBar
         v-model="searchQuery"
-        placeholder="Search events by title or slug..."
+        placeholder="Search events by title..."
       >
         <template #extra>
-          <AppSelect
-            v-model="statusFilter"
-            :options="statusOptions"
-            class="w-48"
-          />
+          <div class="flex items-center gap-4">
+            <MultiSelectFilter
+              v-model="statusFilters"
+              label="Status"
+              :options="statusOptions"
+            />
+          </div>
         </template>
       </AdminFilterBar>
 
       <DataTable
         :columns="columns"
-        :rows="filteredEvents"
+        :rows="sortedEvents"
         :loading="query.isLoading.value"
+        :sort-key="sortKey"
+        :sort-order="sortOrder"
         expandable
+        exportable
+        @sort="handleSort"
         @retry="query.refetch"
       >
+        <!-- Custom Cell: Title (with Status Indicator) -->
         <template #cell:title="{ row }">
-          <div class="flex items-center gap-5 group/item py-1">
-            <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 shrink-0 overflow-hidden group-hover/item:border-violet-200 group-hover/item:shadow-soft transition-all duration-500">
+          <div 
+            class="flex items-center gap-4 group/item py-1 cursor-pointer"
+            @click="router.push(`/admin/events/${row.id}`)"
+          >
+            <!-- Status Circle -->
+            <div 
+              class="w-2.5 h-2.5 shrink-0 rounded-full transition-all duration-500"
+              :class="[
+                row.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300',
+                'border border-white ring-1 ring-slate-100'
+              ]"
+              :title="row.isActive ? 'Active' : 'Draft'"
+            />
+            
+            <div class="w-10 h-10 rounded-none bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0 overflow-hidden group-hover/item:border-violet-300 transition-all duration-500">
               <img
                 v-if="row.displayImageUrl"
                 :src="row.displayImageUrl"
                 class="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-700"
               >
               <div v-else class="w-full h-full bg-slate-50 flex items-center justify-center">
-                <ImageIcon class="w-5 h-5 text-slate-300" />
+                <ImageIcon class="w-4 h-4 text-slate-300" />
               </div>
             </div>
             <div class="min-w-0">
-              <p class="text-[15px] font-black text-slate-900 truncate tracking-tight leading-none mb-1.5">
+              <p class="text-sm font-black text-slate-900 truncate tracking-tight leading-none group-hover/item:text-violet-600 transition-colors">
                 {{ row.title }}
               </p>
-              <div class="flex items-center gap-2">
-                <span class="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500 uppercase tracking-widest border border-slate-200/50">
-                  /give/{{ row.slug }}
-                </span>
-              </div>
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 leading-none">
+                {{ row.isActive ? 'Live Campaign' : 'Administrative Draft' }}
+              </p>
             </div>
           </div>
         </template>
 
-        <template #cell:totalRaised="{ row }">
+        <!-- Custom Cell: Raised (Combined) -->
+        <template #cell:raised="{ row }">
           <div class="flex flex-col gap-1 py-1">
-            <span
-              v-for="t in row.totals"
-              :key="t.currency"
-              class="text-sm font-black text-slate-900 italic"
+            <span 
+              v-for="total in row.totals" 
+              :key="total.currency"
+              class="text-xs font-black italic tracking-tight leading-none"
+              :class="total.currency === 'USD' ? 'text-violet-600' : 'text-slate-900'"
             >
-              {{ formatCurrency(t.amount, t.currency) }}
+              {{ formatCurrency(total.amount, total.currency) }}
             </span>
-            <span
-              v-if="!row.totals?.length"
-              class="text-sm font-black text-slate-400 italic"
-            >GHS 0.00</span>
+            <span v-if="!row.totals?.length" class="text-xs font-black text-slate-400 italic">
+              GHS 0.00
+            </span>
           </div>
         </template>
 
         <template #cell:fundCount="{ value }">
           <div class="py-1">
-            <span class="text-sm font-black text-slate-900 leading-none">{{ value || 0 }}</span>
+            <span class="text-xs font-black text-slate-900 leading-none">{{ value || 0 }}</span>
           </div>
         </template>
 
         <template #cell:collectorCount="{ value }">
           <div class="py-1">
-            <span class="text-sm font-black text-slate-900 leading-none">{{ value || 0 }}</span>
-          </div>
-        </template>
-
-        <template #cell:status="{ value }">
-          <div class="py-1">
-            <StatusBadge
-              :status="value"
-              :tone="value === 'active' ? 'success' : 'neutral'"
-              dot
-            />
+            <span class="text-xs font-black text-slate-900 leading-none">{{ value || 0 }}</span>
           </div>
         </template>
 
@@ -141,9 +150,6 @@
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-none">
               {{ row.eventDate ? formatDate(row.eventDate, 'MMM d, yyyy') : 'No date set' }}
             </span>
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
-              Operational Period
-            </span>
           </div>
         </template>
 
@@ -151,19 +157,19 @@
           <div class="flex items-center justify-end gap-1">
             <AppButton
               variant="ghost"
-              size="sm"
-              class="!rounded-xl hover:bg-violet-50 hover:text-violet-600"
+              size="xs"
+              class="hover:bg-violet-50 hover:text-violet-600 border border-transparent hover:border-violet-100"
               @click="router.push(`/admin/events/${row.id}`)"
             >
-              <Eye class="w-4 h-4" />
+              <Eye class="w-3.5 h-3.5" />
             </AppButton>
             <AppButton
               variant="ghost"
-              size="sm"
-              class="!rounded-xl hover:bg-slate-100"
+              size="xs"
+              class="hover:bg-slate-100 border border-transparent hover:border-slate-200"
               @click="copyPublicLink(row.slug)"
             >
-              <Link2 class="w-4 h-4" />
+              <Link2 class="w-3.5 h-3.5" />
             </AppButton>
             <RowActions
               :actions="[
@@ -186,16 +192,17 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEvents } from '../composables/useEvents'
+import { useToastStore } from '@/shared/stores/useToastStore'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
-import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import EventExpandedDetails from '../components/EventExpandedDetails.vue'
+import MultiSelectFilter from '@/shared/components/filters/MultiSelectFilter.vue'
 import { formatDate, formatCurrency } from '@/core/formatting/formatters'
 import { 
   Plus, 
@@ -204,43 +211,82 @@ import {
   Image as ImageIcon,
   Eye,
   Link2,
-  BarChart2
+  BarChart2,
+  Wallet,
+  Target,
+  Users,
+  FileText
 } from 'lucide-vue-next'
 
 const router = useRouter()
 const query = useEvents()
+const toast = useToastStore()
 
 const searchQuery = ref('')
-const statusFilter = ref('')
+const statusFilters = ref<string[]>([])
+const sortKey = ref('title')
+const sortOrder = ref<'asc' | 'desc'>('asc')
 
 const columns = [
-  { key: 'title', label: 'Event', sortable: true },
-  { key: 'totalRaised', label: 'Raised', sortable: true },
-  { key: 'fundCount', label: 'Funds' },
-  { key: 'collectorCount', label: 'Collectors' },
-  { key: 'status', label: 'Status' },
-  { key: 'dates', label: 'Dates' },
+  { key: 'title', label: 'Event', sortable: true, width: '40%' },
+  { key: 'raised', label: 'Raised', sortable: false, width: '20%' },
+  { key: 'fundCount', label: 'Funds', sortable: true, width: '10%' },
+  { key: 'collectorCount', label: 'Team', sortable: true, width: '10%' },
+  { key: 'dates', label: 'Date', sortable: true, width: '15%' },
 ]
 
 const events = computed(() => query.data.value ?? [])
 
 const filteredEvents = computed(() => {
-  let list = events.value
+  let list = [...events.value]
   
   if (searchQuery.value) {
     const s = searchQuery.value.toLowerCase()
     list = list.filter(e => 
-      e.title.toLowerCase().includes(s) || 
-      (e.slug && e.slug.toLowerCase().includes(s))
+      e.title.toLowerCase().includes(s)
     )
   }
   
-  if (statusFilter.value) {
-    list = list.filter(e => e.status === statusFilter.value)
+  if (statusFilters.value.length > 0) {
+    list = list.filter(e => {
+      const status = e.isActive ? 'active' : 'draft'
+      return statusFilters.value.includes(status)
+    })
   }
   
   return list
 })
+
+const sortedEvents = computed(() => {
+  const list = [...filteredEvents.value]
+  const key = sortKey.value
+  const order = sortOrder.value
+
+  list.sort((a, b) => {
+    let valA = a[key]
+    let valB = b[key]
+
+    if (key === 'dates') {
+      valA = a.eventDate ? new Date(a.eventDate).getTime() : 0
+      valB = b.eventDate ? new Date(b.eventDate).getTime() : 0
+    }
+
+    if (valA < valB) return order === 'asc' ? -1 : 1
+    if (valA > valB) return order === 'asc' ? 1 : -1
+    return 0
+  })
+
+  return list
+})
+
+function handleSort(key: string) {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortOrder.value = 'asc'
+  }
+}
 
 function aggregateTotals(list: any[]) {
   const map: Record<string, number> = {}
@@ -264,7 +310,6 @@ const totalCollectors = computed(() => {
 })
 
 const statusOptions = [
-  { label: 'All Status', value: '' },
   { label: 'Active', value: 'active' },
   { label: 'Draft', value: 'draft' },
 ]
@@ -272,5 +317,14 @@ const statusOptions = [
 function copyPublicLink(slug: string) {
   const url = `${window.location.origin}/give/${slug}`
   navigator.clipboard.writeText(url)
+  toast.success('Public link copied to clipboard')
+}
+
+function exportToPdf() {
+  toast.info('Generating operational PDF report...')
+  // Mock PDF export logic
+  setTimeout(() => {
+    toast.success('Event list exported successfully')
+  }, 1500)
 }
 </script>

@@ -8,14 +8,13 @@
         <div class="flex items-center gap-3">
           <AppButton
             variant="outline"
-            class="!rounded-xl bg-white shadow-sm border-slate-200"
+            class="bg-transparent border-slate-200"
           >
             <Calendar class="w-4 h-4 mr-2 text-slate-400" />
             <span class="text-xs font-bold text-slate-700">Last 30 Days</span>
           </AppButton>
           <AppButton
             variant="primary"
-            class="!rounded-xl shadow-premium"
             @click="router.push('/admin/events/new')"
           >
             <Plus class="w-4 h-4 mr-2" />
@@ -78,20 +77,20 @@
         <!-- Main Activity Column -->
         <div class="lg:col-span-8 space-y-8">
           <!-- Recent Contributions with premium editorial styling -->
-          <AppCard class="!p-0 overflow-hidden border-none shadow-premium bg-white">
-            <div class="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+          <AppCard class="!p-0 border-slate-200">
+            <div class="p-8 border-b border-slate-200 flex items-center justify-between bg-slate-50/10">
               <div class="space-y-1">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-[0.2em] italic">
                   Live Contribution Stream
                 </h3>
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                  Real-time reconciliation across all organizations
+                  Real-time reconciliation across all active events
                 </p>
               </div>
               <AppButton
                 variant="ghost"
                 size="xs"
-                class="text-[9px] font-black uppercase tracking-widest hover:bg-white"
+                class="text-[9px] font-black uppercase tracking-widest hover:bg-slate-100 border border-slate-100"
                 @click="router.push('/admin/contributions')"
               >
                 Intelligence View
@@ -102,43 +101,43 @@
               v-if="!query.data.value?.recentContributions.length"
               class="p-16 text-center"
             >
-              <div class="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center mx-auto mb-4 border border-slate-100">
-                <Activity class="w-8 h-8 text-slate-200" />
+              <div class="w-12 h-12 rounded-none bg-slate-50 flex items-center justify-center mx-auto mb-4 border border-slate-200">
+                <Activity class="w-6 h-6 text-slate-300" />
               </div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                No activity recorded
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">
+                No active contribution activity detected
               </p>
             </div>
             
             <div
               v-else
-              class="divide-y divide-slate-50"
+              class="divide-y divide-slate-100"
             >
               <div
                 v-for="(contribution, index) in query.data.value?.recentContributions"
                 :key="index"
-                class="flex items-center justify-between p-6 hover:bg-slate-50/80 transition-all cursor-pointer group"
+                class="flex items-center justify-between p-6 hover:bg-slate-50/20 transition-all cursor-pointer group"
               >
                 <div class="flex items-center gap-5">
-                  <div class="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-soft group-hover:border-violet-200 group-hover:scale-105 transition-all">
-                    <Heart class="w-5 h-5 text-violet-600 fill-violet-50" />
+                  <div class="w-10 h-10 rounded-none bg-white border border-slate-200 flex items-center justify-center group-hover:border-violet-300 transition-all duration-500">
+                    <Heart class="w-4 h-4 text-violet-600 fill-violet-50" />
                   </div>
                   <div>
                     <p class="text-sm font-black text-slate-900 tracking-tight">
                       {{ contribution.contributorName }}
                     </p>
-                    <div class="flex items-center gap-2 mt-1">
-                      <span class="text-[9px] font-black px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-widest">
+                    <div class="flex items-center gap-3 mt-1.5">
+                      <span class="text-[9px] font-black px-1.5 py-0.5 rounded-none bg-slate-100 text-slate-500 uppercase tracking-widest border border-slate-200/50">
                         {{ contribution.paymentMethod }}
                       </span>
-                      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
                         {{ contribution.eventTitle }}
                       </span>
                     </div>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-sm font-black text-slate-900 italic mb-1">
+                  <p class="text-sm font-black text-slate-900 italic mb-1 tracking-tight">
                     {{ formatCurrency(contribution.amount, contribution.currency) }}
                   </p>
                   <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
@@ -147,12 +146,12 @@
                 </div>
               </div>
             </div>
-            <div class="p-4 bg-slate-50/30 text-center border-t border-slate-50">
+            <div class="p-6 bg-slate-50/10 text-center border-t border-slate-100">
               <button
-                class="text-[10px] font-black text-violet-600 uppercase tracking-widest hover:underline"
+                class="text-[10px] font-black text-violet-600 uppercase tracking-widest hover:underline tracking-[0.2em]"
                 @click="router.push('/admin/contributions')"
               >
-                Expand Stream Archive
+                Expand Activity Archive
               </button>
             </div>
           </AppCard>
@@ -160,21 +159,21 @@
 
         <!-- System Intelligence Sidebar -->
         <div class="lg:col-span-4 space-y-8">
-          <AppCard class="!p-8 space-y-8 border-none shadow-premium">
+          <AppCard class="!p-8 space-y-8 border-slate-200">
             <div class="flex items-center justify-between">
               <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                 Organization Health
               </h3>
-              <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div class="w-2 h-2 bg-emerald-500 animate-pulse" />
             </div>
             
             <div class="space-y-6">
               <div class="flex justify-between items-center group cursor-help">
                 <div class="flex items-center gap-3">
-                  <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600">
-                    <Zap class="w-4 h-4" />
+                  <div class="p-2 rounded-none bg-slate-50 text-emerald-600 border border-slate-100">
+                    <Zap class="w-3.5 h-3.5" />
                   </div>
-                  <span class="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Sync Status</span>
+                  <span class="text-xs font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-widest">Sync Status</span>
                 </div>
                 <StatusBadge
                   status="Stable"
@@ -184,67 +183,67 @@
 
               <div class="flex justify-between items-center group">
                 <div class="flex items-center gap-3">
-                  <div class="p-2 rounded-lg bg-violet-50 text-violet-600">
-                    <UserCheck class="w-4 h-4" />
+                  <div class="p-2 rounded-none bg-slate-50 text-violet-600 border border-slate-100">
+                    <UserCheck class="w-3.5 h-3.5" />
                   </div>
-                  <span class="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Field Force</span>
+                  <span class="text-xs font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-widest">Field Force</span>
                 </div>
-                <span class="text-xs font-black text-slate-900">{{ query.data.value?.totalCollectors }} Agents</span>
+                <span class="text-xs font-black text-slate-900">{{ query.data.value?.totalCollectors }} Staff</span>
               </div>
 
               <div class="flex justify-between items-center group">
                 <div class="flex items-center gap-3">
-                  <div class="p-2 rounded-lg bg-amber-50 text-amber-600">
-                    <Target class="w-4 h-4" />
+                  <div class="p-2 rounded-none bg-slate-50 text-amber-600 border border-slate-100">
+                    <Target class="w-3.5 h-3.5" />
                   </div>
-                  <span class="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Recipient Funds</span>
+                  <span class="text-xs font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-widest">Active Funds</span>
                 </div>
-                <span class="text-xs font-black text-slate-900">{{ query.data.value?.activeRecipientFunds }} Active</span>
+                <span class="text-xs font-black text-slate-900">{{ query.data.value?.activeRecipientFunds }} Recipient</span>
               </div>
             </div>
 
-            <div class="pt-6 border-t border-slate-50">
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+            <div class="pt-6 border-t border-slate-100">
+              <div class="p-5 rounded-none bg-slate-50 border border-slate-100">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">
                   Resource Allocation
                 </p>
-                <div class="space-y-3">
-                  <div class="flex justify-between text-[10px] font-bold">
+                <div class="space-y-4">
+                  <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest">
                     <span class="text-slate-500">Fund Coverage</span>
                     <span class="text-slate-900">85%</span>
                   </div>
-                  <div class="h-1.5 w-full bg-white rounded-full overflow-hidden">
-                    <div class="h-full bg-violet-500 w-[85%] rounded-full" />
+                  <div class="h-1 w-full bg-white rounded-none overflow-hidden border border-slate-200/50">
+                    <div class="h-full bg-violet-500 w-[85%]" />
                   </div>
                 </div>
               </div>
             </div>
           </AppCard>
 
-          <AppCard class="!p-8 bg-slate-900 text-white shadow-2xl space-y-8 relative overflow-hidden group">
-            <!-- Decorative circle -->
-            <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-violet-500/10 group-hover:bg-violet-500/20 transition-all duration-700" />
+          <AppCard class="!p-8 bg-slate-900 text-white shadow-none space-y-8 relative overflow-hidden group border-none">
+            <!-- Decorative accent -->
+            <div class="absolute right-0 top-0 w-1 h-full bg-violet-600" />
             
-            <div class="relative space-y-2">
-              <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+            <div class="relative space-y-3">
+              <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 italic">
                 Rapid Provisioning
               </h3>
-              <p class="text-lg font-black tracking-tight italic leading-tight">
-                Scale Your Collection Infrastructure
+              <p class="text-xl font-black tracking-tight italic leading-tight uppercase">
+                Scale Your <br/>Collection <br/>Ops
               </p>
             </div>
             
             <div class="relative space-y-4">
               <AppButton
                 variant="primary"
-                class="w-full !rounded-xl shadow-xl shadow-violet-500/20 !border-none"
+                class="w-full shadow-xl shadow-violet-500/20 !border-none text-[10px] uppercase tracking-[0.2em] py-4"
                 @click="router.push('/admin/collectors/new')"
               >
                 Onboard New Collector
               </AppButton>
               <AppButton
                 variant="outline"
-                class="w-full !rounded-xl !border-white/10 !text-white hover:!bg-white/5"
+                class="w-full !border-white/20 !text-white hover:!bg-white/5 text-[10px] uppercase tracking-[0.2em] py-4"
                 @click="router.push('/admin/reports')"
               >
                 Performance Audit
@@ -277,7 +276,10 @@ import {
   Activity,
   Zap,
   UserCheck,
-  Target
+  Target,
+  Wallet,
+  Users,
+  ShieldCheck
 } from 'lucide-vue-next'
 
 const { copy } = useCopy()

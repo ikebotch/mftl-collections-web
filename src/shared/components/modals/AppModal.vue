@@ -2,7 +2,7 @@
   <teleport to="body">
     <div
       v-if="open"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 py-10"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4 py-10"
       @keydown.esc="$emit('close')"
     >
       <div
@@ -11,36 +11,38 @@
       />
       <div
         ref="panel"
-        class="relative z-10 w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl"
+        class="relative z-10 w-full max-w-lg rounded-none bg-white border border-slate-200 shadow-2xl flex flex-col"
         role="dialog"
         aria-modal="true"
         :aria-labelledby="titleId"
         tabindex="-1"
       >
-        <div class="flex items-start justify-between gap-4">
+        <!-- Modal Header -->
+        <div class="px-8 py-6 border-b border-slate-100 flex items-start justify-between">
           <div>
             <h2
               :id="titleId"
-              class="text-lg font-semibold text-slate-950"
+              class="text-xl font-black text-slate-900 tracking-tight leading-none uppercase"
             >
               {{ title }}
             </h2>
             <p
-              v-if="description"
-              class="mt-1 text-sm text-slate-500"
+              v-if="subtitle || description"
+              class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none"
             >
-              {{ description }}
+              {{ subtitle || description }}
             </p>
           </div>
-          <AppButton
-            variant="ghost"
-            aria-label="Close modal"
+          <button
+            class="text-slate-400 hover:text-slate-900 transition-colors"
             @click="$emit('close')"
           >
-            Close
-          </AppButton>
+            <X class="w-5 h-5" />
+          </button>
         </div>
-        <div class="mt-6">
+
+        <!-- Modal Body -->
+        <div class="p-8 overflow-y-auto max-h-[70vh]">
           <slot />
         </div>
       </div>
@@ -50,20 +52,23 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
+import { X } from 'lucide-vue-next'
 
 const props = withDefaults(
   defineProps<{
-    open: boolean
+    open?: boolean
     title: string
+    subtitle?: string
     description?: string
   }>(),
   {
+    open: true, // Default to true if used with v-if
     description: '',
+    subtitle: '',
   },
 )
 
-defineEmits<{
+const emit = defineEmits<{
   close: []
 }>()
 
@@ -78,5 +83,6 @@ watch(
       panel.value?.focus()
     }
   },
+  { immediate: true }
 )
 </script>

@@ -1,10 +1,11 @@
 <template>
   <div
     :class="[
-      'border border-slate-100/50 shadow-soft transition-all duration-500 overflow-hidden',
-      !$attrs.class?.toString().includes('bg-') ? 'bg-white' : '',
+      'border border-slate-200 transition-all duration-500 overflow-hidden',
+      !$attrs.class?.toString().includes('bg-') ? 'bg-transparent' : '',
       padded ? 'p-8' : '',
-      rounded === '3xl' ? 'rounded-[2rem]' : 'rounded-[1.5rem]'
+      rounded === '3xl' ? 'rounded-[2rem]' : (rounded === '2xl' ? 'rounded-[1.5rem]' : 'rounded-none'),
+      shadow ? 'shadow-soft' : 'shadow-none'
     ]"
   >
     <slot />
@@ -14,11 +15,13 @@
 <script setup lang="ts">
 interface Props {
   padded?: boolean
-  rounded?: '2xl' | '3xl'
+  rounded?: 'none' | '2xl' | '3xl'
+  shadow?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   padded: false,
-  rounded: '2xl',
+  rounded: 'none',
+  shadow: false
 })
 </script>

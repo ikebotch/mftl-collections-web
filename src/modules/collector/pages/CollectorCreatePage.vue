@@ -1,334 +1,249 @@
 <template>
-  <div class="max-w-4xl mx-auto py-12 px-6">
-    <header class="text-center mb-12">
-      <h1 class="text-4xl font-black font-display tracking-tight text-slate-900 mb-4">
-        Add Collector
-      </h1>
-      <p class="text-slate-500 font-medium text-lg max-w-xl mx-auto leading-relaxed">
-        Create field collector access and assign collection scope.
-      </p>
-    </header>
+  <div class="min-h-screen bg-slate-50/50 pb-32">
+    <!-- Centered Header Area -->
+    <div class="max-w-[1200px] mx-auto pt-16 pb-12 px-8">
+      <header class="mb-16">
+        <h1 class="text-4xl font-black font-display tracking-tight text-slate-900 mb-4">
+          Add Collector
+        </h1>
+        <p class="text-slate-500 font-medium text-lg max-w-xl leading-relaxed">
+          Create field collector access, assign collection scope, and set operational limits.
+        </p>
+      </header>
 
-    <div class="mb-12">
-      <StepIndicator
-        :steps="['Details', 'Access', 'Assignments', 'Limits', 'Review']"
-        :current-step="currentStep"
-      />
-    </div>
-
-    <form @submit.prevent="handleSubmit">
-      <AppCard class="shadow-premium border-none !p-12 bg-white rounded-[2rem] min-h-[400px]">
-        <!-- Step 1: Details -->
-        <div
-          v-if="currentStep === 1"
-          class="space-y-10"
+      <AdminWizardLayout 
+        :sections="steps" 
+        title="Collector Setup"
+      >
+        <!-- Step 1: Identity -->
+        <AppCard 
+          id="section-identity"
+          class="!p-10 scroll-mt-10"
         >
-          <div class="grid md:grid-cols-2 gap-10">
-            <AppInput
-              v-model="form.name"
-              label="Full Name"
-              placeholder="e.g. John Doe"
-              required
-            />
-            <AppInput
-              v-model="form.email"
-              label="Email Address"
-              type="email"
-              placeholder="john@example.com"
-              required
+          <div class="mb-10">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+              Step 01
+            </h3>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+              Personal Identity
+            </h2>
+          </div>
+
+          <div class="space-y-10">
+            <div class="grid md:grid-cols-2 gap-10">
+              <AppInput
+                v-model="form.name"
+                label="Full Name"
+                placeholder="e.g. John Doe"
+                required
+              />
+              <AppInput
+                v-model="form.email"
+                label="Email Address"
+                type="email"
+                placeholder="john@example.com"
+                required
+              />
+            </div>
+            <div class="grid md:grid-cols-2 gap-10">
+              <AppInput
+                v-model="form.phone"
+                label="Phone Number"
+                placeholder="+233..."
+                required
+              />
+              <AppSelect
+                v-model="form.type"
+                label="Collector Type"
+                :options="[
+                  { label: 'Collector', value: 'Collector' },
+                  { label: 'Lead Collector', value: 'Lead' },
+                  { label: 'Supervisor', value: 'Supervisor' }
+                ]"
+              />
+            </div>
+            <AppTextarea
+              id="collector-notes"
+              v-model="form.notes"
+              label="Administrative Notes"
+              placeholder="Internal notes about this collector..."
+              :rows="3"
             />
           </div>
-          <div class="grid md:grid-cols-2 gap-10">
-            <AppInput
-              v-model="form.phone"
-              label="Phone Number"
-              placeholder="+233..."
-              required
-            />
-            <AppSelect
-              v-model="form.type"
-              label="Collector Type"
-              :options="[
-                { label: 'Collector', value: 'Collector' },
-                { label: 'Lead Collector', value: 'Lead' },
-                { label: 'Supervisor', value: 'Supervisor' }
-              ]"
-            />
-          </div>
-          <div class="grid md:grid-cols-2 gap-10">
-            <AppSelect
-              v-model="form.status"
-              label="Initial Status"
-              :options="[
-                { label: 'Invited', value: 'Invited' },
-                { label: 'Active', value: 'Active' },
-                { label: 'Inactive', value: 'Inactive' },
-                { label: 'Suspended', value: 'Suspended' }
-              ]"
-            />
-          </div>
-          <AppTextarea
-            id="collector-notes"
-            v-model="form.notes"
-            label="Notes"
-            placeholder="Optional notes about this collector..."
-            :rows="3"
-          />
-        </div>
+        </AppCard>
 
         <!-- Step 2: Access & Permissions -->
-        <div
-          v-if="currentStep === 2"
-          class="space-y-8"
+        <AppCard 
+          id="section-access"
+          class="!p-10 scroll-mt-10"
         >
-          <div class="space-y-4">
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">
-              System Access
+          <div class="mb-10">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+              Step 02
             </h3>
-            <div class="grid gap-4">
-              <ToggleCard
-                v-model="form.loginEnabled"
-                title="Login Enabled"
-                description="Allow collector to sign in to the mobile app."
-              />
-              <ToggleCard
-                v-model="form.sendInvite"
-                title="Send Auth0 Invite"
-                description="Automatically send an email invite to set up credentials."
-              />
-            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+              Access & Permissions
+            </h2>
           </div>
-          <div class="space-y-4">
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">
-              Field Permissions
-            </h3>
-            <div class="grid gap-4">
-              <ToggleCard
-                v-model="form.recordCash"
-                title="Record Cash Contributions"
-                description="Can accept and record physical cash."
-              />
-              <ToggleCard
-                v-model="form.issueReceipts"
-                title="Issue Receipts"
-                description="Can generate and send digital receipts."
-              />
-              <ToggleCard
-                v-model="form.viewDashboard"
-                title="View Assigned Dashboard"
-                description="Can see personal performance metrics."
-              />
-              <ToggleCard
-                v-model="form.viewReports"
-                title="View Assigned Reports"
-                description="Access to historical collection data."
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 3: Assignments -->
-        <div
-          v-if="currentStep === 3"
-          class="space-y-10"
-        >
-          <div class="p-6 rounded-2xl bg-amber-50 border border-amber-100 flex gap-4">
-            <Info class="w-5 h-5 text-amber-600 shrink-0" />
-            <p class="text-xs text-amber-900 font-medium leading-relaxed">
-              Assignments to specific campaigns and funds will be configured in the Post-Provisioning stage. 
-              Deferred assignment strategy active.
-            </p>
-          </div>
-          <div class="grid md:grid-cols-2 gap-10">
-            <AppInput
-              v-model="form.region"
-              label="Region/Location"
-              placeholder="e.g. Accra Central"
-            />
-          </div>
-        </div>
-
-        <!-- Step 4: Device & Limits -->
-        <div
-          v-if="currentStep === 4"
-          class="space-y-10"
-        >
-          <div class="grid md:grid-cols-2 gap-10">
-            <AppInput
-              v-model="form.deviceName"
-              label="Device Name"
-              placeholder="e.g. Samsung A54"
-            />
-            <AppInput
-              v-model="form.deviceId"
-              label="Device ID (Serial)"
-              placeholder="Optional"
-            />
-          </div>
-          <div class="grid md:grid-cols-2 gap-10">
-            <AppInput
-              v-model="form.dailyLimit"
-              type="number"
-              label="Daily Collection Limit"
-              placeholder="0.00"
-            >
-              <template #prefix>
-                <span class="text-slate-400 font-bold">GHS</span>
-              </template>
-            </AppInput>
-            <AppInput
-              v-model="form.maxCashHolding"
-              type="number"
-              label="Max Cash Holding Limit"
-              placeholder="0.00"
-            >
-              <template #prefix>
-                <span class="text-slate-400 font-bold">GHS</span>
-              </template>
-            </AppInput>
-          </div>
-          <div class="grid md:grid-cols-2 gap-10">
-            <AppInput
-              v-model="form.approvalThreshold"
-              type="number"
-              label="Supervisor Approval Threshold"
-              placeholder="0.00"
-            >
-              <template #prefix>
-                <span class="text-slate-400 font-bold">GHS</span>
-              </template>
-            </AppInput>
-            <div class="flex items-center justify-between p-6 rounded-2xl bg-slate-50/50">
-              <span class="text-sm font-bold text-slate-700">Offline Allowed</span>
-              <AppSwitch v-model="form.offlineAllowed" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 5: Review -->
-        <div
-          v-if="currentStep === 5"
-          class="space-y-10"
-        >
-          <section class="p-8 rounded-[2rem] bg-slate-900 text-white flex items-center gap-6 shadow-premium">
-            <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-2xl font-black">
-              {{ form.name.charAt(0) }}
-            </div>
-            <div>
-              <p class="text-2xl font-black tracking-tight">
-                {{ form.name }}
-              </p>
-              <p class="text-slate-400 font-medium uppercase tracking-widest text-[10px] mt-1">
-                {{ form.type }} • {{ form.status }}
-              </p>
-            </div>
-          </section>
 
           <div class="grid md:grid-cols-2 gap-12">
             <div class="space-y-6">
               <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                Identity & Access
+                System Authentication
               </h4>
-              <div class="space-y-2">
-                <p class="text-sm font-bold text-slate-900">
-                  {{ form.email }}
-                </p>
-                <p class="text-sm font-bold text-slate-900">
-                  {{ form.phone }}
-                </p>
-                <div class="flex gap-2 mt-4">
-                  <StatusBadge
-                    v-if="form.loginEnabled"
-                    status="Login"
-                    variant="success"
-                  />
-                  <StatusBadge
-                    v-if="form.recordCash"
-                    status="Cash"
-                    variant="neutral"
-                  />
-                  <StatusBadge
-                    v-if="form.issueReceipts"
-                    status="Receipts"
-                    variant="neutral"
-                  />
-                </div>
+              <div class="space-y-4">
+                <ToggleCard
+                  v-model="form.loginEnabled"
+                  title="Mobile Login"
+                  description="Allow collector to sign in to the field app."
+                />
+                <ToggleCard
+                  v-model="form.sendInvite"
+                  title="Send Invite Email"
+                  description="Automatically trigger the Auth0 onboarding flow."
+                />
               </div>
             </div>
             <div class="space-y-6">
               <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                Limits & Security
+                Field Privileges
               </h4>
-              <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                  <span class="text-xs font-bold text-slate-500">Daily Limit</span>
-                  <span class="text-xs font-black text-slate-900">{{ formatCurrency(form.dailyLimit, 'GHS') }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-xs font-bold text-slate-500">Max Holding</span>
-                  <span class="text-xs font-black text-slate-900">{{ formatCurrency(form.maxCashHolding, 'GHS') }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-xs font-bold text-slate-500">Approval Threshold</span>
-                  <span class="text-xs font-black text-slate-900">{{ formatCurrency(form.approvalThreshold, 'GHS') }}</span>
-                </div>
+              <div class="space-y-4">
+                <ToggleCard
+                  v-model="form.recordCash"
+                  title="Cash Collection"
+                  description="Authorized to record physical cash payments."
+                />
+                <ToggleCard
+                  v-model="form.issueReceipts"
+                  title="Issue Receipts"
+                  description="Authorized to generate digital receipts."
+                />
               </div>
             </div>
           </div>
-        </div>
-      </AppCard>
+        </AppCard>
 
-      <StickyFormActions>
-        <template #left>
-          <AppButton 
-            v-if="currentStep > 1"
-            variant="outline" 
-            class="!rounded-xl"
-            @click="currentStep--"
-          >
-            Back
-          </AppButton>
-          <AppButton 
-            v-else
-            variant="outline" 
-            class="!rounded-xl"
-            @click="router.push({ name: 'admin-collectors' })"
-          >
-            Cancel
-          </AppButton>
-        </template>
-        
+        <!-- Step 3: Operational Limits -->
+        <AppCard 
+          id="section-limits"
+          class="!p-10 scroll-mt-10"
+        >
+          <div class="mb-10">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+              Step 03
+            </h3>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+              Operational Limits
+            </h2>
+          </div>
+
+          <div class="space-y-10">
+            <div class="grid md:grid-cols-2 gap-10">
+              <AppInput
+                v-model="form.dailyLimit"
+                type="number"
+                label="Daily Collection Limit"
+                placeholder="0.00"
+              >
+                <template #prefix>
+                  <span class="text-slate-400 font-bold">GHS</span>
+                </template>
+              </AppInput>
+              <AppInput
+                v-model="form.maxCashHolding"
+                type="number"
+                label="Max Cash Holding"
+                placeholder="0.00"
+              >
+                <template #prefix>
+                  <span class="text-slate-400 font-bold">GHS</span>
+                </template>
+              </AppInput>
+            </div>
+            <div class="grid md:grid-cols-2 gap-10">
+              <AppInput
+                v-model="form.approvalThreshold"
+                type="number"
+                label="Approval Threshold"
+                placeholder="0.00"
+              >
+                <template #prefix>
+                  <span class="text-slate-400 font-bold">GHS</span>
+                </template>
+              </AppInput>
+              <AppSelect
+                v-model="form.region"
+                label="Assigned Region"
+                :options="[
+                  { label: 'Accra Central', value: 'Accra Central' },
+                  { label: 'Kumasi Metropolitan', value: 'Kumasi' },
+                  { label: 'Northern Territory', value: 'North' }
+                ]"
+              />
+            </div>
+          </div>
+        </AppCard>
+
+        <!-- Step 4: Assignment Strategy -->
+        <AppCard 
+          id="section-assignment"
+          class="!p-10 scroll-mt-10"
+        >
+          <div class="mb-8">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+              Step 04
+            </h3>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+              Campaign Assignment
+            </h2>
+          </div>
+
+          <div class="p-8 border border-slate-200 bg-slate-50 flex gap-6 items-start">
+            <Info class="w-6 h-6 text-slate-400 shrink-0 mt-1" />
+            <div class="space-y-2">
+              <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
+                Deferred Assignment Strategy
+              </p>
+              <p class="text-xs text-slate-500 font-medium leading-relaxed italic">
+                Assignments to specific campaigns and funds are configured after the collector profile is created. 
+                You will be redirected to the assignment manager once published.
+              </p>
+            </div>
+          </div>
+        </AppCard>
+      </AdminWizardLayout>
+    </div>
+
+    <!-- Sticky Bottom Bar -->
+    <StickyFormActions>
+      <template #left>
         <AppButton 
-          v-if="currentStep < 5"
-          variant="primary" 
-          class="!rounded-xl shadow-premium px-12"
-          @click="currentStep++"
+          variant="outline" 
+          @click="router.push({ name: 'admin-collectors' })"
         >
-          Continue
+          Cancel
         </AppButton>
-        <div
-          v-else
-          class="flex gap-3"
+      </template>
+      
+      <div class="flex gap-4">
+        <AppButton 
+          variant="outline"
+          :loading="isSubmitting"
+          @click="handleSubmit('Draft')"
         >
-          <AppButton 
-            variant="outline"
-            class="!rounded-xl"
-            :loading="isSubmitting"
-            @click="handleSubmit('Draft')"
-          >
-            Save Draft
-          </AppButton>
-          <AppButton 
-            variant="primary" 
-            class="!rounded-xl shadow-premium px-10"
-            :loading="isSubmitting"
-            @click="handleSubmit('Active')"
-          >
-            Create Collector
-          </AppButton>
-        </div>
-      </StickyFormActions>
-    </form>
+          Save Draft
+        </AppButton>
+        <AppButton 
+          variant="primary" 
+          class="px-12"
+          :loading="isSubmitting"
+          @click="handleSubmit('Active')"
+        >
+          Create Collector
+        </AppButton>
+      </div>
+    </StickyFormActions>
   </div>
 </template>
 
@@ -336,23 +251,29 @@
 import { reactive, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCreateCollector } from '../composables/useCollectors'
+import { useToastStore } from '@/shared/stores/useToastStore'
+import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
-import StepIndicator from '@/shared/components/steppers/StepIndicator.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import ToggleCard from '@/shared/components/cards/ToggleCard.vue'
-import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
-import { formatCurrency } from '@/core/formatting/formatters'
 import { Info } from 'lucide-vue-next'
 
 const router = useRouter()
-const currentStep = ref(1)
+const toast = useToastStore()
 const mutation = useCreateCollector()
 const isSubmitting = computed(() => mutation.isPending.value)
+
+const steps = [
+  { id: 'section-identity', title: 'Identity', subtitle: 'Profile Details' },
+  { id: 'section-access', title: 'Access', subtitle: 'Permissions' },
+  { id: 'section-limits', title: 'Limits', subtitle: 'Financial Bounds' },
+  { id: 'section-assignment', title: 'Assignment', subtitle: 'Campaign Scope' },
+]
 
 const form = reactive({
   name: '',
@@ -365,41 +286,39 @@ const form = reactive({
   sendInvite: true,
   recordCash: true,
   issueReceipts: true,
-  viewDashboard: true,
-  viewReports: false,
-  region: '',
-  deviceName: '',
-  deviceId: '',
+  region: 'Accra Central',
   dailyLimit: 2000,
   maxCashHolding: 1000,
   approvalThreshold: 500,
-  offlineAllowed: false
 })
 
-async function handleSubmit(finalStatus?: string | SubmitEvent) {
+async function handleSubmit(finalStatus: string) {
+  if (!form.name || !form.email) {
+    toast.error('Please complete the collector identity information')
+    return
+  }
+
   try {
-    const status = typeof finalStatus === 'string' ? finalStatus : form.status
     const payload = {
       ...form,
-      status,
+      status: finalStatus,
       metadata: JSON.stringify({
         notes: form.notes,
         region: form.region,
-        device: { name: form.deviceName, id: form.deviceId },
         permissions: {
           login: form.loginEnabled,
           cash: form.recordCash,
           receipts: form.issueReceipts,
-          dashboard: form.viewDashboard,
-          reports: form.viewReports
         }
       })
     }
     
     await mutation.mutateAsync(payload)
+    toast.success('Collector profile created successfully')
     router.push({ name: 'admin-collectors' })
-  } catch (err) {
+  } catch (err: any) {
     console.error('Failed to create collector:', err)
+    toast.error(err.message || 'Failed to create collector')
   }
 }
 </script>

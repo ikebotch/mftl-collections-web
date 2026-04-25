@@ -13,7 +13,7 @@
         :value="modelValue"
         :disabled="disabled"
         :required="required"
-        class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 pr-10 text-sm font-medium appearance-none transition-all duration-300 focus:bg-white focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 outline-none cursor-pointer"
+        class="w-full bg-transparent border border-slate-200 rounded-none py-3 px-4 pr-10 text-sm font-medium appearance-none transition-all duration-300 focus:bg-white focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 outline-none cursor-pointer"
         @change="handleChange"
       >
         <option
