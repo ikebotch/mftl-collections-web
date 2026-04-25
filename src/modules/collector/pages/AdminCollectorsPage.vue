@@ -30,7 +30,7 @@
       />
       <MetricCard
         label="Pending Cash Return"
-        value="GHS 4,250"
+        :value="formatCurrency(metrics.raisedToday, 'GHS')"
         icon="Clock"
         color="amber"
       />
@@ -52,6 +52,8 @@
         :columns="columns"
         :rows="filteredCollectors"
         :loading="query.isLoading.value"
+        exportable
+        title="Collector Field Operations"
       >
         <template #cell:collector="{ row }">
           <div class="flex items-center gap-4">

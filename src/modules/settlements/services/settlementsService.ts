@@ -1,7 +1,20 @@
-import type { SettlementRow } from '../types/settlement'
+import { httpClient } from '@/core/api/httpClient'
+
+export interface SettlementRow {
+  id: string
+  collectorName: string
+  amount: number
+  currency: string
+  status: string
+  date: string
+  note?: string
+}
 
 export async function listSettlements(): Promise<SettlementRow[]> {
-  return [
-    { id: 'set-1', summary: 'Weekly reconciliation batch', status: 'Pending review' },
-  ]
+  const response = await httpClient.get<SettlementRow[]>('admin/settlements')
+  return response.data
+}
+
+export const settlementsService = {
+  list: listSettlements,
 }

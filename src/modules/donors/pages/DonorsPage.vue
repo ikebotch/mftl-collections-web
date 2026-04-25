@@ -11,7 +11,6 @@
         :value="donors.length.toString()"
         icon="Users"
         color="slate"
-        trend="+5 this month"
       />
       <MetricCard
         label="New Donors"
@@ -26,8 +25,8 @@
         color="purple"
       />
       <MetricCard
-        label="Avg Contribution"
-        value="GHS 450"
+        label="Avg Yield"
+        :value="avgYield"
         icon="TrendingUp"
         color="blue"
       />
@@ -43,6 +42,8 @@
         :columns="columns"
         :rows="filteredDonors"
         :loading="query.isLoading.value"
+        exportable
+        title="Donor Directory"
       >
         <template #cell:donor="{ row }">
           <div class="flex flex-col">
@@ -242,6 +243,12 @@ import type { Donor } from '../types/donor'
 const searchQuery = ref('')
 const query = useDonors()
 const donors = computed(() => query.data.value || [])
+
+const avgYield = computed(() => {
+  if (donors.value.length === 0) return 'GHS 0.00'
+  const total = donors.value.reduce((acc, d) => acc + d.totalGiven, 0)
+  return formatCurrency(total / donors.value.length, 'GHS')
+})
 
 const isDrawerOpen = ref(false)
 const selectedDonor = ref<Donor | null>(null)

@@ -8,27 +8,26 @@
     <AdminMetricGrid>
       <MetricCard
         label="Total Raised"
-        value="GHS 124.5k"
+        :value="totalRaisedFormatted"
         icon="TrendingUp"
         color="green"
-        trend="+15%"
+        :trend="contributions.length > 0 ? '+100%' : '0%'"
       />
       <MetricCard
-        label="This Month"
-        value="GHS 12.2k"
+        label="Total Records"
+        :value="String(contributions.length)"
         icon="Calendar"
         color="purple"
-        trend="+4%"
       />
       <MetricCard
-        label="Pending Receipts"
-        value="0"
-        icon="FileText"
+        label="Verified Funds"
+        :value="String(contributions.filter(c => c.status === 'Completed' || c.status === 'Collected').length)"
+        icon="ShieldCheck"
         color="slate"
       />
       <MetricCard
         label="Failed Payments"
-        value="0"
+        :value="String(contributions.filter(c => c.status === 'Failed').length)"
         icon="AlertCircle"
         color="red"
       />
@@ -44,6 +43,8 @@
         :columns="columns"
         :rows="filteredContributions"
         :loading="query.isLoading.value"
+        exportable
+        title="Contribution Audit Log"
       >
         <template #cell:date="{ value }">
           <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ value }}</span>
@@ -198,11 +199,26 @@ import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
+import { formatCurrency } from '@/core/formatting/formatters'
 import type { ContributionRow } from '../types/contribution'
 
 const searchQuery = ref('')
 const query = useContributions()
 const contributions = computed(() => query.data.value || [])
+
+const totalRaisedFormatted = computed(() => {
+  const currencyGroups: Record<string, number> = {}
+  contributions.value.forEach(c => {
+    const amt = parseFloat(String(c.amount).replace(/[^0-9.]/g, ''))
+    const cur = c.amount.split(' ')[0] || 'GHS'
+    currencyGroups[cur] = (currencyGroups[cur] || 0) + amt
+  })
+  
+  if (Object.keys(currencyGroups).length === 0) return 'GHS 0.00'
+  return Object.entries(currencyGroups)
+    .map(([cur, amt]) => formatCurrency(amt, cur))
+    .join(' • ')
+})
 
 const isDrawerOpen = ref(false)
 const selectedContribution = ref<ContributionRow | null>(null)

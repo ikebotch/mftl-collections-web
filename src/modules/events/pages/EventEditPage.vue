@@ -103,6 +103,33 @@
             />
           </div>
         </AppCard>
+
+        <!-- Event Media -->
+        <AppCard class="!p-8 space-y-8">
+          <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+            Event Media
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">System/Display Image</label>
+              <div class="aspect-video rounded-2xl bg-slate-100 flex items-center justify-center text-slate-300 relative group overflow-hidden border border-slate-100">
+                <ImageIcon class="w-8 h-8" />
+                <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <AppButton variant="primary" size="sm" class="!rounded-lg text-[9px] font-black uppercase tracking-widest">Update Image</AppButton>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Receipt/POS Logo</label>
+              <div class="aspect-video rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-200 relative group overflow-hidden">
+                <Printer class="w-8 h-8" />
+                <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <AppButton variant="primary" size="sm" class="!rounded-lg text-[9px] font-black uppercase tracking-widest">Update Logo</AppButton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </AppCard>
       </div>
 
       <div class="lg:col-span-4 space-y-8">
@@ -181,6 +208,7 @@ import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
+import { Image as ImageIcon, Printer } from 'lucide-vue-next'
 import type { UpdateEventInput } from '../types/event'
 
 const route = useRoute()

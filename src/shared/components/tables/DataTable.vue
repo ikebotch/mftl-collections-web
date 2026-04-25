@@ -11,6 +11,28 @@
       </div>
     </div>
 
+    <!-- Optional Header Area -->
+    <div v-if="title || $slots.actions || exportable" class="flex items-center justify-between mb-6 px-1">
+      <div>
+        <h3 v-if="title" class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+          {{ title }}
+        </h3>
+      </div>
+      <div class="flex items-center gap-3">
+        <slot name="actions" />
+        <AppButton 
+          v-if="exportable && rows.length > 0"
+          variant="outline" 
+          size="xs" 
+          class="!rounded-lg text-[9px] font-black uppercase tracking-widest bg-white border-slate-200"
+          @click="exportToCsv"
+        >
+          <Download class="w-3.5 h-3.5 mr-2 text-slate-400" />
+          Export CSV
+        </AppButton>
+      </div>
+    </div>
+
     <!-- Responsive Container -->
     <div class="w-full overflow-x-auto rounded-2xl border border-slate-100 bg-white shadow-sm shadow-slate-200/50">
       <table class="w-full text-left border-collapse min-w-[800px]">
@@ -175,9 +197,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Inbox, AlertCircle, ChevronRight } from 'lucide-vue-next'
+import { Inbox, AlertCircle, ChevronRight, Download } from 'lucide-vue-next'
 import TableSortHeader from './TableSortHeader.vue'
 import TablePagination from './TablePagination.vue'
+import AppButton from '@/shared/components/buttons/AppButton.vue'
 
 interface Column {
   key: string
@@ -195,6 +218,8 @@ interface Props {
   error?: string | null
   emptyMessage?: string
   expandable?: boolean
+  title?: string
+  exportable?: boolean
   // Pagination
   pagination?: boolean
   currentPage?: number
@@ -206,12 +231,14 @@ interface Props {
   sortOrder?: 'asc' | 'desc'
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   rowKey: 'id',
   loading: false,
   error: null,
   emptyMessage: 'No records found',
   expandable: false,
+  title: '',
+  exportable: false,
   pagination: false,
   currentPage: 1,
   totalPages: 1,
@@ -239,6 +266,30 @@ function toggleExpand(id: any) {
     next.add(id)
     expandedRows.value = next
   }
+}
+
+function exportToCsv() {
+  if (!props.rows.length) return
+
+  const headers = props.columns.map(c => c.label).join(',')
+  const lines = props.rows.map(row => {
+    return props.columns.map(col => {
+      const val = row[col.key]
+      return typeof val === 'string' ? `"${val.replace(/"/g, '""')}"` : val
+    }).join(',')
+  })
+
+  const csvContent = [headers, ...lines].join('\n')
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
+  
+  link.setAttribute('href', url)
+  link.setAttribute('download', `${props.title || 'export'}-${new Date().toISOString().split('T')[0]}.csv`)
+  link.style.visibility = 'hidden'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 </script>
 

@@ -122,31 +122,7 @@
         </template>
 
         <template #expansion="{ row }">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                Fund Distribution
-              </h4>
-              <AppButton
-                variant="ghost"
-                size="xs"
-                class="text-[9px] font-black uppercase tracking-widest"
-                @click="router.push(`/admin/events/${row.id}/recipient-funds`)"
-              >
-                View All Funds
-              </AppButton>
-            </div>
-            <EventRecipientFundsList :event-id="row.id" />
-            
-            <div
-              v-if="row.totalRaised === 0"
-              class="pt-4 border-t border-slate-50 mt-4"
-            >
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">
-                No contribution data yet
-              </p>
-            </div>
-          </div>
+          <EventExpandedDetails :event-id="row.id" />
         </template>
       </DataTable>
     </div>
@@ -166,7 +142,7 @@ import RowActions from '@/shared/components/tables/RowActions.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
+import EventExpandedDetails from '../components/EventExpandedDetails.vue'
 import { formatDate, formatCurrency } from '@/core/formatting/formatters'
 import { 
   Plus, 
