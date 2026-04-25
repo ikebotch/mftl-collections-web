@@ -5,7 +5,7 @@
       class="flex items-center gap-4 py-8"
     >
       <Loader2 class="w-4 h-4 animate-spin text-slate-400" />
-      <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Syncing Strategic Streams...</span>
+      <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Syncing Funds...</span>
     </div>
     <div
       v-else-if="isError"
@@ -18,7 +18,7 @@
       class="py-16 text-center border border-dashed border-slate-100"
     >
       <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 italic">
-        Zero strategic allocations defined
+        Zero recipient funds defined
       </p>
     </div>
     <div
@@ -36,7 +36,7 @@
               {{ fund.name }}
             </p>
             <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
-              Strategic Target
+              Fund Target
             </p>
           </div>
           <div class="text-right space-y-1.5">
@@ -63,7 +63,7 @@
 
         <div v-if="fund.targetAmount > 0">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Deployment Progress</span>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Progress</span>
             <span class="text-[11px] font-black text-slate-900 tabular-nums">{{ calculateProgress(fund) }}%</span>
           </div>
           <div class="h-0.5 w-full bg-slate-50 overflow-hidden">
@@ -77,7 +77,7 @@
           v-else 
           class="pt-6 border-t border-slate-50"
         >
-          <span class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] italic">Open Target Scope</span>
+          <span class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] italic">Open Target</span>
         </div>
       </div>
     </div>
