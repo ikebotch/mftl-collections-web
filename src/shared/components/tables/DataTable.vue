@@ -44,6 +44,12 @@
       <table class="w-full text-left border-collapse min-w-[800px]">
         <thead>
           <tr class="border-b border-slate-100 bg-slate-50/50">
+            <!-- Expansion Control Column -->
+            <th 
+              v-if="expandable" 
+              class="w-12 px-4 py-5"
+            />
+            
             <template
               v-for="column in columns"
               :key="column.key"
@@ -77,7 +83,7 @@
           <!-- Error State -->
           <tr v-if="error">
             <td
-              :colspan="columns.length + ($slots.rowActions ? 1 : 0)"
+              :colspan="columns.length + (expandable ? 1 : 0) + ($slots.rowActions ? 1 : 0)"
               class="px-8 py-16 text-center"
             >
               <div class="flex flex-col items-center gap-2">
@@ -102,7 +108,7 @@
           <!-- Empty State -->
           <tr v-else-if="rows.length === 0 && !loading">
             <td
-              :colspan="columns.length + ($slots.rowActions ? 1 : 0)"
+              :colspan="columns.length + (expandable ? 1 : 0) + ($slots.rowActions ? 1 : 0)"
               class="px-8 py-16 text-center"
             >
               <slot name="empty">
@@ -125,39 +131,43 @@
               :key="row[rowKey] || rowIndex"
             >
               <tr
-                class="group hover:bg-slate-50/50 transition-all duration-300"
+                class="group hover:bg-slate-50/50 transition-all duration-300 border-b border-slate-50"
                 :class="{ 'bg-slate-50/30': expandedRows.has(row[rowKey]) }"
               >
+                <!-- Expansion Toggle Cell -->
+                <td 
+                  v-if="expandable"
+                  class="w-12 px-4 py-5 align-top"
+                >
+                  <button
+                    type="button"
+                    class="p-1.5 rounded-xl hover:bg-slate-200 transition-colors flex items-center justify-center mt-1"
+                    @click="toggleExpand(row[rowKey])"
+                  >
+                    <ChevronRight 
+                      class="w-4.5 h-4.5 transition-transform duration-300 text-slate-400"
+                      :class="{ 'rotate-90 text-violet-600': expandedRows.has(row[rowKey]) }"
+                    />
+                  </button>
+                </td>
+
                 <td
                   v-for="column in columns"
                   :key="column.key"
                   class="px-8 py-5 text-sm font-medium text-slate-600"
-                  :class="column.cellClass"
+                  :class="[column.cellClass, column.key === columns[0].key ? 'align-top' : '']"
                 >
-                  <div class="flex items-center gap-3">
-                    <button
-                      v-if="expandable && column.key === columns[0].key"
-                      type="button"
-                      class="p-1 rounded-lg hover:bg-slate-200 transition-colors"
-                      @click="toggleExpand(row[rowKey])"
-                    >
-                      <ChevronRight 
-                        class="w-4 h-4 transition-transform duration-300"
-                        :class="{ 'rotate-90': expandedRows.has(row[rowKey]) }"
-                      />
-                    </button>
-                    <slot
-                      :name="`cell:${column.key}`"
-                      :value="row[column.key]"
-                      :row="row"
-                    >
-                      {{ row[column.key] }}
-                    </slot>
-                  </div>
+                  <slot
+                    :name="`cell:${column.key}`"
+                    :value="row[column.key]"
+                    :row="row"
+                  >
+                    {{ row[column.key] }}
+                  </slot>
                 </td>
                 <td
                   v-if="$slots.rowActions"
-                  class="sticky right-0 px-8 py-5 bg-white/80 group-hover:bg-slate-50/80 backdrop-blur transition-colors text-right border-l border-slate-50"
+                  class="sticky right-0 px-8 py-5 bg-white/80 group-hover:bg-slate-50/80 backdrop-blur transition-colors text-right border-l border-slate-50 align-top"
                 >
                   <slot
                     name="rowActions"
@@ -169,13 +179,16 @@
               <!-- Expansion Row -->
               <tr 
                 v-if="expandable && expandedRows.has(row[rowKey])"
-                class="bg-slate-50/30"
+                class="bg-slate-50/30 border-b border-slate-50"
               >
+                <!-- Spacer for chevron column -->
+                <td v-if="expandable" />
+                
                 <td 
                   :colspan="columns.length + ($slots.rowActions ? 1 : 0)"
                   class="px-8 py-0"
                 >
-                  <div class="pb-8 pt-2 overflow-hidden animate-in slide-in-from-top-2 duration-300">
+                  <div class="pb-8 pt-0 overflow-hidden animate-in slide-in-from-top-2 duration-300">
                     <slot 
                       name="expansion" 
                       :row="row" 

@@ -10,63 +10,53 @@
         <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ funds.length }} Active Targets</span>
       </div>
       
-      <div class="space-y-4">
-        <div 
-          v-for="fund in funds" 
-          :key="fund.id"
-          class="p-6 rounded-2xl bg-white border border-slate-100 hover:border-violet-200 transition-all shadow-sm"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <p class="text-xs font-black text-slate-900 tracking-tight">
-                {{ fund.name }}
-              </p>
-              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                {{ fund.collectorCount || 0 }} Collectors Assigned
-              </p>
-            </div>
-            <div class="text-right">
-              <div
-                v-if="fund.totals?.length"
-                class="space-y-0.5"
-              >
-                <p
-                  v-for="t in fund.totals"
-                  :key="t.currency"
-                  class="text-[11px] font-black text-slate-900 italic"
-                >
-                  {{ formatCurrency(t.amount, t.currency) }} <span class="text-slate-400 font-bold not-italic">/ {{ fund.targetAmount > 0 ? formatCurrency(fund.targetAmount, t.currency) : 'No target set' }}</span>
-                </p>
-              </div>
-              <p
-                v-else
-                class="text-[11px] font-black text-slate-400 italic"
-              >
-                GHS 0.00 <span class="text-slate-300 font-bold not-italic">/ {{ fund.targetAmount > 0 ? formatCurrency(fund.targetAmount, 'GHS') : 'No target set' }}</span>
-              </p>
-            </div>
-          </div>
-          
-          <div
-            v-if="fund.targetAmount > 0"
-            class="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden"
-          >
-            <div 
-              class="h-full rounded-full transition-all duration-1000" 
-              :class="calculateProgress(fund) > 50 ? 'bg-emerald-500' : 'bg-violet-500'" 
-              :style="{ width: `${calculateProgress(fund)}%` }" 
-            />
-          </div>
-        </div>
-        
-        <div
-          v-if="!funds.length"
-          class="p-12 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/30"
-        >
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            No funds allocated to this event
-          </p>
-        </div>
+      <div class="overflow-hidden rounded-2xl border border-slate-100 bg-slate-50/50">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-100 bg-slate-100/30">
+              <th class="px-6 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest">Fund Name</th>
+              <th class="px-6 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest">Collectors</th>
+              <th class="px-6 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-right">Collected / Target</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr 
+              v-for="fund in funds" 
+              :key="fund.id"
+              class="group hover:bg-white transition-colors"
+            >
+              <td class="px-6 py-4">
+                <p class="text-xs font-black text-slate-900 tracking-tight">{{ fund.name }}</p>
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-xs font-bold text-slate-600">{{ fund.collectorCount || 0 }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex flex-col items-end gap-1.5">
+                  <p class="text-[11px] font-black text-slate-900 italic">
+                    {{ formatCurrency(getGhsTotal(fund), 'GHS') }} 
+                    <span class="text-slate-400 font-bold not-italic">/ {{ fund.targetAmount > 0 ? formatCurrency(fund.targetAmount, 'GHS') : 'No target set' }}</span>
+                  </p>
+                  <div
+                    v-if="fund.targetAmount > 0"
+                    class="h-1 w-24 bg-slate-200 rounded-full overflow-hidden"
+                  >
+                    <div 
+                      class="h-full rounded-full transition-all duration-1000" 
+                      :class="getProgressColor(fund)" 
+                      :style="{ width: `${calculateProgress(fund)}%` }" 
+                    />
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="!funds.length">
+              <td colspan="3" class="px-6 py-12 text-center">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No recipient funds assigned.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -80,32 +70,24 @@
         <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ collectors.length }} Assigned</span>
       </div>
       
-      <div class="space-y-3">
+      <div class="space-y-2">
         <div 
           v-for="collector in collectors" 
           :key="collector.id"
-          class="group p-4 rounded-xl bg-white border border-slate-100 hover:border-amber-200 transition-all flex items-center justify-between"
+          class="flex items-center justify-between p-4 rounded-xl bg-white border border-slate-100 group hover:border-slate-200 transition-all"
         >
-          <div class="flex items-center gap-4">
-            <div class="relative">
-              <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-black text-slate-400 group-hover:bg-amber-50 group-hover:border-amber-100 transition-colors">
-                {{ collector.name.charAt(0) }}
-              </div>
-              <div 
-                class="absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white"
-                :class="collector.status === 'active' ? 'bg-emerald-500' : 'bg-slate-300'"
-              />
-            </div>
-            <div>
-              <p class="text-sm font-black text-slate-900 tracking-tight">
-                {{ collector.name }}
-              </p>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-                {{ collector.assignedFundName || 'Primary Fund' }} | {{ collector.totalCollectedFormatted || 'GHS 0.00' }} / {{ collector.limitFormatted || 'No limit' }}
-              </p>
-            </div>
+          <div class="flex items-center gap-3">
+            <div 
+              class="w-2 h-2 rounded-full"
+              :class="collector.status === 'active' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
+            />
+            <p class="text-sm font-black text-slate-900 tracking-tight">{{ collector.name }}</p>
           </div>
-          <ChevronRight class="w-4 h-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            {{ collector.assignedFundName || 'Unassigned' }} | 
+            <span class="text-slate-900 font-black italic">{{ collector.totalCollectedFormatted || 'GHS 0.00' }}</span> 
+            <span class="text-slate-300">/ {{ collector.limitFormatted || '∞' }}</span>
+          </p>
         </div>
         
         <div
@@ -113,7 +95,7 @@
           class="p-12 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/30"
         >
           <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            No agents assigned to this event
+            No field agents assigned.
           </p>
         </div>
       </div>
@@ -143,9 +125,19 @@ onMounted(async () => {
   }
 })
 
+function getGhsTotal(fund: RecipientFund) {
+  return fund.totals?.find(t => t.currency === 'GHS')?.amount ?? 0
+}
+
 function calculateProgress(fund: RecipientFund) {
-  if (!fund.targetAmount || !fund.totals?.length) return 0
-  const ghsTotal = fund.totals.find(t => t.currency === 'GHS')?.amount ?? 0
-  return Math.min(100, Math.round((ghsTotal / fund.targetAmount) * 100))
+  if (!fund.targetAmount) return 0
+  return Math.min(100, Math.round((getGhsTotal(fund) / fund.targetAmount) * 100))
+}
+
+function getProgressColor(fund: RecipientFund) {
+  const progress = calculateProgress(fund)
+  if (progress >= 50) return 'bg-emerald-500'
+  if (progress > 0) return 'bg-amber-500'
+  return 'bg-slate-300'
 }
 </script>
