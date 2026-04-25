@@ -228,11 +228,11 @@ const sortKey = ref('title')
 const sortOrder = ref<'asc' | 'desc'>('asc')
 
 const columns = [
-  { key: 'title', label: 'Event', sortable: true, width: '40%' },
-  { key: 'raised', label: 'Raised', sortable: false, width: '20%' },
-  { key: 'fundCount', label: 'Funds', sortable: true, width: '10%' },
-  { key: 'collectorCount', label: 'Team', sortable: true, width: '10%' },
-  { key: 'dates', label: 'Date', sortable: true, width: '15%' },
+  { key: 'title', label: 'Event', sortable: true, width: '45%' },
+  { key: 'raised', label: 'Raised', sortable: false, width: '15%' },
+  { key: 'fundCount', label: 'Funds', sortable: true, width: '8%' },
+  { key: 'collectorCount', label: 'Team', sortable: true, width: '12%' },
+  { key: 'dates', label: 'Date', sortable: true, width: '20%' },
 ]
 
 const events = computed(() => query.data.value ?? [])
