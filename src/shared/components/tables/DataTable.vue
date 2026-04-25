@@ -43,7 +43,7 @@
                 v-for="column in columns"
                 :key="column.key"
               >
-                <SortableHeader
+                <TableSortHeader
                   v-if="column.sortable"
                   :label="column.label"
                   :column-key="column.key"
@@ -175,7 +175,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ChevronRight, Download, Inbox, Printer } from 'lucide-vue-next'
-import SortableHeader from './SortableHeader.vue'
+import TableSortHeader from './TableSortHeader.vue'
 import AppButton from '../buttons/AppButton.vue'
 import { useToastStore } from '@/shared/stores/useToastStore'
 
