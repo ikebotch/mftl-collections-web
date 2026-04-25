@@ -67,14 +67,65 @@
         <!-- Overview Tab -->
         <div
           v-if="activeTab === 'overview'"
-          class="grid grid-cols-1 lg:grid-cols-2 gap-10"
+          class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-16 items-start"
         >
-          <!-- Left Column: Event Details -->
-          <div class="space-y-8">
-            <AppCard class="!p-8 border-none shadow-soft bg-white relative">
+          <!-- Left Sidebar: Overview Sections -->
+          <aside class="sticky top-10 space-y-8 hidden lg:block">
+            <div class="space-y-6">
+              <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">
+                Overview Sections
+              </h3>
+              
+              <nav class="relative">
+                <!-- Connecting Line -->
+                <div class="absolute left-[19px] top-4 bottom-4 w-[1px] bg-slate-100 z-0" />
+                
+                <ul class="space-y-4 relative z-10">
+                  <li 
+                    v-for="(section, index) in overviewSections" 
+                    :key="section.id"
+                  >
+                    <button
+                      class="w-full flex items-center gap-4 p-2 rounded-2xl transition-all duration-300 group text-left"
+                      :class="activeSection === section.id ? 'bg-violet-50' : 'hover:bg-slate-50'"
+                      @click="scrollToSection(section.id)"
+                    >
+                      <div 
+                        class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all duration-300"
+                        :class="activeSection === section.id 
+                          ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/20' 
+                          : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'"
+                      >
+                        {{ index + 1 }}
+                      </div>
+                      <div class="min-w-0">
+                        <p 
+                          class="text-xs font-black tracking-tight transition-colors duration-300"
+                          :class="activeSection === section.id ? 'text-violet-600' : 'text-slate-900'"
+                        >
+                          {{ section.title }}
+                        </p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate">
+                          {{ section.subtitle }}
+                        </p>
+                      </div>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </aside>
+
+          <!-- Right Column: Stacked Cards -->
+          <div class="flex flex-col gap-12">
+            <!-- Event Details -->
+            <AppCard 
+              id="section-detail"
+              class="!p-8 border-none shadow-soft bg-white relative scroll-mt-10"
+            >
               <div class="flex items-center justify-between mb-8">
                 <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-                  Event Details
+                  Event Detail
                 </h3>
                 <AppButton
                   v-if="!isEditing"
@@ -203,38 +254,11 @@
               </div>
             </AppCard>
 
-            <AppCard
-              v-if="!isEditing"
-              class="!p-8 border-none shadow-soft bg-white"
-            >
-              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
-                Campaign Metadata
-              </h3>
-              <div class="grid grid-cols-2 gap-8">
-                <div class="space-y-1">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    ID
-                  </p>
-                  <p class="text-[11px] font-mono font-bold text-slate-900">
-                    {{ event.id.slice(0, 8) }}...
-                  </p>
-                </div>
-                <div class="space-y-1">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Created By
-                  </p>
-                  <p class="text-[11px] font-bold text-slate-900">
-                    System Admin
-                  </p>
-                </div>
-              </div>
-            </AppCard>
-          </div>
-
-          <!-- Right Column: Funds and Images -->
-          <div class="space-y-10">
             <!-- Recipient Funds -->
-            <AppCard class="!p-8 border-none shadow-soft bg-white">
+            <AppCard 
+              id="section-funds"
+              class="!p-8 border-none shadow-soft bg-white scroll-mt-10"
+            >
               <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
                   Recipient Funds
@@ -252,7 +276,10 @@
             </AppCard>
 
             <!-- Event Images -->
-            <AppCard class="!p-8 border-none shadow-soft bg-white">
+            <AppCard 
+              id="section-images"
+              class="!p-8 border-none shadow-soft bg-white scroll-mt-10"
+            >
               <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">
                 Event Images
               </h3>
@@ -335,6 +362,35 @@
                   label="Receipt Logo URL"
                   placeholder="https://..."
                 />
+              </div>
+            </AppCard>
+
+            <!-- Campaign Metadata -->
+            <AppCard
+              v-if="!isEditing"
+              id="section-metadata"
+              class="!p-8 border-none shadow-soft bg-white scroll-mt-10"
+            >
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
+                Campaign Metadata
+              </h3>
+              <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-1">
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    ID
+                  </p>
+                  <p class="text-[11px] font-mono font-bold text-slate-900">
+                    {{ event.id.slice(0, 8) }}...
+                  </p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Created By
+                  </p>
+                  <p class="text-[11px] font-bold text-slate-900">
+                    System Admin
+                  </p>
+                </div>
               </div>
             </AppCard>
           </div>
@@ -430,7 +486,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watchEffect, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEvent, useUpdateEvent } from '../composables/useEvents'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
@@ -475,6 +531,45 @@ const tabs = [
   { key: 'activity', label: 'Activity / Audit' },
   { key: 'settings', label: 'Settings' },
 ]
+
+// Overview Navigation Logic
+const activeSection = ref('section-detail')
+const overviewSections = [
+  { id: 'section-detail', title: 'Event Detail', subtitle: 'Basic information and key details' },
+  { id: 'section-funds', title: 'Recipient Funds', subtitle: 'Manage fund distribution' },
+  { id: 'section-images', title: 'Event Images', subtitle: 'System and receipt images' },
+  { id: 'section-metadata', title: 'Campaign Purpose', subtitle: 'Audit and tracking data' },
+]
+
+let observer: IntersectionObserver | null = null
+
+onMounted(() => {
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        activeSection.value = entry.target.id
+      }
+    })
+  }, { threshold: [0.5], rootMargin: '-80px 0px -50% 0px' })
+
+  overviewSections.forEach(section => {
+    const el = document.getElementById(section.id)
+    if (el) observer?.observe(el)
+  })
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+})
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' })
+    activeSection.value = id
+  }
+}
+
 
 // Inline Editing Logic
 const isEditing = ref(route.query.edit === 'true')
