@@ -17,45 +17,67 @@
     class="space-y-10 pb-20"
   >
     <!-- Page Header -->
-    <AdminPageHeader
+    <DetailPageHeader
       :title="event.title"
       description="Operational management, fund allocation, and contribution auditing."
+      back-to="/admin/events"
+      back-label="Events List"
+      :image-url="event.displayImageUrl"
     >
+      <template #status>
+        <div class="flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-200">
+          <div 
+            class="w-1.5 h-1.5 rounded-full"
+            :class="event.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
+          />
+          <span class="text-[9px] font-black text-slate-900 uppercase tracking-widest">
+            {{ event.isActive ? 'Active' : 'Draft' }}
+          </span>
+        </div>
+      </template>
+
       <template #actions>
         <div class="flex items-center gap-3">
           <AppButton
-            variant="outline"
-            class="bg-transparent border-slate-200"
-            @click="activeTab = 'funds'"
-          >
-            <Target class="w-4 h-4 mr-2" />
-            Manage Funds
-          </AppButton>
-          <AppButton
-            variant="outline"
-            class="bg-transparent border-slate-200"
+            variant="secondary"
+            size="sm"
+            class="bg-white border-slate-200"
             @click="previewStorefront"
           >
-            <ExternalLink class="w-4 h-4 mr-2" />
+            <template #icon><ExternalLink class="w-3.5 h-3.5 mr-2" /></template>
             Preview Storefront
           </AppButton>
+          
           <AppButton
-            variant="outline"
-            class="bg-transparent border-slate-200"
+            variant="secondary"
+            size="sm"
+            class="bg-white border-slate-200"
             @click="copyPublicLink"
           >
-            <Link2 class="w-4 h-4 mr-2" />
+            <template #icon><Link2 class="w-3.5 h-3.5 mr-2" /></template>
             Copy Link
           </AppButton>
-          <AppButton
-            variant="ghost"
-            class="border border-slate-200"
+
+          <RowActions
+            :actions="[
+              { label: 'Manage Recipient Funds', icon: 'Target', onClick: () => activeTab = 'funds' },
+              { label: 'Event Analytics', icon: 'BarChart2', onClick: () => {} },
+              { label: 'Archive Event', icon: 'Trash2', onClick: () => {}, variant: 'danger' }
+            ]"
           >
-            <MoreVertical class="w-4 h-4" />
-          </AppButton>
+            <template #trigger>
+              <AppButton
+                variant="ghost"
+                size="sm"
+                class="border border-slate-200 w-10 p-0"
+              >
+                <MoreVertical class="w-4 h-4" />
+              </AppButton>
+            </template>
+          </RowActions>
         </div>
       </template>
-    </AdminPageHeader>
+    </DetailPageHeader>
 
     <div class="space-y-8">
       <DetailTabs
@@ -81,9 +103,9 @@
                 </h3>
                 <AppButton
                   v-if="!isEditing"
-                  variant="outline"
-                  size="sm"
-                  class="!text-[10px] uppercase tracking-widest font-black bg-transparent border-slate-200"
+                  variant="secondary"
+                  size="xs"
+                  class="bg-transparent border-slate-200"
                   @click="startEditing"
                 >
                   Edit Details
@@ -95,17 +117,17 @@
                 class="space-y-10"
               >
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div class="space-y-1">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Title
+                  <div class="space-y-1.5">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                      Campaign Title
                     </p>
                     <p class="text-lg font-black text-slate-900 tracking-tight leading-none uppercase">
                       {{ event.title }}
                     </p>
                   </div>
-                  <div class="space-y-1">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Public Slug
+                  <div class="space-y-1.5">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                      Public Path
                     </p>
                     <p class="text-lg font-black text-slate-900 tracking-tight leading-none italic underline decoration-slate-200">
                       /give/{{ event.slug }}
@@ -113,9 +135,9 @@
                   </div>
                 </div>
 
-                <div class="space-y-1">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Description
+                <div class="space-y-1.5">
+                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                    Operational Description
                   </p>
                   <p class="text-sm font-medium text-slate-600 leading-relaxed max-w-2xl">
                     {{ event.description || 'No description provided.' }}
@@ -123,25 +145,25 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div class="space-y-1">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Start Date
+                  <div class="space-y-1.5">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                      Launch Date
                     </p>
                     <p class="text-sm font-black text-slate-900 uppercase">
                       {{ formatDate(event.eventDate) }}
                     </p>
                   </div>
-                  <div class="space-y-1">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Operational Status
+                  <div class="space-y-1.5">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                      Administrative Status
                     </p>
-                    <div class="pt-2 flex items-center gap-2">
+                    <div class="pt-1 flex items-center gap-2">
                       <div 
-                        class="w-2 h-2 rounded-full"
-                        :class="event.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
+                        class="w-1.5 h-1.5 rounded-full"
+                        :class="event.isActive ? 'bg-emerald-500' : 'bg-slate-300'"
                       />
                       <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">
-                        {{ event.isActive ? 'Active' : 'Draft' }}
+                        {{ event.isActive ? 'Active / Visible' : 'Inactive / Draft' }}
                       </span>
                     </div>
                   </div>
@@ -189,7 +211,8 @@
                     label="Status"
                     :options="[
                       { label: 'Active', value: true },
-                      { label: 'Inactive / Draft', value: false }
+                      { label: 'Inactive / Draft', value: false },
+                      { label: 'Archive / Delete', value: false }
                     ]"
                   />
                 </div>
@@ -206,9 +229,9 @@
                   Recipient Funds
                 </h3>
                 <AppButton
-                  variant="outline"
-                  size="sm"
-                  class="!text-[10px] uppercase tracking-widest font-black bg-transparent border-slate-200"
+                  variant="secondary"
+                  size="xs"
+                  class="bg-transparent border-slate-200"
                   @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)"
                 >
                   <Plus class="w-3 h-3 mr-2" /> Add Fund
@@ -237,34 +260,6 @@
                   label="Receipt / POS Logo"
                   :icon="Printer"
                 />
-              </div>
-            </AppCard>
-
-            <!-- Campaign Metadata -->
-            <AppCard
-              id="section-metadata"
-              class="!p-10 scroll-mt-10 border-slate-200"
-            >
-              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">
-                Campaign Metadata
-              </h3>
-              <div class="grid grid-cols-2 gap-10">
-                <div class="space-y-1">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Event Identifier
-                  </p>
-                  <p class="text-xs font-mono font-bold text-slate-900 bg-slate-100 px-2 py-1 inline-block border border-slate-200">
-                    {{ event.id }}
-                  </p>
-                </div>
-                <div class="space-y-1">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Created By
-                  </p>
-                  <p class="text-sm font-black text-slate-900 uppercase">
-                    System Administrator
-                  </p>
-                </div>
               </div>
             </AppCard>
           </AdminWizardLayout>
@@ -413,7 +408,7 @@ import { ref, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEvent, useUpdateEvent } from '../composables/useEvents'
 import { useToastStore } from '@/shared/stores/useToastStore'
-import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
+import DetailPageHeader from '@/shared/components/headers/DetailPageHeader.vue'
 import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
 import AuditTimeline from '@/shared/components/feedback/AuditTimeline.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
@@ -428,6 +423,7 @@ import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
 import EventCollectorsList from '../components/EventCollectorsList.vue'
 import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
 import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
+import RowActions from '@/shared/components/tables/RowActions.vue'
 import { formatDate } from '@/core/formatting/formatters'
 import { 
   Target, 
@@ -440,7 +436,9 @@ import {
   History,
   LayoutDashboard,
   Users,
-  Settings
+  Settings,
+  Trash2,
+  BarChart2
 } from 'lucide-vue-next'
 import type { UpdateEventInput } from '../types/event'
 
@@ -463,19 +461,15 @@ const tabs = [
   { key: 'settings', label: 'Settings', icon: 'Settings' },
 ]
 
-// Overview Sections
 const overviewSections = [
   { id: 'section-detail', title: 'Event Detail', subtitle: 'Identity & Status' },
   { id: 'section-funds', title: 'Recipient Funds', subtitle: 'Fund Management' },
   { id: 'section-images', title: 'Media & Branding', subtitle: 'Images & Logos' },
-  { id: 'section-metadata', title: 'Campaign Purpose', subtitle: 'Audit Metadata' },
 ]
 
-// Inline Editing Logic
 const isEditing = ref(route.query.edit === 'true')
 const form = ref<UpdateEventInput | null>(null)
 
-// Proxy for media inputs so we can track changes independently of edit mode
 const displayImageUrlProxy = ref('')
 const receiptLogoUrlProxy = ref('')
 
@@ -532,7 +526,6 @@ async function handleSave() {
     receiptLogoUrl: receiptLogoUrlProxy.value
   }
 
-  // Ensure media is included even if not in "edit" mode for details
   if (!isEditing.value) {
     payload.displayImageUrl = displayImageUrlProxy.value
     payload.receiptLogoUrl = receiptLogoUrlProxy.value
@@ -580,15 +573,6 @@ const auditItems = computed(() => [
     description: `Event initialized by system`,
     date: formatDate(event.value?.eventDate),
     datetime: event.value?.eventDate || new Date().toISOString()
-  },
-  {
-    id: '2',
-    type: 'update' as const,
-    content: 'Status Updated',
-    target: event.value?.isActive ? 'Active' : 'Draft',
-    description: `Event status moved to operational state`,
-    date: 'Today',
-    datetime: new Date().toISOString()
   }
 ])
 
@@ -601,6 +585,8 @@ function copyPublicLink() {
 
 function previewStorefront() {
   if (!event.value) return
-  window.open(`/give/${event.value.slug}`, '_blank')
+  // Correct absolute URL for storefront
+  const url = `${window.location.origin}/give/${event.value.slug}`
+  window.open(url, '_blank')
 }
 </script>
