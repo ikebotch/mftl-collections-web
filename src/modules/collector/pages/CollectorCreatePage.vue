@@ -19,13 +19,32 @@
     <form @submit.prevent="handleSubmit">
       <AppCard class="shadow-premium border-none !p-12 bg-white rounded-[2rem] min-h-[400px]">
         <!-- Step 1: Details -->
-        <div v-if="currentStep === 1" class="space-y-10">
+        <div
+          v-if="currentStep === 1"
+          class="space-y-10"
+        >
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput v-model="form.name" label="Full Name" placeholder="e.g. John Doe" required />
-            <AppInput v-model="form.email" label="Email Address" type="email" placeholder="john@example.com" required />
+            <AppInput
+              v-model="form.name"
+              label="Full Name"
+              placeholder="e.g. John Doe"
+              required
+            />
+            <AppInput
+              v-model="form.email"
+              label="Email Address"
+              type="email"
+              placeholder="john@example.com"
+              required
+            />
           </div>
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput v-model="form.phone" label="Phone Number" placeholder="+233..." required />
+            <AppInput
+              v-model="form.phone"
+              label="Phone Number"
+              placeholder="+233..."
+              required
+            />
             <AppSelect
               v-model="form.type"
               label="Collector Type"
@@ -48,31 +67,71 @@
               ]"
             />
           </div>
-          <AppTextarea id="collector-notes" v-model="form.notes" label="Notes" placeholder="Optional notes about this collector..." :rows="3" />
+          <AppTextarea
+            id="collector-notes"
+            v-model="form.notes"
+            label="Notes"
+            placeholder="Optional notes about this collector..."
+            :rows="3"
+          />
         </div>
 
         <!-- Step 2: Access & Permissions -->
-        <div v-if="currentStep === 2" class="space-y-8">
+        <div
+          v-if="currentStep === 2"
+          class="space-y-8"
+        >
           <div class="space-y-4">
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">System Access</h3>
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">
+              System Access
+            </h3>
             <div class="grid gap-4">
-              <ToggleCard v-model="form.loginEnabled" title="Login Enabled" description="Allow collector to sign in to the mobile app." />
-              <ToggleCard v-model="form.sendInvite" title="Send Auth0 Invite" description="Automatically send an email invite to set up credentials." />
+              <ToggleCard
+                v-model="form.loginEnabled"
+                title="Login Enabled"
+                description="Allow collector to sign in to the mobile app."
+              />
+              <ToggleCard
+                v-model="form.sendInvite"
+                title="Send Auth0 Invite"
+                description="Automatically send an email invite to set up credentials."
+              />
             </div>
           </div>
           <div class="space-y-4">
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">Field Permissions</h3>
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">
+              Field Permissions
+            </h3>
             <div class="grid gap-4">
-              <ToggleCard v-model="form.recordCash" title="Record Cash Contributions" description="Can accept and record physical cash." />
-              <ToggleCard v-model="form.issueReceipts" title="Issue Receipts" description="Can generate and send digital receipts." />
-              <ToggleCard v-model="form.viewDashboard" title="View Assigned Dashboard" description="Can see personal performance metrics." />
-              <ToggleCard v-model="form.viewReports" title="View Assigned Reports" description="Access to historical collection data." />
+              <ToggleCard
+                v-model="form.recordCash"
+                title="Record Cash Contributions"
+                description="Can accept and record physical cash."
+              />
+              <ToggleCard
+                v-model="form.issueReceipts"
+                title="Issue Receipts"
+                description="Can generate and send digital receipts."
+              />
+              <ToggleCard
+                v-model="form.viewDashboard"
+                title="View Assigned Dashboard"
+                description="Can see personal performance metrics."
+              />
+              <ToggleCard
+                v-model="form.viewReports"
+                title="View Assigned Reports"
+                description="Access to historical collection data."
+              />
             </div>
           </div>
         </div>
 
         <!-- Step 3: Assignments -->
-        <div v-if="currentStep === 3" class="space-y-10">
+        <div
+          v-if="currentStep === 3"
+          class="space-y-10"
+        >
           <div class="p-6 rounded-2xl bg-amber-50 border border-amber-100 flex gap-4">
             <Info class="w-5 h-5 text-amber-600 shrink-0" />
             <p class="text-xs text-amber-900 font-medium leading-relaxed">
@@ -81,27 +140,63 @@
             </p>
           </div>
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput v-model="form.region" label="Region/Location" placeholder="e.g. Accra Central" />
+            <AppInput
+              v-model="form.region"
+              label="Region/Location"
+              placeholder="e.g. Accra Central"
+            />
           </div>
         </div>
 
         <!-- Step 4: Device & Limits -->
-        <div v-if="currentStep === 4" class="space-y-10">
+        <div
+          v-if="currentStep === 4"
+          class="space-y-10"
+        >
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput v-model="form.deviceName" label="Device Name" placeholder="e.g. Samsung A54" />
-            <AppInput v-model="form.deviceId" label="Device ID (Serial)" placeholder="Optional" />
+            <AppInput
+              v-model="form.deviceName"
+              label="Device Name"
+              placeholder="e.g. Samsung A54"
+            />
+            <AppInput
+              v-model="form.deviceId"
+              label="Device ID (Serial)"
+              placeholder="Optional"
+            />
           </div>
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput v-model="form.dailyLimit" type="number" label="Daily Collection Limit" placeholder="0.00">
-              <template #prefix><span class="text-slate-400 font-bold">GHS</span></template>
+            <AppInput
+              v-model="form.dailyLimit"
+              type="number"
+              label="Daily Collection Limit"
+              placeholder="0.00"
+            >
+              <template #prefix>
+                <span class="text-slate-400 font-bold">GHS</span>
+              </template>
             </AppInput>
-            <AppInput v-model="form.maxCashHolding" type="number" label="Max Cash Holding Limit" placeholder="0.00">
-              <template #prefix><span class="text-slate-400 font-bold">GHS</span></template>
+            <AppInput
+              v-model="form.maxCashHolding"
+              type="number"
+              label="Max Cash Holding Limit"
+              placeholder="0.00"
+            >
+              <template #prefix>
+                <span class="text-slate-400 font-bold">GHS</span>
+              </template>
             </AppInput>
           </div>
           <div class="grid md:grid-cols-2 gap-10">
-            <AppInput v-model="form.approvalThreshold" type="number" label="Supervisor Approval Threshold" placeholder="0.00">
-              <template #prefix><span class="text-slate-400 font-bold">GHS</span></template>
+            <AppInput
+              v-model="form.approvalThreshold"
+              type="number"
+              label="Supervisor Approval Threshold"
+              placeholder="0.00"
+            >
+              <template #prefix>
+                <span class="text-slate-400 font-bold">GHS</span>
+              </template>
             </AppInput>
             <div class="flex items-center justify-between p-6 rounded-2xl bg-slate-50/50">
               <span class="text-sm font-bold text-slate-700">Offline Allowed</span>
@@ -111,32 +206,59 @@
         </div>
 
         <!-- Step 5: Review -->
-        <div v-if="currentStep === 5" class="space-y-10">
+        <div
+          v-if="currentStep === 5"
+          class="space-y-10"
+        >
           <section class="p-8 rounded-[2rem] bg-slate-900 text-white flex items-center gap-6 shadow-premium">
             <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-2xl font-black">
               {{ form.name.charAt(0) }}
             </div>
             <div>
-              <p class="text-2xl font-black tracking-tight">{{ form.name }}</p>
-              <p class="text-slate-400 font-medium uppercase tracking-widest text-[10px] mt-1">{{ form.type }} • {{ form.status }}</p>
+              <p class="text-2xl font-black tracking-tight">
+                {{ form.name }}
+              </p>
+              <p class="text-slate-400 font-medium uppercase tracking-widest text-[10px] mt-1">
+                {{ form.type }} • {{ form.status }}
+              </p>
             </div>
           </section>
 
           <div class="grid md:grid-cols-2 gap-12">
             <div class="space-y-6">
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Identity & Access</h4>
+              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                Identity & Access
+              </h4>
               <div class="space-y-2">
-                <p class="text-sm font-bold text-slate-900">{{ form.email }}</p>
-                <p class="text-sm font-bold text-slate-900">{{ form.phone }}</p>
+                <p class="text-sm font-bold text-slate-900">
+                  {{ form.email }}
+                </p>
+                <p class="text-sm font-bold text-slate-900">
+                  {{ form.phone }}
+                </p>
                 <div class="flex gap-2 mt-4">
-                  <StatusBadge v-if="form.loginEnabled" status="Login" variant="success" />
-                  <StatusBadge v-if="form.recordCash" status="Cash" variant="neutral" />
-                  <StatusBadge v-if="form.issueReceipts" status="Receipts" variant="neutral" />
+                  <StatusBadge
+                    v-if="form.loginEnabled"
+                    status="Login"
+                    variant="success"
+                  />
+                  <StatusBadge
+                    v-if="form.recordCash"
+                    status="Cash"
+                    variant="neutral"
+                  />
+                  <StatusBadge
+                    v-if="form.issueReceipts"
+                    status="Receipts"
+                    variant="neutral"
+                  />
                 </div>
               </div>
             </div>
             <div class="space-y-6">
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Limits & Security</h4>
+              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                Limits & Security
+              </h4>
               <div class="space-y-3">
                 <div class="flex justify-between items-center">
                   <span class="text-xs font-bold text-slate-500">Daily Limit</span>
@@ -184,7 +306,10 @@
         >
           Continue
         </AppButton>
-        <div v-else class="flex gap-3">
+        <div
+          v-else
+          class="flex gap-3"
+        >
           <AppButton 
             variant="outline"
             class="!rounded-xl"

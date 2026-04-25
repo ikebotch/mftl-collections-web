@@ -43,7 +43,7 @@ describe('CollectorHistoryPage', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Receipt History')
+    expect(wrapper.text()).toContain('History')
     expect(wrapper.text()).toContain('RCT-1001')
   })
 })

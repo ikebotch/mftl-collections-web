@@ -38,10 +38,19 @@
           </div>
           <div class="text-right">
             <div class="flex flex-col items-end">
-              <p v-for="t in fund.totals" :key="t.currency" class="text-xs font-black text-slate-900">
+              <p
+                v-for="t in fund.totals"
+                :key="t.currency"
+                class="text-xs font-black text-slate-900"
+              >
                 {{ formatCurrency(t.amount, t.currency) }}
               </p>
-              <p v-if="!fund.totals?.length" class="text-xs font-black text-slate-900">GHS 0.00</p>
+              <p
+                v-if="!fund.totals?.length"
+                class="text-xs font-black text-slate-900"
+              >
+                GHS 0.00
+              </p>
             </div>
             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
               Raised

@@ -14,6 +14,8 @@ export interface EventDto {
   fundCount: number
   collectorCount: number
   slug: string
+  displayImageUrl?: string
+  receiptLogoUrl?: string
 }
 
 export interface Event extends EventDto {
@@ -25,6 +27,8 @@ export interface CreateEventInput {
   description: string
   eventDate: string | null
   slug: string
+  displayImageUrl?: string
+  receiptLogoUrl?: string
 }
 
 export interface UpdateEventInput {
@@ -33,4 +37,6 @@ export interface UpdateEventInput {
   eventDate: string
   isActive: boolean
   slug: string
+  displayImageUrl?: string
+  receiptLogoUrl?: string
 }

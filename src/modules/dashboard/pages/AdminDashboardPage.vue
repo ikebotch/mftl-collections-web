@@ -88,19 +88,32 @@
                   Real-time reconciliation across all organizations
                 </p>
               </div>
-              <AppButton variant="ghost" size="xs" class="text-[9px] font-black uppercase tracking-widest hover:bg-white" @click="router.push('/admin/contributions')">
+              <AppButton
+                variant="ghost"
+                size="xs"
+                class="text-[9px] font-black uppercase tracking-widest hover:bg-white"
+                @click="router.push('/admin/contributions')"
+              >
                 Intelligence View
               </AppButton>
             </div>
             
-            <div v-if="!query.data.value?.recentContributions.length" class="p-16 text-center">
+            <div
+              v-if="!query.data.value?.recentContributions.length"
+              class="p-16 text-center"
+            >
               <div class="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center mx-auto mb-4 border border-slate-100">
                 <Activity class="w-8 h-8 text-slate-200" />
               </div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">No activity recorded</p>
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                No activity recorded
+              </p>
             </div>
             
-            <div v-else class="divide-y divide-slate-50">
+            <div
+              v-else
+              class="divide-y divide-slate-50"
+            >
               <div
                 v-for="(contribution, index) in query.data.value?.recentContributions"
                 :key="index"
@@ -135,7 +148,10 @@
               </div>
             </div>
             <div class="p-4 bg-slate-50/30 text-center border-t border-slate-50">
-              <button class="text-[10px] font-black text-violet-600 uppercase tracking-widest hover:underline" @click="router.push('/admin/contributions')">
+              <button
+                class="text-[10px] font-black text-violet-600 uppercase tracking-widest hover:underline"
+                @click="router.push('/admin/contributions')"
+              >
                 Expand Stream Archive
               </button>
             </div>
@@ -160,7 +176,10 @@
                   </div>
                   <span class="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Sync Status</span>
                 </div>
-                <StatusBadge status="Stable" tone="success" />
+                <StatusBadge
+                  status="Stable"
+                  tone="success"
+                />
               </div>
 
               <div class="flex justify-between items-center group">
@@ -186,7 +205,9 @@
 
             <div class="pt-6 border-t border-slate-50">
               <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Resource Allocation</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                  Resource Allocation
+                </p>
                 <div class="space-y-3">
                   <div class="flex justify-between text-[10px] font-bold">
                     <span class="text-slate-500">Fund Coverage</span>
@@ -214,10 +235,18 @@
             </div>
             
             <div class="relative space-y-4">
-              <AppButton variant="primary" class="w-full !rounded-xl shadow-xl shadow-violet-500/20 !border-none" @click="router.push('/admin/collectors/new')">
+              <AppButton
+                variant="primary"
+                class="w-full !rounded-xl shadow-xl shadow-violet-500/20 !border-none"
+                @click="router.push('/admin/collectors/new')"
+              >
                 Onboard New Collector
               </AppButton>
-              <AppButton variant="outline" class="w-full !rounded-xl !border-white/10 !text-white hover:!bg-white/5" @click="router.push('/admin/reports')">
+              <AppButton
+                variant="outline"
+                class="w-full !rounded-xl !border-white/10 !text-white hover:!bg-white/5"
+                @click="router.push('/admin/reports')"
+              >
                 Performance Audit
               </AppButton>
             </div>
@@ -234,7 +263,6 @@ import { useRouter } from 'vue-router'
 import { useCopy } from '@/core/i18n/useCopy'
 import { useDashboard } from '../composables/useDashboard'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
-import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
@@ -246,9 +274,6 @@ import {
   Calendar,
   Plus, 
   Heart,
-  Users,
-  ShieldCheck,
-  Wallet,
   Activity,
   Zap,
   UserCheck,

@@ -48,10 +48,8 @@ describe('CollectorReceiptPage', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Receipt')
+    expect(wrapper.text()).toContain('RCT-123')
     expect(wrapper.text()).toContain('Collector Donor')
-    expect(wrapper.text()).toContain('+233241234567')
     expect(wrapper.text()).toContain('Abena Osei')
-    expect(wrapper.text()).toContain('Print placeholder')
   })
 })

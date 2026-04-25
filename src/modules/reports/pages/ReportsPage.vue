@@ -125,7 +125,10 @@
               <div class="flex items-center justify-end gap-2">
                 <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">{{ event.percent }}% of Target</span>
                 <div class="w-12 bg-slate-200 h-1 rounded-full overflow-hidden">
-                  <div class="h-full bg-emerald-500" :style="{ width: event.percent + '%' }" />
+                  <div
+                    class="h-full bg-emerald-500"
+                    :style="{ width: event.percent + '%' }"
+                  />
                 </div>
               </div>
             </div>

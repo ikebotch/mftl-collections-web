@@ -73,34 +73,52 @@
         expandable
         @retry="query.refetch"
       >
-        <template #cell:title="{ value, row }">
+        <template #cell:title="{ row }">
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 shrink-0 group-hover:bg-white group-hover:border-violet-100 transition-all">
-              <Calendar class="w-5 h-5" />
+            <div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 shrink-0 overflow-hidden group-hover:border-violet-200 transition-all">
+              <img
+                v-if="row.displayImageUrl"
+                :src="row.displayImageUrl"
+                class="w-full h-full object-cover"
+              >
+              <Calendar
+                v-else
+                class="w-5 h-5"
+              />
             </div>
             <div class="min-w-0">
               <p class="text-sm font-black text-slate-900 truncate tracking-tight">
-                {{ value }}
+                {{ row.title }}
               </p>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-                {{ row.eventDate ? formatDate(row.eventDate) : 'No date' }} · /give/{{ row.slug }}
+                /give/{{ row.slug }}
               </p>
             </div>
           </div>
         </template>
 
         <template #cell:totalRaised="{ row }">
-          <span class="font-bold text-slate-700">
-            {{ row.totals?.length ? row.totals.map((t: any) => formatCurrency(t.amount, t.currency)).join(' • ') : 'GHS 0.00' }}
-          </span>
+          <div class="flex flex-col">
+            <span
+              v-for="t in row.totals"
+              :key="t.currency"
+              class="text-xs font-black text-slate-900 italic"
+            >
+              {{ formatCurrency(t.amount, t.currency) }}
+            </span>
+            <span
+              v-if="!row.totals?.length"
+              class="text-xs font-bold text-slate-400"
+            >GHS 0.00</span>
+          </div>
         </template>
 
         <template #cell:fundCount="{ value }">
-          <span class="text-xs font-bold text-slate-600">{{ value }} Funds</span>
+          <span class="text-sm font-black text-slate-900">{{ value || 0 }}</span>
         </template>
 
         <template #cell:collectorCount="{ value }">
-          <span class="text-xs font-bold text-slate-600">{{ value }} Collectors</span>
+          <span class="text-sm font-black text-slate-900">{{ value || 0 }}</span>
         </template>
 
         <template #cell:status="{ value }">
@@ -108,6 +126,12 @@
             :status="value"
             :tone="value === 'active' ? 'success' : 'neutral'"
           />
+        </template>
+
+        <template #cell:dates="{ row }">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            {{ row.eventDate ? formatDate(row.eventDate) : 'No date' }}
+          </span>
         </template>
 
         <template #rowActions="{ row }">
@@ -162,6 +186,7 @@ const columns = [
   { key: 'fundCount', label: 'Funds' },
   { key: 'collectorCount', label: 'Collectors' },
   { key: 'status', label: 'Status' },
+  { key: 'dates', label: 'Dates' },
 ]
 
 const events = computed(() => query.data.value ?? [])

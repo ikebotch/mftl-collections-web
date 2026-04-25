@@ -126,9 +126,9 @@
               <button 
                 v-for="loc in availableLocales" 
                 :key="loc"
-                @click="setLocale(loc)"
                 class="px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
                 :class="currentLocale === loc ? 'bg-white text-violet-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'"
+                @click="setLocale(loc)"
               >
                 {{ loc }}
               </button>

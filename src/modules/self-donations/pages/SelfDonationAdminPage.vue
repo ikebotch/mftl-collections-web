@@ -54,7 +54,10 @@
         </template>
 
         <template #cell:status="{ row }">
-          <StatusBadge :status="row.receiptStatus" :tone="row.receiptStatus.toLowerCase() === 'issued' ? 'success' : 'neutral'" />
+          <StatusBadge
+            :status="row.receiptStatus"
+            :tone="row.receiptStatus.toLowerCase() === 'issued' ? 'success' : 'neutral'"
+          />
         </template>
 
         <template #rowActions>
@@ -72,10 +75,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useCopy } from '@/core/i18n/useCopy'
 import { useSelfDonations } from '../composables/useSelfDonations'
 
-const { copy } = useCopy()
 const query = useSelfDonations()
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'

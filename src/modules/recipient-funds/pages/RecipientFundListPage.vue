@@ -68,14 +68,20 @@
 
         <template #cell:raised="{ row }">
           <div class="flex flex-col gap-1">
-            <div v-for="t in row.totals" :key="t.currency">
+            <div
+              v-for="t in row.totals"
+              :key="t.currency"
+            >
               <MoneyCell
                 :amount="t.amount"
                 :currency="t.currency"
               />
             </div>
             <div v-if="!row.totals?.length">
-              <MoneyCell :amount="0" currency="GHS" />
+              <MoneyCell
+                :amount="0"
+                currency="GHS"
+              />
             </div>
             <div class="mt-2 w-24">
               <ProgressBar

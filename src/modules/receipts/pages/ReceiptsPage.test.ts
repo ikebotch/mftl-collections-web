@@ -15,6 +15,6 @@ vi.mock('../composables/useReceipts', () => ({
 describe('ReceiptsPage', () => {
   it('renders the empty state when there are no receipts', () => {
     const wrapper = mount(ReceiptsPage)
-    expect(wrapper.text()).toContain('No receipts available')
+    expect(wrapper.text()).toContain('No records found')
   })
 })

@@ -32,10 +32,17 @@
         >
           <Building2 class="w-4 h-4 shrink-0" />
           <div class="flex-1 min-w-0">
-            <p class="text-xs font-bold truncate">{{ tenant.name }}</p>
-            <p class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Organization</p>
+            <p class="text-xs font-bold truncate">
+              {{ tenant.name }}
+            </p>
+            <p class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">
+              Organization
+            </p>
           </div>
-          <Check v-if="tenantStore.selectedTenantId === tenant.id" class="w-3 h-3" />
+          <Check
+            v-if="tenantStore.selectedTenantId === tenant.id"
+            class="w-3 h-3"
+          />
         </button>
       </div>
       
@@ -48,7 +55,10 @@
           <span class="text-xs font-bold">Custom Tenant ID</span>
         </button>
         
-        <div v-if="showCustom" class="px-4 pb-3 pt-1 space-y-2">
+        <div
+          v-if="showCustom"
+          class="px-4 pb-3 pt-1 space-y-2"
+        >
           <input
             v-model="customId"
             type="text"
@@ -56,7 +66,12 @@
             class="w-full bg-slate-800 border border-slate-700 text-white text-[10px] font-mono rounded-lg py-2 px-3 focus:outline-none focus:border-violet-500"
             @keyup.enter="applyCustomId"
           >
-          <AppButton size="xs" variant="primary" class="w-full" @click="applyCustomId">
+          <AppButton
+            size="xs"
+            variant="primary"
+            class="w-full"
+            @click="applyCustomId"
+          >
             Switch Tenant
           </AppButton>
         </div>

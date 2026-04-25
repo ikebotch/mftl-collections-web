@@ -29,7 +29,7 @@ describe('AdminLayout', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Dashboard')
+    expect(wrapper.text()).toContain('Overview')
     expect(wrapper.text()).toContain('Events')
     expect(wrapper.text()).toContain('Contributions')
   })

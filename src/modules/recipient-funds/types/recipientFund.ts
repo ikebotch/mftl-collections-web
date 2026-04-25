@@ -7,6 +7,7 @@ export interface RecipientFundDto {
   description: string
   targetAmount: number
   totals?: CurrencyTotal[]
+  collectorCount?: number
 }
 
 export interface RecipientFund extends RecipientFundDto {

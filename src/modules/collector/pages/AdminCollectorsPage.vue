@@ -68,11 +68,17 @@
         </template>
 
         <template #cell:today="{ row }">
-          <MoneyCell :amount="row.totalCollectedToday" currency="GHS" />
+          <MoneyCell
+            :amount="row.totalCollectedToday"
+            currency="GHS"
+          />
         </template>
 
         <template #cell:month="{ row }">
-          <MoneyCell :amount="row.totalCollectedToday * 12" currency="GHS" />
+          <MoneyCell
+            :amount="row.totalCollectedToday * 12"
+            currency="GHS"
+          />
         </template>
 
         <template #cell:donations="{ row }">
@@ -117,32 +123,55 @@
       :subtitle="selectedCollector?.name"
       @close="isDrawerOpen = false"
     >
-      <div v-if="selectedCollector" class="space-y-10">
+      <div
+        v-if="selectedCollector"
+        class="space-y-10"
+      >
         <section class="flex flex-col items-center text-center">
           <div class="w-24 h-24 rounded-[2.5rem] bg-slate-900 text-white flex items-center justify-center text-3xl font-black mb-6 shadow-premium">
             {{ getInitials(selectedCollector.name) }}
           </div>
-          <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ selectedCollector.name }}</h3>
-          <p class="text-slate-500 font-medium mt-1">{{ selectedCollector.email }}</p>
+          <h3 class="text-2xl font-black text-slate-900 tracking-tight">
+            {{ selectedCollector.name }}
+          </h3>
+          <p class="text-slate-500 font-medium mt-1">
+            {{ selectedCollector.email }}
+          </p>
           <div class="mt-6 flex gap-3">
-            <StatusBadge :status="selectedCollector.status" :tone="selectedCollector.status.toLowerCase() === 'active' ? 'success' : 'neutral'" />
-            <StatusBadge status="Field Agent" tone="neutral" />
+            <StatusBadge
+              :status="selectedCollector.status"
+              :tone="selectedCollector.status.toLowerCase() === 'active' ? 'success' : 'neutral'"
+            />
+            <StatusBadge
+              status="Field Agent"
+              tone="neutral"
+            />
           </div>
         </section>
 
         <div class="grid grid-cols-2 gap-4">
           <AppCard class="!p-6 border-slate-100 bg-slate-50/50">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Today's Yield</p>
-            <p class="text-xl font-black text-slate-900 tracking-tight">{{ formatCurrency(selectedCollector.totalCollectedToday, 'GHS') }}</p>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+              Today's Yield
+            </p>
+            <p class="text-xl font-black text-slate-900 tracking-tight">
+              {{ formatCurrency(selectedCollector.totalCollectedToday, 'GHS') }}
+            </p>
           </AppCard>
           <AppCard class="!p-6 border-slate-100 bg-slate-50/50">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Receipts</p>
-            <p class="text-xl font-black text-slate-900 tracking-tight">{{ selectedCollector.receiptsIssuedToday }}</p>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+              Receipts
+            </p>
+            <p class="text-xl font-black text-slate-900 tracking-tight">
+              {{ selectedCollector.receiptsIssuedToday }}
+            </p>
           </AppCard>
         </div>
 
         <section class="space-y-6 pt-6 border-t border-slate-100">
-          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Operational Scope</h4>
+          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+            Operational Scope
+          </h4>
           <div class="space-y-4">
             <div class="flex justify-between items-center">
               <span class="text-xs font-bold text-slate-500">Assigned Events</span>
@@ -163,9 +192,16 @@
           </div>
         </section>
 
-        <div v-if="selectedCollector.blockedReason" class="p-6 rounded-2xl bg-red-50 text-red-700">
-          <p class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-70">Block Rationale</p>
-          <p class="text-sm font-medium italic">"{{ selectedCollector.blockedReason }}"</p>
+        <div
+          v-if="selectedCollector.blockedReason"
+          class="p-6 rounded-2xl bg-red-50 text-red-700"
+        >
+          <p class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-70">
+            Block Rationale
+          </p>
+          <p class="text-sm font-medium italic">
+            "{{ selectedCollector.blockedReason }}"
+          </p>
         </div>
       </div>
 
