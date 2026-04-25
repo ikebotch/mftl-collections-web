@@ -18,7 +18,10 @@
       >
         View Receipt
       </AppButton>
-      <span v-else class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">N/A</span>
+      <span
+        v-else
+        class="text-[9px] font-bold text-slate-300 uppercase tracking-widest"
+      >N/A</span>
     </template>
   </DataTable>
 </template>

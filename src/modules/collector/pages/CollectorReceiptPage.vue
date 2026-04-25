@@ -93,6 +93,14 @@
                     {{ query.data.value.issuedAt.split(',')[0] }}
                   </p>
                 </div>
+                <div>
+                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1.5">
+                    Collector
+                  </p>
+                  <p class="text-sm font-bold text-slate-900 truncate">
+                    {{ query.data.value.collectorName }}
+                  </p>
+                </div>
               </div>
 
               <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100/50 text-center mt-10">

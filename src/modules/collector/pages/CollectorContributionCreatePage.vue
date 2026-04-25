@@ -168,6 +168,15 @@
               </div>
               <ChevronRight class="w-5 h-5 text-slate-700" />
             </button>
+
+            <div
+              v-if="availableFunds.length === 0"
+              class="text-center py-12 px-6 rounded-3xl bg-white/[0.02] border border-dashed border-white/10"
+            >
+              <p class="text-sm font-bold text-slate-500">
+                No recipient funds found for this event.
+              </p>
+            </div>
           </div>
 
           <div
@@ -573,6 +582,20 @@ async function onSubmit() {
     isSubmitting.value = false
   }
 }
+
+watch(() => route.query.eventId, (newId) => {
+  if (typeof newId === 'string' && newId !== form.eventId) {
+    form.eventId = newId
+    form.recipientFundId = ''
+    activeStepOverride.value = 2
+  }
+})
+
+watch(() => route.query.fundId, (newId) => {
+  if (typeof newId === 'string' && newId !== form.recipientFundId) {
+    form.recipientFundId = newId
+  }
+})
 
 watch(() => form.eventId, (newId) => {
   if (!newId) activeStepOverride.value = 1

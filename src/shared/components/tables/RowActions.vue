@@ -6,10 +6,13 @@
         :key="action.label"
         type="button"
         class="p-2 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all active:scale-90"
-        @click.stop="action.onClick"
         :title="action.label"
+        @click.stop="action.onClick"
       >
-        <component :is="getIcon(action.icon)" class="w-4 h-4" />
+        <component
+          :is="getIcon(action.icon)"
+          class="w-4 h-4"
+        />
       </button>
     </template>
     <slot />

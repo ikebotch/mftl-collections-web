@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import { useSettlements } from '../composables/useSettlements'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'

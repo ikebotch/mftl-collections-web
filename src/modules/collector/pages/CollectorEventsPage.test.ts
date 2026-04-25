@@ -63,7 +63,7 @@ describe('CollectorEventsPage', () => {
     })
 
     expect(wrapper.text()).toContain('Youth Conference 2026')
-    expect(wrapper.text()).toContain('My Events')
-    expect(wrapper.text()).toContain('My Funds')
+    expect(wrapper.text()).toContain('Assigned Shifts')
+    expect(wrapper.text()).toContain('funds')
   })
 })

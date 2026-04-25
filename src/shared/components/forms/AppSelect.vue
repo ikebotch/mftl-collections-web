@@ -25,7 +25,7 @@
         </option>
         <option
           v-for="option in options"
-          :key="option.value"
+          :key="String(option.value)"
           :value="option.value"
         >
           {{ option.label }}
@@ -49,11 +49,11 @@ import { ChevronDown } from 'lucide-vue-next'
 
 export interface SelectOption {
   label: string
-  value: string | number
+  value: string | number | boolean
 }
 
 interface Props {
-  modelValue: string | number
+  modelValue: string | number | boolean | null | undefined
   options: SelectOption[]
   label?: string
   placeholder?: string
@@ -76,6 +76,11 @@ const emit = defineEmits(['update:modelValue'])
 
 function handleChange(e: Event) {
   const target = e.target as HTMLSelectElement
-  emit('update:modelValue', target.value)
+  let val: string | number | boolean = target.value
+  
+  if (val === 'true') val = true
+  if (val === 'false') val = false
+  
+  emit('update:modelValue', val)
 }
 </script>

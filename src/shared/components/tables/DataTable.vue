@@ -12,9 +12,15 @@
     </div>
 
     <!-- Optional Header Area -->
-    <div v-if="title || $slots.actions || exportable" class="flex items-center justify-between mb-6 px-1">
+    <div
+      v-if="title || $slots.actions || exportable"
+      class="flex items-center justify-between mb-6 px-1"
+    >
       <div>
-        <h3 v-if="title" class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+        <h3
+          v-if="title"
+          class="text-xs font-black uppercase tracking-[0.2em] text-slate-400"
+        >
           {{ title }}
         </h3>
       </div>

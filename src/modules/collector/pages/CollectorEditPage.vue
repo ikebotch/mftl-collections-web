@@ -12,7 +12,10 @@
     show-retry
     @retry="query.refetch"
   />
-  <form v-else-if="form" @submit.prevent="handleSave">
+  <form
+    v-else-if="form"
+    @submit.prevent="handleSave"
+  >
     <AdminPageHeader
       :title="`Edit ${collector?.name}`"
       description="Manage collector identity, access scope, and operational limits."
@@ -54,13 +57,28 @@
       <div class="lg:col-span-8 space-y-8">
         <!-- Identity -->
         <AppCard class="!p-8 space-y-8">
-          <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Identity Details</h3>
+          <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+            Identity Details
+          </h3>
           <div class="grid md:grid-cols-2 gap-8">
-            <AppInput v-model="form.name" label="Full Name" required />
-            <AppInput v-model="form.email" label="Email Address" type="email" required />
+            <AppInput
+              v-model="form.name"
+              label="Full Name"
+              required
+            />
+            <AppInput
+              v-model="form.email"
+              label="Email Address"
+              type="email"
+              required
+            />
           </div>
           <div class="grid md:grid-cols-2 gap-8">
-            <AppInput v-model="form.phone" label="Phone Number" required />
+            <AppInput
+              v-model="form.phone"
+              label="Phone Number"
+              required
+            />
             <AppSelect
               v-model="form.type"
               label="Role"
@@ -75,20 +93,42 @@
 
         <!-- Access -->
         <AppCard class="!p-8 space-y-8">
-          <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Field Access & Permissions</h3>
+          <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+            Field Access & Permissions
+          </h3>
           <div class="grid md:grid-cols-2 gap-4">
-            <ToggleCard v-model="form.loginEnabled" title="Login Enabled" />
-            <ToggleCard v-model="form.recordCash" title="Record Cash" />
-            <ToggleCard v-model="form.issueReceipts" title="Issue Receipts" />
-            <ToggleCard v-model="form.viewDashboard" title="View Dashboard" />
+            <ToggleCard
+              v-model="form.loginEnabled"
+              title="Login Enabled"
+            />
+            <ToggleCard
+              v-model="form.recordCash"
+              title="Record Cash"
+            />
+            <ToggleCard
+              v-model="form.issueReceipts"
+              title="Issue Receipts"
+            />
+            <ToggleCard
+              v-model="form.viewDashboard"
+              title="View Dashboard"
+            />
           </div>
         </AppCard>
 
         <!-- Assignments -->
         <AppCard class="!p-8 space-y-8">
           <div class="flex items-center justify-between">
-            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Event Assignments</h3>
-            <AppButton variant="outline" size="sm" class="!rounded-lg text-[10px]">Manage Assignments</AppButton>
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+              Event Assignments
+            </h3>
+            <AppButton
+              variant="outline"
+              size="sm"
+              class="!rounded-lg text-[10px]"
+            >
+              Manage Assignments
+            </AppButton>
           </div>
           <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-center">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">
@@ -100,7 +140,10 @@
 
       <div class="lg:col-span-4 space-y-8">
         <!-- Status & Control -->
-        <DetailSummaryCard title="Account Control" :items="[]">
+        <DetailSummaryCard
+          title="Account Control"
+          :items="[]"
+        >
           <div class="space-y-6">
             <AppSelect
               v-model="form.status"
@@ -119,7 +162,9 @@
 
         <!-- Limits -->
         <AppCard class="!p-8 space-y-6 bg-slate-900 text-white shadow-premium">
-          <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Operational Limits</h3>
+          <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">
+            Operational Limits
+          </h3>
           <div class="space-y-4">
             <AppInput 
               v-model="form.dailyLimit" 
@@ -138,7 +183,9 @@
 
         <!-- Last Sync -->
         <AppCard class="!p-6 border-slate-100 bg-slate-50/30">
-          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Last Sync</h4>
+          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
+            Last Sync
+          </h4>
           <div class="flex justify-between items-center">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Activity</span>
             <span class="text-[10px] font-black text-slate-900 tracking-tight">{{ collector?.lastActiveAt ? formatDate(collector.lastActiveAt) : 'Never' }}</span>
@@ -149,7 +196,10 @@
 
     <StickyFormActions>
       <template #left>
-        <span v-if="updateMutation.isPending.value" class="text-xs font-bold text-violet-600 animate-pulse">Syncing changes...</span>
+        <span
+          v-if="updateMutation.isPending.value"
+          class="text-xs font-bold text-violet-600 animate-pulse"
+        >Syncing changes...</span>
       </template>
       <AppButton
         variant="outline"

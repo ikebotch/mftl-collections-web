@@ -4,6 +4,7 @@ import SettlementsPage from './SettlementsPage.vue'
 
 vi.mock('../composables/useSettlements', () => ({
   useSettlements: () => ({
+    isLoading: { value: false },
     data: {
       value: [{ id: 'set-1', summary: 'Weekly reconciliation batch', status: 'Pending review' }],
     },

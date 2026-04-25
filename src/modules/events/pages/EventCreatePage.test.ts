@@ -27,7 +27,8 @@ describe('EventCreatePage', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Create event')
-    expect(wrapper.find('form').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Create Event')
+    // Steps check
+    expect(wrapper.text()).toContain('Basics')
   })
 })

@@ -13,7 +13,10 @@
     </div>
     <div class="flex-1">
       <p class="text-sm font-black text-slate-900 tracking-tight">{{ title }}</p>
-      <p v-if="description" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{{ description }}</p>
+      <p
+        v-if="description"
+        class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1"
+      >{{ description }}</p>
     </div>
   </label>
 </template>

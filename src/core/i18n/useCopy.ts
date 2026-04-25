@@ -15,7 +15,7 @@ const state = reactive({
 
 export function useCopy() {
   const copy = computed(() => {
-    // @ts-ignore - dynamic dictionary access
+    // @ts-expect-error - dynamic dictionary access
     return state.dictionaries[state.locale] || state.dictionaries.en
   })
 

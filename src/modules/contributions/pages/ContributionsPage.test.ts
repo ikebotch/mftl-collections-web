@@ -4,12 +4,14 @@ import ContributionsPage from './ContributionsPage.vue'
 
 vi.mock('../composables/useContributions', () => ({
   useContributions: () => ({
+    isLoading: { value: false },
+    isError: { value: false },
     data: {
       value: [
         {
           id: 'c-1',
           date: '2026-04-24',
-          event: 'Community fundraiser',
+          contributorName: 'Community fundraiser',
           recipientFund: 'Medical support',
           paymentMethod: 'cash',
           status: 'Recorded',

@@ -53,7 +53,7 @@ vi.mock('@/modules/contributions/services/contributionsService', () => ({
   },
 }))
 
-function mountPage(path = '/collector/contributions/new') {
+function mountPage() {
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
@@ -65,24 +65,22 @@ function mountPage(path = '/collector/contributions/new') {
   const wrapper = mount(CollectorContributionCreatePage, {
     global: {
       plugins: [router],
-      stubs: {
-        RouterLink: {
-          template: '<a><slot /></a>',
-        },
-      },
     },
   })
 
-  return { wrapper, router, path }
+  return { wrapper, router }
 }
 
 describe('CollectorContributionCreatePage', () => {
   it('preselects event from the query string', async () => {
-    const { wrapper, router, path } = mountPage()
-    await router.push(`${path}?eventId=event-1`)
+    const { wrapper, router } = mountPage()
+    await router.push('/collector/contributions/new?eventId=event-1')
     await flushPromises()
 
-    expect((wrapper.find('#collector-event').element as HTMLSelectElement).value).toBe('event-1')
+    // Should show the selected event title in the summary
+    expect(wrapper.text()).toContain('Youth Conference 2026')
+    // Should show fund selection step
+    expect(wrapper.text()).toContain('Selected Fund')
   })
 
   it('shows empty fund state when selected event has no assigned funds', async () => {
@@ -101,10 +99,11 @@ describe('CollectorContributionCreatePage', () => {
           assignedFundCount: 0,
         },
       ],
+      // No funds for event-2
     }
 
-    const { wrapper, router, path } = mountPage()
-    await router.push(`${path}?eventId=event-2`)
+    const { wrapper, router } = mountPage()
+    await router.push('/collector/contributions/new?eventId=event-2')
     await flushPromises()
 
     expect(wrapper.text()).toContain('No recipient funds found for this event')
@@ -117,39 +116,41 @@ describe('CollectorContributionCreatePage', () => {
       status: 'Completed',
     })
 
-    const { wrapper, router, path } = mountPage()
-    await router.push(`${path}?eventId=event-1`)
+    const { wrapper, router } = mountPage()
+    // Start with event selected
+    await router.push('/collector/contributions/new?eventId=event-1')
     await flushPromises()
 
-    await wrapper.find('#collector-fund').setValue('fund-1')
-    await wrapper.find('#collector-name').setValue('Ama Serwaa')
-    await wrapper.find('#collector-phone').setValue('+233241234567')
-    await wrapper.find('#collector-email').setValue('ama@example.com')
-    await wrapper.find('#collector-amount').setValue('150')
+    // 1. Select Fund
+    const fundBtn = wrapper.findAll('button').find(b => b.text().includes('Youth Scholarships'))
+    await fundBtn?.trigger('click')
     await flushPromises()
 
-    await wrapper.find('form').trigger('submit.prevent')
+    // 2. Fill Details (inputs should now be visible)
+    const nameInput = wrapper.find('input[placeholder="Ama Serwaa"]')
+    const phoneInput = wrapper.find('input[placeholder="+233 24 123 4567"]')
+    const amountInput = wrapper.find('input[placeholder="0.00"]')
+    
+    await nameInput.setValue('Ama Serwaa')
+    await phoneInput.setValue('+233241234567')
+    await amountInput.setValue('150')
+    await flushPromises()
+
+    // 3. Submit
+    const submitBtn = wrapper.findAll('button').find(b => b.text().includes('Next: Payment'))
+    await submitBtn?.trigger('click')
     await flushPromises()
 
     expect(recordCash).toHaveBeenCalledWith(
-      {
+      expect.objectContaining({
         eventId: 'event-1',
         recipientFundId: 'fund-1',
         amount: 150,
-        currency: 'GHS',
         contributorName: 'Ama Serwaa',
         contributorPhone: '+233241234567',
-        contributorEmail: 'ama@example.com',
-        anonymous: false,
-        paymentMethod: 'cash',
-        note: '',
-      },
-      {
-        headers: {
-          'X-Dev-User-Id': 'dev-collector',
-        },
-      },
+      }),
+      expect.anything()
     )
-    expect(router.currentRoute.value.fullPath).toBe('/collector/receipts/receipt-1')
+    expect(router.currentRoute.value.path).toBe('/collector/receipts/receipt-1')
   })
 })

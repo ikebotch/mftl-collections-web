@@ -5,7 +5,10 @@
       :description="copy.admin.pages.users.description"
     >
       <template #actions>
-        <AppButton variant="primary" class="!rounded-xl shadow-premium">
+        <AppButton
+          variant="primary"
+          class="!rounded-xl shadow-premium"
+        >
           <UserPlus class="w-4 h-4 mr-2" /> Invite System User
         </AppButton>
       </template>
@@ -68,7 +71,10 @@
         </template>
 
         <template #cell:status="{ value }">
-          <StatusBadge :status="value" :tone="value === 'Active' ? 'success' : 'neutral'" />
+          <StatusBadge
+            :status="value"
+            :tone="value === 'Active' ? 'success' : 'neutral'"
+          />
         </template>
 
         <template #cell:inviteState="{ value }">

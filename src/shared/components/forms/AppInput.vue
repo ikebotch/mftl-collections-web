@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 interface Props {
-  modelValue: string | number
+  modelValue?: string | number | null
   label?: string
   placeholder?: string
   type?: string
@@ -51,6 +51,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
+  modelValue: '',
   type: 'text',
   id: () => `input-${Math.random().toString(36).substring(2, 9)}`,
   disabled: false,

@@ -69,26 +69,58 @@
             <div class="grid md:grid-cols-2 gap-10">
               <div class="space-y-4">
                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">System/Display Image</label>
-                <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
-                  <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
-                    <ImageIcon class="w-6 h-6" />
+                <div class="space-y-3">
+                  <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
+                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
+                      <img
+                        v-if="form.displayImageUrl"
+                        :src="form.displayImageUrl"
+                        class="w-full h-full object-cover rounded-lg"
+                      >
+                      <ImageIcon
+                        v-else
+                        class="w-6 h-6"
+                      />
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        {{ form.displayImageUrl ? 'External URL Set' : 'No file chosen' }}
+                      </p>
+                    </div>
                   </div>
-                  <div class="flex-1">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">No file chosen</p>
-                  </div>
-                  <AppButton variant="ghost" size="xs" class="!rounded-lg text-[9px] font-black uppercase tracking-widest">Choose</AppButton>
+                  <AppInput
+                    v-model="form.displayImageUrl"
+                    placeholder="https://image-url.com/event.jpg"
+                    class="!bg-white"
+                  />
                 </div>
               </div>
               <div class="space-y-4">
                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Receipt/POS Logo</label>
-                <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
-                  <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
-                    <Printer class="w-6 h-6" />
+                <div class="space-y-3">
+                  <div class="flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-100 bg-slate-50/30">
+                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-slate-300">
+                      <img
+                        v-if="form.receiptLogoUrl"
+                        :src="form.receiptLogoUrl"
+                        class="w-full h-full object-contain p-1"
+                      >
+                      <Printer
+                        v-else
+                        class="w-6 h-6"
+                      />
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        {{ form.receiptLogoUrl ? 'External URL Set' : 'Default active' }}
+                      </p>
+                    </div>
                   </div>
-                  <div class="flex-1">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Default active</p>
-                  </div>
-                  <AppButton variant="ghost" size="xs" class="!rounded-lg text-[9px] font-black uppercase tracking-widest">Choose</AppButton>
+                  <AppInput
+                    v-model="form.receiptLogoUrl"
+                    placeholder="https://image-url.com/logo.png"
+                    class="!bg-white"
+                  />
                 </div>
               </div>
             </div>
@@ -520,6 +552,8 @@ const form = reactive({
   endDate: '',
   status: 'Draft',
   currency: 'GHS',
+  displayImageUrl: '',
+  receiptLogoUrl: '',
   acceptedMethods: ['cash', 'momo'],
   minContribution: 1,
   suggestedAmounts: '10, 20, 50, 100',
@@ -560,7 +594,9 @@ async function submit() {
       title: form.title,
       description: form.description,
       slug: form.slug,
-      eventDate: form.startDate ? new Date(`${form.startDate}T00:00:00Z`).toISOString() : null
+      eventDate: form.startDate ? new Date(`${form.startDate}T00:00:00Z`).toISOString() : null,
+      displayImageUrl: form.displayImageUrl,
+      receiptLogoUrl: form.receiptLogoUrl
     })
     
     // 2. Create recipient funds
