@@ -32,28 +32,28 @@
       >
         <div class="flex items-start justify-between mb-8">
           <div class="space-y-3">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
               Strategic Target
             </p>
-            <p class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none max-w-[200px] truncate" :title="fund.name">
+            <p class="text-[15px] font-black text-slate-900 tracking-tighter uppercase leading-none max-w-[200px] truncate" :title="fund.name">
               {{ fund.name }}
             </p>
           </div>
           <div class="text-right space-y-3">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
               Raised Today
             </p>
             <div class="flex flex-col items-end gap-1.5">
               <p
                 v-for="t in fund.totals"
                 :key="t.currency"
-                class="text-sm font-black text-slate-900 italic tracking-tighter leading-none"
+                class="text-[15px] font-black text-slate-900 italic tracking-tighter leading-none"
               >
                 {{ formatCurrency(t.amount, t.currency) }}
               </p>
               <p
                 v-if="!fund.totals?.length"
-                class="text-sm font-black text-slate-900 italic leading-none"
+                class="text-[15px] font-black text-slate-900 italic leading-none"
               >
                 GHS 0.00
               </p>
@@ -63,8 +63,8 @@
 
         <div v-if="fund.targetAmount > 0">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Deployment Progress</span>
-            <span class="text-[10px] font-black text-slate-900 tabular-nums">{{ calculateProgress(fund) }}%</span>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Deployment Progress</span>
+            <span class="text-[11px] font-black text-slate-900 tabular-nums">{{ calculateProgress(fund) }}%</span>
           </div>
           <div class="h-0.5 w-full bg-slate-50 overflow-hidden">
             <div 

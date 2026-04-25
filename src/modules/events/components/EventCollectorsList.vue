@@ -59,10 +59,10 @@
               {{ collector.name.charAt(0) }}
             </div>
             <div>
-              <p class="text-sm font-black text-slate-900 tracking-tight leading-none uppercase">
+              <p class="text-[15px] font-black text-slate-900 tracking-tighter leading-none uppercase">
                 {{ collector.name }}
               </p>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 leading-none">
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-2 leading-none">
                 {{ collector.status }}
               </p>
             </div>
@@ -75,19 +75,19 @@
 
         <div class="space-y-4 pt-4 border-t border-slate-100">
           <div class="flex justify-between items-end">
-            <div class="space-y-1">
-              <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+            <div class="space-y-3">
+              <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
                 Collected Today
               </p>
-              <p class="text-sm font-black text-slate-900 italic tracking-tight leading-none">
+              <p class="text-[15px] font-black text-slate-900 italic tracking-tighter leading-none">
                 {{ formatCurrency(collector.totalCollectedToday, 'GHS') }}
               </p>
             </div>
-            <div class="text-right space-y-1">
-              <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
-                Receipts
+            <div class="text-right space-y-3">
+              <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
+                Receipts Issued
               </p>
-              <p class="text-sm font-black text-slate-900 leading-none">
+              <p class="text-[15px] font-black text-slate-900 tracking-tighter leading-none tabular-nums">
                 {{ collector.receiptsIssuedToday }}
               </p>
             </div>
