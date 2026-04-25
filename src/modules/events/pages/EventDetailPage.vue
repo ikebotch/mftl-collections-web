@@ -18,7 +18,7 @@
   >
     <!-- 1. Page Header (Pixel Standard) -->
     <DetailPageHeader
-      :title="`${event.title} ${event.id.slice(0, 8)}`"
+      :title="event.title"
       description="Operational management, fund allocation, and contribution auditing."
       back-to="/admin/events"
       back-label="Events List"
@@ -83,16 +83,15 @@
                 <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
                   Event Identity
                 </h3>
-                <AppButton
+                <button
                   v-if="!isEditing"
-                  variant="primary"
-                  size="xs"
-                  class="px-5 shadow-sm border-violet-200"
+                  type="button"
+                  class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
                   @click="startEditing"
                 >
-                  <template #icon><Settings2 class="w-3 h-3 mr-2" /></template>
-                  Edit Identity
-                </AppButton>
+                  <Pencil class="w-3.5 h-3.5" />
+                  <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit</span>
+                </button>
               </div>
 
               <div
@@ -213,7 +212,7 @@
             >
               <div class="flex items-center justify-between mb-12">
                 <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
-                  Strategic Allocations
+                  Recipient Funds
                 </h3>
                 <AppButton
                   variant="primary"
@@ -255,7 +254,7 @@
         <!-- Other Tabs -->
         <div v-else-if="activeTab === 'funds'" class="space-y-12">
           <div class="flex justify-between items-center mb-12">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Strategic Allocations</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Recipient Funds</h3>
             <AppButton variant="primary" @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)">
               <Plus class="w-4 h-4 mr-2" /> Add Fund
             </AppButton>
@@ -352,7 +351,7 @@ import {
   LayoutDashboard,
   Users,
   Settings,
-  Settings2
+  Pencil
 } from 'lucide-vue-next'
 import type { UpdateEventInput } from '../types/event'
 
