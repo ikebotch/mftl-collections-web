@@ -85,11 +85,12 @@
                 </h3>
                 <AppButton
                   v-if="!isEditing"
-                  variant="secondary"
+                  variant="primary"
                   size="xs"
-                  class="bg-transparent border-slate-200"
+                  class="px-5 shadow-sm border-violet-200"
                   @click="startEditing"
                 >
+                  <template #icon><Settings2 class="w-3 h-3 mr-2" /></template>
                   Edit Identity
                 </AppButton>
               </div>
@@ -124,7 +125,7 @@
                     <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
                       Operational Narrative
                     </p>
-                    <p class="text-[15px] font-medium text-slate-500 leading-relaxed max-w-3xl">
+                    <p class="text-[15px] font-black text-slate-900 tracking-tighter uppercase leading-relaxed max-w-3xl">
                       {{ event.description || 'Zero operational narrative established.' }}
                     </p>
                   </div>
@@ -215,9 +216,9 @@
                   Strategic Allocations
                 </h3>
                 <AppButton
-                  variant="secondary"
+                  variant="primary"
                   size="xs"
-                  class="bg-transparent border-slate-200"
+                  class="px-5 shadow-sm border-violet-200"
                   @click="router.push(`/admin/events/${event.id}/recipient-funds/new`)"
                 >
                   <Plus class="w-3 h-3 mr-2" /> Add Fund
@@ -251,7 +252,7 @@
           </AdminWizardLayout>
         </div>
 
-        <!-- Other Tabs (Refined Typography) -->
+        <!-- Other Tabs -->
         <div v-else-if="activeTab === 'funds'" class="space-y-12">
           <div class="flex justify-between items-center mb-12">
             <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Strategic Allocations</h3>
@@ -350,7 +351,8 @@ import {
   History,
   LayoutDashboard,
   Users,
-  Settings
+  Settings,
+  Settings2
 } from 'lucide-vue-next'
 import type { UpdateEventInput } from '../types/event'
 
