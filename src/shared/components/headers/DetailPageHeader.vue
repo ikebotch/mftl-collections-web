@@ -11,8 +11,8 @@
       Back to {{ backLabel || 'list' }}
     </button>
 
-    <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-      <div class="flex items-start gap-5">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+      <div class="flex items-start gap-5 min-w-0 flex-1">
         <!-- Optional Image/Icon Prefix -->
         <div 
           v-if="imageUrl || $slots.prefix"
@@ -26,16 +26,20 @@
           <slot v-else name="prefix" />
         </div>
 
-        <div class="space-y-2">
-          <div class="flex items-center gap-4">
-            <h1 class="text-3xl font-black tracking-tighter text-slate-900 leading-none">
+        <div class="space-y-2 min-w-0 flex-1">
+          <div class="flex items-center gap-4 flex-wrap">
+            <h1 
+              class="text-3xl font-black tracking-tighter text-slate-900 leading-none truncate max-w-full"
+              :title="title"
+            >
               {{ title }}
             </h1>
             <slot name="status" />
           </div>
           <p
             v-if="description"
-            class="text-xs font-medium text-slate-500 max-w-2xl leading-relaxed uppercase tracking-widest opacity-80"
+            class="text-xs font-medium text-slate-400 max-w-3xl leading-relaxed uppercase tracking-widest opacity-80 truncate"
+            :title="description"
           >
             {{ description }}
           </p>
@@ -44,7 +48,7 @@
 
       <div
         v-if="$slots.actions"
-        class="flex flex-wrap items-center gap-3 pt-1"
+        class="flex shrink-0 items-center gap-3 pt-1"
       >
         <slot name="actions" />
       </div>
