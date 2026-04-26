@@ -1,5 +1,6 @@
+import { toValue, computed, type MaybeRefOrGetter } from 'vue'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
-import { listUsers, getUserById, updateUser } from '../services/usersService'
+import { listUsers, getUserById, updateUser, getMe } from '../services/usersService'
 
 export function useUsers() {
   return useQuery({
@@ -8,11 +9,18 @@ export function useUsers() {
   })
 }
 
-export function useUser(id: string) {
+export function useUser(id: MaybeRefOrGetter<string>) {
   return useQuery({
     queryKey: ['users', id],
-    queryFn: () => getUserById(id),
-    enabled: Boolean(id)
+    queryFn: () => getUserById(toValue(id)),
+    enabled: computed(() => !!toValue(id))
+  })
+}
+
+export function useMe() {
+  return useQuery({
+    queryKey: ['users', 'me'],
+    queryFn: getMe,
   })
 }
 

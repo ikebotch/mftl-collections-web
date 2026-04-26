@@ -35,7 +35,7 @@
         v-if="!query.data.value?.filter(f => f.isActive).length && !query.isLoading.value"
         class="p-12 border-2 border-dashed border-slate-100 text-center space-y-4"
       >
-        <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto">
+        <div class="w-12 h-12 rounded-none bg-slate-50 flex items-center justify-center mx-auto">
           <span class="text-xl">🏜️</span>
         </div>
         <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">
@@ -58,7 +58,7 @@
             v-if="errors.amount || errors.recipientFundId" 
             class="mt-4 text-xs font-bold text-rose-500 uppercase tracking-widest flex items-center gap-2"
           >
-            <span class="w-1 h-1 rounded-full bg-rose-500" />
+            <span class="w-1 h-1 rounded-none bg-rose-500" />
             {{ errors.amount || errors.recipientFundId }}
           </div>
         </div>

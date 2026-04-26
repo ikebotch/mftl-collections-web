@@ -18,6 +18,7 @@ export interface UserDetail extends UserRow {
   createdAt: string
   inviteStatus: string
   scopeAssignments: ScopeAssignment[]
+  auth0Roles: string[]
 }
 
 export interface ScopeAssignment {
@@ -42,6 +43,11 @@ export async function listUsers(): Promise<UserRow[]> {
 
 export async function getUserById(id: string): Promise<UserDetail> {
   const response = await httpClient.get<UserDetail>(`/users/${id}`)
+  return response.data
+}
+
+export async function getMe(): Promise<UserDetail> {
+  const response = await httpClient.get<UserDetail>('/users/me')
   return response.data
 }
 

@@ -4,14 +4,14 @@
       v-if="loading"
       class="py-12 flex justify-center"
     >
-      <div class="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-violet-600" />
+      <div class="h-8 w-8 animate-spin rounded-none border-2 border-slate-200 border-t-violet-600" />
     </div>
     
     <div
       v-else-if="collectors.length === 0"
       class="p-20 text-center border border-dashed border-slate-200 bg-slate-50/10 flex flex-col items-center gap-6"
     >
-      <div class="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">
+      <div class="w-16 h-16 rounded-none bg-slate-50 flex items-center justify-center border border-slate-100">
         <Users class="w-8 h-8 text-slate-300" />
       </div>
       <div class="space-y-2">
@@ -68,7 +68,7 @@
             </div>
           </div>
           <div 
-            class="w-2 h-2 rounded-full"
+            class="w-2 h-2 rounded-none"
             :class="collector.status === 'Active' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
           />
         </div>
@@ -111,7 +111,7 @@
         class="border border-dashed border-slate-200 bg-slate-50/10 flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-violet-300 group transition-all min-h-[160px]"
         @click="showAssignModal = true"
       >
-        <div class="w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-violet-500 group-hover:border-violet-100 transition-colors">
+        <div class="w-10 h-10 rounded-none bg-white border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-violet-500 group-hover:border-violet-100 transition-colors">
           <UserPlus class="w-5 h-5" />
         </div>
         <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-violet-600">Assign Staff</span>

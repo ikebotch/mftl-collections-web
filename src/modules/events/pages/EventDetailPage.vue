@@ -27,7 +27,7 @@
       <template #status>
         <div class="flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
           <div 
-            class="w-1.5 h-1.5 rounded-full"
+            class="w-1.5 h-1.5 rounded-none"
             :class="event.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
           />
           <span class="text-[9px] font-black text-slate-900 uppercase tracking-[0.2em]">
@@ -155,7 +155,7 @@
                     </p>
                     <div class="flex items-center gap-2.5">
                       <div 
-                        class="w-1.5 h-1.5 rounded-full"
+                        class="w-1.5 h-1.5 rounded-none"
                         :class="event.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
                       />
                       <span class="text-[15px] font-black text-slate-900 tracking-tighter uppercase leading-none">
@@ -453,7 +453,7 @@
             v-if="updateMutation.isPending.value"
             class="flex items-center gap-2"
           >
-            <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
+            <div class="w-2 h-2 rounded-none bg-slate-900 animate-pulse" />
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Saving changes...</span>
           </div>
           <span

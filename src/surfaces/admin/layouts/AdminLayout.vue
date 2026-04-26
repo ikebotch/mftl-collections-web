@@ -2,10 +2,10 @@
   <div class="min-h-screen bg-[#f8fafc] font-sans text-slate-900 selection:bg-violet-100 selection:text-violet-900">
     <AppToast />
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-[#060b13] text-white transition-all duration-300 transform lg:translate-x-0 -translate-x-full overflow-y-auto border-r border-navy-900">
+    <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-[#060b13] text-white transition-all duration-300 transform lg:translate-x-0 -translate-x-full border-r border-navy-900">
       <div class="flex flex-col h-full">
         <!-- Logo Section -->
-        <div class="px-8 py-10">
+        <div class="px-8 py-10 LogoSection">
           <TenantSwitcher />
           <p class="text-[10px] text-slate-400 mt-4 leading-relaxed font-medium uppercase tracking-[0.2em]">
             Collect. Impact. Transform.
@@ -14,7 +14,7 @@
 
 
         <!-- Navigation -->
-        <nav class="flex-1 px-4 space-y-10 mt-2">
+        <nav class="flex-1 px-4 space-y-10 mt-2 overflow-y-auto custom-scrollbar">
           <div
             v-for="(group, index) in navGroups"
             :key="index"
@@ -55,51 +55,6 @@
           </div>
         </nav>
 
-        <!-- Footer / Profile Card -->
-        <div class="p-4 mt-auto">
-          <div class="p-4 rounded-none bg-navy-900/30 border border-navy-800/50 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-none bg-slate-800 flex items-center justify-center overflow-hidden border border-navy-700/50 relative">
-              <img
-                v-if="currentUser.picture"
-                :src="currentUser.picture"
-                class="w-full h-full object-cover"
-              >
-              <span
-                v-else
-                class="text-xs font-bold text-slate-400"
-              >{{ currentUser.name?.charAt(0) || 'U' }}</span>
-              <div class="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 border border-navy-950 rounded-none transform rotate-45" />
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-sm font-black truncate text-white tracking-tight">
-                {{ currentUser.name }}
-              </p>
-              <p class="text-[10px] text-slate-500 truncate uppercase tracking-widest font-black italic">
-                {{ currentUser.role }}
-              </p>
-            </div>
-            <button
-              class="p-2 rounded-none hover:bg-navy-800 text-slate-500 hover:text-white transition-colors duration-300"
-              @click="handleLogout"
-            >
-              <LogOut class="w-4 h-4" />
-            </button>
-          </div>
-          
-          <!-- Impact Summary Mini-Card -->
-          <div class="mt-4 p-5 rounded-none bg-violet-600/5 border border-violet-500/20">
-            <p class="text-[9px] text-violet-400 font-black uppercase tracking-[0.2em] mb-3">
-              Performance Index
-            </p>
-            <div class="flex items-end justify-between mb-3">
-              <span class="text-lg font-black text-white italic tracking-tight">$24,582.50</span>
-              <span class="text-[10px] text-emerald-400 font-black">↑ 12.5%</span>
-            </div>
-            <div class="h-1 bg-violet-900/50 rounded-none overflow-hidden">
-              <div class="h-full bg-violet-500 w-3/4" />
-            </div>
-          </div>
-        </div>
       </div>
     </aside>
 
@@ -140,36 +95,87 @@
 
             <button class="relative p-2.5 rounded-none text-slate-500 hover:bg-slate-50 hover:text-violet-600 transition-all duration-300">
               <Bell class="w-4.5 h-4.5" />
-              <span class="absolute top-2 right-2 w-4 h-4 bg-violet-600 text-[8px] font-black text-white flex items-center justify-center rounded-none border-2 border-white transform rotate-12">12</span>
+              <span class="absolute top-2 right-2 w-4 h-4 bg-violet-600 text-[8px] font-black text-white flex items-center justify-center rounded-full border-2 border-white transform rotate-12">12</span>
             </button>
-            <button class="p-2.5 rounded-none text-slate-500 hover:bg-slate-50 hover:text-violet-600 transition-all duration-300">
+            <router-link
+              to="/admin/settings"
+              class="p-2.5 rounded-none text-slate-500 hover:bg-slate-50 hover:text-violet-600 transition-all duration-300"
+            >
               <Settings class="w-4.5 h-4.5" />
-            </button>
+            </router-link>
           </div>
 
           <div class="w-px h-8 bg-slate-200" />
 
           <!-- User Info with Dropdown Trigger -->
-          <button class="flex items-center gap-4 p-1.5 pr-4 rounded-none hover:bg-slate-50 transition-all duration-300 group">
-            <div class="w-10 h-10 rounded-none overflow-hidden border border-slate-200 shadow-sm relative p-0.5 bg-white">
-              <img
-                v-if="currentUser.picture"
-                :src="currentUser.picture"
-                class="w-full h-full object-cover"
-              >
-              <div
-                v-else
-                class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400 font-black text-sm italic"
-              >
-                {{ currentUser.name?.charAt(0) || 'A' }}
+          <div class="relative">
+            <button 
+              class="flex items-center gap-4 p-1.5 pr-4 rounded-none hover:bg-slate-50 transition-all duration-300 group"
+              @click="isUserDropdownOpen = !isUserDropdownOpen"
+            >
+              <div class="w-10 h-10 rounded-full overflow-hidden border border-slate-200 shadow-sm relative p-0.5 bg-white">
+                <img
+                  v-if="currentUser.picture"
+                  :src="currentUser.picture"
+                  class="w-full h-full object-cover rounded-full"
+                >
+                <div
+                  v-else
+                  class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400 font-black text-sm italic rounded-full"
+                >
+                  {{ currentUser.name?.charAt(0) || 'A' }}
+                </div>
+              </div>
+              <div class="hidden sm:flex flex-col items-start text-left">
+                <span class="text-sm font-black text-slate-900 leading-none tracking-tight">{{ currentUser.name }}</span>
+                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1.5 italic">{{ currentUser.role }}</span>
+              </div>
+              <ChevronDown 
+                class="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-600 transition-transform duration-300"
+                :class="{ 'rotate-180': isUserDropdownOpen }"
+              />
+            </button>
+
+            <!-- Premium User Dropdown -->
+            <div 
+              v-if="isUserDropdownOpen"
+              class="absolute top-full right-0 mt-4 w-64 bg-white border border-slate-200 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-300"
+            >
+              <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Authenticated as</p>
+                <p class="text-sm font-black text-slate-900 truncate">{{ currentUser.email }}</p>
+              </div>
+              
+              <div class="p-2">
+                <router-link
+                  to="/admin/settings"
+                  class="flex items-center gap-3 px-4 py-3 text-[10px] font-black text-slate-600 uppercase tracking-widest hover:bg-slate-50 hover:text-violet-600 transition-colors"
+                  @click="isUserDropdownOpen = false"
+                >
+                  <User class="w-4 h-4" />
+                  Profile Strategy
+                </router-link>
+                <router-link
+                  to="/admin/users"
+                  class="flex items-center gap-3 px-4 py-3 text-[10px] font-black text-slate-600 uppercase tracking-widest hover:bg-slate-50 hover:text-violet-600 transition-colors"
+                  @click="isUserDropdownOpen = false"
+                >
+                  <ShieldCheck class="w-4 h-4" />
+                  Security Matrix
+                </router-link>
+              </div>
+
+              <div class="p-2 border-t border-slate-100">
+                <button
+                  class="w-full flex items-center gap-3 px-4 py-3 text-[10px] font-black text-rose-600 uppercase tracking-widest hover:bg-rose-50 transition-colors"
+                  @click="handleLogout"
+                >
+                  <LogOut class="w-4 h-4" />
+                  Terminate Session
+                </button>
               </div>
             </div>
-            <div class="hidden sm:flex flex-col items-start text-left">
-              <span class="text-sm font-black text-slate-900 leading-none tracking-tight">{{ currentUser.name }}</span>
-              <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1.5 italic">{{ currentUser.role }}</span>
-            </div>
-            <ChevronDown class="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-600 transition-colors" />
-          </button>
+          </div>
         </div>
       </header>
 
@@ -209,7 +215,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { appConfig } from '@/core/config/appConfig'
 import { useCurrentUser } from '@/core/auth/currentUser'
 import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
@@ -233,12 +239,29 @@ import {
   ShieldCheck,
   UserCheck,
   Globe,
-  Building2
+  Building2,
+  User
 } from 'lucide-vue-next'
 
 const { copy, setLocale, currentLocale, availableLocales } = useCopy()
 const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
 const { currentUser } = useCurrentUser()
+const isUserDropdownOpen = ref(false)
+
+function handleClickOutside(event: MouseEvent) {
+  const dropdown = document.querySelector('.relative') // Simple selector for demo
+  if (isUserDropdownOpen.value && !(event.target as HTMLElement).closest('.relative')) {
+    isUserDropdownOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('mousedown', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('mousedown', handleClickOutside)
+})
 
 const appName = appConfig.appName
 
@@ -277,6 +300,7 @@ const navGroups = computed(() => [
       { label: copy.value.admin.sidebar.nav.settlements, to: '/admin/settlements', icon: ShieldCheck },
       { label: 'Branches', to: '/admin/branches', icon: Building2 },
       { label: copy.value.admin.sidebar.nav.users, to: '/admin/users', icon: UserCheck },
+      { label: copy.value.admin.sidebar.nav.organization, to: '/admin/organization', icon: Building2 },
       { label: copy.value.admin.sidebar.nav.settings, to: '/admin/settings', icon: Settings },
     ]
   },
@@ -295,3 +319,25 @@ function handleLogout() {
   })
 }
 </script>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure the logo section allows overflow for the switcher dropdown */
+.LogoSection {
+  position: relative;
+  z-index: 60;
+}
+</style>

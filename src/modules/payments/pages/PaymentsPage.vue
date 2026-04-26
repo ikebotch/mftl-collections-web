@@ -7,7 +7,7 @@
       <template #actions>
         <AppButton
           variant="outline"
-          class="!rounded-xl bg-white shadow-sm border-slate-200"
+          class="!rounded-none bg-white shadow-sm border-slate-200"
         >
           <Download class="w-4 h-4 mr-2 text-slate-400" />
           Export Transaction Log
@@ -89,7 +89,7 @@
           <AppButton 
             variant="ghost" 
             size="sm" 
-            class="!px-3 !py-1 !rounded-lg bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all border border-slate-100"
+            class="!px-3 !py-1 !rounded-none bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all border border-slate-100"
           >
             Contribution
           </AppButton>
@@ -100,7 +100,7 @@
             v-if="value"
             variant="ghost" 
             size="sm" 
-            class="!px-3 !py-1 !rounded-lg bg-violet-50 text-[10px] font-black uppercase tracking-widest text-violet-600 hover:text-violet-900 transition-all border border-violet-100"
+            class="!px-3 !py-1 !rounded-none bg-violet-50 text-[10px] font-black uppercase tracking-widest text-violet-600 hover:text-violet-900 transition-all border border-violet-100"
           >
             Receipt
           </AppButton>

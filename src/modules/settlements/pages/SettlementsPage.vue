@@ -7,7 +7,7 @@
       <template #actions>
         <AppButton
           variant="outline"
-          class="!rounded-xl bg-white shadow-sm border-slate-200"
+          class="!rounded-none bg-white shadow-sm border-slate-200"
         >
           <Download class="w-4 h-4 mr-2 text-slate-400" />
           Export Ledger
@@ -58,7 +58,7 @@
       >
         <template #cell:collectorName="{ value }">
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0">
+            <div class="w-10 h-10 rounded-none bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0">
               {{ getInitials(value) }}
             </div>
             <span class="text-sm font-black text-slate-900 tracking-tight">{{ value }}</span>

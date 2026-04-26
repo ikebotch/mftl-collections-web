@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="sticky top-0 z-30 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between">
       <button 
-        class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white active:scale-90 transition-transform"
+        class="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center text-white active:scale-90 transition-transform"
         @click="router.back()"
       >
         <ChevronLeft class="w-6 h-6" />
@@ -12,10 +12,10 @@
         New Contribution
       </h1>
       <div class="flex items-center gap-2">
-        <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40">
+        <button class="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center text-white/40">
           <Download class="w-5 h-5" />
         </button>
-        <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40">
+        <button class="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center text-white/40">
           <MoreHorizontal class="w-5 h-5" />
         </button>
       </div>
@@ -36,7 +36,7 @@
           class="relative z-10 flex flex-col items-center gap-3"
         >
           <div 
-            class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black transition-all duration-500 border-2"
+            class="w-10 h-10 rounded-none flex items-center justify-center text-sm font-black transition-all duration-500 border-2"
             :class="i + 1 <= activeStep ? 'bg-violet-600 border-violet-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.4)]' : 'bg-slate-900 border-white/10 text-slate-500'"
           >
             <Check
@@ -90,10 +90,10 @@
             <button
               v-for="event in assignmentsQuery.data.value.events"
               :key="event.id"
-              class="w-full p-5 rounded-3xl bg-white/[0.03] border border-white/5 flex items-center gap-4 text-left active:scale-[0.98] transition-all"
+              class="w-full p-5 rounded-none bg-white/[0.03] border border-white/5 flex items-center gap-4 text-left active:scale-[0.98] transition-all"
               @click="selectEvent(event.id)"
             >
-              <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center text-slate-800">
+              <div class="w-16 h-16 rounded-none bg-slate-900 border border-white/10 flex items-center justify-center text-slate-800">
                 <Calendar class="w-8 h-8" />
               </div>
               <div class="min-w-0 flex-1">
@@ -110,9 +110,9 @@
 
           <div
             v-else
-            class="p-5 rounded-3xl bg-white/[0.03] border border-white/5 flex items-center gap-4"
+            class="p-5 rounded-none bg-white/[0.03] border border-white/5 flex items-center gap-4"
           >
-            <div class="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center">
+            <div class="relative w-16 h-16 rounded-none overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center">
               <Calendar class="w-8 h-8 text-slate-800" />
               <div class="absolute inset-0 bg-violet-600/10" />
             </div>
@@ -152,10 +152,10 @@
             <button
               v-for="fund in availableFunds"
               :key="fund.id"
-              class="w-full p-5 rounded-3xl bg-white/[0.03] border border-white/5 flex items-center gap-4 text-left active:scale-[0.98] transition-all"
+              class="w-full p-5 rounded-none bg-white/[0.03] border border-white/5 flex items-center gap-4 text-left active:scale-[0.98] transition-all"
               @click="form.recipientFundId = fund.id"
             >
-              <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center text-slate-800">
+              <div class="w-16 h-16 rounded-none bg-slate-900 border border-white/10 flex items-center justify-center text-slate-800">
                 <Target class="w-8 h-8" />
               </div>
               <div class="min-w-0 flex-1">
@@ -171,7 +171,7 @@
 
             <div
               v-if="availableFunds.length === 0"
-              class="text-center py-12 px-6 rounded-3xl bg-white/[0.02] border border-dashed border-white/10"
+              class="text-center py-12 px-6 rounded-none bg-white/[0.02] border border-dashed border-white/10"
             >
               <p class="text-sm font-bold text-slate-500">
                 No recipient funds found for this event.
@@ -181,10 +181,10 @@
 
           <div
             v-else
-            class="p-5 rounded-3xl bg-white/[0.03] border border-white/5 space-y-5"
+            class="p-5 rounded-none bg-white/[0.03] border border-white/5 space-y-5"
           >
             <div class="flex items-center gap-4">
-              <div class="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center">
+              <div class="relative w-16 h-16 rounded-none overflow-hidden bg-slate-900 border border-white/10 flex items-center justify-center">
                 <Target class="w-8 h-8 text-slate-800" />
                 <div class="absolute inset-0 bg-cyan-600/10" />
               </div>
@@ -203,9 +203,9 @@
                 <span class="text-slate-500">Target: {{ formatCurrency(selectedFund?.targetAmount || 0, 'GHS') }}</span>
                 <span class="text-cyan-400">Raised: {{ formatCurrency(selectedFund?.collectedAmount || 0, 'GHS') }} ({{ selectedFund?.progress }}%)</span>
               </div>
-              <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+              <div class="h-1.5 w-full bg-white/5 rounded-none overflow-hidden">
                 <div 
-                  class="h-full bg-cyan-500 rounded-full transition-all duration-1000"
+                  class="h-full bg-cyan-500 rounded-none transition-all duration-1000"
                   :style="{ width: `${selectedFund?.progress}%` }"
                 />
               </div>
@@ -226,11 +226,11 @@
             <div class="space-y-4">
               <!-- Name -->
               <div 
-                class="group p-5 rounded-3xl border border-white/5 bg-white/[0.03] focus-within:border-indigo-500/50 transition-all"
+                class="group p-5 rounded-none border border-white/5 bg-white/[0.03] focus-within:border-indigo-500/50 transition-all"
                 :class="{ 'opacity-40 pointer-events-none': form.anonymous }"
               >
                 <div class="flex items-center gap-4 mb-1">
-                  <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-600 group-focus-within:text-indigo-500">
+                  <div class="w-8 h-8 rounded-none bg-white/5 flex items-center justify-center text-slate-600 group-focus-within:text-indigo-500">
                     <User class="w-4 h-4" />
                   </div>
                   <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Full Name <span class="text-rose-500">*</span></label>
@@ -244,17 +244,17 @@
 
               <!-- Phone -->
               <div 
-                class="group p-5 rounded-3xl border border-white/5 bg-white/[0.03] focus-within:border-indigo-500/50 transition-all"
+                class="group p-5 rounded-none border border-white/5 bg-white/[0.03] focus-within:border-indigo-500/50 transition-all"
                 :class="{ 'opacity-40 pointer-events-none': form.anonymous }"
               >
                 <div class="flex items-center gap-4 mb-1">
-                  <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-600 group-focus-within:text-indigo-500">
+                  <div class="w-8 h-8 rounded-none bg-white/5 flex items-center justify-center text-slate-600 group-focus-within:text-indigo-500">
                     <Phone class="w-4 h-4" />
                   </div>
                   <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Phone Number <span class="text-rose-500">*</span></label>
                 </div>
                 <div class="flex items-center gap-3 pl-12">
-                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-bold">
+                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-none bg-white/5 border border-white/10 text-xs font-bold">
                     <span>🇬🇭</span>
                     <ChevronDown class="w-3 h-3 text-slate-500" />
                   </div>
@@ -269,11 +269,11 @@
 
               <!-- Email -->
               <div 
-                class="group p-5 rounded-3xl border border-white/5 bg-white/[0.03] focus-within:border-indigo-500/50 transition-all"
+                class="group p-5 rounded-none border border-white/5 bg-white/[0.03] focus-within:border-indigo-500/50 transition-all"
                 :class="{ 'opacity-40 pointer-events-none': form.anonymous }"
               >
                 <div class="flex items-center gap-4 mb-1">
-                  <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-600 group-focus-within:text-indigo-500">
+                  <div class="w-8 h-8 rounded-none bg-white/5 flex items-center justify-center text-slate-600 group-focus-within:text-indigo-500">
                     <Mail class="w-4 h-4" />
                   </div>
                   <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Email (Optional)</label>
@@ -287,10 +287,10 @@
               </div>
 
               <!-- Anonymous Toggle -->
-              <label class="flex items-center justify-between p-5 rounded-3xl border border-white/5 bg-white/[0.03] cursor-pointer active:scale-[0.98] transition-transform">
+              <label class="flex items-center justify-between p-5 rounded-none border border-white/5 bg-white/[0.03] cursor-pointer active:scale-[0.98] transition-transform">
                 <div class="flex items-center gap-4">
                   <div 
-                    class="w-10 h-10 rounded-2xl flex items-center justify-center transition-colors"
+                    class="w-10 h-10 rounded-none flex items-center justify-center transition-colors"
                     :class="form.anonymous ? 'bg-indigo-600 text-white' : 'bg-white/5 text-slate-600'"
                   >
                     <EyeOff
@@ -308,7 +308,7 @@
                   </div>
                 </div>
                 <div 
-                  class="w-6 h-6 rounded-lg border-2 transition-all flex items-center justify-center"
+                  class="w-6 h-6 rounded-none border-2 transition-all flex items-center justify-center"
                   :class="form.anonymous ? 'bg-indigo-600 border-indigo-600' : 'border-white/10 bg-slate-900'"
                 >
                   <Check
@@ -330,7 +330,7 @@
             <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 px-1">
               Contribution Amount
             </h3>
-            <div class="p-6 rounded-[2.5rem] bg-white/[0.03] border border-white/5 focus-within:border-emerald-500/50 transition-all">
+            <div class="p-6 rounded-none bg-white/[0.03] border border-white/5 focus-within:border-emerald-500/50 transition-all">
               <div class="flex items-center justify-between gap-4">
                 <div class="min-w-0 flex-1">
                   <label class="block text-[10px] font-black uppercase tracking-widest text-slate-600 mb-2">Amount (GHS) <span class="text-rose-500">*</span></label>
@@ -342,7 +342,7 @@
                     placeholder="0.00"
                   >
                 </div>
-                <div class="px-4 py-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-2">
+                <div class="px-4 py-3 rounded-none bg-white/5 border border-white/10 flex items-center gap-2">
                   <span class="text-sm font-black text-white">{{ form.currency }}</span>
                   <ChevronDown class="w-4 h-4 text-slate-500" />
                 </div>
@@ -359,12 +359,12 @@
               <button 
                 v-for="method in paymentMethods" 
                 :key="method.value"
-                class="relative p-6 rounded-3xl border transition-all duration-300 flex flex-col items-center gap-4 text-center overflow-hidden active:scale-95"
+                class="relative p-6 rounded-none border transition-all duration-300 flex flex-col items-center gap-4 text-center overflow-hidden active:scale-95"
                 :class="form.paymentMethod === method.value ? 'bg-emerald-600/10 border-emerald-500 text-emerald-500' : 'bg-white/[0.03] border-white/5 text-slate-500'"
                 @click="form.paymentMethod = method.value"
               >
                 <div 
-                  class="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors shadow-lg"
+                  class="w-12 h-12 rounded-none flex items-center justify-center transition-colors shadow-lg"
                   :class="form.paymentMethod === method.value ? 'bg-emerald-500 text-white' : 'bg-white/5'"
                 >
                   <component
@@ -375,7 +375,7 @@
                 <span class="text-xs font-black uppercase tracking-widest">{{ method.label }}</span>
                 
                 <div 
-                  class="absolute top-3 right-3 w-4 h-4 rounded-full border-2 transition-all flex items-center justify-center"
+                  class="absolute top-3 right-3 w-4 h-4 rounded-none border-2 transition-all flex items-center justify-center"
                   :class="form.paymentMethod === method.value ? 'bg-emerald-500 border-emerald-500' : 'border-white/10'"
                 >
                   <Check
@@ -391,7 +391,7 @@
           <div class="pt-8">
             <AppButton 
               variant="primary" 
-              class="w-full !rounded-[2rem] !py-6 text-xl bg-violet-600 hover:bg-violet-500 shadow-[0_20px_50px_rgba(124,58,237,0.3)] group"
+              class="w-full !rounded-none !py-6 text-xl bg-violet-600 hover:bg-violet-500 shadow-[0_20px_50px_rgba(124,58,237,0.3)] group"
               :disabled="!canSubmit || isSubmitting"
               :loading="isSubmitting"
               @click="onSubmit"
@@ -425,7 +425,7 @@
         <span class="text-[9px] font-black uppercase tracking-widest">{{ nav.label }}</span>
       </div>
       <div class="absolute -top-10 left-1/2 -translate-x-1/2">
-        <div class="w-20 h-20 rounded-full bg-violet-600 border-[8px] border-slate-950 flex items-center justify-center text-white shadow-2xl">
+        <div class="w-20 h-20 rounded-none bg-violet-600 border-[8px] border-slate-950 flex items-center justify-center text-white shadow-2xl">
           <Plus class="w-10 h-10" />
         </div>
       </div>

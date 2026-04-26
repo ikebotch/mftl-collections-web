@@ -36,7 +36,7 @@
           </p>
         </div>
         <button 
-          class="p-2 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-900 transition-all"
+          class="p-2 rounded-none hover:bg-slate-50 text-slate-400 hover:text-slate-900 transition-all"
           @click="close"
         >
           <X class="w-6 h-6" />

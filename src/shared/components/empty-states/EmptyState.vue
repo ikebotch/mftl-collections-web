@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-24 px-6 text-center border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/30">
-    <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-slate-300 mb-6 shadow-sm border border-slate-100">
+  <div class="flex flex-col items-center justify-center py-24 px-6 text-center border-2 border-dashed border-slate-100 rounded-none bg-slate-50/30">
+    <div class="w-16 h-16 rounded-none bg-white flex items-center justify-center text-slate-300 mb-6 shadow-sm border border-slate-100">
       <component
         :is="resolvedIcon"
         class="w-8 h-8"

@@ -30,7 +30,7 @@
           <button 
             v-for="role in roles" 
             :key="role"
-            class="p-4 border rounded-xl transition-all text-left group"
+            class="p-4 border rounded-none transition-all text-left group"
             :class="form.role === role ? 'bg-slate-900 border-slate-900 shadow-lg' : 'bg-white border-slate-100 hover:border-slate-300'"
             @click="form.role = role"
           >
@@ -77,7 +77,7 @@
     <template #actions>
       <AppButton
         variant="primary"
-        class="flex-1 !rounded-xl shadow-premium"
+        class="flex-1 !rounded-none shadow-premium"
         :loading="loading"
         :disabled="!isValid"
         @click="handleSubmit"

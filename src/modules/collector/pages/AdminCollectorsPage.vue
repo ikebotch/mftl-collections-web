@@ -102,7 +102,7 @@
           >
             <!-- Status Circle Inline -->
             <div 
-              class="w-2 h-2 rounded-full shrink-0"
+              class="w-2 h-2 rounded-none shrink-0"
               :class="row.status === 'Active' ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
             />
             
@@ -188,7 +188,7 @@
           <div class="mt-8 flex gap-3">
             <div class="flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200">
               <div 
-                class="w-1.5 h-1.5 rounded-full"
+                class="w-1.5 h-1.5 rounded-none"
                 :class="selectedCollector.status === 'Active' ? 'bg-emerald-500' : 'bg-slate-300'"
               />
               <span class="text-[9px] font-black text-slate-600 uppercase tracking-widest">{{ selectedCollector.status }}</span>

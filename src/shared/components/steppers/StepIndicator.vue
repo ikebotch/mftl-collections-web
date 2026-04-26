@@ -18,7 +18,7 @@
 
       <!-- Step Circle -->
       <div 
-        class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold z-10 transition-all duration-500 border-2"
+        class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all duration-500 border-2"
         :class="[
           index + 1 === currentStep ? 'bg-violet-600 text-white border-violet-600 shadow-premium' :
           index + 1 < currentStep ? 'bg-white text-violet-600 border-violet-600' :

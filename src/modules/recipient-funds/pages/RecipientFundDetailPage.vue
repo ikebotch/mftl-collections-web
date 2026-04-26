@@ -36,7 +36,7 @@
       <template #actions>
         <AppButton
           variant="outline"
-          class="!rounded-xl"
+          class="!rounded-none"
           @click="router.push({ name: 'admin-funds-edit', params: { id: fundId } })"
         >
           <Edit class="w-4 h-4 mr-2" /> Edit Fund
@@ -109,7 +109,7 @@
               <span class="text-3xl font-black tracking-tight">{{ Math.round((fund.receivedAmount / fund.targetAmount) * 100) }}%</span>
               <span class="text-xs font-bold opacity-70">Target: {{ formatCurrency(fund.targetAmount, fund.currency) }}</span>
             </div>
-            <div class="h-2 w-full bg-white/20 rounded-full overflow-hidden">
+            <div class="h-2 w-full bg-white/20 rounded-none overflow-hidden">
               <div 
                 class="h-full bg-white transition-all duration-1000"
                 :style="{ width: `${Math.min((fund.receivedAmount / fund.targetAmount) * 100, 100)}%` }"

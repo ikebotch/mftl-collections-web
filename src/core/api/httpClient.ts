@@ -29,18 +29,22 @@ export class HttpClient {
       const headers = config.headers ?? {}
       headers[CORRELATION_HEADER_NAME] = createCorrelationId()
 
-      let tenantId = readSelectedTenantId()
-      if (!tenantId && appConfig.auth.devBypass) {
-        tenantId = '00000000-0000-0000-0000-000000000000'
+      if (!headers[appConfig.api.tenantHeaderName]) {
+        let tenantId = readSelectedTenantId()
+        if (!tenantId && appConfig.auth.devBypass) {
+          tenantId = '00000000-0000-0000-0000-000000000000'
+        }
+
+        if (tenantId) {
+          headers[appConfig.api.tenantHeaderName] = tenantId
+        }
       }
 
-      if (tenantId) {
-        headers[appConfig.api.tenantHeaderName] = tenantId
-      }
-
-      const branchId = readSelectedBranchId()
-      if (branchId) {
-        headers['X-Branch-Id'] = branchId
+      if (!headers['X-Branch-Id']) {
+        const branchId = readSelectedBranchId()
+        if (branchId) {
+          headers['X-Branch-Id'] = branchId
+        }
       }
 
       if (!config.skipAuth && !appConfig.auth.devBypass) {

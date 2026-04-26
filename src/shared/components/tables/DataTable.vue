@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-none overflow-hidden shadow-sm">
+    <div class="bg-transparent border border-slate-200 rounded-none overflow-hidden shadow-sm">
       <div class="overflow-x-auto custom-scrollbar">
         <table class="w-full text-left border-collapse table-auto">
           <thead>
@@ -89,7 +89,7 @@
                   class="px-4 py-3"
                 >
                   <button
-                    class="p-1 rounded-none hover:bg-white border border-transparent hover:border-slate-200 text-slate-300 hover:text-violet-600 transition-all"
+                    class="p-1 rounded-lg hover:bg-white border border-transparent hover:border-slate-200 text-slate-300 hover:text-violet-600 transition-all"
                     @click="toggleExpand(row.id || index)"
                   >
                     <ChevronRight 
@@ -150,7 +150,7 @@
                 class="px-6 py-24 text-center"
               >
                 <div class="flex flex-col items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">
+                  <div class="w-12 h-12 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100">
                     <Inbox class="w-6 h-6 text-slate-300" />
                   </div>
                   <div class="space-y-1">

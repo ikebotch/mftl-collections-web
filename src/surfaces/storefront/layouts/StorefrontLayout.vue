@@ -3,7 +3,7 @@
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-6 h-20">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center shadow-lg shadow-brand-600/20 rotate-3">
+          <div class="w-10 h-10 rounded-none bg-brand-600 flex items-center justify-center shadow-lg shadow-brand-600/20 rotate-3">
             <span class="text-white font-bold text-xl font-display">M</span>
           </div>
           <div>
@@ -25,7 +25,7 @@
             </p>
           </div>
           <div class="w-px h-8 bg-slate-100 mx-2 hidden sm:block" />
-          <div class="p-2 rounded-full bg-emerald-50 text-emerald-600">
+          <div class="p-2 rounded-none bg-emerald-50 text-emerald-600">
             <span class="sr-only">Secure</span>
             🔒
           </div>
@@ -47,7 +47,7 @@
     <footer class="py-12 border-t border-slate-100 mt-12 bg-white">
       <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="flex items-center gap-3 grayscale opacity-50">
-          <div class="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center">
+          <div class="w-8 h-8 rounded-none bg-slate-900 flex items-center justify-center">
             <span class="text-white font-bold text-sm font-display">M</span>
           </div>
           <span class="font-bold font-display text-slate-900 tracking-tight">{{ appName }}</span>

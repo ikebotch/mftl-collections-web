@@ -1,19 +1,20 @@
+import { toValue, type MaybeRefOrGetter } from 'vue'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { branchesService } from '../services/branchesService'
 import type { BranchDto } from '../services/branchesService'
 
-export function useBranches(tenantId?: string) {
+export function useBranches(tenantId?: MaybeRefOrGetter<string | undefined>) {
   return useQuery({
     queryKey: ['branches', tenantId],
-    queryFn: () => branchesService.list(tenantId),
+    queryFn: () => branchesService.list(toValue(tenantId)),
   })
 }
 
-export function useBranch(id: string) {
+export function useBranch(id: MaybeRefOrGetter<string>) {
   return useQuery({
     queryKey: ['branch', id],
-    queryFn: () => branchesService.getById(id),
-    enabled: !!id,
+    queryFn: () => branchesService.getById(toValue(id)),
+    enabled: () => !!toValue(id),
   })
 }
 

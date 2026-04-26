@@ -8,14 +8,14 @@
         <div class="flex items-center gap-3">
           <AppButton
             variant="outline"
-            class="!rounded-xl bg-white shadow-sm border-slate-200"
+            class="!rounded-none bg-white shadow-sm border-slate-200"
           >
             <Download class="w-4 h-4 mr-2 text-slate-400" />
             Generate PDF
           </AppButton>
           <AppButton 
             variant="primary"
-            class="!rounded-xl shadow-premium"
+            class="!rounded-none shadow-premium"
           >
             <Share2 class="w-4 h-4 mr-2" />
             Export Data
@@ -93,8 +93,8 @@
               Top performing campaigns
             </p>
           </div>
-          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 text-violet-600 text-[10px] font-black uppercase tracking-widest border border-violet-100">
-            <span class="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-none bg-violet-50 text-violet-600 text-[10px] font-black uppercase tracking-widest border border-violet-100">
+            <span class="w-1.5 h-1.5 rounded-none bg-violet-500 animate-pulse" />
             Live Updates
           </span>
         </div>
@@ -103,10 +103,10 @@
           <div
             v-for="event in eventPerformance"
             :key="event.title"
-            class="flex items-center justify-between p-6 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-slate-900 transition-all cursor-pointer"
+            class="flex items-center justify-between p-6 rounded-none bg-slate-50 border border-slate-100 group hover:border-slate-900 transition-all cursor-pointer"
           >
             <div class="flex items-center gap-5">
-              <div class="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-soft">
+              <div class="w-12 h-12 rounded-none bg-white border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-soft">
                 <Calendar class="w-5 h-5 text-slate-400" />
               </div>
               <div>
@@ -124,7 +124,7 @@
               </p>
               <div class="flex items-center justify-end gap-2">
                 <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">{{ event.percent }}% of Target</span>
-                <div class="w-12 bg-slate-200 h-1 rounded-full overflow-hidden">
+                <div class="w-12 bg-slate-200 h-1 rounded-none overflow-hidden">
                   <div
                     class="h-full bg-emerald-500"
                     :style="{ width: event.percent + '%' }"

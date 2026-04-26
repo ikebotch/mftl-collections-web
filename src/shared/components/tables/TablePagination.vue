@@ -13,7 +13,7 @@
       <button
         type="button"
         :disabled="currentPage === 1"
-        class="p-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+        class="p-2 rounded-none border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
         @click="$emit('update:currentPage', currentPage - 1)"
       >
         <ChevronLeft class="w-4 h-4" />
@@ -21,7 +21,7 @@
       <button
         type="button"
         :disabled="currentPage === totalPages"
-        class="p-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+        class="p-2 rounded-none border border-slate-200 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
         @click="$emit('update:currentPage', currentPage + 1)"
       >
         <ChevronRight class="w-4 h-4" />

@@ -7,7 +7,7 @@
       <template #actions>
         <AppButton
           variant="primary"
-          class="!rounded-xl shadow-premium"
+          class="!rounded-none shadow-premium"
           @click="router.push({ name: 'admin-funds-new' })"
         >
           <Plus class="w-4 h-4 mr-2" /> New Fund

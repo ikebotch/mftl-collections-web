@@ -14,7 +14,7 @@
       </AppBadge>
     </div>
     <dl class="mt-6 grid gap-4 sm:grid-cols-2">
-      <div class="rounded-2xl bg-slate-50 p-4">
+      <div class="rounded-none bg-slate-50 p-4">
         <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
           Target amount
         </dt>
@@ -22,7 +22,7 @@
           {{ formatCurrency(fund.targetAmount, fund.currency) }}
         </dd>
       </div>
-      <div class="rounded-2xl bg-slate-50 p-4">
+      <div class="rounded-none bg-slate-50 p-4">
         <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
           Received
         </dt>

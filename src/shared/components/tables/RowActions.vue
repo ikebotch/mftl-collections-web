@@ -5,7 +5,7 @@
         v-for="action in actions"
         :key="action.label"
         type="button"
-        class="p-2 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all active:scale-90"
+        class="p-2 rounded-none text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all active:scale-90"
         :title="action.label"
         @click.stop="action.onClick"
       >

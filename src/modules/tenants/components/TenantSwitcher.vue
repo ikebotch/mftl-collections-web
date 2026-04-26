@@ -1,5 +1,8 @@
 <template>
-  <div ref="containerRef" class="relative group">
+  <div
+    ref="containerRef"
+    class="relative group"
+  >
     <!-- Main Selector Button (Modernized) -->
     <button 
       class="premium-switcher-btn"
@@ -45,22 +48,24 @@
         <div class="sliding-tabs">
           <div 
             class="tab-indicator"
-            :style="{ transform: `translateX(${activeView === 'tenants' ? '0%' : '100%'})` }"
+            :style="{ transform: `translateX(${activeView === 'tenants' ? '0' : '100%'})` }"
           />
-          <button 
-            class="tab-btn"
-            :class="{ active: activeView === 'tenants' }"
-            @click="activeView = 'tenants'"
-          >
-            Organizations
-          </button>
-          <button 
-            class="tab-btn"
-            :class="{ active: activeView === 'branches' }"
-            @click="activeView = 'branches'"
-          >
-            Branches
-          </button>
+          <div class="tabs-grid">
+            <button 
+              class="tab-btn"
+              :class="{ active: activeView === 'tenants' }"
+              @click="activeView = 'tenants'"
+            >
+              Organizations
+            </button>
+            <button 
+              class="tab-btn"
+              :class="{ active: activeView === 'branches' }"
+              @click="activeView = 'branches'"
+            >
+              Branches
+            </button>
+          </div>
         </div>
 
         <!-- Scrollable Content Area -->
@@ -73,7 +78,7 @@
             class="list-container"
           >
             <div
-              v-if="!tenants?.length"
+              v-if="!isPendingTenants && !tenants?.length"
               key="empty"
               class="empty-state"
             >
@@ -82,6 +87,31 @@
               </div>
               <p>No organizations found</p>
             </div>
+
+            <!-- Global Discovery (Platform Admin Only) -->
+            <button
+              v-if="isPlatformAdmin"
+              key="global"
+              class="list-item"
+              :class="{ 'is-selected': !tenantStore.selectedTenantId }"
+              @click="selectGlobalView"
+            >
+              <div class="item-icon-box global-icon">
+                <Globe class="w-4 h-4" />
+              </div>
+              <div class="item-info">
+                <p class="item-name">
+                  Global System View
+                </p>
+                <p class="item-meta">
+                  All Organizations & Branches
+                </p>
+              </div>
+              <div
+                v-if="!tenantStore.selectedTenantId"
+                class="active-indicator"
+              />
+            </button>
             
             <button
               v-for="tenant in tenants"
@@ -129,7 +159,7 @@
               </div>
               <div class="item-info">
                 <p class="item-name">
-                  Main Hub
+                  {{ tenantStore.selectedTenantName || 'Main Hub' }}
                 </p>
                 <p class="item-meta">
                   Root Organization View
@@ -137,6 +167,31 @@
               </div>
               <div
                 v-if="branchStore.selectedBranchIds.length === 0"
+                class="active-indicator"
+              />
+            </button>
+
+            <!-- All Branches (Platform Admin or Reporting Pages) -->
+            <button
+              v-if="isPlatformAdmin"
+              key="all-branches"
+              class="list-item"
+              :class="{ 'is-selected': branchStore.selectedBranchIds.includes('all') }"
+              @click="selectAllBranches"
+            >
+              <div class="item-icon-box all-icon">
+                <Layers class="w-4 h-4" />
+              </div>
+              <div class="item-info">
+                <p class="item-name">
+                  All Branches
+                </p>
+                <p class="item-meta">
+                  System Wide Overview
+                </p>
+              </div>
+              <div
+                v-if="branchStore.selectedBranchIds.includes('all')"
                 class="active-indicator"
               />
             </button>
@@ -175,12 +230,13 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
-import { Building2, MapPin, ChevronDown, Search, ArrowLeft, Check } from 'lucide-vue-next'
+import { Building2, MapPin, ChevronDown, Search, ArrowLeft, Check, Globe, Layers } from 'lucide-vue-next'
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { tenantsService } from '../services/tenantsService'
 import { branchesService } from '../services/branchesService'
 import { useTenantStore } from '../store/tenantStore'
 import { useBranchStore } from '@/modules/branches/store/branchStore'
+import { useMe } from '@/modules/users/composables/useUsers'
 
 const isOpen = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
@@ -189,19 +245,27 @@ const queryClient = useQueryClient()
 
 const tenantStore = useTenantStore()
 const branchStore = useBranchStore()
+const { data: me } = useMe()
+
+const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
 
 const displayTitle = computed(() => {
+  if (branchStore.selectedBranchIds.includes('all')) return 'All Branches'
   if (branchStore.selectedBranchIds.length > 1) return `${branchStore.selectedBranchIds.length} Branches`
   if (branchStore.selectedBranchIds.length === 1) {
     const branch = branches.value?.find(b => b.id === branchStore.selectedBranchIds[0])
     return branch?.name || 'Selected Branch'
   }
+  
+  if (!tenantStore.selectedTenantId && isPlatformAdmin.value) return 'Global View'
   if (tenantStore.selectedTenantIds.length > 1) return `${tenantStore.selectedTenantIds.length} Organizations`
   return tenantStore.selectedTenantName || 'Select Hub'
 })
 
 const displaySubtitle = computed(() => {
+  if (branchStore.selectedBranchIds.includes('all')) return 'System Wide Discovery'
   if (branchStore.selectedBranchIds.length > 0) return 'Operational Scope'
+  if (!tenantStore.selectedTenantId && isPlatformAdmin.value) return 'System Authority'
   return 'Organization Wide'
 })
 
@@ -219,15 +283,15 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-const { data: tenants } = useQuery({
+const { data: tenants, isPending: isPendingTenants } = useQuery({
   queryKey: ['tenants-list'],
   queryFn: () => tenantsService.list()
 })
 
 const { data: branches, refetch: refetchBranches } = useQuery({
   queryKey: ['branches-list', tenantStore.selectedTenantId],
-  queryFn: () => branchesService.list(),
-  enabled: !!tenantStore.selectedTenantId
+  queryFn: () => branchesService.list(tenantStore.selectedTenantId || undefined),
+  enabled: !!tenantStore.selectedTenantId || isPlatformAdmin.value
 })
 
 watch(() => tenantStore.selectedTenantIds, () => {
@@ -250,19 +314,30 @@ function isBranchSelected(id: string) {
 function toggleTenant(tenant: any) {
   const ids = [...tenantStore.selectedTenantIds]
   const index = ids.indexOf(tenant.id)
+  
   if (index > -1) {
-    if (ids.length > 1) ids.splice(index, 1) // Keep at least one
+    if (ids.length > 1) ids.splice(index, 1)
   } else {
     ids.push(tenant.id)
   }
+  
   tenantStore.setTenants(ids)
-  // When switching tenants, we might want to clear branches or keep them if they exist in new tenants? 
-  // Usually, clearing is safer.
   branchStore.clearBranch()
+}
+
+function selectGlobalView() {
+  tenantStore.clearTenant()
+  branchStore.clearBranch()
+  isOpen.value = false
 }
 
 function toggleBranch(branch: any) {
   branchStore.toggleBranch(branch.id)
+}
+
+function selectAllBranches() {
+  branchStore.setBranches(['all'])
+  isOpen.value = false
 }
 
 function selectMainHub() {
@@ -288,7 +363,7 @@ function selectMainHub() {
   gap: 0.875rem;
   width: 100%;
   padding: 0.5rem;
-  border-radius: 1rem;
+  border-radius: 0;
   background: transparent;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   text-align: left;
@@ -308,7 +383,7 @@ function selectMainHub() {
   position: relative;
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: 0.875rem;
+  border-radius: 0;
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
   display: flex;
   align-items: center;
@@ -328,7 +403,7 @@ function selectMainHub() {
   background: inherit;
   filter: blur(8px);
   opacity: 0.4;
-  border-radius: inherit;
+  border-radius: 0;
   z-index: -1;
 }
 
@@ -366,7 +441,7 @@ function selectMainHub() {
 .badge-dot {
   width: 4px;
   height: 4px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--hub-accent);
   box-shadow: 0 0 8px var(--hub-accent);
 }
@@ -402,9 +477,9 @@ function selectMainHub() {
 /* Dropdown Styles */
 .premium-dropdown {
   position: absolute;
-  top: calc(100% + 0.75rem);
+  top: calc(100% + 1rem);
   left: 0;
-  width: 20rem;
+  width: 22rem;
   z-index: 60;
   animation: dropdown-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -419,43 +494,48 @@ function selectMainHub() {
   backdrop-filter: blur(16px);
   border: 1px solid var(--hub-border);
   box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
-  border-radius: 1.25rem;
+  border-radius: 0;
   overflow: hidden;
 }
 
 .sliding-tabs {
   position: relative;
-  display: flex;
-  padding: 0.375rem;
   background: rgba(255, 255, 255, 0.03);
-  margin: 0.75rem;
-  border-radius: 0.875rem;
-  gap: 0.25rem;
+  margin: 1rem;
+  border-radius: 0;
+  padding: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+ 
+.tabs-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  z-index: 1;
 }
 
 .tab-indicator {
   position: absolute;
-  top: 0.375rem;
-  left: 0.375rem;
-  width: calc(50% - 0.5rem);
-  height: calc(100% - 0.75rem);
+  top: 0.25rem;
+  left: 0.25rem;
+  width: calc(50% - 0.25rem);
+  height: calc(100% - 0.5rem);
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 0.625rem;
-  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  border-radius: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .tab-btn {
-  position: relative;
-  flex: 1;
-  padding: 0.625rem;
+  padding: 0.625rem 0.25rem;
   font-size: 0.625rem;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--hub-text-muted);
-  z-index: 1;
-  transition: color 0.3s;
+  transition: all 0.3s;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
@@ -481,7 +561,7 @@ function selectMainHub() {
   gap: 1rem;
   width: 100%;
   padding: 0.875rem 1rem;
-  border-radius: 0.75rem;
+  border-radius: 0;
   transition: all 0.2s;
   text-align: left;
 }
@@ -497,7 +577,7 @@ function selectMainHub() {
 .item-icon-box {
   width: 2rem;
   height: 2rem;
-  border-radius: 0.5rem;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.03);
   display: flex;
   align-items: center;
@@ -545,7 +625,7 @@ function selectMainHub() {
 .active-indicator {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--hub-accent);
   box-shadow: 0 0 10px var(--hub-accent);
 }
@@ -594,7 +674,7 @@ function selectMainHub() {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
+  border-radius: 0;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.1);

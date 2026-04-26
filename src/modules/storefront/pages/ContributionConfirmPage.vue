@@ -8,7 +8,7 @@
 
     <AppCard>
       <dl class="grid gap-4 md:grid-cols-2">
-        <div class="rounded-2xl bg-slate-50 p-4">
+        <div class="rounded-none bg-slate-50 p-4">
           <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             Amount
           </dt>
@@ -16,7 +16,7 @@
             {{ formatCurrency(flowStore.draft.amount) }}
           </dd>
         </div>
-        <div class="rounded-2xl bg-slate-50 p-4">
+        <div class="rounded-none bg-slate-50 p-4">
           <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             Payment method
           </dt>
@@ -24,7 +24,7 @@
             {{ flowStore.draft.paymentMethod }}
           </dd>
         </div>
-        <div class="rounded-2xl bg-slate-50 p-4 md:col-span-2">
+        <div class="rounded-none bg-slate-50 p-4 md:col-span-2">
           <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             Contributor
           </dt>

@@ -3,11 +3,10 @@
     :type="buttonType"
     :disabled="disabled || loading"
     :class="[
-      'inline-flex items-center justify-center font-black transition-all duration-300 focus:outline-none focus:ring-4 active:scale-[0.98] uppercase tracking-[0.15em]',
+      'inline-flex items-center justify-center font-black transition-all duration-300 focus:outline-none focus:ring-4 active:scale-[0.98] uppercase tracking-[0.15em] rounded-none',
       'disabled:opacity-40 disabled:cursor-not-allowed disabled:saturate-50',
       sizeClasses,
-      variantClasses,
-      rounded ? 'rounded-full' : 'rounded-none'
+      variantClasses
     ]"
     :aria-busy="loading ? 'true' : undefined"
     :aria-label="ariaLabel"
@@ -15,7 +14,7 @@
   >
     <div
       v-if="loading"
-      class="mr-2 h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent"
+      class="mr-2 h-3.5 w-3.5 animate-spin rounded-none border-2 border-current border-t-transparent"
     />
     <slot name="icon" />
     <slot />

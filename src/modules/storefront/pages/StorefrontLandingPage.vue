@@ -3,8 +3,8 @@
     <section class="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] items-start">
       <!-- Hero Section -->
       <div class="relative group">
-        <div class="absolute -inset-4 bg-gradient-to-tr from-violet-600/20 to-emerald-500/10 rounded-[2.5rem] blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000" />
-        <AppCard class="relative overflow-hidden bg-slate-900 border-none shadow-2xl rounded-[2rem]">
+        <div class="absolute -inset-4 bg-gradient-to-tr from-violet-600/20 to-emerald-500/10 rounded-none blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000" />
+        <AppCard class="relative overflow-hidden bg-slate-900 border-none shadow-2xl rounded-none">
           <div 
             v-if="eventQuery.data.value?.displayImageUrl"
             class="absolute inset-0 z-0"
@@ -18,13 +18,13 @@
           </div>
 
           <div v-else>
-            <div class="absolute top-0 right-0 w-96 h-96 bg-violet-500/10 blur-3xl rounded-full -mr-48 -mt-48" />
-            <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 blur-3xl rounded-full -ml-32 -mb-32" />
+            <div class="absolute top-0 right-0 w-96 h-96 bg-violet-500/10 blur-3xl rounded-none -mr-48 -mt-48" />
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 blur-3xl rounded-none -ml-32 -mb-32" />
           </div>
           
           <div class="relative p-8 md:p-14 z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-[10px] font-bold uppercase tracking-widest mb-8">
-              <span class="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-violet-500/10 border border-violet-500/20 text-violet-400 text-[10px] font-bold uppercase tracking-widest mb-8">
+              <span class="w-2 h-2 rounded-none bg-violet-400 animate-pulse" />
               Support this event
             </div>
             
@@ -64,7 +64,7 @@
           padded
           class="border-slate-100 shadow-xl"
         >
-          <div class="p-3 w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 mb-6 flex items-center justify-center shadow-sm">
+          <div class="p-3 w-12 h-12 rounded-none bg-violet-50 text-violet-600 mb-6 flex items-center justify-center shadow-sm">
             🛡️
           </div>
           <h3 class="text-xl font-bold font-display text-slate-900 mb-4">
@@ -79,7 +79,7 @@
               :key="i"
               class="flex items-center gap-3 text-sm font-bold text-slate-700"
             >
-              <span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px]">✓</span>
+              <span class="w-5 h-5 rounded-none bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px]">✓</span>
               {{ item }}
             </li>
           </ul>
@@ -96,7 +96,7 @@
             <div
               v-for="i in 4"
               :key="i"
-              class="h-10 rounded-lg bg-slate-200 animate-pulse"
+              class="h-10 rounded-none bg-slate-200 animate-pulse"
             />
           </div>
           <p class="mt-6 text-xs text-slate-500 text-center font-medium italic">
