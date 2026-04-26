@@ -138,6 +138,28 @@
             </div>
           </div>
         </AppCard>
+
+        <!-- Branch Infrastructure (New) -->
+        <AppCard class="!p-10 border-slate-200 bg-slate-50/30">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-6">
+              <div class="w-14 h-14 bg-white border border-slate-200 flex items-center justify-center">
+                <Building2 class="w-7 h-7 text-violet-600" />
+              </div>
+              <div>
+                <h3 class="text-lg font-black text-slate-900 tracking-tight uppercase leading-none">Branch Infrastructure</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 leading-none">Regional hub deployment and operational management.</p>
+              </div>
+            </div>
+            <AppButton 
+              variant="outline" 
+              class="bg-white text-[10px] uppercase tracking-widest"
+              @click="router.push('/admin/branches')"
+            >
+              Configure Hubs
+            </AppButton>
+          </div>
+        </AppCard>
       </div>
 
       <div class="lg:col-span-4 space-y-10">
@@ -215,6 +237,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useTenantSettings } from '../composables/useTenantSettings'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
@@ -227,8 +250,9 @@ import DetailSummaryCard from '@/shared/components/cards/DetailSummaryCard.vue'
 import ToggleCard from '@/shared/components/cards/ToggleCard.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
-import { Check, Copy as CopyIcon, Image as ImageIcon, Printer } from 'lucide-vue-next'
+import { Check, Copy as CopyIcon, Image as ImageIcon, Printer, Building2 } from 'lucide-vue-next'
 
+const router = useRouter()
 const query = useTenantSettings()
 const toast = useToastStore()
 

@@ -81,21 +81,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Heart, ChevronDown, Building2, Check, Settings } from 'lucide-vue-next'
 import { useTenantStore } from '../store/tenantStore'
+import { tenantsService } from '../services/tenantsService'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
+import { useQuery } from '@tanstack/vue-query'
 
 const tenantStore = useTenantStore()
 const isOpen = ref(false)
 const showCustom = ref(false)
 const customId = ref('')
 
-const tenants = [
-  { id: '00000000-0000-0000-0000-000000000000', name: 'MFTL General' },
-  { id: '11111111-1111-1111-1111-111111111111', name: 'Youth Conference' },
-  { id: '22222222-2222-2222-2222-222222222222', name: 'Accra Central Mission' },
-]
+const { data: tenants } = useQuery({
+  queryKey: ['tenants-list'],
+  queryFn: () => tenantsService.list()
+})
 
 function selectTenant(tenant: any) {
   tenantStore.setTenant(tenant.id, tenant.name)

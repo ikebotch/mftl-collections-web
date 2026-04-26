@@ -37,6 +37,17 @@
                 placeholder="e.g. Community Health Drive 2024"
                 required
               />
+              <AppSelect 
+                v-model="form.branchId"
+                label="Operational Branch"
+                placeholder="Select the hosting hub..."
+                :options="branchOptions"
+                :loading="isLoadingBranches"
+                required
+              />
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10 pt-4">
               <AppInput 
                 v-model="form.slug"
                 label="Public Slug"
@@ -274,10 +285,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCreateEvent } from '../composables/useEvents'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
+import { branchesService } from '@/modules/tenants/services/branchesService'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
@@ -302,6 +314,8 @@ const steps = [
 ]
 
 const isSubmitting = ref(false)
+const isLoadingBranches = ref(true)
+const branchOptions = ref([])
 
 const paymentMethods = [
   { id: 'cash', label: 'Cash', description: 'Offline physical currency' },
@@ -319,6 +333,7 @@ const form = reactive({
   currency: 'GHS',
   displayImageUrl: '',
   receiptLogoUrl: '',
+  branchId: null as string | null,
   acceptedMethods: ['cash', 'momo'],
   minContribution: 1,
   suggestedAmounts: '10, 20, 50, 100',
@@ -328,6 +343,19 @@ const form = reactive({
     { name: 'General Fund', description: 'Default allocation for this event', targetAmount: 1000, isActive: true }
   ]
 })
+
+async function fetchBranches() {
+  try {
+    const data = await branchesService.list()
+    branchOptions.value = data.map(b => ({ label: b.name, value: b.id }))
+  } catch (err) {
+    console.error('Failed to load branches:', err)
+  } finally {
+    isLoadingBranches.value = false
+  }
+}
+
+onMounted(fetchBranches)
 
 function addFund() {
   form.recipientFunds.push({ name: '', description: '', targetAmount: 0, isActive: true })
@@ -342,8 +370,8 @@ function handleCancel() {
 }
 
 async function submit() {
-  if (!form.title || !form.slug) {
-    toast.error('Please complete the basic event information')
+  if (!form.title || !form.slug || !form.branchId) {
+    toast.error('Please complete all required fields, including the Operational Branch')
     return
   }
 
@@ -356,7 +384,8 @@ async function submit() {
       slug: form.slug,
       eventDate: form.startDate ? new Date(`${form.startDate}T00:00:00Z`).toISOString() : null,
       displayImageUrl: form.displayImageUrl,
-      receiptLogoUrl: form.receiptLogoUrl
+      receiptLogoUrl: form.receiptLogoUrl,
+      branchId: form.branchId
     })
     
     const validFunds = form.recipientFunds.filter(f => f.name.trim())

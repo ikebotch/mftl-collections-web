@@ -73,20 +73,22 @@
               id="section-identity"
               class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm"
             >
-              <div class="flex items-center justify-between mb-16">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
-                  Staff Identity
-                </h3>
-                <button
-                  v-if="!isEditing"
-                  type="button"
-                  class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
-                  @click="startEditing"
-                >
-                  <Pencil class="w-3.5 h-3.5" />
-                  <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit</span>
-                </button>
-              </div>
+              <EditorialHeader 
+                title="Staff Identity" 
+                subtitle="Step 01"
+              >
+                <template #actions>
+                  <button
+                    v-if="!isEditing"
+                    type="button"
+                    class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
+                    @click="startEditing"
+                  >
+                    <Pencil class="w-3.5 h-3.5" />
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Profile</span>
+                  </button>
+                </template>
+              </EditorialHeader>
 
               <div
                 v-if="!isEditing"
@@ -167,6 +169,16 @@
                     placeholder="+233..."
                   />
                   <AppSelect
+                    v-model="form!.branchId"
+                    label="Assigned Branch"
+                    placeholder="Select operational branch"
+                    :options="branchOptions"
+                    :loading="isLoadingBranches"
+                    required
+                  />
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 pt-4">
+                  <AppSelect
                     v-model="form!.status"
                     label="Account Status"
                     :options="[
@@ -184,16 +196,22 @@
               id="section-assignments"
               class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm"
             >
-              <div class="flex items-center justify-between mb-12">
-                <div class="space-y-1">
-                  <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
-                    Step 02
-                  </h3>
-                  <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">
-                    Campaign Scope
-                  </h2>
-                </div>
-              </div>
+              <EditorialHeader 
+                title="Campaign Scope" 
+                subtitle="Step 02"
+              >
+                <template #actions>
+                  <button
+                    v-if="!isEditingCampaigns"
+                    type="button"
+                    class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
+                    @click="isEditingCampaigns = true"
+                  >
+                    <Pencil class="w-3.5 h-3.5" />
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Manage Access</span>
+                  </button>
+                </template>
+              </EditorialHeader>
 
               <div class="space-y-10">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
@@ -391,6 +409,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCollector, useUpdateCollector } from '../composables/useCollectors'
 import { useEvents } from '@/modules/events/composables/useEvents'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
+import { branchesService } from '@/modules/tenants/services/branchesService'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import DetailPageHeader from '@/shared/components/headers/DetailPageHeader.vue'
 import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
@@ -417,7 +436,8 @@ import {
   SearchX,
   Target
 } from 'lucide-vue-next'
-import AssignmentListRow from '../components/AssignmentListRow.vue'
+import AssignmentListRow from '@/shared/components/rows/AssignmentListRow.vue'
+import EditorialHeader from '@/shared/components/headers/EditorialHeader.vue'
 import type { RecipientFund } from '@/modules/recipient-funds/types/recipientFund'
 
 const route = useRoute()
@@ -431,12 +451,21 @@ const toast = useToastStore()
 const eventQuery = useEvents()
 const availableEvents = computed(() => eventQuery.data.value ?? [])
 const allFunds = ref<RecipientFund[]>([])
+const isLoadingBranches = ref(true)
+const branchOptions = ref([])
 
 onMounted(async () => {
   try {
-    allFunds.value = await recipientFundsService.list()
+    const [fundsData, branchesData] = await Promise.all([
+      recipientFundsService.list(),
+      branchesService.list()
+    ])
+    allFunds.value = fundsData
+    branchOptions.value = branchesData.map(b => ({ label: b.name, value: b.id }))
   } catch (err) {
-    console.error('Failed to load recipient funds:', err)
+    console.error('Failed to load dependency records:', err)
+  } finally {
+    isLoadingBranches.value = false
   }
 })
 
@@ -486,6 +515,7 @@ function resetForm() {
     email: collector.value.email,
     phoneNumber: collector.value.phoneNumber || '',
     status: collector.value.status,
+    branchId: (collector.value as any).branchId || null,
     eventIds: [...(collector.value.eventIds || [])],
     fundIds: [...((collector.value as any).fundIds || [])]
   }
