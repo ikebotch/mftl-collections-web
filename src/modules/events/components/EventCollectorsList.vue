@@ -139,15 +139,22 @@
                 {{ staff.name.charAt(0) }}
               </div>
               <div>
-                <p class="text-xs font-black text-slate-900 tracking-tight leading-none uppercase">{{ staff.name }}</p>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 leading-none">{{ staff.email }}</p>
+                <p class="text-xs font-black text-slate-900 tracking-tight leading-none uppercase">
+                  {{ staff.name }}
+                </p>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 leading-none">
+                  {{ staff.email }}
+                </p>
               </div>
             </div>
             <div 
               class="w-5 h-5 border-2 flex items-center justify-center"
               :class="isSelected(staff.id) ? 'bg-violet-600 border-violet-600' : 'border-slate-200 bg-white'"
             >
-              <Check v-if="isSelected(staff.id)" class="w-3.5 h-3.5 text-white" />
+              <Check
+                v-if="isSelected(staff.id)"
+                class="w-3.5 h-3.5 text-white"
+              />
             </div>
           </div>
         </div>

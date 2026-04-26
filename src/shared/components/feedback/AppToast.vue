@@ -15,9 +15,18 @@
         :class="typeClasses(toast.type)"
       >
         <div class="shrink-0">
-          <CheckCircle v-if="toast.type === 'success'" class="w-5 h-5 text-emerald-400" />
-          <AlertCircle v-else-if="toast.type === 'error'" class="w-5 h-5 text-rose-400" />
-          <Info v-else class="w-5 h-5 text-blue-400" />
+          <CheckCircle
+            v-if="toast.type === 'success'"
+            class="w-5 h-5 text-emerald-400"
+          />
+          <AlertCircle
+            v-else-if="toast.type === 'error'"
+            class="w-5 h-5 text-rose-400"
+          />
+          <Info
+            v-else
+            class="w-5 h-5 text-blue-400"
+          />
         </div>
         <div class="flex-1">
           <p class="text-[11px] font-black uppercase tracking-[0.15em] text-white">

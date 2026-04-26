@@ -265,7 +265,10 @@
           >
             Cancel
           </AppButton>
-          <div v-if="isSubmitting" class="flex items-center gap-2">
+          <div
+            v-if="isSubmitting"
+            class="flex items-center gap-2"
+          >
             <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Publishing Event...</span>
           </div>

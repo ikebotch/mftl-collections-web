@@ -1,5 +1,8 @@
 <template>
-  <div v-if="query.isLoading.value" class="py-32">
+  <div
+    v-if="query.isLoading.value"
+    class="py-32"
+  >
     <LoadingState text="Synchronizing hub parameters..." />
   </div>
   <ErrorState
@@ -9,7 +12,10 @@
     show-retry
     @retry="query.refetch"
   />
-  <div v-else-if="branch" class="space-y-10 pb-20">
+  <div
+    v-else-if="branch"
+    class="space-y-10 pb-20"
+  >
     <!-- Page Header (Pixel Standard) -->
     <DetailPageHeader
       :title="branch.name"
@@ -31,8 +37,14 @@
 
       <template #actions>
         <div class="flex items-center gap-3">
-          <AppButton variant="secondary" size="sm" class="bg-white border-slate-100 px-6">
-            <template #icon><Settings class="w-3.5 h-3.5 mr-2.5 text-slate-400" /></template>
+          <AppButton
+            variant="secondary"
+            size="sm"
+            class="bg-white border-slate-100 px-6"
+          >
+            <template #icon>
+              <Settings class="w-3.5 h-3.5 mr-2.5 text-slate-400" />
+            </template>
             Hub Config
           </AppButton>
         </div>
@@ -43,16 +55,25 @@
       <!-- Premium Sticky Sub-Nav -->
       <div class="sticky top-0 z-40 -mx-8 px-8 bg-white/80 backdrop-blur-md border-b border-slate-100 py-4 mb-12">
         <div class="max-w-[1200px] mx-auto">
-          <DetailTabs v-model="activeTab" :tabs="tabs" />
+          <DetailTabs
+            v-model="activeTab"
+            :tabs="tabs"
+          />
         </div>
       </div>
 
       <div class="min-h-[400px]">
         <!-- Overview Tab -->
         <div v-if="activeTab === 'overview'">
-          <AdminWizardLayout :sections="sections" title="Hub Overview">
+          <AdminWizardLayout
+            :sections="sections"
+            title="Hub Overview"
+          >
             <!-- Identity Section -->
-            <AppCard id="identity" class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm">
+            <AppCard
+              id="identity"
+              class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm"
+            >
               <EditorialHeader title="Identity & Narrative">
                 <template #actions>
                   <button
@@ -67,24 +88,39 @@
                 </template>
               </EditorialHeader>
 
-              <div v-if="!isEditing" class="space-y-16 animate-in fade-in duration-700">
+              <div
+                v-if="!isEditing"
+                class="space-y-16 animate-in fade-in duration-700"
+              >
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-16">
                   <div class="space-y-4">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">Hub Name</p>
-                    <p class="text-[15px] font-black text-slate-900 tracking-tighter uppercase leading-none">{{ branch.name }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
+                      Hub Name
+                    </p>
+                    <p class="text-[15px] font-black text-slate-900 tracking-tighter uppercase leading-none">
+                      {{ branch.name }}
+                    </p>
                   </div>
                   <div class="space-y-4">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">System Identifier</p>
-                    <p class="text-[15px] font-black text-violet-600 tracking-tighter uppercase leading-none font-mono">{{ branch.identifier }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
+                      System Identifier
+                    </p>
+                    <p class="text-[15px] font-black text-violet-600 tracking-tighter uppercase leading-none font-mono">
+                      {{ branch.identifier }}
+                    </p>
                   </div>
                   <div class="md:col-span-2 space-y-4">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">Geographic Parameters</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
+                      Geographic Parameters
+                    </p>
                     <p class="text-[15px] font-black text-slate-900 tracking-tighter uppercase leading-relaxed max-w-3xl">
                       {{ branch.location || 'No specific geographic constraints established.' }}
                     </p>
                   </div>
                   <div class="space-y-4">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">Operational Status</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-none">
+                      Operational Status
+                    </p>
                     <div class="flex items-center gap-2.5">
                       <div 
                         class="w-1.5 h-1.5 rounded-full"
@@ -98,12 +134,30 @@
                 </div>
               </div>
 
-              <div v-else class="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div
+                v-else
+                class="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
+              >
                 <div class="grid md:grid-cols-2 gap-12">
-                  <AppInput v-model="form.name" label="Hub Name" placeholder="Regional name" required />
-                  <AppInput v-model="form.identifier" label="System ID" placeholder="UNIQUE-CODE" required />
+                  <AppInput
+                    v-model="form.name"
+                    label="Hub Name"
+                    placeholder="Regional name"
+                    required
+                  />
+                  <AppInput
+                    v-model="form.identifier"
+                    label="System ID"
+                    placeholder="UNIQUE-CODE"
+                    required
+                  />
                 </div>
-                <AppTextarea v-model="form.location" label="Geographic Parameters" placeholder="Detailed location or range..." :rows="3" />
+                <AppTextarea
+                  v-model="form.location"
+                  label="Geographic Parameters"
+                  placeholder="Detailed location or range..."
+                  :rows="3"
+                />
                 <div class="flex items-center gap-4 pt-4">
                   <AppSwitch v-model="form.isActive" />
                   <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Active State</span>
@@ -112,15 +166,25 @@
             </AppCard>
 
             <!-- Metrics / Resources (Placeholder) -->
-            <AppCard id="resources" class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm relative overflow-hidden group">
-              <EditorialHeader title="Resource Allocation" subtitle="Operational Matrix" />
+            <AppCard
+              id="resources"
+              class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm relative overflow-hidden group"
+            >
+              <EditorialHeader
+                title="Resource Allocation"
+                subtitle="Operational Matrix"
+              />
               <div class="py-20 flex flex-col items-center justify-center border border-dashed border-slate-100 bg-slate-50/30 rounded-3xl gap-4">
                 <div class="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-200">
                   <LayoutGrid class="w-6 h-6" />
                 </div>
                 <div class="text-center">
-                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Resource Monitoring</p>
-                  <p class="text-[9px] font-bold text-slate-300 uppercase tracking-widest mt-1 italic">Real-time telemetry pending synchronization</p>
+                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                    Resource Monitoring
+                  </p>
+                  <p class="text-[9px] font-bold text-slate-300 uppercase tracking-widest mt-1 italic">
+                    Real-time telemetry pending synchronization
+                  </p>
                 </div>
               </div>
             </AppCard>
@@ -128,32 +192,52 @@
         </div>
 
         <!-- Events Tab -->
-        <div v-else-if="activeTab === 'events'" class="space-y-12 animate-in fade-in duration-500">
+        <div
+          v-else-if="activeTab === 'events'"
+          class="space-y-12 animate-in fade-in duration-500"
+        >
           <BranchEventsList :branch-id="branchId" />
         </div>
 
         <!-- Activity Tab -->
-        <div v-else-if="activeTab === 'activity'" class="max-w-4xl">
+        <div
+          v-else-if="activeTab === 'activity'"
+          class="max-w-4xl"
+        >
           <AppCard class="!p-16 border-slate-100">
             <EditorialHeader title="System Audit Stream" />
             <div class="py-20 flex flex-col items-center justify-center gap-4">
               <History class="w-8 h-8 text-slate-100" />
-              <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">No Recent Audit Logs</p>
+              <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                No Recent Audit Logs
+              </p>
             </div>
           </AppCard>
         </div>
 
         <!-- Settings Tab -->
-        <div v-else-if="activeTab === 'settings'" class="max-w-4xl space-y-12">
+        <div
+          v-else-if="activeTab === 'settings'"
+          class="max-w-4xl space-y-12"
+        >
           <AppCard class="!p-16 border-slate-100">
             <EditorialHeader title="Advanced Hub Configuration" />
             <div class="space-y-12 mt-12">
               <div class="flex items-center justify-between p-12 bg-rose-50/30 border border-rose-100">
                 <div class="space-y-3">
-                  <p class="text-[13px] font-black text-rose-900 tracking-tighter uppercase leading-none">Decommission Hub</p>
-                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest leading-none">Permanently remove this hub from the active infrastructure matrix</p>
+                  <p class="text-[13px] font-black text-rose-900 tracking-tighter uppercase leading-none">
+                    Decommission Hub
+                  </p>
+                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest leading-none">
+                    Permanently remove this hub from the active infrastructure matrix
+                  </p>
                 </div>
-                <AppButton variant="danger" size="sm" class="!rounded-2xl" @click="handleDecommission">
+                <AppButton
+                  variant="danger"
+                  size="sm"
+                  class="!rounded-2xl"
+                  @click="handleDecommission"
+                >
                   <Trash2 class="w-3.5 h-3.5 mr-2" /> Decommission
                 </AppButton>
               </div>
@@ -167,15 +251,34 @@
     <StickyFormActions v-if="isEditing">
       <template #left>
         <div class="flex items-center gap-3">
-          <div v-if="updateMutation.isPending.value" class="flex items-center gap-2">
+          <div
+            v-if="updateMutation.isPending.value"
+            class="flex items-center gap-2"
+          >
             <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Synchronizing matrix...</span>
           </div>
-          <span v-else class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Pending hub configuration changes</span>
+          <span
+            v-else
+            class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic"
+          >Pending hub configuration changes</span>
         </div>
       </template>
-      <AppButton variant="outline" class="bg-transparent border-slate-200 px-10" @click="cancelEditing">Discard</AppButton>
-      <AppButton variant="primary" class="px-12" :loading="updateMutation.isPending.value" @click="handleSave">Sync Hub</AppButton>
+      <AppButton
+        variant="outline"
+        class="bg-transparent border-slate-200 px-10"
+        @click="cancelEditing"
+      >
+        Discard
+      </AppButton>
+      <AppButton
+        variant="primary"
+        class="px-12"
+        :loading="updateMutation.isPending.value"
+        @click="handleSave"
+      >
+        Sync Hub
+      </AppButton>
     </StickyFormActions>
   </div>
 </template>

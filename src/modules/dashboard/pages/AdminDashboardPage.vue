@@ -229,7 +229,7 @@
                 Rapid Provisioning
               </h3>
               <p class="text-xl font-black tracking-tight italic leading-tight uppercase">
-                Scale Your <br/>Collection <br/>Ops
+                Scale Your <br>Collection <br>Ops
               </p>
             </div>
             

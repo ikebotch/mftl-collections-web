@@ -10,7 +10,7 @@ vi.mock('../composables/useStorefront', () => ({
     isLoading: { value: false },
     data: {
       value: [
-        { id: 'fund-1', name: 'Medical support', description: 'Support care', targetAmount: 500, currency: 'GBP' },
+        { id: 'fund-1', name: 'Medical support', description: 'Support care', targetAmount: 500, currency: 'GBP', isActive: true },
       ],
     },
   }),

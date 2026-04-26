@@ -12,7 +12,10 @@
       </h3>
       <div class="flex items-center gap-3">
         <slot name="headerActions" />
-        <div v-if="exportable" class="flex items-center gap-2">
+        <div
+          v-if="exportable"
+          class="flex items-center gap-2"
+        >
           <button
             class="p-2 text-slate-400 hover:text-violet-600 border border-transparent hover:border-slate-200 transition-all"
             title="Export CSV"
@@ -37,7 +40,10 @@
           <thead>
             <tr class="bg-slate-50/50 border-b border-slate-200">
               <!-- Expand spacer -->
-              <th v-if="expandable" class="w-12 px-4 py-3" />
+              <th
+                v-if="expandable"
+                class="w-12 px-4 py-3"
+              />
               
               <template
                 v-for="column in columns"
@@ -62,7 +68,10 @@
                   {{ column.label }}
                 </th>
               </template>
-              <th v-if="$slots.rowActions" class="px-6 py-3 text-right w-20" />
+              <th
+                v-if="$slots.rowActions"
+                class="px-6 py-3 text-right w-20"
+              />
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -75,7 +84,10 @@
                 :class="{ 'bg-violet-50/20': isExpanded(row.id || index) }"
               >
                 <!-- Expand trigger -->
-                <td v-if="expandable" class="px-4 py-3">
+                <td
+                  v-if="expandable"
+                  class="px-4 py-3"
+                >
                   <button
                     class="p-1 rounded-none hover:bg-white border border-transparent hover:border-slate-200 text-slate-300 hover:text-violet-600 transition-all"
                     @click="toggleExpand(row.id || index)"
@@ -118,7 +130,10 @@
                 v-if="expandable && isExpanded(row.id || index)"
                 class="bg-slate-50/20"
               >
-                <td :colspan="columns.length + (expandable ? 1 : 0) + ($slots.rowActions ? 1 : 0)" class="px-10 py-0">
+                <td
+                  :colspan="columns.length + (expandable ? 1 : 0) + ($slots.rowActions ? 1 : 0)"
+                  class="px-10 py-0"
+                >
                   <div class="border-l-2 border-violet-500 ml-2">
                     <slot 
                       name="expansion" 
@@ -139,8 +154,12 @@
                     <Inbox class="w-6 h-6 text-slate-300" />
                   </div>
                   <div class="space-y-1">
-                    <p class="text-sm font-black text-slate-900 uppercase tracking-tight">No data available</p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Adjust your filters or try refreshing</p>
+                    <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
+                      No data available
+                    </p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Adjust your filters or try refreshing
+                    </p>
                   </div>
                   <AppButton 
                     variant="ghost" 

@@ -44,7 +44,9 @@
             class="bg-white border-slate-100 px-6 whitespace-nowrap"
             @click="previewStorefront"
           >
-            <template #icon><ExternalLink class="w-3.5 h-3.5 mr-2.5 text-slate-400" /></template>
+            <template #icon>
+              <ExternalLink class="w-3.5 h-3.5 mr-2.5 text-slate-400" />
+            </template>
             Preview
           </AppButton>
           
@@ -54,7 +56,9 @@
             class="bg-white border-slate-100 px-6 whitespace-nowrap"
             @click="copyPublicLink"
           >
-            <template #icon><Link2 class="w-3.5 h-3.5 mr-2.5 text-slate-400" /></template>
+            <template #icon>
+              <Link2 class="w-3.5 h-3.5 mr-2.5 text-slate-400" />
+            </template>
             Copy
           </AppButton>
         </div>
@@ -246,8 +250,13 @@
 
               <div class="space-y-16">
                 <!-- 1. Pending Additions (Inline Style) -->
-                <div v-if="newFunds.length > 0" class="space-y-16">
-                  <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-violet-600">Pending Additions</h4>
+                <div
+                  v-if="newFunds.length > 0"
+                  class="space-y-16"
+                >
+                  <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-violet-600">
+                    Pending Additions
+                  </h4>
                   <div 
                     v-for="(fund, index) in newFunds" 
                     :key="index"
@@ -295,8 +304,13 @@
 
                 <!-- 2. Existing Operational Funds (View Style - Always Visible) -->
                 <div class="space-y-8">
-                  <div v-if="newFunds.length > 0" class="pt-8 border-t border-slate-100">
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Operational Records</h4>
+                  <div
+                    v-if="newFunds.length > 0"
+                    class="pt-8 border-t border-slate-100"
+                  >
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                      Operational Records
+                    </h4>
                   </div>
                   <EventRecipientFundsList 
                     :event-id="event.id" 
@@ -331,9 +345,14 @@
         </div>
 
         <!-- Other Tabs -->
-        <div v-else-if="activeTab === 'funds'" class="space-y-12">
+        <div
+          v-else-if="activeTab === 'funds'"
+          class="space-y-12"
+        >
           <div class="flex justify-between items-center mb-12">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Recipient Funds</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
+              Recipient Funds
+            </h3>
             <RouterLink
               :to="`/admin/funds/new?eventId=${event.id}`"
               class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
@@ -345,9 +364,14 @@
           <EventRecipientFundsList :event-id="event.id" />
         </div>
 
-        <div v-else-if="activeTab === 'collectors'" class="space-y-12">
+        <div
+          v-else-if="activeTab === 'collectors'"
+          class="space-y-12"
+        >
           <div class="flex justify-between items-center mb-12">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Assigned Field Staff</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
+              Assigned Field Staff
+            </h3>
             <button
               type="button"
               class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
@@ -360,28 +384,51 @@
           <EventCollectorsList :event-id="event.id" />
         </div>
 
-        <div v-else-if="activeTab === 'activity'" class="space-y-12">
+        <div
+          v-else-if="activeTab === 'activity'"
+          class="space-y-12"
+        >
           <AppCard class="!p-16 max-w-4xl border-slate-100">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">Audit Stream</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">
+              Audit Stream
+            </h3>
             <AuditTimeline :events="auditItems" />
           </AppCard>
         </div>
 
-        <div v-else-if="activeTab === 'settings'" class="space-y-16">
+        <div
+          v-else-if="activeTab === 'settings'"
+          class="space-y-16"
+        >
           <AppCard class="!p-16 max-w-4xl border-slate-100">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">Operational Settings</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">
+              Operational Settings
+            </h3>
             <div class="space-y-12">
               <div class="flex items-center justify-between p-12 bg-slate-50/50 border border-slate-100">
                 <div class="space-y-3">
-                  <p class="text-[13px] font-black text-slate-900 tracking-tighter uppercase">Collection Visibility</p>
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Toggle whether this event is visible on the public storefront</p>
+                  <p class="text-[13px] font-black text-slate-900 tracking-tighter uppercase">
+                    Collection Visibility
+                  </p>
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Toggle whether this event is visible on the public storefront
+                  </p>
                 </div>
-                <AppSelect v-model="visibilityProxy" :options="[{ label: 'Public', value: true }, { label: 'Hidden / Draft', value: false }]" class="w-48" @update:model-value="saveVisibility" />
+                <AppSelect
+                  v-model="visibilityProxy"
+                  :options="[{ label: 'Public', value: true }, { label: 'Hidden / Draft', value: false }]"
+                  class="w-48"
+                  @update:model-value="saveVisibility"
+                />
               </div>
               <div class="flex items-center justify-between p-12 bg-rose-50/30 border border-rose-100">
                 <div class="space-y-3">
-                  <p class="text-[13px] font-black text-rose-900 tracking-tighter uppercase">Archive Campaign</p>
-                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Permanently remove this campaign from the active operational stream</p>
+                  <p class="text-[13px] font-black text-rose-900 tracking-tighter uppercase">
+                    Archive Campaign
+                  </p>
+                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest">
+                    Permanently remove this campaign from the active operational stream
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -402,15 +449,34 @@
     <StickyFormActions v-if="isEditing || hasMediaChanges || newFunds.length > 0">
       <template #left>
         <div class="flex items-center gap-3">
-          <div v-if="updateMutation.isPending.value" class="flex items-center gap-2">
+          <div
+            v-if="updateMutation.isPending.value"
+            class="flex items-center gap-2"
+          >
             <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Saving changes...</span>
           </div>
-          <span v-else class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">You have unsaved changes</span>
+          <span
+            v-else
+            class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic"
+          >You have unsaved changes</span>
         </div>
       </template>
-      <AppButton variant="outline" class="bg-transparent border-slate-200 px-10" @click="cancelEditing">Cancel</AppButton>
-      <AppButton variant="primary" class="px-12" :loading="updateMutation.isPending.value" @click="handleSave">Save Changes</AppButton>
+      <AppButton
+        variant="outline"
+        class="bg-transparent border-slate-200 px-10"
+        @click="cancelEditing"
+      >
+        Cancel
+      </AppButton>
+      <AppButton
+        variant="primary"
+        class="px-12"
+        :loading="updateMutation.isPending.value"
+        @click="handleSave"
+      >
+        Save Changes
+      </AppButton>
     </StickyFormActions>
   </div>
 </template>

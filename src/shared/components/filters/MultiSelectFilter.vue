@@ -39,7 +39,10 @@
             class="w-4 h-4 border-2 flex items-center justify-center transition-all"
             :class="isSelected(option.value) ? 'bg-violet-600 border-violet-600' : 'border-slate-200 bg-white group-hover:border-slate-300'"
           >
-            <Check v-if="isSelected(option.value)" class="w-3 h-3 text-white" />
+            <Check
+              v-if="isSelected(option.value)"
+              class="w-3 h-3 text-white"
+            />
           </div>
           <span 
             class="text-[11px] font-black uppercase tracking-tight transition-colors"

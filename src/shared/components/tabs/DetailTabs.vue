@@ -17,8 +17,8 @@
         @click="$emit('update:modelValue', tab.key)"
       >
         <component 
-          v-if="tab.icon"
-          :is="resolvedIcon(tab.icon)" 
+          :is="resolvedIcon(tab.icon)"
+          v-if="tab.icon" 
           class="w-3.5 h-3.5"
           :class="modelValue === tab.key ? 'text-violet-600' : 'text-slate-300'"
         />

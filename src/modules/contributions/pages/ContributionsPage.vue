@@ -210,7 +210,7 @@
                 v-model="editForm.amount"
                 type="number" 
                 class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-50 outline-none transition-all font-black text-xl"
-              />
+              >
             </div>
 
             <div class="space-y-2">
@@ -219,7 +219,7 @@
                 v-model="editForm.contributorName"
                 type="text" 
                 class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 outline-none transition-all font-bold"
-              />
+              >
             </div>
 
             <div class="space-y-2">
@@ -228,10 +228,18 @@
                 v-model="editForm.status"
                 class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 outline-none transition-all font-bold appearance-none bg-white"
               >
-                <option value="RecordedCash">Recorded Cash</option>
-                <option value="Completed">Completed</option>
-                <option value="Failed">Failed</option>
-                <option value="Refunded">Refunded</option>
+                <option value="RecordedCash">
+                  Recorded Cash
+                </option>
+                <option value="Completed">
+                  Completed
+                </option>
+                <option value="Failed">
+                  Failed
+                </option>
+                <option value="Refunded">
+                  Refunded
+                </option>
               </select>
             </div>
 
@@ -242,7 +250,7 @@
                 rows="4"
                 class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 outline-none transition-all font-medium"
                 placeholder="Internal audit notes..."
-              ></textarea>
+              />
             </div>
           </div>
         </template>

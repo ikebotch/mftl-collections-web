@@ -1,8 +1,12 @@
 <template>
   <div class="space-y-16 animate-fade-in">
     <div class="space-y-4 text-center">
-      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-violet-600">Step 01 / 04</p>
-      <h2 class="text-4xl md:text-5xl font-bold text-slate-900 font-display tracking-tight">Choose a recipient</h2>
+      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-violet-600">
+        Step 01 / 04
+      </p>
+      <h2 class="text-4xl md:text-5xl font-bold text-slate-900 font-display tracking-tight">
+        Choose a recipient
+      </h2>
       <p class="text-slate-500 font-medium max-w-md mx-auto leading-relaxed">
         Select the specific cause or fund this contribution should support.
       </p>
@@ -34,7 +38,9 @@
         <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto">
           <span class="text-xl">🏜️</span>
         </div>
-        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No active funds found</p>
+        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">
+          No active funds found
+        </p>
       </div>
     </div>
 

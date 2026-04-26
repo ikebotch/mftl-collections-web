@@ -1,8 +1,12 @@
 <template>
   <div class="space-y-16 animate-fade-in">
     <div class="space-y-4 text-center">
-      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-violet-600">Step 02 / 04</p>
-      <h2 class="text-4xl md:text-5xl font-bold text-slate-900 font-display tracking-tight">Your Details</h2>
+      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-violet-600">
+        Step 02 / 04
+      </p>
+      <h2 class="text-4xl md:text-5xl font-bold text-slate-900 font-display tracking-tight">
+        Your Details
+      </h2>
       <p class="text-slate-500 font-medium max-w-md mx-auto leading-relaxed">
         Please provide your contact information to receive your digital receipt.
       </p>
@@ -39,7 +43,12 @@
               class="w-full bg-transparent border-b border-slate-200 py-3 text-xl font-bold text-slate-900 focus:outline-none focus:border-violet-600 transition-all placeholder:text-slate-200"
               placeholder="Jane Doe"
             >
-            <p v-if="errors.contributorName" class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mt-1">{{ errors.contributorName }}</p>
+            <p
+              v-if="errors.contributorName"
+              class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mt-1"
+            >
+              {{ errors.contributorName }}
+            </p>
           </div>
 
           <div class="space-y-2">
@@ -50,7 +59,12 @@
               class="w-full bg-transparent border-b border-slate-200 py-3 text-xl font-bold text-slate-900 focus:outline-none focus:border-violet-600 transition-all placeholder:text-slate-200"
               placeholder="+233..."
             >
-            <p v-if="errors.contributorPhone" class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mt-1">{{ errors.contributorPhone }}</p>
+            <p
+              v-if="errors.contributorPhone"
+              class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mt-1"
+            >
+              {{ errors.contributorPhone }}
+            </p>
           </div>
         </div>
 
@@ -62,7 +76,12 @@
             class="w-full bg-transparent border-b border-slate-200 py-3 text-xl font-bold text-slate-900 focus:outline-none focus:border-violet-600 transition-all placeholder:text-slate-200"
             placeholder="jane@example.com"
           >
-          <p v-if="errors.contributorEmail" class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mt-1">{{ errors.contributorEmail }}</p>
+          <p
+            v-if="errors.contributorEmail"
+            class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mt-1"
+          >
+            {{ errors.contributorEmail }}
+          </p>
         </div>
 
         <div class="space-y-2">
@@ -76,9 +95,16 @@
         </div>
       </form>
 
-      <div v-else class="py-12 text-center space-y-4">
-        <div class="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto text-2xl">🕵️</div>
-        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">You are contributing anonymously</p>
+      <div
+        v-else
+        class="py-12 text-center space-y-4"
+      >
+        <div class="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto text-2xl">
+          🕵️
+        </div>
+        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">
+          You are contributing anonymously
+        </p>
         <button 
           class="text-xs font-bold text-violet-600 uppercase tracking-widest hover:underline"
           @click="anonymous = false"

@@ -2,8 +2,12 @@
   <div class="space-y-6">
     <div class="flex items-center justify-between mb-8">
       <div class="space-y-1">
-        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Regional Campaign Stream</h3>
-        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic">Operational events tied to this hub</p>
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
+          Regional Campaign Stream
+        </h3>
+        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic">
+          Operational events tied to this hub
+        </p>
       </div>
       <AppButton
         variant="ghost"
@@ -50,7 +54,10 @@
           >
             {{ formatCurrency(total.amount, total.currency) }}
           </span>
-          <span v-if="!row.totals?.length" class="text-xs font-black text-slate-300 italic">
+          <span
+            v-if="!row.totals?.length"
+            class="text-xs font-black text-slate-300 italic"
+          >
             GHS 0.00
           </span>
         </div>
