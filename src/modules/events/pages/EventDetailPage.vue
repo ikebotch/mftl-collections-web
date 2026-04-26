@@ -174,6 +174,16 @@
                     placeholder="Event title"
                     required
                   />
+                  <AppSelect 
+                    v-model="form!.branchId"
+                    label="Operational Branch"
+                    placeholder="Select the hosting hub..."
+                    :options="branchOptions"
+                    :loading="isLoadingBranches"
+                    required
+                  />
+                </div>
+                <div class="grid md:grid-cols-2 gap-10 pt-4">
                   <AppInput
                     v-model="form!.slug"
                     label="Public Slug"
@@ -406,9 +416,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watchEffect, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEvent, useUpdateEvent } from '../composables/useEvents'
+import { branchesService } from '@/modules/tenants/services/branchesService'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import DetailPageHeader from '@/shared/components/headers/DetailPageHeader.vue'
 import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
@@ -470,6 +481,19 @@ const isEditing = ref(route.query.edit === 'true')
 const form = ref<UpdateEventInput | null>(null)
 const newFunds = ref<any[]>([])
 const isLoadingFunds = ref(false)
+const isLoadingBranches = ref(true)
+const branchOptions = ref([])
+
+onMounted(async () => {
+  try {
+    const branchesData = await branchesService.list()
+    branchOptions.value = branchesData.map(b => ({ label: b.name, value: b.id }))
+  } catch (err) {
+    console.error('Failed to load branch records:', err)
+  } finally {
+    isLoadingBranches.value = false
+  }
+})
 
 const displayImageUrlProxy = ref('')
 const receiptLogoUrlProxy = ref('')
@@ -519,7 +543,8 @@ function resetForm() {
     isActive: event.value.isActive,
     slug: event.value.slug,
     displayImageUrl: event.value.displayImageUrl,
-    receiptLogoUrl: event.value.receiptLogoUrl
+    receiptLogoUrl: event.value.receiptLogoUrl,
+    branchId: event.value.branchId || null
   }
 }
 
@@ -567,9 +592,9 @@ async function handleSave() {
     receiptLogoUrl: receiptLogoUrlProxy.value
   }
 
-  if (!isEditing.value) {
-    payload.displayImageUrl = displayImageUrlProxy.value
-    payload.receiptLogoUrl = receiptLogoUrlProxy.value
+  if (isEditing.value && !form.value?.branchId) {
+    toast.error('Operational hub association is required')
+    return
   }
 
   try {

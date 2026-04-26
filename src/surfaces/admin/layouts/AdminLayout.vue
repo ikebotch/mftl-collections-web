@@ -232,7 +232,8 @@ import {
   LogOut,
   ShieldCheck,
   UserCheck,
-  Globe
+  Globe,
+  Building2
 } from 'lucide-vue-next'
 
 const { copy, setLocale, currentLocale, availableLocales } = useCopy()
@@ -274,6 +275,7 @@ const navGroups = computed(() => [
     title: copy.value.admin.sidebar.groups.system,
     items: [
       { label: copy.value.admin.sidebar.nav.settlements, to: '/admin/settlements', icon: ShieldCheck },
+      { label: 'Branches', to: '/admin/branches', icon: Building2 },
       { label: copy.value.admin.sidebar.nav.users, to: '/admin/users', icon: UserCheck },
       { label: copy.value.admin.sidebar.nav.settings, to: '/admin/settings', icon: Settings },
     ]

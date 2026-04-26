@@ -11,7 +11,7 @@ export interface SettlementRow {
 }
 
 export async function listSettlements(): Promise<SettlementRow[]> {
-  const response = await httpClient.get<SettlementRow[]>('admin/settlements')
+  const response = await httpClient.get<SettlementRow[]>('settlements')
   return response.data
 }
 

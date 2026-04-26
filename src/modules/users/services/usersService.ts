@@ -9,35 +9,39 @@ export interface UserRow {
   inviteState: string
   scope: string
   phoneNumber?: string
+  lastLoginAt?: string
+}
+
+export interface UserDetail extends UserRow {
+  auth0Id: string
+  createdAt: string
+  inviteStatus: string
+  scopeAssignments: ScopeAssignment[]
+}
+
+export interface ScopeAssignment {
+  id: string
+  role: string
+  scopeType: string
+  targetId?: string
+}
+
+export interface AuditLog {
+  id: string
+  action: string
+  details: string
+  performedBy: string
+  createdAt: string
 }
 
 export async function listUsers(): Promise<UserRow[]> {
-  const response = await httpClient.get<any[]>('/users')
-  return (response.data || []).map(u => ({
-    id: u.id,
-    name: u.name,
-    email: u.email,
-    role: u.scopeAssignments?.[0]?.role || 'User',
-    status: u.status,
-    inviteState: 'Accepted', // Placeholder until invite system implemented
-    scope: u.scopeAssignments?.length > 0 ? `${u.scopeAssignments.length} Assignments` : 'None',
-    phoneNumber: u.phoneNumber
-  }))
+  const response = await httpClient.get<UserRow[]>('/users')
+  return response.data || []
 }
 
-export async function getUserById(id: string): Promise<UserRow> {
-  const response = await httpClient.get<any>(`/users/${id}`)
-  const u = response.data
-  return {
-    id: u.id,
-    name: u.name,
-    email: u.email,
-    role: u.scopeAssignments?.[0]?.role || 'User',
-    status: u.status,
-    inviteState: 'Accepted',
-    scope: u.scopeAssignments?.length > 0 ? `${u.scopeAssignments.length} Assignments` : 'None',
-    phoneNumber: u.phoneNumber
-  }
+export async function getUserById(id: string): Promise<UserDetail> {
+  const response = await httpClient.get<UserDetail>(`/users/${id}`)
+  return response.data
 }
 
 export async function updateUser(id: string, payload: any): Promise<boolean> {
@@ -45,8 +49,38 @@ export async function updateUser(id: string, payload: any): Promise<boolean> {
   return response.data
 }
 
+export async function inviteUser(payload: any): Promise<string> {
+  const response = await httpClient.post<string, any>('/users/invite', payload)
+  return response.data
+}
+
+export async function updateUserStatus(id: string, action: string): Promise<boolean> {
+  const response = await httpClient.post<boolean, any>(`/users/${id}/status`, { action })
+  return response.data
+}
+
+export async function getUserAuditLogs(id: string): Promise<AuditLog[]> {
+  const response = await httpClient.get<AuditLog[]>(`/users/${id}/audit`)
+  return response.data || []
+}
+
+export async function assignScope(userId: string, payload: { role: string, scopeType: string, targetId?: string }): Promise<string> {
+  const response = await httpClient.post<string, any>(`/users/${userId}/scopes`, payload)
+  return response.data
+}
+
+export async function revokeScope(assignmentId: string): Promise<boolean> {
+  const response = await httpClient.delete<boolean>(`/users/scopes/${assignmentId}`)
+  return response.data
+}
+
 export const usersService = {
   list: listUsers,
   getById: getUserById,
   update: updateUser,
+  invite: inviteUser,
+  updateStatus: updateUserStatus,
+  getAuditLogs: getUserAuditLogs,
+  assignScope,
+  revokeScope
 }

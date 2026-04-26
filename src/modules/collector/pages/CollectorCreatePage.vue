@@ -173,13 +173,12 @@
                 </template>
               </AppInput>
               <AppSelect
-                v-model="form.region"
-                label="Assigned Region"
-                :options="[
-                  { label: 'Accra Central', value: 'Accra Central' },
-                  { label: 'Kumasi Metropolitan', value: 'Kumasi' },
-                  { label: 'Northern Territory', value: 'North' }
-                ]"
+                v-model="form.branchId"
+                label="Assigned Branch"
+                placeholder="Select operational branch"
+                :options="branchOptions"
+                :loading="isLoadingBranches"
+                required
               />
             </div>
           </div>
@@ -248,9 +247,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCreateCollector } from '../composables/useCollectors'
+import { branchesService } from '@/modules/tenants/services/branchesService'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
@@ -267,6 +267,9 @@ const router = useRouter()
 const toast = useToastStore()
 const mutation = useCreateCollector()
 const isSubmitting = computed(() => mutation.isPending.value)
+
+const isLoadingBranches = ref(true)
+const branchOptions = ref([])
 
 const steps = [
   { id: 'section-identity', title: 'Identity', subtitle: 'Profile Details' },
@@ -286,11 +289,24 @@ const form = reactive({
   sendInvite: true,
   recordCash: true,
   issueReceipts: true,
-  region: 'Accra Central',
+  branchId: null as string | null,
   dailyLimit: 2000,
   maxCashHolding: 1000,
   approvalThreshold: 500,
 })
+
+async function fetchBranches() {
+  try {
+    const data = await branchesService.list()
+    branchOptions.value = data.map(b => ({ label: b.name, value: b.id }))
+  } catch (err) {
+    console.error('Failed to load branches:', err)
+  } finally {
+    isLoadingBranches.value = false
+  }
+}
+
+onMounted(fetchBranches)
 
 async function handleSubmit(finalStatus: string) {
   if (!form.name || !form.email) {
@@ -304,7 +320,7 @@ async function handleSubmit(finalStatus: string) {
       status: finalStatus,
       metadata: JSON.stringify({
         notes: form.notes,
-        region: form.region,
+        branchId: form.branchId,
         permissions: {
           login: form.loginEnabled,
           cash: form.recordCash,
