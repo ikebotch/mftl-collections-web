@@ -344,7 +344,10 @@
           </AdminWizardLayout>
         </div>
 
-        <!-- Other Tabs -->
+        <!-- Analytics Tab -->
+        <div v-else-if="activeTab === 'analytics'">
+          <EventAnalyticsPage :is-tab="true" />
+        </div>
         <div
           v-else-if="activeTab === 'funds'"
           class="space-y-12"
@@ -501,6 +504,7 @@ import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import EventRecipientFundsList from '../components/EventRecipientFundsList.vue'
 import EventCollectorsList from '../components/EventCollectorsList.vue'
 import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
+import EventAnalyticsPage from './EventAnalyticsPage.vue'
 import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
 import { formatDate } from '@/core/formatting/formatters'
 import { 
@@ -527,6 +531,7 @@ const visibilityProxy = ref(false)
 
 const tabs = [
   { key: 'overview', label: 'Overview', icon: 'LayoutDashboard' },
+  { key: 'analytics', label: 'Analytics', icon: 'BarChart2' },
   { key: 'funds', label: 'Recipient Funds', icon: 'Target' },
   { key: 'collectors', label: 'Collectors', icon: 'Users' },
   { key: 'activity', label: 'Activity / Audit', icon: 'History' },

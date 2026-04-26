@@ -19,12 +19,12 @@
     <!-- Header -->
     <DetailPageHeader
       :title="user.name"
-      description="Identity access management, security auditing, and granular authorization control."
+      description="User identity, permissions, and security settings management."
       back-to="/admin/users"
       back-label="Users List"
     >
       <template #status>
-        <div class="flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
+        <div class="flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] shrink-0 rounded-full">
           <div 
             class="w-1.5 h-1.5 rounded-full"
             :class="user.status === 'Active' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
@@ -59,7 +59,7 @@
     </DetailPageHeader>
 
     <!-- Top Tabs (Level 1 Navigation) -->
-    <div class="sticky top-0 z-40 -mx-8 px-8 bg-white/80 backdrop-blur-md border-b border-slate-100 py-4 mb-12">
+    <div class="sticky top-0 z-40 -mx-8 px-8 bg-transparent border-b border-slate-200/60 py-4 mb-12">
       <div class="max-w-[1200px] mx-auto">
         <DetailTabs
           v-model="activeTab"
@@ -73,7 +73,7 @@
       <div v-if="activeTab === 'overview'">
         <AdminWizardLayout
           :sections="pageSections"
-          title="Operational Overview"
+          title="User Details"
         >
           <!-- Identity Section -->
           <AppCard
@@ -81,7 +81,7 @@
             class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm relative overflow-hidden group"
           >
             <EditorialHeader 
-              title="Identity & Sync" 
+              title="Profile" 
             >
               <template #actions>
                 <button
@@ -91,7 +91,7 @@
                   @click="isEditing = true"
                 >
                   <Pencil class="w-3.5 h-3.5" />
-                  <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Profile</span>
+                  <span class="text-[10px] font-black uppercase tracking-[0.2em]">Update Profile</span>
                 </button>
               </template>
             </EditorialHeader>
@@ -764,9 +764,9 @@ const topTabs = [
 ]
 
 const pageSections = [
-  { id: 'identity', title: 'Identity', subtitle: 'Auth0 Mapping' },
-  { id: 'scopes', title: 'Access', subtitle: 'Scopes & Roles' },
-  { id: 'capabilities', title: 'Capabilities', subtitle: 'Granted Actions' }
+  { id: 'identity', title: 'Profile' },
+  { id: 'roles', title: 'Permissions' },
+  { id: 'audit', title: 'Activity' }
 ]
 
 function scrollToSection(id: string) {

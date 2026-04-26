@@ -7,6 +7,7 @@ export interface ContributionRow {
   status: string
   amount: string
   amountValue: number
+  currency: string
   contributorName: string
   contributorPhone: string
   contributorEmail?: string

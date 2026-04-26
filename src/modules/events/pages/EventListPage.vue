@@ -72,25 +72,12 @@
               <button 
                 v-for="opt in statusOptions" 
                 :key="opt.value"
-                class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all"
+                class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full"
                 :class="statusFilters.includes(opt.value) ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
                 @click="toggleStatusFilter(opt.value)"
               >
                 {{ opt.label }}
               </button>
-            </div>
-          </div>
-          <div class="space-y-3">
-            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Date Range</label>
-            <div class="flex gap-2">
-              <input
-                type="date"
-                class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase"
-              >
-              <input
-                type="date"
-                class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase"
-              >
             </div>
           </div>
         </template>
@@ -107,6 +94,24 @@
         @sort="handleSort"
         @retry="query.refetch"
       >
+        <!-- Custom Header: Raised with Currency Dropdown -->
+        <template #header:raised>
+          <div class="flex flex-col gap-1 items-start min-w-[80px]">
+            <span class="leading-none">Raised</span>
+            <div class="relative group/select">
+              <select
+                v-model="selectedCurrency"
+                class="appearance-none bg-transparent border-none p-0 pr-4 text-[10px] font-bold text-slate-400 focus:text-violet-600 outline-none cursor-pointer uppercase tracking-widest transition-colors"
+                @click.stop
+              >
+                <option value="">All</option>
+                <option value="GHS">GHS Only</option>
+                <option value="USD">USD Only</option>
+              </select>
+              <ChevronDown class="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-slate-300 pointer-events-none group-hover/select:text-violet-400 transition-colors" />
+            </div>
+          </div>
+        </template>
         <!-- Custom Cell: Title (with Status Indicator) -->
         <template #cell:title="{ row }">
           <div 
@@ -115,7 +120,7 @@
           >
             <!-- Status Circle -->
             <div 
-              class="w-2.5 h-2.5 shrink-0 rounded-none transition-all duration-500"
+              class="w-2.5 h-2.5 shrink-0 rounded-full transition-all duration-500"
               :class="[
                 row.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300',
                 'border border-white ring-1 ring-slate-100'
@@ -123,7 +128,7 @@
               :title="row.isActive ? 'Active' : 'Draft'"
             />
             
-            <div class="w-10 h-10 rounded-none bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0 overflow-hidden group-hover/item:border-violet-300 transition-all duration-500">
+            <div class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0 overflow-hidden group-hover/item:border-violet-300 transition-all duration-500">
               <img
                 v-if="row.displayImageUrl"
                 :src="row.displayImageUrl"
@@ -192,14 +197,6 @@
             <AppButton
               variant="ghost"
               size="xs"
-              class="hover:bg-violet-50 hover:text-violet-600 border border-transparent hover:border-violet-100"
-              @click="router.push(`/admin/events/${row.id}`)"
-            >
-              <Eye class="w-3.5 h-3.5" />
-            </AppButton>
-            <AppButton
-              variant="ghost"
-              size="xs"
               class="hover:bg-slate-100 border border-transparent hover:border-slate-200"
               @click="copyPublicLink(row.slug)"
             >
@@ -249,7 +246,8 @@ import {
   Wallet,
   Target,
   Users,
-  FileText
+  FileText,
+  Coins
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -258,6 +256,7 @@ const toast = useToastStore()
 
 const searchQuery = ref('')
 const statusFilters = ref<string[]>([])
+const selectedCurrency = ref('')
 const sortKey = ref('title')
 const sortOrder = ref<'asc' | 'desc'>('asc')
 
@@ -270,13 +269,13 @@ function toggleStatusFilter(status: string) {
   }
 }
 
-const columns = [
+const columns = computed(() => [
   { key: 'title', label: 'Event', sortable: true, width: '45%' },
-  { key: 'raised', label: 'Raised', sortable: false, width: '15%' },
+  { key: 'raised', label: 'Raised', sortable: !!selectedCurrency.value, width: '15%' },
   { key: 'fundCount', label: 'Funds', sortable: true, width: '8%' },
   { key: 'collectorCount', label: 'Team', sortable: true, width: '12%' },
   { key: 'dates', label: 'Date', sortable: true, width: '20%' },
-]
+])
 
 const events = computed(() => query.data.value ?? [])
 
@@ -312,6 +311,11 @@ const sortedEvents = computed(() => {
     if (key === 'dates') {
       valA = a.eventDate ? new Date(a.eventDate).getTime() : 0
       valB = b.eventDate ? new Date(b.eventDate).getTime() : 0
+    }
+
+    if (key === 'raised' && selectedCurrency.value) {
+      valA = a.totals?.find((t: any) => t.currency === selectedCurrency.value)?.amount || 0
+      valB = b.totals?.find((t: any) => t.currency === selectedCurrency.value)?.amount || 0
     }
 
     if (valA < valB) return order === 'asc' ? -1 : 1

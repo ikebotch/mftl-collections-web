@@ -1,14 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
+import { toValue, type MaybeRef } from 'vue'
 import { listContributions, getContributionById, updateContribution } from '../services/contributionsService'
 import type { ContributionRow } from '../types/contribution'
 import type { ApiError } from '@/core/api/apiError'
 import { useBranchStore } from '@/modules/branches/store/branchStore'
+import type { PagedResponse } from '@/core/api/types'
 
-export function useContributions() {
+export function useContributions(params?: MaybeRef<{ page?: number, pageSize?: number }>) {
   const branchStore = useBranchStore()
-  return useQuery<ContributionRow[], ApiError>({
-    queryKey: ['contributions', { branchId: branchStore.selectedBranchId }],
-    queryFn: listContributions,
+  return useQuery<PagedResponse<ContributionRow>, ApiError>({
+    queryKey: ['contributions', { branchId: branchStore.selectedBranchId }, params],
+    queryFn: () => listContributions(toValue(params)),
   })
 }
 

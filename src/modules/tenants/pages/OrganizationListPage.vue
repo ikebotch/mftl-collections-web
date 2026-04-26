@@ -53,7 +53,7 @@
             >
               <td class="px-10 py-6">
                 <div class="flex items-center gap-4">
-                  <div class="w-10 h-10 bg-white border border-slate-200 flex items-center justify-center text-violet-600 font-black text-xs shadow-sm">
+                  <div class="w-10 h-10 bg-white border border-slate-200 flex items-center justify-center text-violet-600 font-black text-xs shadow-sm rounded-full">
                     {{ tenant.name.charAt(0) }}
                   </div>
                   <div>
@@ -70,8 +70,8 @@
                 <code class="text-[10px] font-black text-violet-600 bg-violet-50 px-2.5 py-1.5 border border-violet-100 tracking-tighter italic">{{ tenant.id }}</code>
               </td>
               <td class="px-10 py-6">
-                <div class="flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-100 w-fit">
-                  <div class="w-1.5 h-1.5 rounded-none bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+                <div class="flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-100 w-fit rounded-full">
+                  <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
                   <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Operational</span>
                 </div>
               </td>

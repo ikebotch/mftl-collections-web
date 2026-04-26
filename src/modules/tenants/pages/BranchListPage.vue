@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-12 pb-32">
     <AdminPageHeader
-      title="Infrastructure Matrix"
+      title="Branches & Hubs"
       description="Deploy and manage regional operational hubs. Configure branch-specific parameters and monitor localized resource allocation."
-      eyebrow="Network Operations"
+      eyebrow="Setup"
     >
       <template #actions>
         <AppButton 

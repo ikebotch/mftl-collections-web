@@ -1,5 +1,5 @@
 import { httpClient } from '@/core/api/httpClient'
-import type { RequestOptions } from '@/core/api/types'
+import type { RequestOptions, PagedResponse } from '@/core/api/types'
 import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import type { ContributionRow } from '../types/contribution'
 
@@ -21,7 +21,7 @@ export interface CashContributionResultDto {
 export interface RecordCashContributionInput {
   eventId: string
   recipientFundId: string
-  amount: number
+  amountValue: number
   currency: string
   contributorName?: string
   contributorPhone: string
@@ -83,6 +83,7 @@ function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
     status: dto.status ?? dto.Status ?? 'Unknown',
     amount: formatCurrency(amount, currency),
     amountValue: amount,
+    currency,
     contributorName: dto.contributorName ?? dto.ContributorName ?? 'Anonymous',
     contributorPhone: dto.contributorPhone ?? dto.ContributorPhone ?? '',
     contributorEmail: dto.contributorEmail ?? dto.ContributorEmail,
@@ -92,14 +93,26 @@ function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
   }
 }
 
-export async function listContributions(): Promise<ContributionRow[]> {
+export async function listContributions(params?: { page?: number, pageSize?: number }): Promise<PagedResponse<ContributionRow>> {
   try {
-    const response = await httpClient.get<ContributionListItemDto[]>('/contributions')
-    return (response.data || []).map(mapContributionRow)
+    const response = await httpClient.get<PagedResponse<ContributionListItemDto>>('/contributions', { params })
+    const paged = response.data
+    
+    return {
+      ...paged,
+      items: (paged.items || []).map(mapContributionRow)
+    }
   } catch (error) {
-    // Fallback for not implemented or missing endpoint
     console.warn('Contributions list endpoint error:', error)
-    return []
+    return {
+      items: [],
+      totalCount: 0,
+      page: 1,
+      pageSize: 10,
+      totalPages: 0,
+      hasNextPage: false,
+      hasPreviousPage: false
+    }
   }
 }
 

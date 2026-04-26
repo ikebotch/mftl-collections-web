@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center py-20 px-6 text-center">
-    <div class="w-16 h-16 rounded-none bg-rose-50 flex items-center justify-center text-rose-500 mb-6 border border-rose-100 shadow-sm">
+    <div class="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mb-6 border border-rose-100 shadow-sm">
       <AlertCircle class="w-8 h-8" />
     </div>
     <h2 class="text-xl font-bold text-slate-900">

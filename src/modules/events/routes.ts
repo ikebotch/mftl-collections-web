@@ -21,4 +21,14 @@ export const eventRoutes: RouteRecordRaw[] = [
     name: 'admin-events-edit',
     component: () => import('./pages/EventEditPage.vue'),
   },
+  {
+    path: 'events/:id/analytics',
+    name: 'admin-events-analytics',
+    component: () => import('./pages/EventAnalyticsPage.vue'),
+  },
+  {
+    path: 'events/:id/recipient-funds',
+    name: 'admin-events-funds',
+    component: () => import('./pages/EventRecipientFundsPage.vue'),
+  },
 ]
