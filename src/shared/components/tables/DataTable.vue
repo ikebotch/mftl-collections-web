@@ -37,7 +37,7 @@
           <thead>
             <tr class="bg-slate-50/50 border-b border-slate-200">
               <!-- Expand spacer -->
-              <th v-if="expandable" class="w-12 px-4 py-4" />
+              <th v-if="expandable" class="w-12 px-4 py-3" />
               
               <template
                 v-for="column in columns"
@@ -55,14 +55,14 @@
                 />
                 <th
                   v-else
-                  class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap"
+                  class="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap"
                   :class="[column.headerClass, column.width ? `w-[${column.width}]` : '']"
                   :style="column.width ? { width: column.width, minWidth: column.width } : {}"
                 >
                   {{ column.label }}
                 </th>
               </template>
-              <th v-if="$slots.rowActions" class="px-6 py-4 text-right w-20" />
+              <th v-if="$slots.rowActions" class="px-6 py-3 text-right w-20" />
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -75,7 +75,7 @@
                 :class="{ 'bg-violet-50/20': isExpanded(row.id || index) }"
               >
                 <!-- Expand trigger -->
-                <td v-if="expandable" class="px-4 py-4">
+                <td v-if="expandable" class="px-4 py-3">
                   <button
                     class="p-1 rounded-none hover:bg-white border border-transparent hover:border-slate-200 text-slate-300 hover:text-violet-600 transition-all"
                     @click="toggleExpand(row.id || index)"
@@ -90,7 +90,7 @@
                 <td
                   v-for="column in columns"
                   :key="column.key"
-                  class="px-6 py-4"
+                  class="px-6 py-3"
                   :class="column.cellClass"
                 >
                   <slot
@@ -104,7 +104,7 @@
                 
                 <td
                   v-if="$slots.rowActions"
-                  class="px-6 py-4 text-right"
+                  class="px-6 py-3 text-right"
                 >
                   <slot
                     name="rowActions"
@@ -272,5 +272,33 @@ function printTable() {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #cbd5e1;
+}
+
+@media print {
+  .no-print, 
+  button, 
+  .sm\:flex-row,
+  .header-actions {
+    display: none !important;
+  }
+  
+  .bg-white {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+  
+  th, td {
+    border: 1px solid #e2e8f0 !important;
+    padding: 8px !important;
+  }
+  
+  .text-slate-400 {
+    color: #64748b !important;
+  }
 }
 </style>

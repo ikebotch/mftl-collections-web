@@ -120,8 +120,14 @@ export async function getContributionById(id: string): Promise<ContributionRow> 
   return mapContributionRow(response.data)
 }
 
+export async function updateContribution(id: string, payload: any): Promise<boolean> {
+  const response = await httpClient.put<boolean, any>(`/contributions/${id}`, payload)
+  return response.data
+}
+
 export const contributionsService = {
   list: listContributions,
   getById: getContributionById,
   recordCash: recordCashContribution,
+  update: updateContribution,
 }

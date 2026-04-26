@@ -40,6 +40,9 @@ function mapProfile(dto: CollectorProfileDto): CollectorProfile {
     lastActiveAt: dto.lastActiveAt,
     hasAssignments: dto.hasAssignments,
     blockedReason: dto.blockedReason ?? '',
+    phoneNumber: dto.phoneNumber ?? '',
+    eventIds: dto.eventIds || [],
+    fundIds: dto.fundIds || [],
   }
 }
 

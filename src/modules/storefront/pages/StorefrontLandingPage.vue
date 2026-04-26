@@ -41,7 +41,7 @@
                 variant="primary"
                 size="lg"
                 class="bg-violet-600 text-white shadow-xl shadow-violet-600/20"
-                @click="router.push(`/contribute/${eventSlug}/recipient`)"
+                @click="router.push(`/give/${eventSlug}/recipient`)"
               >
                 Start Contribution
               </AppButton>
@@ -49,7 +49,7 @@
                 size="lg"
                 variant="outline"
                 class="!text-slate-200 !border-slate-700 hover:!bg-slate-800 hover:!text-white hover:!border-slate-600"
-                @click="router.push(`/contribute/${eventSlug}/self`)"
+                @click="router.push(`/give/${eventSlug}/self`)"
               >
                 I am contributing for myself
               </AppButton>

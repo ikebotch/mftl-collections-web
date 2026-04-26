@@ -1,56 +1,81 @@
 <template>
-  <div class="space-y-6">
-    <PageHeader
-      eyebrow="Contribution flow"
-      title="Choose a recipient fund"
-      description="Select the cause this contribution should support."
-    />
+  <div class="space-y-16 animate-fade-in">
+    <div class="space-y-4 text-center">
+      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-violet-600">Step 01 / 04</p>
+      <h2 class="text-4xl md:text-5xl font-bold text-slate-900 font-display tracking-tight">Choose a recipient</h2>
+      <p class="text-slate-500 font-medium max-w-md mx-auto leading-relaxed">
+        Select the specific cause or fund this contribution should support.
+      </p>
+    </div>
 
     <LoadingState
       v-if="query.isLoading.value"
-      text="Loading recipient funds…"
+      text="Retrieving fund options…"
     />
+    
     <div
       v-else
-      class="grid gap-4"
+      class="grid gap-6"
     >
       <RecipientFundOptionCard
-        v-for="fund in query.data.value ?? []"
+        v-for="fund in query.data.value?.filter(f => f.isActive) ?? []"
         :key="fund.id"
         :title="fund.name"
         :description="fund.description"
-        :amount="formatCurrency(fund.targetAmount, fund.currency)"
+        :amount="formatCurrency(fund.targetAmount, 'GHS')"
         :selected="draft.recipientFundId === fund.id"
         @select="selectFund(fund.id)"
       />
+      
+      <div 
+        v-if="!query.data.value?.filter(f => f.isActive).length && !query.isLoading.value"
+        class="p-12 border-2 border-dashed border-slate-100 text-center space-y-4"
+      >
+        <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto">
+          <span class="text-xl">🏜️</span>
+        </div>
+        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No active funds found</p>
+      </div>
     </div>
 
-    <AppCard>
-      <form
-        class="space-y-4"
-        @submit.prevent="onSubmit"
-      >
-        <AppInput
-          id="contribution-amount"
-          v-model="amount"
-          type="number"
-          label="Contribution amount"
-          placeholder="50"
-          :error="errors.amount || errors.recipientFundId"
-        />
-        <div class="flex justify-between gap-3">
-          <AppButton
-            variant="secondary"
-            @click="router.push(`/contribute/${eventSlug}`)"
+    <div class="pt-12 border-t border-slate-100 space-y-10">
+      <div class="space-y-4">
+        <label class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Contribution Amount (GHS)</label>
+        <div class="relative group">
+          <input
+            v-model="amount"
+            type="number"
+            class="w-full bg-transparent border-b-2 border-slate-100 py-6 text-6xl md:text-8xl font-bold font-display text-slate-900 focus:outline-none focus:border-violet-600 transition-all placeholder:text-slate-100 tabular-nums"
+            placeholder="0.00"
           >
-            Back
-          </AppButton>
-          <AppButton native-type="submit">
-            Continue
-          </AppButton>
+          <div 
+            v-if="errors.amount || errors.recipientFundId" 
+            class="mt-4 text-xs font-bold text-rose-500 uppercase tracking-widest flex items-center gap-2"
+          >
+            <span class="w-1 h-1 rounded-full bg-rose-500" />
+            {{ errors.amount || errors.recipientFundId }}
+          </div>
         </div>
-      </form>
-    </AppCard>
+      </div>
+
+      <div class="flex items-center justify-between gap-6 pt-10">
+        <AppButton
+          variant="ghost"
+          size="lg"
+          class="text-xs font-black uppercase tracking-[0.2em] px-0 hover:bg-transparent hover:text-violet-600"
+          @click="router.push(`/give/${eventSlug}`)"
+        >
+          ← Back to overview
+        </AppButton>
+        <AppButton 
+          size="lg"
+          class="bg-slate-900 text-white min-w-[200px] shadow-xl hover:bg-violet-600 transition-all duration-500 text-xs font-black uppercase tracking-[0.2em]"
+          @click="onSubmit"
+        >
+          Continue to Details
+        </AppButton>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -97,7 +122,7 @@ function onSubmit() {
   flowStore.patch({
     amount: result.data.amount,
   })
-  void router.push(`/contribute/${eventSlug.value}/details`)
+  void router.push(`/give/${eventSlug.value}/details`)
 }
 
 function applyZodErrors(error: z.ZodError) {

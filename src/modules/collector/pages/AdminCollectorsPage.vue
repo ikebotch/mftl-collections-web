@@ -56,12 +56,32 @@
         v-model="searchQuery"
         placeholder="Search staff by name, email or ID..."
       >
-        <template #extra>
-          <MultiSelectFilter
-            v-model="statusFilters"
-            label="Staff Status"
-            :options="statusOptions"
-          />
+        <template #sections>
+          <div class="space-y-3">
+            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Staff Status</label>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="opt in statusOptions" 
+                :key="opt.value"
+                class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all"
+                :class="statusFilters.includes(opt.value) ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
+                @click="toggleStatusFilter(opt.value)"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Activity Level</label>
+            <div class="flex flex-wrap gap-2">
+              <button class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border bg-white text-slate-500 border-slate-200 hover:border-slate-300">
+                High Activity
+              </button>
+              <button class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border bg-white text-slate-500 border-slate-200 hover:border-slate-300">
+                Low Activity
+              </button>
+            </div>
+          </div>
         </template>
       </AdminFilterBar>
 
@@ -133,14 +153,12 @@
             >
               <Eye class="w-3.5 h-3.5" />
             </AppButton>
-            <AppButton
-              variant="ghost"
-              size="xs"
-              class="hover:bg-slate-100"
-              @click="router.push(`/admin/collectors/${row.id}/edit`)"
+            <button
+              class="text-[9px] font-black uppercase tracking-widest text-violet-600 hover:text-violet-700 px-4 py-2 border border-violet-100 hover:border-violet-200 bg-white transition-all"
+              @click="router.push(`/admin/collectors/${row.id}`)"
             >
-              <Edit3 class="w-3.5 h-3.5" />
-            </AppButton>
+              Manage Hub
+            </button>
           </div>
         </template>
       </DataTable>
@@ -267,6 +285,16 @@ const searchQuery = ref('')
 const statusFilters = ref<string[]>([])
 const sortKey = ref('name')
 const sortOrder = ref<'asc' | 'desc'>('asc')
+
+function toggleStatusFilter(status: string) {
+  const index = statusFilters.value.indexOf(status)
+  if (index > -1) {
+    statusFilters.value.splice(index, 1)
+  } else {
+    statusFilters.value.push(status)
+  }
+}
+
 const isDrawerOpen = ref(false)
 const selectedCollector = ref<CollectorProfile | null>(null)
 
