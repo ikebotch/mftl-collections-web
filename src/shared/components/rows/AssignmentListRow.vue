@@ -8,7 +8,7 @@
   >
     <div class="flex items-center gap-4">
       <div 
-        class="w-10 h-10 flex items-center justify-center rounded-none bg-slate-50 border border-slate-100 shrink-0 overflow-hidden"
+        class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 border border-slate-100 shrink-0 overflow-hidden"
         :class="{ 
           '!bg-violet-50 !border-violet-100': isAssigned,
           'w-8 h-8': isSubItem

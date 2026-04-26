@@ -74,10 +74,65 @@
       </div>
 
       <div class="grid gap-8 lg:grid-cols-12">
+        <!-- Campaign Performance Ledger (Full Width) -->
+        <div class="lg:col-span-12 space-y-6">
+          <AppCard class="!p-0 border-slate-200/60 shadow-premium overflow-hidden bg-white/40">
+            <div class="p-10 border-b border-slate-100 flex items-center justify-between">
+              <div class="space-y-1">
+                <h3 class="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Campaign Performance Ledger</h3>
+                <p class="text-base font-black text-slate-900 tracking-tight italic">Detailed financial auditing</p>
+              </div>
+              <span class="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-violet-50 text-violet-600 text-[10px] font-black uppercase tracking-widest border border-violet-100">
+                <span class="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+                Live Updates
+              </span>
+            </div>
+
+            <DataTable
+              :columns="reportColumns"
+              :rows="eventPerformance"
+              :page-size="5"
+            >
+              <template #cell:title="{ row }">
+                <div class="flex items-center gap-6 py-2">
+                  <div class="w-12 h-12 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400">
+                    <Calendar class="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none">{{ row.title }}</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">{{ row.count }} Records Audited</p>
+                  </div>
+                </div>
+              </template>
+
+              <template #cell:total="{ row }">
+                <div class="flex flex-col gap-1">
+                  <span 
+                    v-for="(amt, curr) in row.totals" 
+                    :key="curr"
+                    class="text-sm font-black text-slate-900 italic leading-none"
+                  >
+                    {{ formatCurrency(amt, curr) }}
+                  </span>
+                </div>
+              </template>
+
+              <template #cell:percent="{ row }">
+                <div class="flex items-center gap-4">
+                  <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{{ row.percent }}%</span>
+                  <div class="w-32 bg-slate-100 h-1 rounded-full overflow-hidden">
+                    <div class="h-full bg-emerald-500" :style="{ width: row.percent + '%' }" />
+                  </div>
+                </div>
+              </template>
+            </DataTable>
+          </AppCard>
+        </div>
+
         <!-- Main Activity Column -->
         <div class="lg:col-span-8 space-y-8">
-          <!-- Recent Contributions with premium editorial styling -->
-          <AppCard class="!p-0 border-slate-200">
+          <!-- Live Contribution Stream -->
+          <AppCard class="!p-0 border-slate-200 bg-white/40">
             <div class="p-8 border-b border-slate-200 flex items-center justify-between bg-slate-50/10">
               <div class="space-y-1">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-[0.2em] italic">
@@ -101,7 +156,7 @@
               v-if="!query.data.value?.recentContributions.length"
               class="p-16 text-center"
             >
-              <div class="w-12 h-12 rounded-none bg-slate-50 flex items-center justify-center mx-auto mb-4 border border-slate-200">
+              <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-4 border border-slate-200">
                 <Activity class="w-6 h-6 text-slate-300" />
               </div>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">
@@ -119,7 +174,7 @@
                 class="flex items-center justify-between p-6 hover:bg-slate-50/20 transition-all cursor-pointer group"
               >
                 <div class="flex items-center gap-5">
-                  <div class="w-10 h-10 rounded-none bg-white border border-slate-200 flex items-center justify-center group-hover:border-violet-300 transition-all duration-500">
+                  <div class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-violet-300 transition-all duration-500">
                     <Heart class="w-4 h-4 text-violet-600 fill-violet-50" />
                   </div>
                   <div>
@@ -164,7 +219,7 @@
               <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                 Organization Health
               </h3>
-              <div class="w-2 h-2 bg-emerald-500 animate-pulse" />
+              <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
             
             <div class="space-y-6">
@@ -261,12 +316,14 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCopy } from '@/core/i18n/useCopy'
 import { useDashboard } from '../composables/useDashboard'
+import { useContributions } from '@/modules/contributions/composables/useContributions'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
+import DataTable from '@/shared/components/tables/DataTable.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import { 
@@ -285,6 +342,51 @@ import {
 const { copy } = useCopy()
 const router = useRouter()
 const query = useDashboard()
+const contribQuery = useContributions()
+
+const contributions = computed(() => contribQuery.data.value || [])
+
+const reportColumns = [
+  { key: 'title', label: 'Campaign' },
+  { key: 'total', label: 'Aggregated' },
+  { key: 'percent', label: 'Velocity' }
+]
+
+const totalsByCurrency = computed(() => {
+  const map: Record<string, number> = {}
+  contributions.value.forEach(c => {
+    map[c.currency] = (map[c.currency] || 0) + c.amountValue
+  })
+  return map
+})
+
+const eventPerformance = computed(() => {
+  const events: Record<string, { totals: Record<string, number>, count: number }> = {}
+  
+  contributions.value.forEach(c => {
+    const eventTitle = c.event || 'Legacy Campaign'
+    if (!events[eventTitle]) events[eventTitle] = { totals: {}, count: 0 }
+    events[eventTitle].totals[c.currency] = (events[eventTitle].totals[c.currency] || 0) + c.amountValue
+    events[eventTitle].count++
+  })
+  
+  return Object.entries(events).map(([title, data]) => {
+    const mainCurrency = Object.keys(data.totals)[0] || 'GHS'
+    const totalForPercent = data.totals[mainCurrency] || 0
+    const globalTotalForPercent = totalsByCurrency.value[mainCurrency] || 1
+    
+    return {
+      title,
+      totals: data.totals,
+      count: data.count,
+      percent: Math.min(100, Math.round((totalForPercent / globalTotalForPercent) * 100))
+    }
+  }).sort((a, b) => {
+    const valA = Object.values(a.totals)[0] || 0
+    const valB = Object.values(b.totals)[0] || 0
+    return valB - valA
+  }).slice(0, 5)
+})
 
 const formattedTotals = computed(() => {
   const totals = query.data.value?.totals ?? []

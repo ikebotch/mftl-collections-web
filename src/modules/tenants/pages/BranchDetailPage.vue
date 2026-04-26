@@ -4,12 +4,12 @@
       :title="branch?.name"
       description="Regional operational hub management, resource allocation, and localized parameter configuration."
       back-to="/admin/branches"
-      back-label="Infrastructure Matrix"
+      back-label="Branches"
     >
       <template #status>
         <div class="flex items-center gap-2 px-2.5 py-1 bg-slate-50 border border-slate-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
           <div 
-            class="w-1.5 h-1.5 rounded-none"
+            class="w-1.5 h-1.5 rounded-full"
             :class="branch?.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
           />
           <span class="text-[9px] font-black text-slate-900 uppercase tracking-[0.2em]">
@@ -31,7 +31,7 @@
       class="space-y-10"
     >
       <!-- Navigation Tabs -->
-      <div class="sticky top-0 z-40 -mx-8 px-8 bg-white/80 backdrop-blur-md border-b border-slate-100 py-4">
+      <div class="sticky top-0 z-40 -mx-8 px-8 bg-transparent border-b border-slate-200/60 py-4 mb-10">
         <div class="max-w-[1200px] mx-auto">
           <DetailTabs
             v-model="activeTab"
@@ -45,11 +45,11 @@
         <div v-if="activeTab === 'overview'" class="animate-in fade-in duration-500">
           <AdminWizardLayout
             :sections="overviewSections"
-            title="Regional Hub Matrix"
+            title="Branch Details"
           >
             <!-- Identity Section -->
             <AppCard id="identity" class="!p-12 space-y-10 border-slate-200 scroll-mt-24">
-              <EditorialHeader title="Identity & Narrative">
+              <EditorialHeader title="About">
                 <template #actions>
                   <button
                     v-if="!isEditingOverview"
@@ -58,7 +58,7 @@
                     @click="isEditingOverview = true"
                   >
                     <Pencil class="w-3.5 h-3.5" />
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Identity</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Details</span>
                   </button>
                 </template>
               </EditorialHeader>
@@ -101,7 +101,7 @@
 
             <!-- Topology Section -->
             <AppCard id="topology" class="!p-12 space-y-10 border-slate-200 scroll-mt-24">
-              <EditorialHeader title="Network Topology">
+              <EditorialHeader title="Hub Structure">
                 <template #actions>
                   <button
                     v-if="!isEditingOverview"
@@ -110,7 +110,7 @@
                     @click="isEditingOverview = true"
                   >
                     <Pencil class="w-3.5 h-3.5" />
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Topology</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Structure</span>
                   </button>
                 </template>
               </EditorialHeader>
@@ -191,7 +191,7 @@
     <StickyFormActions v-if="isAnySectionEditing">
       <template #left>
         <div class="flex items-center gap-3">
-          <div class="w-2 h-2 rounded-none bg-violet-500 animate-pulse" />
+          <div class="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
           <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Infrastructure configuration active</span>
         </div>
       </template>
@@ -252,9 +252,9 @@ const tabs = [
 ]
 
 const overviewSections = [
-  { id: 'identity', title: 'Identity', subtitle: 'Step 01' },
-  { id: 'topology', title: 'Topology', subtitle: 'Step 02' },
-  { id: 'health', title: 'Health', subtitle: 'Step 03' }
+  { id: 'identity', title: 'Identity' },
+  { id: 'financial', title: 'Financials' },
+  { id: 'operational', title: 'Settings' }
 ]
 
 const isEditingOverview = ref(route.query.edit === 'true')

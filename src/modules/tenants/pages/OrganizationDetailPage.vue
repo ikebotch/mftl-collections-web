@@ -35,12 +35,12 @@
           >
             <AdminWizardLayout
               :sections="generalSections"
-              title="Identity Matrix"
+              title="Identity"
             >
               <!-- Organization Identity -->
               <AppCard id="intelligence" class="!p-10 space-y-10 border-slate-200 scroll-mt-24">
                 <EditorialHeader 
-                  title="Organization Intelligence"
+                  title="General Settings"
                   class="!mb-8"
                 >
                   <template #actions>
@@ -51,7 +51,7 @@
                       @click="isEditingGeneral = true"
                     >
                       <Pencil class="w-3.5 h-3.5" />
-                      <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Intelligence</span>
+                      <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Details</span>
                     </button>
                   </template>
                 </EditorialHeader>
@@ -273,7 +273,7 @@
               title="Network Core"
             >
               <AppCard id="topology" class="!p-10 space-y-8 border-slate-200 scroll-mt-24">
-                <EditorialHeader title="Network Topology">
+                <EditorialHeader title="Organizational Structure">
                   <template #actions>
                     <button
                       v-if="!isEditingInfrastructure"
@@ -282,7 +282,7 @@
                       @click="isEditingInfrastructure = true"
                     >
                       <Pencil class="w-3.5 h-3.5" />
-                      <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Topology</span>
+                      <span class="text-[10px] font-black uppercase tracking-[0.2em]">Edit Structure</span>
                     </button>
                   </template>
                 </EditorialHeader>
@@ -450,34 +450,34 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Sticky Actions -->
-    <StickyFormActions v-if="isAnySectionEditing">
-      <template #left>
-        <div class="flex items-center gap-3">
-          <div class="w-2 h-2 rounded-none bg-violet-500 animate-pulse" />
-          <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Network configuration mode active</span>
+      <!-- Sticky Actions -->
+      <StickyFormActions v-if="isAnySectionEditing">
+        <template #left>
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Network configuration mode active</span>
+          </div>
+        </template>
+        
+        <div class="flex gap-4">
+          <AppButton
+            variant="outline"
+            class="px-8"
+            @click="resetAllEdits"
+          >
+            Discard
+          </AppButton>
+          <AppButton
+            variant="primary"
+            class="px-12"
+            @click="saveConfiguration"
+          >
+            Save Global Strategy
+          </AppButton>
         </div>
-      </template>
-      
-      <div class="flex gap-4">
-        <AppButton
-          variant="outline"
-          class="px-8"
-          @click="resetAllEdits"
-        >
-          Discard
-        </AppButton>
-        <AppButton
-          variant="primary"
-          class="px-12"
-          @click="saveConfiguration"
-        >
-          Save Global Strategy
-        </AppButton>
-      </div>
-    </StickyFormActions>
+      </StickyFormActions>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -536,29 +536,30 @@ const activeTab = ref('general')
 
 const settingsTabs = [
   { key: 'general', label: 'General', icon: 'Settings2' },
+  { key: 'users', label: 'Users', icon: 'Users' },
   { key: 'regional', label: 'Regional', icon: 'Globe' },
   { key: 'infrastructure', label: 'Infrastructure', icon: 'Network' },
   { key: 'operational', label: 'Operational', icon: 'Activity' }
 ]
 
 const generalSections = [
-  { id: 'intelligence', title: 'Intelligence', subtitle: 'Step 01' },
-  { id: 'branding', title: 'Branding', subtitle: 'Step 02' },
-  { id: 'health', title: 'Health', subtitle: 'Step 03' }
+  { id: 'intelligence', title: 'Identity' },
+  { id: 'branding', title: 'Appearance' },
+  { id: 'health', title: 'System' }
 ]
 
 const regionalSections = [
-  { id: 'localization', title: 'Localization', subtitle: 'Step 01' }
+  { id: 'localization', title: 'Region' }
 ]
 
 const infrastructureSections = [
-  { id: 'topology', title: 'Topology', subtitle: 'Step 01' },
-  { id: 'hubs', title: 'Hubs', subtitle: 'Step 02' }
+  { id: 'topology', title: 'Regional Setup' },
+  { id: 'hubs', title: 'Branches' }
 ]
 
 const operationalSections = [
-  { id: 'controls', title: 'Execution', subtitle: 'Step 01' },
-  { id: 'audit', title: 'Audit', subtitle: 'Step 02' }
+  { id: 'controls', title: 'Settings' },
+  { id: 'audit', title: 'Activity' }
 ]
 
 const orgName = computed(() => {

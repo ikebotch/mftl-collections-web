@@ -61,7 +61,7 @@
     <!-- Main Content -->
     <div class="lg:pl-72 min-h-screen flex flex-col">
       <!-- Topbar -->
-      <header class="h-20 bg-white/90 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-40 px-10 flex items-center justify-between">
+      <header class="h-20 bg-white/90 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-[60] px-10 flex items-center justify-between">
         <!-- Search bar -->
         <div class="flex-1 max-w-xl relative">
           <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
@@ -77,20 +77,34 @@
 
         <div class="flex items-center gap-8">
           <div class="flex items-center gap-2">
-            <!-- Language Selector -->
-            <div class="flex items-center bg-slate-50 rounded-none p-1 mr-4 border border-slate-200">
-              <div class="p-1.5 mr-1 text-slate-400">
-                <Globe class="w-3.5 h-3.5" />
-              </div>
+            <!-- Minimalist Language Dropdown -->
+            <div class="relative">
               <button 
-                v-for="loc in availableLocales" 
-                :key="loc"
-                class="px-2 py-1 rounded-none text-[10px] font-black uppercase tracking-widest transition-all"
-                :class="currentLocale === loc ? 'bg-white text-violet-600 border border-slate-200' : 'text-slate-400 hover:text-slate-600'"
-                @click="setLocale(loc)"
+                class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/50 border border-slate-200/60 hover:bg-slate-100 transition-all duration-300 group ml-4"
+                @click="isLanguageDropdownOpen = !isLanguageDropdownOpen"
               >
-                {{ loc }}
+                <Globe class="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-600 transition-colors" />
+                <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">{{ currentLocale }}</span>
+                <ChevronDown 
+                  class="w-3 h-3 text-slate-400 transition-transform duration-300"
+                  :class="{ 'rotate-180': isLanguageDropdownOpen }"
+                />
               </button>
+
+              <div 
+                v-if="isLanguageDropdownOpen"
+                class="absolute top-full left-4 mt-3 w-32 bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-2xl z-[70] p-1.5 animate-in fade-in slide-in-from-top-2 duration-300"
+              >
+                <button 
+                  v-for="loc in availableLocales" 
+                  :key="loc"
+                  class="w-full text-left px-3 py-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 hover:bg-slate-50"
+                  :class="currentLocale === loc ? 'text-violet-600 bg-violet-50/50' : 'text-slate-500'"
+                  @click="setLocale(loc); isLanguageDropdownOpen = false"
+                >
+                  {{ loc }}
+                </button>
+              </div>
             </div>
 
             <button class="relative p-2.5 rounded-none text-slate-500 hover:bg-slate-50 hover:text-violet-600 transition-all duration-300">
@@ -110,10 +124,10 @@
           <!-- User Info with Dropdown Trigger -->
           <div class="relative">
             <button 
-              class="flex items-center gap-4 p-1.5 pr-4 rounded-none hover:bg-slate-50 transition-all duration-300 group"
+              class="flex items-center gap-3 p-1 rounded-full hover:bg-slate-50 transition-all duration-300 group ml-2"
               @click="isUserDropdownOpen = !isUserDropdownOpen"
             >
-              <div class="w-10 h-10 rounded-full overflow-hidden border border-slate-200 shadow-sm relative p-0.5 bg-white">
+              <div class="w-9 h-9 rounded-full overflow-hidden border border-slate-200 shadow-sm relative p-0.5 bg-white">
                 <img
                   v-if="currentUser.picture"
                   :src="currentUser.picture"
@@ -126,10 +140,7 @@
                   {{ currentUser.name?.charAt(0) || 'A' }}
                 </div>
               </div>
-              <div class="hidden sm:flex flex-col items-start text-left">
-                <span class="text-sm font-black text-slate-900 leading-none tracking-tight">{{ currentUser.name }}</span>
-                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1.5 italic">{{ currentUser.role }}</span>
-              </div>
+              <span class="hidden sm:block text-[11px] font-black text-slate-900 uppercase tracking-widest">{{ formattedUserName }}</span>
               <ChevronDown 
                 class="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-600 transition-transform duration-300"
                 :class="{ 'rotate-180': isUserDropdownOpen }"
@@ -139,11 +150,12 @@
             <!-- Premium User Dropdown -->
             <div 
               v-if="isUserDropdownOpen"
-              class="absolute top-full right-0 mt-4 w-64 bg-white border border-slate-200 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-300"
+              class="absolute top-full right-0 mt-4 w-72 bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-2xl z-[70] animate-in fade-in slide-in-from-top-2 duration-300"
             >
-              <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+              <div class="p-6 border-b border-slate-100 bg-slate-50/30">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Authenticated as</p>
-                <p class="text-sm font-black text-slate-900 truncate">{{ currentUser.email }}</p>
+                <p class="text-sm font-black text-slate-900 truncate uppercase tracking-tight mb-1">{{ currentUser.name }}</p>
+                <p class="text-[11px] font-medium text-slate-500 truncate italic">{{ currentUser.email }}</p>
               </div>
               
               <div class="p-2">
@@ -153,7 +165,7 @@
                   @click="isUserDropdownOpen = false"
                 >
                   <User class="w-4 h-4" />
-                  Profile Strategy
+                  Settings
                 </router-link>
                 <router-link
                   to="/admin/users"
@@ -161,7 +173,7 @@
                   @click="isUserDropdownOpen = false"
                 >
                   <ShieldCheck class="w-4 h-4" />
-                  Security Matrix
+                  Users
                 </router-link>
               </div>
 
@@ -171,7 +183,7 @@
                   @click="handleLogout"
                 >
                   <LogOut class="w-4 h-4" />
-                  Terminate Session
+                  Logout
                 </button>
               </div>
             </div>
@@ -247,11 +259,23 @@ const { copy, setLocale, currentLocale, availableLocales } = useCopy()
 const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
 const { currentUser } = useCurrentUser()
 const isUserDropdownOpen = ref(false)
+const isLanguageDropdownOpen = ref(false)
+
+const formattedUserName = computed(() => {
+  if (!currentUser.value.name) return ''
+  const parts = currentUser.value.name.split(' ')
+  return parts[0]
+})
 
 function handleClickOutside(event: MouseEvent) {
-  const dropdown = document.querySelector('.relative') // Simple selector for demo
-  if (isUserDropdownOpen.value && !(event.target as HTMLElement).closest('.relative')) {
+  const target = event.target as HTMLElement
+  
+  if (isUserDropdownOpen.value && !target.closest('.relative')) {
     isUserDropdownOpen.value = false
+  }
+  
+  if (isLanguageDropdownOpen.value && !target.closest('.relative')) {
+    isLanguageDropdownOpen.value = false
   }
 }
 

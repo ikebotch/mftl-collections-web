@@ -4,7 +4,11 @@
     @click="$emit('sort', columnKey)"
   >
     <div class="flex items-center gap-2">
-      {{ label }}
+      <div class="flex flex-col">
+        <slot>
+          {{ label }}
+        </slot>
+      </div>
       <div class="flex flex-col -space-y-1">
         <ChevronUp
           class="w-3 h-3 transition-colors"

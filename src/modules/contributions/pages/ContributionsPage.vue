@@ -11,11 +11,11 @@
         :value="totalRaisedFormatted"
         icon="TrendingUp"
         color="green"
-        :trend="contributions.length > 0 ? '+100%' : '0%'"
+        :trend="finalTotalItems > 0 ? '+100%' : '0%'"
       />
       <MetricCard
         label="Total Records"
-        :value="String(contributions.length)"
+        :value="String(finalTotalItems)"
         icon="Calendar"
         color="purple"
       />
@@ -61,7 +61,7 @@
               <button 
                 v-for="m in ['Direct Cash', 'Mobile Money']"
                 :key="m"
-                class="px-4 py-2 text-[10px] font-black uppercase tracking-widest border transition-all"
+                class="px-4 py-2 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full"
                 :class="activeFilters.methods.includes(m) ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-500 border-slate-100 hover:border-slate-300'"
                 @click="toggleFilter('methods', m)"
               >
@@ -69,13 +69,30 @@
               </button>
             </div>
           </div>
+          <div class="space-y-3">
+            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Primary Currency</label>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="curr in ['GHS', 'USD']" 
+                :key="curr"
+                class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all rounded-full"
+                :class="activeFilters.currency === curr ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
+                @click="activeFilters.currency = activeFilters.currency === curr ? '' : curr"
+              >
+                {{ curr }}
+              </button>
+            </div>
+          </div>
         </template>
       </AdminFilterBar>
 
       <DataTable
+        v-model:page="currentPage"
         :columns="columns"
         :rows="filteredContributions"
         :loading="query.isLoading.value"
+        :total-items="finalTotalItems"
+        :page-size="pageSize"
         exportable
         title="Contribution Audit Log"
       >
@@ -314,13 +331,20 @@ import { useToastStore } from '@/shared/stores/useToastStore'
 const searchQuery = ref('')
 const activeFilters = ref({
   status: [] as string[],
-  methods: [] as string[]
+  methods: [] as string[],
+  currency: ''
 })
 
-const query = useContributions()
+const currentPage = ref(1)
+const pageSize = ref(10)
+const query = useContributions(computed(() => ({ 
+  page: currentPage.value, 
+  pageSize: pageSize.value 
+})))
 const updateMutation = useUpdateContribution()
 const toast = useToastStore()
-const contributions = computed(() => query.data.value || [])
+const contributions = computed(() => query.data.value?.items || [])
+const finalTotalItems = computed(() => query.data.value?.totalCount || 0)
 
 const filteredContributions = computed(() => {
   let items = contributions.value
@@ -342,14 +366,18 @@ const filteredContributions = computed(() => {
     items = items.filter(c => activeFilters.value.methods.includes(c.paymentMethod))
   }
 
+  if (activeFilters.value.currency) {
+    items = items.filter(c => c.currency === activeFilters.value.currency)
+  }
+
   return items
 })
 
 const totalRaisedFormatted = computed(() => {
   const currencyGroups: Record<string, number> = {}
   contributions.value.forEach(c => {
-    const amt = c.amountValue || parseFloat(String(c.amount).replace(/[^0-9.]/g, ''))
-    const cur = c.amount.split(' ')[0] || 'GHS'
+    const amt = c.amountValue
+    const cur = c.currency || 'GHS'
     currencyGroups[cur] = (currencyGroups[cur] || 0) + amt
   })
   
@@ -370,14 +398,15 @@ const editForm = ref({
   note: ''
 })
 
-const columns = [
-  { key: 'date', label: 'Date/Time' },
-  { key: 'donor', label: 'Donor' },
-  { key: 'event', label: 'Event' },
-  { key: 'fund', label: 'Fund' },
-  { key: 'method', label: 'Method' },
-  { key: 'status', label: 'Status' }
-]
+const columns = computed(() => [
+  { key: 'date', label: 'Date/Time', sortable: true },
+  { key: 'donor', label: 'Donor', sortable: true },
+  { key: 'amount', label: 'Amount', sortable: !!activeFilters.value.currency },
+  { key: 'event', label: 'Event', sortable: true },
+  { key: 'fund', label: 'Fund', sortable: true },
+  { key: 'method', label: 'Method', sortable: true },
+  { key: 'status', label: 'Status', sortable: true }
+])
 
 function toggleFilter(type: 'status' | 'methods', value: string) {
   const index = activeFilters.value[type].indexOf(value)
@@ -392,6 +421,7 @@ function clearAllFilters() {
   searchQuery.value = ''
   activeFilters.value.status = []
   activeFilters.value.methods = []
+  activeFilters.value.currency = ''
 }
 
 function openDrawer(item: ContributionRow) {

@@ -1,6 +1,6 @@
 <template>
   <span 
-    class="inline-flex items-center gap-1.5 rounded-none px-2.5 py-1 text-[10px] font-black uppercase tracking-widest border transition-all duration-300 shadow-sm"
+    class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest border transition-all duration-300 shadow-sm"
     :class="toneClasses"
   >
     <span
