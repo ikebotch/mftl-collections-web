@@ -1,6 +1,7 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ReceiptsPage from './ReceiptsPage.vue'
+import { createPinia, setActivePinia } from 'pinia'
 
 vi.mock('../composables/useReceipts', () => ({
   useReceipts: () => ({
@@ -13,8 +14,12 @@ vi.mock('../composables/useReceipts', () => ({
 }))
 
 describe('ReceiptsPage', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders the empty state when there are no receipts', () => {
     const wrapper = mount(ReceiptsPage)
-    expect(wrapper.text()).toContain('No records found')
+    expect(wrapper.text()).toContain('No data available')
   })
 })

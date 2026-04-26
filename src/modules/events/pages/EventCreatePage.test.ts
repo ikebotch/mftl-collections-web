@@ -27,7 +27,7 @@ describe('EventCreatePage', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Create Event')
+    expect(wrapper.text()).toContain('Create New Event')
     // Steps check
     expect(wrapper.text()).toContain('Basics')
   })

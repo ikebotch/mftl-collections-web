@@ -1,11 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ContributionsPage from './ContributionsPage.vue'
+import { createPinia, setActivePinia } from 'pinia'
 
 vi.mock('../composables/useContributions', () => ({
   useContributions: () => ({
-    isLoading: { value: false },
-    isError: { value: false },
     data: {
       value: [
         {
@@ -19,10 +18,20 @@ vi.mock('../composables/useContributions', () => ({
         },
       ],
     },
+    isLoading: { value: false },
+    isError: { value: false }
   }),
+  useUpdateContribution: () => ({
+    mutate: vi.fn(),
+    isLoading: { value: false }
+  })
 }))
 
 describe('ContributionsPage', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders the contribution table', () => {
     const wrapper = mount(ContributionsPage)
     expect(wrapper.text()).toContain('Community fundraiser')

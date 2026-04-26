@@ -1,186 +1,172 @@
 <template>
-  <div class="relative group">
-    <!-- Main Selector Button -->
+  <div ref="containerRef" class="relative group">
+    <!-- Main Selector Button (Modernized) -->
     <button 
-      class="flex items-center gap-3 w-full text-left p-1 rounded-xl hover:bg-white/5 transition-all duration-300 group/btn"
+      class="premium-switcher-btn"
+      :class="{ 'is-open': isOpen }"
       @click="isOpen = !isOpen"
     >
-      <div class="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/20 rotate-2 shrink-0 group-hover/btn:rotate-0 transition-transform duration-500">
+      <div class="icon-container">
+        <div class="icon-glow" />
         <Building2
           v-if="!branchStore.selectedBranchId"
-          class="text-white w-5 h-5"
+          class="icon"
         />
         <MapPin
           v-else
-          class="text-white w-5 h-5"
+          class="icon"
         />
       </div>
-      <div class="flex-1 min-w-0">
-        <h1 class="text-[15px] font-black font-display tracking-tight leading-none text-white truncate uppercase">
-          {{ branchStore.selectedBranchName || tenantStore.selectedTenantName || 'Select Hub' }}
+      
+      <div class="label-area">
+        <h1 class="hub-title">
+          {{ displayTitle }}
         </h1>
-        <p class="text-[9px] uppercase tracking-[0.2em] text-slate-500 mt-1.5 font-black truncate italic">
-          {{ branchStore.selectedBranchId ? 'Operational Branch' : 'Organization Hub' }}
-        </p>
-      </div>
-      <ChevronDown class="w-3.5 h-3.5 text-slate-600 group-hover/btn:text-violet-400 transition-colors" />
-    </button>
-
-    <!-- Dropdown Menu -->
-    <div 
-      v-if="isOpen"
-      class="absolute top-full left-0 w-80 mt-4 bg-[#0a0f18] border border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[60] overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300 rounded-none"
-    >
-      <!-- Mode Tabs -->
-      <div class="flex border-b border-slate-800 bg-slate-900/20">
-        <button 
-          class="flex-1 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all"
-          :class="activeView === 'tenants' ? 'text-white border-b-2 border-violet-500 bg-violet-500/5' : 'text-slate-500 hover:text-slate-300'"
-          @click="activeView = 'tenants'"
-        >
-          Organizations
-        </button>
-        <button 
-          class="flex-1 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all"
-          :class="activeView === 'branches' ? 'text-white border-b-2 border-violet-500 bg-violet-500/5' : 'text-slate-500 hover:text-slate-300'"
-          @click="activeView = 'branches'"
-        >
-          Branches
-        </button>
-      </div>
-
-      <!-- Content Area -->
-      <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
-        <!-- Tenants List -->
-        <div
-          v-if="activeView === 'tenants'"
-          class="p-2 space-y-1"
-        >
-          <div
-            v-if="!tenants?.length"
-            class="p-8 text-center"
-          >
-            <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest">
-              No organizations found
-            </p>
-          </div>
-          <button
-            v-for="tenant in tenants"
-            :key="tenant.id"
-            class="w-full flex items-center gap-4 px-5 py-4 text-left transition-all hover:bg-white/5 border-l-2 border-transparent"
-            :class="tenantStore.selectedTenantId === tenant.id ? 'bg-violet-600/10 border-violet-500 text-white' : 'text-slate-400 hover:text-slate-200'"
-            @click="selectTenant(tenant)"
-          >
-            <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center shrink-0">
-              <Building2 class="w-4 h-4" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[11px] font-black uppercase tracking-tight truncate">
-                {{ tenant.name }}
-              </p>
-              <p class="text-[8px] uppercase tracking-widest text-slate-600 font-bold mt-1">
-                Primary Identity
-              </p>
-            </div>
-            <div
-              v-if="tenantStore.selectedTenantId === tenant.id"
-              class="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.5)]"
-            />
-          </button>
-        </div>
-
-        <!-- Branches List -->
-        <div
-          v-else-if="activeView === 'branches'"
-          class="p-2 space-y-1"
-        >
-          <!-- Back to Tenant Option -->
-          <button
-            class="w-full flex items-center gap-4 px-5 py-4 text-left transition-all hover:bg-white/5 border-l-2 border-transparent"
-            :class="!branchStore.selectedBranchId ? 'bg-violet-600/10 border-violet-500 text-white' : 'text-slate-400 hover:text-slate-200'"
-            @click="selectBranch(null)"
-          >
-            <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0">
-              <LayoutGrid class="w-4 h-4" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[11px] font-black uppercase tracking-tight truncate">
-                Show All Hubs
-              </p>
-              <p class="text-[8px] uppercase tracking-widest text-slate-600 font-bold mt-1">
-                Cross-Branch Overview
-              </p>
-            </div>
-          </button>
-
-          <div
-            v-if="!branches?.length"
-            class="p-8 text-center py-12"
-          >
-            <MapPin class="w-8 h-8 text-slate-800 mx-auto mb-4" />
-            <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest">
-              No hubs established
-            </p>
-          </div>
-          
-          <button
-            v-for="branch in branches"
-            :key="branch.id"
-            class="w-full flex items-center gap-4 px-5 py-4 text-left transition-all hover:bg-white/5 border-l-2 border-transparent"
-            :class="branchStore.selectedBranchId === branch.id ? 'bg-violet-600/10 border-violet-500 text-white' : 'text-slate-400 hover:text-slate-200'"
-            @click="selectBranch(branch)"
-          >
-            <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center shrink-0">
-              <MapPin class="w-4 h-4" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[11px] font-black uppercase tracking-tight truncate">
-                {{ branch.name }}
-              </p>
-              <p class="text-[8px] uppercase tracking-widest text-slate-600 font-bold mt-1">
-                {{ branch.location || 'Regional Hub' }}
-              </p>
-            </div>
-            <div
-              v-if="branchStore.selectedBranchId === branch.id"
-              class="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.5)]"
-            />
-          </button>
+        <div class="hub-badge">
+          <span class="badge-dot" />
+          <p class="badge-text">
+            {{ displaySubtitle }}
+          </p>
         </div>
       </div>
       
-      <!-- Developer Matrix Control -->
-      <div
-        v-if="isDev"
-        class="p-2 border-t border-slate-800 bg-slate-900/50"
-      >
-        <button 
-          class="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-600 hover:text-slate-300 transition-all hover:bg-white/5 group/dev"
-          @click="showCustom = !showCustom"
-        >
-          <Settings class="w-3.5 h-3.5 group-hover/dev:rotate-90 transition-transform duration-500" />
-          <span class="text-[9px] font-black uppercase tracking-widest">Dev Matrix Override</span>
-        </button>
-        
-        <div
-          v-if="showCustom"
-          class="px-4 pb-4 pt-1 space-y-2 animate-in slide-in-from-bottom-2"
-        >
-          <input
-            v-model="customId"
-            type="text"
-            placeholder="Identity UUID..."
-            class="w-full bg-[#060b13] border border-slate-800 text-violet-400 text-[10px] font-mono rounded-none py-2.5 px-3 focus:outline-none focus:border-violet-500 transition-colors"
-            @keyup.enter="applyCustomId"
+      <div class="chevron-wrapper">
+        <ChevronDown class="chevron" />
+      </div>
+    </button>
+
+    <!-- Premium Glassmorphism Dropdown -->
+    <div 
+      v-if="isOpen"
+      class="premium-dropdown"
+    >
+      <div class="dropdown-inner">
+        <!-- Modern Sliding Tab Switcher -->
+        <div class="sliding-tabs">
+          <div 
+            class="tab-indicator"
+            :style="{ transform: `translateX(${activeView === 'tenants' ? '0%' : '100%'})` }"
+          />
+          <button 
+            class="tab-btn"
+            :class="{ active: activeView === 'tenants' }"
+            @click="activeView = 'tenants'"
           >
-          <AppButton
-            size="xs"
-            variant="primary"
-            class="w-full !rounded-none"
-            @click="applyCustomId"
+            Organizations
+          </button>
+          <button 
+            class="tab-btn"
+            :class="{ active: activeView === 'branches' }"
+            @click="activeView = 'branches'"
           >
-            Force Sync
-          </AppButton>
+            Branches
+          </button>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="content-viewport custom-scrollbar">
+          <!-- Organizations List -->
+          <TransitionGroup 
+            v-if="activeView === 'tenants'"
+            name="list-slide"
+            tag="div"
+            class="list-container"
+          >
+            <div
+              v-if="!tenants?.length"
+              key="empty"
+              class="empty-state"
+            >
+              <div class="empty-icon-box">
+                <Search class="w-4 h-4 text-slate-600" />
+              </div>
+              <p>No organizations found</p>
+            </div>
+            
+            <button
+              v-for="tenant in tenants"
+              :key="tenant.id"
+              class="list-item"
+              :class="{ 'is-selected': isTenantSelected(tenant.id) }"
+              @click="toggleTenant(tenant)"
+            >
+              <div class="item-icon-box">
+                <Building2 class="w-4 h-4" />
+              </div>
+              <div class="item-info">
+                <p class="item-name">
+                  {{ tenant.name }}
+                </p>
+                <p class="item-meta">
+                  Primary Identity
+                </p>
+              </div>
+              <div
+                v-if="isTenantSelected(tenant.id)"
+                class="multi-check"
+              >
+                <Check class="w-3 h-3" />
+              </div>
+            </button>
+          </TransitionGroup>
+
+          <!-- Branches List -->
+          <TransitionGroup 
+            v-else-if="activeView === 'branches'"
+            name="list-slide"
+            tag="div"
+            class="list-container"
+          >
+            <!-- Back to Organization Root -->
+            <button
+              key="root"
+              class="list-item"
+              :class="{ 'is-selected': branchStore.selectedBranchIds.length === 0 }"
+              @click="selectMainHub"
+            >
+              <div class="item-icon-box root-icon">
+                <ArrowLeft class="w-4 h-4" />
+              </div>
+              <div class="item-info">
+                <p class="item-name">
+                  Main Hub
+                </p>
+                <p class="item-meta">
+                  Root Organization View
+                </p>
+              </div>
+              <div
+                v-if="branchStore.selectedBranchIds.length === 0"
+                class="active-indicator"
+              />
+            </button>
+
+            <button
+              v-for="branch in branches"
+              :key="branch.id"
+              class="list-item"
+              :class="{ 'is-selected': isBranchSelected(branch.id) }"
+              @click="toggleBranch(branch)"
+            >
+              <div class="item-icon-box">
+                <MapPin class="w-4 h-4" />
+              </div>
+              <div class="item-info">
+                <p class="item-name">
+                  {{ branch.name }}
+                </p>
+                <p class="item-meta">
+                  {{ branch.isHeadquarters ? 'Headquarters' : 'Regional Branch' }}
+                </p>
+              </div>
+              <div
+                v-if="isBranchSelected(branch.id)"
+                class="multi-check"
+              >
+                <Check class="w-3 h-3" />
+              </div>
+            </button>
+          </TransitionGroup>
         </div>
       </div>
     </div>
@@ -188,74 +174,418 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
-import { 
-  Building2, 
-  ChevronDown, 
-  Settings, 
-  MapPin, 
-  LayoutGrid 
-} from 'lucide-vue-next'
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
+import { Building2, MapPin, ChevronDown, Search, ArrowLeft, Check } from 'lucide-vue-next'
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
+import { tenantsService } from '../services/tenantsService'
+import { branchesService } from '../services/branchesService'
 import { useTenantStore } from '../store/tenantStore'
 import { useBranchStore } from '@/modules/branches/store/branchStore'
-import { tenantsService } from '../services/tenantsService'
-import { useBranches } from '../composables/useBranches'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
-import { useQuery } from '@tanstack/vue-query'
-import { appConfig } from '@/core/config/appConfig'
+
+const isOpen = ref(false)
+const containerRef = ref<HTMLElement | null>(null)
+const activeView = ref<'tenants' | 'branches'>('tenants')
+const queryClient = useQueryClient()
 
 const tenantStore = useTenantStore()
 const branchStore = useBranchStore()
-const isOpen = ref(false)
-const showCustom = ref(false)
-const customId = ref('')
-const activeView = ref<'tenants' | 'branches'>('tenants')
-const isDev = computed(() => appConfig.auth.devBypass)
+
+const displayTitle = computed(() => {
+  if (branchStore.selectedBranchIds.length > 1) return `${branchStore.selectedBranchIds.length} Branches`
+  if (branchStore.selectedBranchIds.length === 1) {
+    const branch = branches.value?.find(b => b.id === branchStore.selectedBranchIds[0])
+    return branch?.name || 'Selected Branch'
+  }
+  if (tenantStore.selectedTenantIds.length > 1) return `${tenantStore.selectedTenantIds.length} Organizations`
+  return tenantStore.selectedTenantName || 'Select Hub'
+})
+
+const displaySubtitle = computed(() => {
+  if (branchStore.selectedBranchIds.length > 0) return 'Operational Scope'
+  return 'Organization Wide'
+})
+
+function handleClickOutside(event: MouseEvent) {
+  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const { data: tenants } = useQuery({
   queryKey: ['tenants-list'],
   queryFn: () => tenantsService.list()
 })
 
-const { data: branches, refetch: refetchBranches } = useBranches(tenantStore.selectedTenantId || undefined)
-
-// Auto-switch to branches view if tenant is already selected
-onMounted(() => {
-  if (tenantStore.selectedTenantId) {
-    activeView.value = 'branches'
-  }
+const { data: branches, refetch: refetchBranches } = useQuery({
+  queryKey: ['branches-list', tenantStore.selectedTenantId],
+  queryFn: () => branchesService.list(),
+  enabled: !!tenantStore.selectedTenantId
 })
 
-watch(() => tenantStore.selectedTenantId, () => {
+watch(() => tenantStore.selectedTenantIds, () => {
   refetchBranches()
-})
+  queryClient.invalidateQueries()
+}, { deep: true })
 
-function selectTenant(tenant: any) {
-  tenantStore.setTenant(tenant.id, tenant.name)
-  branchStore.clearBranch() // Clear branch when tenant changes
-  activeView.value = 'branches'
+watch(() => branchStore.selectedBranchIds, () => {
+  queryClient.invalidateQueries()
+}, { deep: true })
+
+function isTenantSelected(id: string) {
+  return tenantStore.selectedTenantIds.includes(id)
 }
 
-function selectBranch(branch: any | null) {
-  if (!branch) {
-    branchStore.clearBranch()
+function isBranchSelected(id: string) {
+  return branchStore.selectedBranchIds.includes(id)
+}
+
+function toggleTenant(tenant: any) {
+  const ids = [...tenantStore.selectedTenantIds]
+  const index = ids.indexOf(tenant.id)
+  if (index > -1) {
+    if (ids.length > 1) ids.splice(index, 1) // Keep at least one
   } else {
-    branchStore.setBranch(branch.id, branch.name)
+    ids.push(tenant.id)
   }
-  isOpen.value = false
-  window.location.reload()
+  tenantStore.setTenants(ids)
+  // When switching tenants, we might want to clear branches or keep them if they exist in new tenants? 
+  // Usually, clearing is safer.
+  branchStore.clearBranch()
 }
 
-function applyCustomId() {
-  if (customId.value) {
-    tenantStore.setTenant(customId.value, 'Matrix Override')
-    branchStore.clearBranch()
-    window.location.reload()
-  }
+function toggleBranch(branch: any) {
+  branchStore.toggleBranch(branch.id)
+}
+
+function selectMainHub() {
+  branchStore.clearBranch()
+  isOpen.value = false
 }
 </script>
 
 <style scoped>
+/* Premium Design System Tokens */
+:root {
+  --hub-bg: #0d121f;
+  --hub-border: rgba(255, 255, 255, 0.08);
+  --hub-accent: #8b5cf6;
+  --hub-accent-glow: rgba(139, 92, 246, 0.3);
+  --hub-text-main: #ffffff;
+  --hub-text-muted: #64748b;
+}
+
+.premium-switcher-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  background: transparent;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  text-align: left;
+  border: 1px solid transparent;
+}
+
+.premium-switcher-btn:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.premium-switcher-btn.is-open {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--hub-border);
+}
+
+.icon-container {
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.875rem;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px -4px var(--hub-accent-glow);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.premium-switcher-btn:hover .icon-container {
+  transform: rotate(-3deg) scale(1.05);
+}
+
+.icon-glow {
+  position: absolute;
+  inset: -2px;
+  background: inherit;
+  filter: blur(8px);
+  opacity: 0.4;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.icon {
+  color: white;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.label-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.hub-title {
+  font-size: 0.9375rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--hub-text-main);
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hub-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.375rem;
+}
+
+.badge-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--hub-accent);
+  box-shadow: 0 0 8px var(--hub-accent);
+}
+
+.badge-text {
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--hub-text-muted);
+  margin: 0;
+}
+
+.chevron-wrapper {
+  color: #334155;
+  transition: color 0.3s;
+}
+
+.premium-switcher-btn:hover .chevron-wrapper {
+  color: var(--hub-accent);
+}
+
+.chevron {
+  width: 0.875rem;
+  height: 0.875rem;
+  transition: transform 0.4s;
+}
+
+.premium-switcher-btn.is-open .chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Styles */
+.premium-dropdown {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  left: 0;
+  width: 20rem;
+  z-index: 60;
+  animation: dropdown-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dropdown-inner {
+  background: rgba(10, 15, 24, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--hub-border);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+.sliding-tabs {
+  position: relative;
+  display: flex;
+  padding: 0.375rem;
+  background: rgba(255, 255, 255, 0.03);
+  margin: 0.75rem;
+  border-radius: 0.875rem;
+  gap: 0.25rem;
+}
+
+.tab-indicator {
+  position: absolute;
+  top: 0.375rem;
+  left: 0.375rem;
+  width: calc(50% - 0.5rem);
+  height: calc(100% - 0.75rem);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 0.625rem;
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 0;
+}
+
+.tab-btn {
+  position: relative;
+  flex: 1;
+  padding: 0.625rem;
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--hub-text-muted);
+  z-index: 1;
+  transition: color 0.3s;
+}
+
+.tab-btn.active {
+  color: white;
+}
+
+.content-viewport {
+  max-height: 24rem;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.list-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.list-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.list-item.is-selected {
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.item-icon-box {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hub-text-muted);
+  transition: all 0.3s;
+}
+
+.list-item:hover .item-icon-box {
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.list-item.is-selected .item-icon-box {
+  color: var(--hub-accent);
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-name {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-meta {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--hub-text-muted);
+  margin-top: 0.125rem;
+}
+
+.active-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hub-accent);
+  box-shadow: 0 0 10px var(--hub-accent);
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--hub-text-muted);
+}
+
+.empty-icon-box {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  opacity: 0.3;
+}
+
+.empty-state p {
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Transitions */
+.list-slide-enter-active,
+.list-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.list-slide-enter-from {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.list-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
@@ -263,10 +593,10 @@ function applyCustomId() {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.1);
 }
 </style>

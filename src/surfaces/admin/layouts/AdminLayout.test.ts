@@ -6,11 +6,13 @@ import AdminLayout from './AdminLayout.vue'
 
 vi.mock('@auth0/auth0-vue', () => ({
   useAuth0: () => ({
-    logout: vi.fn(),
-    user: { value: { email: 'admin@example.com' } },
-    isAuthenticated: { value: true },
-    isLoading: { value: false },
+    isAuthenticated: true,
+    user: { name: 'Test User', email: 'test@example.com' },
+    logout: vi.fn()
   }),
+  createAuth0: vi.fn(() => ({
+    install: vi.fn()
+  }))
 }))
 
 describe('AdminLayout', () => {
@@ -25,6 +27,7 @@ describe('AdminLayout', () => {
         plugins: [router, createPinia()],
         stubs: {
           RouterView: true,
+          TenantSwitcher: true,
         },
       },
     })

@@ -2,10 +2,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { collectorService } from '../services/collectorService'
 import type { CollectorProfile } from '../types/collector'
 import type { ApiError } from '@/core/api/apiError'
+import { useBranchStore } from '@/modules/branches/store/branchStore'
 
 export function useAllCollectors() {
+  const branchStore = useBranchStore()
   return useQuery<CollectorProfile[], ApiError>({
-    queryKey: ['admin', 'collectors'],
+    queryKey: ['admin', 'collectors', { branchId: branchStore.selectedBranchId }],
     queryFn: () => collectorService.listAll(),
   })
 }
