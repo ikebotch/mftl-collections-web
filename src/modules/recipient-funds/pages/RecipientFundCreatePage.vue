@@ -4,7 +4,7 @@
     <div class="max-w-[1200px] mx-auto pt-16 pb-12 px-8">
       <header class="mb-16">
         <h1 class="text-4xl font-black font-display tracking-tight text-slate-900 mb-4 uppercase">
-          Initialize Fund
+          New Recipient Fund
         </h1>
         <p class="text-slate-500 font-medium text-lg max-w-xl leading-relaxed">
           Define a strategic target for contributions within an operational event stream.
@@ -73,7 +73,7 @@
               <AppInput
                 v-model="form.targetAmount"
                 type="number"
-                label="Strategic Target"
+                label="Fund Target"
                 placeholder="0.00"
                 required
               >

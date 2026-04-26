@@ -102,8 +102,8 @@
               <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
                 Step 02
               </h3>
-              <h2 class="text-2xl font-black text-slate-900 tracking-tight">
-                Allocation Funds
+              <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">
+                Recipient Funds
               </h2>
             </div>
             <AppButton
@@ -132,7 +132,7 @@
                   <AppInput
                     v-model="fund.targetAmount"
                     type="number"
-                    label="Target Amount"
+                    label="Fund Target"
                     placeholder="0.00"
                     required
                   >

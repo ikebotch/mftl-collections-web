@@ -62,10 +62,15 @@
     </DetailPageHeader>
 
     <div class="space-y-12">
-      <DetailTabs
-        v-model="activeTab"
-        :tabs="tabs"
-      />
+      <!-- Premium Sticky Sub-Nav -->
+      <div class="sticky top-0 z-40 -mx-8 px-8 bg-white/80 backdrop-blur-md border-b border-slate-100 py-4 mb-12">
+        <div class="max-w-[1200px] mx-auto">
+          <DetailTabs
+            v-model="activeTab"
+            :tabs="tabs"
+          />
+        </div>
+      </div>
 
       <div class="min-h-[400px]">
         <!-- Overview Tab -->
@@ -77,7 +82,7 @@
             <!-- Event Identity Section -->
             <AppCard 
               id="section-detail"
-              class="!p-16 scroll-mt-10 border-slate-100"
+              class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm"
             >
               <div class="flex items-center justify-between mb-16">
                 <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
@@ -205,30 +210,95 @@
               </div>
             </AppCard>
 
-            <!-- Recipient Funds -->
+            <!-- Recipient Funds Section (Hybrid Concept) -->
             <AppCard 
               id="section-funds"
-              class="!p-16 scroll-mt-10 border-slate-100"
+              class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm"
             >
               <div class="flex items-center justify-between mb-12">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
-                  Recipient Funds
-                </h3>
-                <RouterLink
-                  :to="`/admin/funds/new?eventId=${event.id}`"
+                <div class="space-y-1">
+                  <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
+                    Step 02
+                  </h3>
+                  <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">
+                    Recipient Funds
+                  </h2>
+                </div>
+                <button
+                  type="button"
                   class="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors group"
+                  @click="handleAddFundClick"
                 >
                   <Plus class="w-4 h-4" />
                   <span class="text-[10px] font-black uppercase tracking-[0.2em]">Add Fund</span>
-                </RouterLink>
+                </button>
               </div>
-              <EventRecipientFundsList :event-id="event.id" />
+
+              <div class="space-y-16">
+                <!-- 1. Pending Additions (Inline Style) -->
+                <div v-if="newFunds.length > 0" class="space-y-16">
+                  <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-violet-600">Pending Additions</h4>
+                  <div 
+                    v-for="(fund, index) in newFunds" 
+                    :key="index"
+                    class="space-y-10 relative group pb-16 border-b border-slate-100 last:border-0"
+                  >
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      <AppInput
+                        v-model="fund.name"
+                        label="Fund Name"
+                        placeholder="e.g. Clean Water wells"
+                        required
+                      />
+                      <AppInput
+                        v-model="fund.targetAmount"
+                        type="number"
+                        label="Fund Target"
+                        placeholder="0.00"
+                        required
+                      >
+                        <template #prefix>
+                          <span class="text-slate-400 font-bold uppercase tracking-tighter">GHS</span>
+                        </template>
+                      </AppInput>
+                    </div>
+                    <AppInput
+                      v-model="fund.description"
+                      label="Description"
+                      placeholder="Short summary of this fund's purpose..."
+                    />
+                    <div class="flex items-center justify-between pt-4">
+                      <div class="flex items-center gap-3">
+                        <AppSwitch v-model="fund.isActive" />
+                        <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Fund Active</span>
+                      </div>
+                      <button 
+                        type="button"
+                        class="p-2 text-slate-300 hover:text-rose-500 transition-colors"
+                        @click="removeNewFund(index)"
+                      >
+                        <Trash2 class="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. Existing Operational Funds (View Style - Always Visible) -->
+                <div class="space-y-8">
+                  <div v-if="newFunds.length > 0" class="pt-8 border-t border-slate-100">
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Operational Records</h4>
+                  </div>
+                  <EventRecipientFundsList 
+                    :event-id="event.id" 
+                  />
+                </div>
+              </div>
             </AppCard>
 
             <!-- Event Images (Modern) -->
             <AppCard 
               id="section-images"
-              class="!p-16 scroll-mt-10 border-slate-100"
+              class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm"
             >
               <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">
                 Media & Branding
@@ -319,7 +389,7 @@
     </div>
 
     <!-- Inline Edit Actions -->
-    <StickyFormActions v-if="isEditing || hasMediaChanges">
+    <StickyFormActions v-if="isEditing || hasMediaChanges || newFunds.length > 0">
       <template #left>
         <div class="flex items-center gap-3">
           <div v-if="updateMutation.isPending.value" class="flex items-center gap-2">
@@ -391,13 +461,15 @@ const tabs = [
 ]
 
 const overviewSections = [
-  { id: 'section-detail', title: 'Event Detail', subtitle: 'Identity & Status' },
-  { id: 'section-funds', title: 'Recipient Funds', subtitle: 'Fund Management' },
-  { id: 'section-images', title: 'Media & Branding', subtitle: 'Images & Logos' },
+  { id: 'section-detail', title: 'Identity', subtitle: 'Step 01' },
+  { id: 'section-funds', title: 'Funds', subtitle: 'Step 02' },
+  { id: 'section-images', title: 'Branding', subtitle: 'Step 03' },
 ]
 
 const isEditing = ref(route.query.edit === 'true')
 const form = ref<UpdateEventInput | null>(null)
+const newFunds = ref<any[]>([])
+const isLoadingFunds = ref(false)
 
 const displayImageUrlProxy = ref('')
 const receiptLogoUrlProxy = ref('')
@@ -410,6 +482,25 @@ watchEffect(() => {
     visibilityProxy.value = event.value.isActive
   }
 })
+
+function addNewFund() {
+  newFunds.value.unshift({
+    name: '',
+    description: '',
+    targetAmount: 0,
+    isActive: true
+  })
+}
+
+function removeNewFund(index: number) {
+  newFunds.value.splice(index, 1)
+}
+
+async function handleAddFundClick() {
+  addNewFund()
+}
+
+// Removed the loose watchEffect for fund population as it is now handled deterministically in startEditing
 
 const hasMediaChanges = computed(() => {
   if (!event.value) return false
@@ -432,13 +523,34 @@ function resetForm() {
   }
 }
 
-function startEditing() {
+async function startEditing() {
   resetForm()
   isEditing.value = true
+  
+  // Deterministically populate funds for inline editing
+  if (event.value) {
+    isLoadingFunds.value = true
+    try {
+      const funds = await recipientFundsService.listByEvent(event.value.id)
+      editingFunds.value = funds.map(f => ({
+        id: f.id,
+        name: f.name,
+        description: f.description,
+        targetAmount: f.targetAmount,
+        isActive: true
+      }))
+    } catch (err) {
+      console.error('Failed to sync funds for editing:', err)
+      editingFunds.value = []
+    } finally {
+      isLoadingFunds.value = false
+    }
+  }
 }
 
 function cancelEditing() {
   isEditing.value = false
+  newFunds.value = []
   displayImageUrlProxy.value = event.value?.displayImageUrl || ''
   receiptLogoUrlProxy.value = event.value?.receiptLogoUrl || ''
   router.replace({ query: { ...route.query, edit: undefined } })
@@ -461,13 +573,31 @@ async function handleSave() {
   }
 
   try {
+    // 1. Update Event Identity
     await updateMutation.mutateAsync({
       id: eventId.value,
       payload: payload as UpdateEventInput
     })
+
+    // 2. Batch Create Pending Funds
+    if (newFunds.value.length > 0) {
+      await Promise.all(
+        newFunds.value.map(fund => 
+          recipientFundsService.create({
+            eventId: eventId.value,
+            name: fund.name,
+            description: fund.description || '',
+            targetAmount: fund.targetAmount
+          })
+        )
+      )
+    }
+
     isEditing.value = false
+    newFunds.value = []
     router.replace({ query: { ...route.query, edit: undefined } })
-    toast.success('Event details updated successfully')
+    toast.success('Campaign synchronized successfully')
+    query.refetch()
   } catch (err) {
     console.error('Failed to update event:', err)
     toast.error('Failed to save changes')

@@ -32,11 +32,11 @@
         </div>
       </div>
     </header>
-    <main>
+    <main class="max-w-3xl mx-auto px-6 py-12 md:py-24">
       <router-view v-slot="{ Component }">
         <transition 
-          enter-active-class="transition duration-500 ease-out" 
-          enter-from-class="opacity-0 translate-y-8" 
+          enter-active-class="transition duration-700 ease-out" 
+          enter-from-class="opacity-0 translate-y-12" 
           enter-to-class="opacity-100 translate-y-0"
           mode="out-in"
         >

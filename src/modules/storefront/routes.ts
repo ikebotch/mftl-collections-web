@@ -2,7 +2,8 @@ import type { RouteRecordRaw } from 'vue-router'
 
 export const storefrontRoutes: RouteRecordRaw[] = [
   {
-    path: '/contribute/:eventSlug',
+    path: '/give/:eventSlug',
+    alias: '/contribute/:eventSlug',
     component: () => import('@/surfaces/storefront/layouts/StorefrontLayout.vue'),
     children: [
       {

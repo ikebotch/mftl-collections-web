@@ -11,6 +11,8 @@ export interface CollectorProfileDto {
   hasAssignments: boolean
   blockedReason?: string | null
   eventIds: string[]
+  fundIds: string[]
+  phoneNumber?: string | null
 }
 
 export interface CollectorAssignedEventDto {
@@ -59,6 +61,7 @@ export interface CollectorProfile {
   id: string
   name: string
   email: string
+  phoneNumber: string
   status: string
   assignedEventCount: number
   assignedFundCount: number
@@ -68,6 +71,7 @@ export interface CollectorProfile {
   hasAssignments: boolean
   blockedReason: string
   eventIds: string[]
+  fundIds: string[]
 }
 
 export interface CollectorAssignedEvent {

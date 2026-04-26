@@ -15,6 +15,14 @@
             Export PDF
           </AppButton>
           <AppButton
+            variant="outline"
+            class="bg-transparent border-slate-200"
+            @click="exportToExcel"
+          >
+            <Download class="w-4 h-4 mr-2 text-slate-400" />
+            Export Excel
+          </AppButton>
+          <AppButton
             variant="primary"
             @click="router.push('/admin/events/new')"
           >
@@ -57,13 +65,27 @@
         v-model="searchQuery"
         placeholder="Search events by title..."
       >
-        <template #extra>
-          <div class="flex items-center gap-4">
-            <MultiSelectFilter
-              v-model="statusFilters"
-              label="Status"
-              :options="statusOptions"
-            />
+        <template #sections>
+          <div class="space-y-3">
+            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Campaign Status</label>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="opt in statusOptions" 
+                :key="opt.value"
+                class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border transition-all"
+                :class="statusFilters.includes(opt.value) ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
+                @click="toggleStatusFilter(opt.value)"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Date Range</label>
+            <div class="flex gap-2">
+              <input type="date" class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase" />
+              <input type="date" class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase" />
+            </div>
           </div>
         </template>
       </AdminFilterBar>
@@ -227,6 +249,15 @@ const statusFilters = ref<string[]>([])
 const sortKey = ref('title')
 const sortOrder = ref<'asc' | 'desc'>('asc')
 
+function toggleStatusFilter(status: string) {
+  const index = statusFilters.value.indexOf(status)
+  if (index > -1) {
+    statusFilters.value.splice(index, 1)
+  } else {
+    statusFilters.value.push(status)
+  }
+}
+
 const columns = [
   { key: 'title', label: 'Event', sortable: true, width: '45%' },
   { key: 'raised', label: 'Raised', sortable: false, width: '15%' },
@@ -324,7 +355,44 @@ function exportToPdf() {
   toast.info('Generating operational PDF report...')
   // Mock PDF export logic
   setTimeout(() => {
-    toast.success('Event list exported successfully')
+    toast.success('Event list exported to PDF successfully')
   }, 1500)
+}
+
+function exportToExcel() {
+  toast.info('Generating operational CSV ledger...')
+  
+  try {
+    const headers = ['Event', 'Raised', 'Funds', 'Team', 'Date', 'Status']
+    const rows = sortedEvents.value.map(e => [
+      e.title,
+      aggregateTotals([e]).replace(/ • /g, ' | '),
+      e.fundCount || 0,
+      e.collectorCount || 0,
+      e.eventDate ? formatDate(e.eventDate, 'yyyy-MM-dd') : 'N/A',
+      e.isActive ? 'Active' : 'Draft'
+    ])
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    
+    link.setAttribute('href', url)
+    link.setAttribute('download', `mftl-campaigns-${formatDate(new Date(), 'yyyy-MM-dd')}.csv`)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    
+    toast.success('Campaign ledger exported successfully')
+  } catch (err) {
+    console.error('Export failed:', err)
+    toast.error('Failed to generate export file')
+  }
 }
 </script>

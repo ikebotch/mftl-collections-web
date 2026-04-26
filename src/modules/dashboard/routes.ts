@@ -27,6 +27,11 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/modules/users/pages/UsersPage.vue'),
       },
       {
+        path: 'users/:id',
+        name: 'admin-users-detail',
+        component: () => import('@/modules/users/pages/AdminUserDetailPage.vue'),
+      },
+      {
         path: 'roles-permissions',
         name: 'admin-roles-permissions',
         component: () => import('@/modules/users/pages/RolesPermissionsPage.vue'),
@@ -70,6 +75,16 @@ export const adminRoutes: RouteRecordRaw[] = [
         path: 'collectors/new',
         name: 'admin-collectors-new',
         component: () => import('@/modules/collector/pages/CollectorCreatePage.vue'),
+      },
+      {
+        path: 'collectors/:id',
+        name: 'admin-collectors-detail',
+        component: () => import('@/modules/collector/pages/AdminCollectorDetailPage.vue'),
+      },
+      {
+        path: 'collectors/:id/edit',
+        name: 'admin-collectors-edit',
+        component: () => import('@/modules/collector/pages/CollectorEditPage.vue'),
       },
       {
         path: 'donors',

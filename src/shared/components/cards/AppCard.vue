@@ -1,11 +1,10 @@
 <template>
   <div
     :class="[
-      'border border-slate-200 transition-all duration-500 overflow-hidden',
-      !$attrs.class?.toString().includes('bg-') ? 'bg-transparent' : '',
-      padded ? 'p-8' : '',
-      rounded === '3xl' ? 'rounded-[2rem]' : (rounded === '2xl' ? 'rounded-[1.5rem]' : 'rounded-none'),
-      shadow ? 'shadow-soft' : 'shadow-none'
+      'border border-slate-200/60 transition-all duration-500 overflow-hidden bg-transparent',
+      padded ? 'p-12' : '',
+      rounded === '3xl' ? 'rounded-[2.5rem]' : (rounded === '2xl' ? 'rounded-[1.5rem]' : 'rounded-none'),
+      shadow ? 'shadow-premium' : 'shadow-none'
     ]"
   >
     <slot />
