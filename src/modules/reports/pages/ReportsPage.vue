@@ -137,7 +137,7 @@ import {
 } from 'lucide-vue-next'
 
 const query = useContributions()
-const contributions = computed(() => query.data.value || [])
+const contributions = computed(() => query.data.value?.items || [])
 const searchQuery = ref('')
 const timeRange = ref('30d')
 

@@ -12,11 +12,14 @@ export function useEvents(branchId?: MaybeRefOrGetter<string | undefined>) {
   })
 }
 
-export function useEvent(eventId: MaybeRefOrGetter<string>) {
+export function useEvent(eventId: MaybeRefOrGetter<string | undefined>) {
   return useQuery<Event, ApiError>({
     queryKey: ['events', eventId],
-    queryFn: () => eventsService.getById(toValue(eventId)),
-    enabled: computed(() => !!toValue(eventId)),
+    queryFn: () => eventsService.getById(toValue(eventId) as string),
+    enabled: () => {
+      const val = toValue(eventId)
+      return !!val && val !== 'undefined'
+    },
   })
 }
 

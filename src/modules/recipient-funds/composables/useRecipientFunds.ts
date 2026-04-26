@@ -10,11 +10,14 @@ export function useAllRecipientFunds() {
   })
 }
 
-export function useRecipientFund(id: string) {
+export function useRecipientFund(id: MaybeRefOrGetter<string | undefined>) {
   return useQuery<RecipientFund, ApiError>({
     queryKey: ['recipient-funds', id],
-    queryFn: () => recipientFundsService.getById(id),
-    enabled: Boolean(id),
+    queryFn: () => recipientFundsService.getById(toValue(id) as string),
+    enabled: () => {
+      const val = toValue(id)
+      return !!val && val !== 'undefined'
+    },
   })
 }
 
