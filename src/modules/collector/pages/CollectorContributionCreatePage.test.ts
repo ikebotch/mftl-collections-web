@@ -148,8 +148,13 @@ describe('CollectorContributionCreatePage', () => {
         amount: 150,
         contributorName: 'Ama Serwaa',
         contributorPhone: '+233241234567',
+        anonymous: false,
+        currency: 'GHS',
+        paymentMethod: 'cash',
+        contributorEmail: undefined,
+        note: '',
       }),
-      expect.anything()
+      undefined
     )
     expect(router.currentRoute.value.path).toBe('/collector/receipts/receipt-1')
   })

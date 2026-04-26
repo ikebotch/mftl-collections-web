@@ -10,6 +10,7 @@ export interface UserRow {
   scope: string
   phoneNumber?: string
   lastLoginAt?: string
+  isPlatformAdmin: boolean
 }
 
 export interface UserDetail extends UserRow {

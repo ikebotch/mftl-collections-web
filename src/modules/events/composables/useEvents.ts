@@ -2,10 +2,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { eventsService } from '../services/eventsService'
 import type { CreateEventInput, UpdateEventInput, Event } from '../types/event'
 import type { ApiError } from '@/core/api/apiError'
+import { useBranchStore } from '@/modules/branches/store/branchStore'
 
 export function useEvents() {
+  const branchStore = useBranchStore()
+  
   return useQuery<Event[], ApiError>({
-    queryKey: ['events'],
+    queryKey: ['events', { branchId: branchStore.selectedBranchId }],
     queryFn: () => eventsService.list(),
   })
 }

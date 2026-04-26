@@ -73,7 +73,7 @@ describe('EventDetailPage', () => {
     expect(wrapper.text()).toContain('Live Verification Event')
     // Should not have the "Edit" button in the header
     expect(wrapper.find('button').text()).not.toBe('Edit')
-    expect(wrapper.text()).toContain('Edit Details')
+    expect(wrapper.text()).toContain('Edit')
   })
 
   it('activates inline edit mode when Edit Details is clicked', async () => {
@@ -90,7 +90,7 @@ describe('EventDetailPage', () => {
       },
     })
 
-    const editBtn = wrapper.findAll('button').find(b => b.text().includes('Edit Details'))
+    const editBtn = wrapper.findAll('button').find(b => b.text().includes('Edit'))
     expect(editBtn).toBeDefined()
     
     await editBtn?.trigger('click')

@@ -8,7 +8,7 @@
   <ErrorState
     v-else-if="query.isError.value"
     title="Data Retrieval Failed"
-    :message="query.error.value?.message"
+    :message="query.error.value?.message || 'Sync failed'"
     show-retry
     @retry="query.refetch"
   />

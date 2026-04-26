@@ -94,7 +94,13 @@
               {{ row.name?.charAt(0) || 'U' }}
             </div>
             <div class="flex flex-col">
-              <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
+              <div class="flex items-center gap-2">
+                <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
+                <span 
+                  v-if="row.isPlatformAdmin" 
+                  class="px-1.5 py-0.5 rounded-md bg-violet-600 text-[8px] font-black text-white uppercase tracking-widest"
+                >Platform</span>
+              </div>
               <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ row.email }}</span>
             </div>
           </div>

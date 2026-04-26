@@ -72,10 +72,10 @@
             </div>
             <div class="min-w-0 flex-1">
               <p class="text-sm font-black truncate text-white tracking-tight">
-                {{ currentUser.name || 'Admin User' }}
+                {{ currentUser.name }}
               </p>
               <p class="text-[10px] text-slate-500 truncate uppercase tracking-widest font-black italic">
-                {{ currentUser.role || 'Super Admin' }}
+                {{ currentUser.role }}
               </p>
             </div>
             <button
@@ -165,8 +165,8 @@
               </div>
             </div>
             <div class="hidden sm:flex flex-col items-start text-left">
-              <span class="text-sm font-black text-slate-900 leading-none tracking-tight">{{ currentUser.name || 'Isaac Botchway' }}</span>
-              <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1.5 italic">System Administrator</span>
+              <span class="text-sm font-black text-slate-900 leading-none tracking-tight">{{ currentUser.name }}</span>
+              <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1.5 italic">{{ currentUser.role }}</span>
             </div>
             <ChevronDown class="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-600 transition-colors" />
           </button>

@@ -1,5 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import SettlementsPage from './SettlementsPage.vue'
 
 vi.mock('../composables/useSettlements', () => ({
@@ -12,6 +13,10 @@ vi.mock('../composables/useSettlements', () => ({
 }))
 
 describe('SettlementsPage', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders settlement status display', () => {
     const wrapper = mount(SettlementsPage)
     expect(wrapper.text()).toContain('Pending review')

@@ -34,7 +34,7 @@ export function useCurrentUser() {
         Array.isArray(auth0.user.value[roleClaim as keyof typeof auth0.user.value])
           ? auth0.user.value[roleClaim as keyof typeof auth0.user.value]?.[0]
           : undefined
-      ) ?? 'Admin',
+      ) ?? 'User',
     ),
   }))
 

@@ -509,10 +509,6 @@ import {
   Plus,
   Image as ImageIcon,
   Printer,
-  History,
-  LayoutDashboard,
-  Users,
-  Settings,
   Pencil,
   Trash2
 } from 'lucide-vue-next'
@@ -546,6 +542,7 @@ const overviewSections = [
 const isEditing = ref(route.query.edit === 'true')
 const form = ref<UpdateEventInput | null>(null)
 const newFunds = ref<any[]>([])
+const editingFunds = ref<any[]>([])
 const isLoadingFunds = ref(false)
 const isLoadingBranches = ref(true)
 const branchOptions = ref([])

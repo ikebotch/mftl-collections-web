@@ -25,35 +25,59 @@ function readStorage(key: string): string {
   return getStorage()?.getItem(key) ?? ''
 }
 
-export function readSelectedTenantId(): string {
-  return readStorage(TENANT_ID_KEY)
+export function readSelectedTenantIds(): string[] {
+  const stored = readStorage(TENANT_ID_KEY)
+  if (!stored) return []
+  if (stored.startsWith('[')) {
+    try {
+      return JSON.parse(stored)
+    } catch {
+      return [stored]
+    }
+  }
+  return [stored]
 }
 
 export const useTenantStore = defineStore('tenant', () => {
-  const selectedTenantId = ref(readSelectedTenantId())
+  const selectedTenantIds = ref<string[]>(readSelectedTenantIds())
+  
+  // For legacy/single selection compatibility
+  const selectedTenantId = computed(() => selectedTenantIds.value[0] ?? '')
   const selectedTenantName = ref(readStorage(TENANT_NAME_KEY))
-
-  const hasTenant = computed(() => Boolean(selectedTenantId.value))
+  const hasTenant = computed(() => selectedTenantIds.value.length > 0)
 
   function setTenant(id: string, name: string) {
-    selectedTenantId.value = id
+    selectedTenantIds.value = [id]
     selectedTenantName.value = name
     getStorage()?.setItem(TENANT_ID_KEY, id)
     getStorage()?.setItem(TENANT_NAME_KEY, name)
   }
 
+  function setTenants(ids: string[]) {
+    selectedTenantIds.value = ids
+    getStorage()?.setItem(TENANT_ID_KEY, JSON.stringify(ids))
+  }
+
   function clearTenant() {
-    selectedTenantId.value = ''
+    selectedTenantIds.value = []
     selectedTenantName.value = ''
     getStorage()?.removeItem(TENANT_ID_KEY)
     getStorage()?.removeItem(TENANT_NAME_KEY)
   }
 
   return {
+    selectedTenantIds,
     selectedTenantId,
     selectedTenantName,
     hasTenant,
     setTenant,
+    setTenants,
     clearTenant,
   }
 })
+
+// Helper for HTTP client
+export function readSelectedTenantId(): string {
+  const ids = readSelectedTenantIds()
+  return ids.join(',')
+}
