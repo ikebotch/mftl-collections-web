@@ -115,7 +115,7 @@
           >
             <!-- Status Circle -->
             <div 
-              class="w-2.5 h-2.5 shrink-0 rounded-full transition-all duration-500"
+              class="w-2.5 h-2.5 shrink-0 rounded-none transition-all duration-500"
               :class="[
                 row.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300',
                 'border border-white ring-1 ring-slate-100'

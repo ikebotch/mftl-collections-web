@@ -131,7 +131,7 @@
       >
         <!-- Read Mode -->
         <template v-if="!isEditing">
-          <section class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 flex flex-col items-center text-center">
+          <section class="p-8 rounded-none bg-slate-50 border border-slate-100 flex flex-col items-center text-center">
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
               Total Amount
             </p>
@@ -190,7 +190,7 @@
 
           <div
             v-if="selectedContribution.note"
-            class="p-6 rounded-2xl bg-amber-50 text-amber-700"
+            class="p-6 rounded-none bg-amber-50 text-amber-700"
           >
             <p class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-70">
               Note
@@ -209,7 +209,7 @@
               <input 
                 v-model="editForm.amount"
                 type="number" 
-                class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-50 outline-none transition-all font-black text-xl"
+                class="w-full p-4 rounded-none border border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-50 outline-none transition-all font-black text-xl"
               >
             </div>
 
@@ -218,7 +218,7 @@
               <input 
                 v-model="editForm.contributorName"
                 type="text" 
-                class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 outline-none transition-all font-bold"
+                class="w-full p-4 rounded-none border border-slate-200 focus:border-violet-500 outline-none transition-all font-bold"
               >
             </div>
 
@@ -226,7 +226,7 @@
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</label>
               <select 
                 v-model="editForm.status"
-                class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 outline-none transition-all font-bold appearance-none bg-white"
+                class="w-full p-4 rounded-none border border-slate-200 focus:border-violet-500 outline-none transition-all font-bold appearance-none bg-white"
               >
                 <option value="RecordedCash">
                   Recorded Cash
@@ -248,7 +248,7 @@
               <textarea 
                 v-model="editForm.note"
                 rows="4"
-                class="w-full p-4 rounded-xl border border-slate-200 focus:border-violet-500 outline-none transition-all font-medium"
+                class="w-full p-4 rounded-none border border-slate-200 focus:border-violet-500 outline-none transition-all font-medium"
                 placeholder="Internal audit notes..."
               />
             </div>
@@ -260,14 +260,14 @@
         <template v-if="!isEditing">
           <AppButton
             variant="primary"
-            class="flex-1 !rounded-xl shadow-premium"
+            class="flex-1 !rounded-none shadow-premium"
             @click="isEditing = true"
           >
             Edit Record
           </AppButton>
           <AppButton
             variant="outline"
-            class="!rounded-xl"
+            class="!rounded-none"
             @click="viewReceipt(selectedContribution!)"
           >
             Receipt
@@ -276,7 +276,7 @@
         <template v-else>
           <AppButton
             variant="primary"
-            class="flex-1 !rounded-xl shadow-premium"
+            class="flex-1 !rounded-none shadow-premium"
             :loading="updateMutation.isPending.value"
             @click="handleUpdate"
           >
@@ -284,7 +284,7 @@
           </AppButton>
           <AppButton
             variant="ghost"
-            class="!rounded-xl"
+            class="!rounded-none"
             @click="isEditing = false"
           >
             Cancel

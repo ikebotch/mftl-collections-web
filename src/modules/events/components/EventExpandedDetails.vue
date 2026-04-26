@@ -9,7 +9,7 @@
 
         <div class="flex items-center justify-between pr-4">
           <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
-            <div class="w-1.5 h-1.5 rounded-full bg-violet-500" />
+            <div class="w-1.5 h-1.5 rounded-none bg-violet-500" />
             Fund Distribution
           </h4>
           <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ funds.length }} Active Targets</span>
@@ -26,7 +26,7 @@
                 {{ fund.name }}
               </p>
               <div class="flex items-center gap-3 mt-3">
-                <div class="w-1 h-1 rounded-full bg-slate-200" />
+                <div class="w-1 h-1 rounded-none bg-slate-200" />
                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
                   {{ collectorMapping[fund.id]?.length || 0 }} Field Staff Assigned
                 </span>
@@ -70,7 +70,7 @@
 
         <div class="flex items-center justify-between pr-4">
           <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
-            <div class="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            <div class="w-1.5 h-1.5 rounded-none bg-amber-500" />
             Field Operations
           </h4>
           <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ combinedOperations.length }} Active Channels</span>
@@ -85,7 +85,7 @@
             <div class="flex items-center gap-5">
               <!-- Intensity Dot -->
               <div 
-                class="w-2.5 h-2.5 rounded-full shrink-0"
+                class="w-2.5 h-2.5 rounded-none shrink-0"
                 :class="[
                   op.type === 'staff' 
                     ? (op.status === 'Active' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]' : 'bg-slate-300')

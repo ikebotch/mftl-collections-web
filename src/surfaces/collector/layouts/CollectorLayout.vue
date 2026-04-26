@@ -12,7 +12,7 @@
             </h1>
           </div>
           <div class="flex items-center gap-2">
-            <div class="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+            <div class="rounded-none border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
               Mobile mode
             </div>
           </div>
@@ -24,7 +24,7 @@
       </main>
 
       <nav
-        class="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-md border-t border-white/10 bg-[#09101D]/95 px-3 pb-[max(env(safe-area-inset-bottom),0.9rem)] pt-3 backdrop-blur lg:static lg:mx-0 lg:mt-6 lg:max-w-none lg:rounded-[2rem] lg:border"
+        class="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-md border-t border-white/10 bg-[#09101D]/95 px-3 pb-[max(env(safe-area-inset-bottom),0.9rem)] pt-3 backdrop-blur lg:static lg:mx-0 lg:mt-6 lg:max-w-none lg:rounded-none lg:border"
         aria-label="Collector mobile navigation"
       >
         <div class="grid grid-cols-5 gap-2">
@@ -32,12 +32,12 @@
             v-for="item in navItems"
             :key="item.to"
             :to="item.to"
-            class="flex flex-col items-center gap-2 rounded-2xl px-2 py-2 text-[11px] font-medium text-slate-400 transition"
+            class="flex flex-col items-center gap-2 rounded-none px-2 py-2 text-[11px] font-medium text-slate-400 transition"
             active-class="text-violet-300"
           >
             <div
               :class="[
-                'flex h-12 w-12 items-center justify-center rounded-full border transition',
+                'flex h-12 w-12 items-center justify-center rounded-none border transition',
                 item.isPrimary
                   ? 'border-violet-400/50 bg-violet-500 text-white shadow-[0_10px_30px_rgba(124,58,237,0.45)]'
                   : 'border-white/10 bg-white/5',

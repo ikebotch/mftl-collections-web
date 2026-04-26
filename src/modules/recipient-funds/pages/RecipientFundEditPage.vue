@@ -25,7 +25,7 @@
         <div class="flex items-center gap-4">
           <div class="flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200">
             <div 
-              class="w-1.5 h-1.5 rounded-full"
+              class="w-1.5 h-1.5 rounded-none"
               :class="form.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
             />
             <span class="text-[9px] font-black text-slate-600 uppercase tracking-widest">{{ form.isActive ? 'Active' : 'Draft' }}</span>
@@ -148,7 +148,7 @@
         <div class="flex items-center gap-2">
           <div 
             v-if="updateMutation.isPending.value"
-            class="w-2 h-2 rounded-full bg-violet-600 animate-pulse"
+            class="w-2 h-2 rounded-none bg-violet-600 animate-pulse"
           />
           <span
             v-if="updateMutation.isPending.value"

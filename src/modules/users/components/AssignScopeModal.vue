@@ -18,8 +18,8 @@
           v-if="activeTab === 'system'"
           class="space-y-4 animate-in fade-in slide-in-from-left-4 duration-500"
         >
-          <div class="p-6 bg-slate-50 border border-slate-100 rounded-3xl flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-violet-600 flex items-center justify-center text-white shadow-lg shadow-violet-100">
+          <div class="p-6 bg-slate-50 border border-slate-100 rounded-none flex items-center gap-4">
+            <div class="w-12 h-12 rounded-none bg-violet-600 flex items-center justify-center text-white shadow-lg shadow-violet-100">
               <Globe class="w-6 h-6" />
             </div>
             <div>
@@ -42,7 +42,7 @@
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Organization</label>
               <select 
                 v-model="form.tenantId"
-                class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
+                class="w-full p-4 rounded-none bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
               >
                 <option value="">
                   Current Organization
@@ -60,7 +60,7 @@
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Branch (Optional)</label>
               <select 
                 v-model="form.branchId"
-                class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
+                class="w-full p-4 rounded-none bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
               >
                 <option value="">
                   Full Organization
@@ -86,7 +86,7 @@
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Select Event</label>
               <select 
                 v-model="form.eventId"
-                class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
+                class="w-full p-4 rounded-none bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
               >
                 <option value="">
                   Choose an event...
@@ -105,7 +105,7 @@
               <select 
                 v-model="form.fundId"
                 :disabled="!form.eventId"
-                class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all disabled:opacity-50"
+                class="w-full p-4 rounded-none bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all disabled:opacity-50"
               >
                 <option value="">
                   All Event Funds
@@ -130,7 +130,7 @@
               v-for="role in roles"
               :key="role"
               type="button"
-              class="p-4 rounded-2xl border text-left transition-all"
+              class="p-4 rounded-none border text-left transition-all"
               :class="form.roles.includes(role) 
                 ? 'border-violet-600 bg-violet-50 ring-1 ring-violet-600' 
                 : 'border-slate-100 bg-slate-50 hover:border-slate-200'"

@@ -1,10 +1,10 @@
 <template>
   <div 
-    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border"
+    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-[10px] font-black uppercase tracking-widest border"
     :class="statusClasses"
   >
     <span
-      class="w-1.5 h-1.5 rounded-full"
+      class="w-1.5 h-1.5 rounded-none"
       :class="dotClasses"
     />
     {{ status }}

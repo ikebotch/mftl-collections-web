@@ -26,7 +26,7 @@
               Collector ID: {{ query.data.value.profile.id.slice(0, 8) }}
             </p>
           </div>
-          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right">
+          <div class="rounded-none border border-white/10 bg-white/5 px-4 py-3 text-right">
             <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
               Sync
             </p>
@@ -36,9 +36,9 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between rounded-2xl border border-emerald-400/15 bg-emerald-400/8 px-4 py-3">
+        <div class="flex items-center justify-between rounded-none border border-emerald-400/15 bg-emerald-400/8 px-4 py-3">
           <div class="flex items-center gap-2 text-sm font-medium text-emerald-300">
-            <span class="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            <span class="h-2.5 w-2.5 rounded-none bg-emerald-400" />
             {{ query.data.value.syncStatusLabel }}
           </div>
           <p class="text-xs text-slate-400">
@@ -49,7 +49,7 @@
 
       <section
         v-if="!query.data.value.profile.hasAssignments"
-        class="rounded-[1.75rem] border border-amber-400/15 bg-amber-400/8 p-5"
+        class="rounded-none border border-amber-400/15 bg-amber-400/8 p-5"
       >
         <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-300">
           Collection blocked
@@ -63,7 +63,7 @@
       </section>
 
       <section class="grid grid-cols-2 gap-3">
-        <article class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+        <article class="rounded-none border border-white/10 bg-white/5 p-4">
           <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
             Today collected
           </p>
@@ -71,7 +71,7 @@
             {{ query.data.value.todayTotal }}
           </p>
         </article>
-        <article class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+        <article class="rounded-none border border-white/10 bg-white/5 p-4">
           <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
             Receipts issued
           </p>
@@ -79,7 +79,7 @@
             {{ query.data.value.receiptsIssued }}
           </p>
         </article>
-        <article class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+        <article class="rounded-none border border-white/10 bg-white/5 p-4">
           <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
             Assigned events
           </p>
@@ -87,7 +87,7 @@
             {{ query.data.value.assignedEvents }}
           </p>
         </article>
-        <article class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+        <article class="rounded-none border border-white/10 bg-white/5 p-4">
           <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
             Assigned funds
           </p>
@@ -98,7 +98,7 @@
       </section>
 
       <section class="space-y-3">
-        <article class="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
+        <article class="rounded-none border border-white/10 bg-white/5 p-5">
           <div class="flex items-center justify-between gap-3">
             <div>
               <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
@@ -108,13 +108,13 @@
                 {{ query.data.value.currentShiftLabel }}
               </h3>
             </div>
-            <span class="rounded-full bg-violet-500/20 px-3 py-1 text-xs font-semibold text-violet-200">
+            <span class="rounded-none bg-violet-500/20 px-3 py-1 text-xs font-semibold text-violet-200">
               {{ query.data.value.profile.status }}
             </span>
           </div>
         </article>
 
-        <article class="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
+        <article class="rounded-none border border-white/10 bg-white/5 p-5">
           <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
             Sync status
           </p>
@@ -128,7 +128,7 @@
       </section>
 
       <AppButton
-        class="!mt-1 w-full !rounded-[1.35rem] !py-4 text-base"
+        class="!mt-1 w-full !rounded-none !py-4 text-base"
         size="lg"
         :disabled="!query.data.value.profile.hasAssignments"
         @click="$router.push('/collector/contributions/new')"
@@ -152,7 +152,7 @@
 
         <div
           v-if="query.data.value.recentReceipts.length === 0"
-          class="rounded-[1.75rem] border border-dashed border-white/10 bg-white/[0.03] p-5 text-sm text-slate-300"
+          class="rounded-none border border-dashed border-white/10 bg-white/[0.03] p-5 text-sm text-slate-300"
         >
           No receipts issued yet.
         </div>
@@ -162,7 +162,7 @@
             v-for="receipt in query.data.value.recentReceipts"
             :key="receipt.id"
             type="button"
-            class="w-full rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 text-left"
+            class="w-full rounded-none border border-white/10 bg-white/[0.04] p-4 text-left"
             @click="$router.push(`/collector/receipts/${receipt.id}`)"
           >
             <div class="flex items-start justify-between gap-3">

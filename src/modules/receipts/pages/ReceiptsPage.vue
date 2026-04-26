@@ -7,7 +7,7 @@
       <template #actions>
         <AppButton
           variant="outline"
-          class="!rounded-xl bg-white shadow-sm border-slate-200"
+          class="!rounded-none bg-white shadow-sm border-slate-200"
         >
           <Download class="w-4 h-4 mr-2 text-slate-400" />
           Export Ledger
@@ -72,7 +72,7 @@
 
         <template #cell:contributorName="{ value }">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0 uppercase">
+            <div class="w-8 h-8 rounded-none bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0 uppercase">
               {{ getInitials(value) }}
             </div>
             <span class="text-sm font-black text-slate-900 tracking-tight truncate max-w-[150px]">
@@ -126,8 +126,8 @@
         v-if="selectedReceipt"
         class="space-y-10"
       >
-        <section class="p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100 flex flex-col items-center text-center">
-          <div class="w-20 h-20 rounded-3xl bg-white border border-slate-100 flex items-center justify-center text-2xl font-black text-slate-900 shadow-premium mb-6 uppercase">
+        <section class="p-8 rounded-none bg-slate-50 border border-slate-100 flex flex-col items-center text-center">
+          <div class="w-20 h-20 rounded-none bg-white border border-slate-100 flex items-center justify-center text-2xl font-black text-slate-900 shadow-premium mb-6 uppercase">
             {{ getInitials(selectedReceipt.contributorName) }}
           </div>
           <h3 class="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">
@@ -138,7 +138,7 @@
           </p>
           
           <div class="mt-10 grid grid-cols-2 gap-4 w-full">
-            <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-soft">
+            <div class="p-6 rounded-none bg-white border border-slate-100 shadow-soft">
               <h4 class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">
                 Amount
               </h4>
@@ -146,7 +146,7 @@
                 {{ selectedReceipt.amount }}
               </p>
             </div>
-            <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-soft">
+            <div class="p-6 rounded-none bg-white border border-slate-100 shadow-soft">
               <h4 class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">
                 Method
               </h4>
@@ -161,7 +161,7 @@
           <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2 italic">
             Audit Allocation
           </h4>
-          <div class="p-8 rounded-[2.5rem] border border-slate-100 bg-white space-y-6">
+          <div class="p-8 rounded-none border border-slate-100 bg-white space-y-6">
             <div class="flex items-center justify-between">
               <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Event</span>
               <span class="text-sm font-black text-slate-900 tracking-tight">{{ selectedReceipt.eventTitle }}</span>
@@ -180,14 +180,14 @@
       
       <template #actions>
         <AppButton
-          class="flex-1 !rounded-2xl !py-4"
+          class="flex-1 !rounded-none !py-4"
           variant="outline"
         >
           <Printer class="w-4 h-4 mr-3" />
           <span class="font-black uppercase tracking-widest text-[10px]">Print</span>
         </AppButton>
         <AppButton
-          class="flex-1 !rounded-2xl !py-4 shadow-premium"
+          class="flex-1 !rounded-none !py-4 shadow-premium"
           variant="primary"
         >
           <Download class="w-4 h-4 mr-3" />

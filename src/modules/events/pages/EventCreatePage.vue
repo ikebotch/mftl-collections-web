@@ -269,7 +269,7 @@
             v-if="isSubmitting"
             class="flex items-center gap-2"
           >
-            <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
+            <div class="w-2 h-2 rounded-none bg-slate-900 animate-pulse" />
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Publishing Event...</span>
           </div>
         </div>
@@ -284,6 +284,17 @@
         {{ form.status === 'Live' ? 'Create & Publish' : 'Save Event' }}
       </AppButton>
     </StickyFormActions>
+
+    <!-- Context Validation Warning -->
+    <div 
+      v-if="isPlatformAdmin && !tenantStore.selectedTenantId"
+      class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 animate-bounce"
+    >
+      <div class="bg-amber-500 text-white px-6 py-3 rounded-none shadow-2xl flex items-center gap-3 border-2 border-white/20 backdrop-blur-md">
+        <AlertTriangle class="w-5 h-5" />
+        <span class="text-xs font-black uppercase tracking-widest">Select an Organisation context first</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -305,9 +316,17 @@ import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import { Plus, Trash2, Image as ImageIcon, Printer } from 'lucide-vue-next'
 
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+import { useMe } from '@/modules/users/composables/useUsers'
+import { Plus, Trash2, Image as ImageIcon, Printer, AlertTriangle } from 'lucide-vue-next'
+
 const router = useRouter()
 const toast = useToastStore()
+const tenantStore = useTenantStore()
+const { data: me } = useMe()
 const createEventMutation = useCreateEvent()
+
+const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
 
 const steps = [
   { id: 'section-basics', title: 'Basics', subtitle: 'Title & Identity' },
@@ -373,6 +392,11 @@ function handleCancel() {
 }
 
 async function submit() {
+  if (isPlatformAdmin.value && !tenantStore.selectedTenantId) {
+    toast.error('Strategic Context Missing: Select an organization before publishing.')
+    return
+  }
+
   if (!form.title || !form.slug || !form.branchId) {
     toast.error('Please complete all required fields, including the Operational Branch')
     return

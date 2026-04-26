@@ -1,23 +1,22 @@
+import { toValue, computed, type MaybeRefOrGetter } from 'vue'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { eventsService } from '../services/eventsService'
 import type { CreateEventInput, UpdateEventInput, Event } from '../types/event'
 import type { ApiError } from '@/core/api/apiError'
 import { useBranchStore } from '@/modules/branches/store/branchStore'
 
-export function useEvents() {
-  const branchStore = useBranchStore()
-  
+export function useEvents(branchId?: MaybeRefOrGetter<string | undefined>) {
   return useQuery<Event[], ApiError>({
-    queryKey: ['events', { branchId: branchStore.selectedBranchId }],
+    queryKey: ['events', { branchId }],
     queryFn: () => eventsService.list(),
   })
 }
 
-export function useEvent(eventId: string) {
+export function useEvent(eventId: MaybeRefOrGetter<string>) {
   return useQuery<Event, ApiError>({
     queryKey: ['events', eventId],
-    queryFn: () => eventsService.getById(eventId),
-    enabled: Boolean(eventId),
+    queryFn: () => eventsService.getById(toValue(eventId)),
+    enabled: computed(() => !!toValue(eventId)),
   })
 }
 

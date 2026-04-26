@@ -37,9 +37,24 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/modules/users/pages/RolesPermissionsPage.vue'),
       },
       {
+        path: 'organization',
+        name: 'admin-organization',
+        component: () => import('@/modules/tenants/pages/OrganizationListPage.vue'),
+      },
+      {
+        path: 'organization/new',
+        name: 'admin-organization-new',
+        component: () => import('@/modules/tenants/pages/OrganizationCreatePage.vue'),
+      },
+      {
+        path: 'organization/:id',
+        name: 'admin-organization-detail',
+        component: () => import('@/modules/tenants/pages/OrganizationDetailPage.vue'),
+      },
+      {
         path: 'settings',
         name: 'admin-settings',
-        component: () => import('@/modules/tenants/pages/TenantSettingsPage.vue'),
+        component: () => import('@/modules/users/pages/UserSettingsPage.vue'),
       },
       {
         path: 'branches',

@@ -7,7 +7,7 @@
       <template #actions>
         <AppButton
           variant="primary"
-          class="!rounded-xl shadow-premium"
+          class="!rounded-none shadow-premium"
           @click="isInviteModalOpen = true"
         >
           <UserPlus class="w-4 h-4 mr-2" /> Invite System User
@@ -90,7 +90,7 @@
       >
         <template #cell:user="{ row }">
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-black text-slate-400 uppercase">
+            <div class="w-10 h-10 rounded-none bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-black text-slate-400 uppercase">
               {{ row.name?.charAt(0) || 'U' }}
             </div>
             <div class="flex flex-col">
@@ -98,7 +98,7 @@
                 <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
                 <span 
                   v-if="row.isPlatformAdmin" 
-                  class="px-1.5 py-0.5 rounded-md bg-violet-600 text-[8px] font-black text-white uppercase tracking-widest"
+                  class="px-1.5 py-0.5 rounded-none bg-violet-600 text-[8px] font-black text-white uppercase tracking-widest"
                 >Platform</span>
               </div>
               <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ row.email }}</span>
@@ -120,7 +120,7 @@
         <template #cell:inviteState="{ value }">
           <div class="flex items-center gap-2">
             <div 
-              class="w-1.5 h-1.5 rounded-full" 
+              class="w-1.5 h-1.5 rounded-none" 
               :class="value === 'Accepted' ? 'bg-emerald-500' : (value === 'Pending' ? 'bg-amber-500' : 'bg-slate-300')"
             />
             <span class="text-[10px] font-black uppercase tracking-widest text-slate-600">

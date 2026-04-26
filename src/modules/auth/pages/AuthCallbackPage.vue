@@ -32,11 +32,28 @@ watch([isLoading, isAuthenticated], ([loading]) => {
 
 <template>
   <main class="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-50">
-    <div class="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl shadow-slate-950/40">
-      <div v-if="!error" class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-slate-300/20 border-t-teal-300" />
-      <div v-else class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/20 text-red-400">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    <div class="w-full max-w-md rounded-none border border-white/10 bg-white/5 p-8 text-center shadow-2xl shadow-slate-950/40">
+      <div
+        v-if="!error"
+        class="mx-auto mb-4 h-12 w-12 animate-spin rounded-none border-4 border-slate-300/20 border-t-teal-300"
+      />
+      <div
+        v-else
+        class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-none bg-red-500/20 text-red-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
         </svg>
       </div>
 
@@ -47,10 +64,13 @@ watch([isLoading, isAuthenticated], ([loading]) => {
         {{ error ? error.message : 'Your secure session is being prepared. You’ll be redirected in a moment.' }}
       </p>
 
-      <div v-if="error" class="mt-6">
+      <div
+        v-if="error"
+        class="mt-6"
+      >
         <button 
+          class="rounded-none bg-white px-6 py-2 text-sm font-bold text-slate-950 transition hover:bg-slate-200"
           @click="router.replace('/auth/login')"
-          class="rounded-xl bg-white px-6 py-2 text-sm font-bold text-slate-950 transition hover:bg-slate-200"
         >
           Back to Login
         </button>

@@ -25,12 +25,12 @@
     
     <template v-else-if="query.data.value">
       <!-- Tabs -->
-      <div class="grid grid-cols-2 gap-2 rounded-2xl border border-white/5 bg-white/[0.03] p-1.5">
+      <div class="grid grid-cols-2 gap-2 rounded-none border border-white/5 bg-white/[0.03] p-1.5">
         <button
           v-for="tab in ['events', 'funds']"
           :key="tab"
           type="button"
-          class="rounded-xl py-3 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300"
+          class="rounded-none py-3 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300"
           :class="activeTab === tab ? 'bg-violet-600 text-white shadow-premium' : 'text-slate-500 hover:text-slate-300'"
           @click="activeTab = tab as any"
         >
@@ -41,9 +41,9 @@
       <!-- Assignments Status -->
       <div
         v-if="!query.data.value.hasAssignments"
-        class="rounded-3xl border border-amber-500/20 bg-amber-500/10 p-6 flex gap-4 items-start"
+        class="rounded-none border border-amber-500/20 bg-amber-500/10 p-6 flex gap-4 items-start"
       >
-        <div class="w-10 h-10 rounded-2xl bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
+        <div class="w-10 h-10 rounded-none bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
           <AlertTriangle class="w-6 h-6" />
         </div>
         <div>
@@ -63,7 +63,7 @@
       >
         <div
           v-if="query.data.value.events.length === 0"
-          class="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
+          class="rounded-none border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
         >
           <Calendar class="w-12 h-12 text-slate-700 mx-auto mb-4" />
           <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">
@@ -77,12 +77,12 @@
           class="relative overflow-hidden active:scale-[0.98] transition-all duration-200 group"
           @click="router.push(`/collector/contributions/new?eventId=${event.id}`)"
         >
-          <div class="p-5 rounded-[2.5rem] bg-white/[0.03] border border-white/5 flex gap-5 items-center">
-            <div class="relative h-24 w-24 shrink-0 overflow-hidden rounded-[2rem] bg-slate-900 border border-white/10 flex items-center justify-center">
+          <div class="p-5 rounded-none bg-white/[0.03] border border-white/5 flex gap-5 items-center">
+            <div class="relative h-24 w-24 shrink-0 overflow-hidden rounded-none bg-slate-900 border border-white/10 flex items-center justify-center">
               <Calendar class="w-10 h-10 text-slate-800" />
               <div class="absolute inset-0 bg-gradient-to-br from-violet-600/20 to-cyan-500/20" />
               <div
-                class="absolute bottom-2 right-2 w-3 h-3 rounded-full border-2 border-slate-900"
+                class="absolute bottom-2 right-2 w-3 h-3 rounded-none border-2 border-slate-900"
                 :class="event.status.toLowerCase() === 'live' ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'bg-amber-400'"
               />
             </div>
@@ -97,7 +97,7 @@
                     {{ event.title }}
                   </h3>
                 </div>
-                <div class="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center text-white/40 group-hover:text-white group-hover:bg-violet-600 transition-all">
+                <div class="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center text-white/40 group-hover:text-white group-hover:bg-violet-600 transition-all">
                   <ChevronRight class="w-6 h-6" />
                 </div>
               </div>
@@ -114,7 +114,7 @@
               </div>
 
               <div class="mt-4 flex items-center gap-2">
-                <div class="px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-slate-400">
+                <div class="px-3 py-1 rounded-none bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-slate-400">
                   {{ event.assignedFundCount }} Assigned Funds
                 </div>
               </div>
@@ -130,7 +130,7 @@
       >
         <div
           v-if="query.data.value.funds.length === 0"
-          class="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
+          class="rounded-none border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
         >
           <LayoutGrid class="w-12 h-12 text-slate-700 mx-auto mb-4" />
           <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">
@@ -144,8 +144,8 @@
           class="relative group active:scale-[0.98] transition-transform duration-200"
           @click="router.push(`/collector/contributions/new?eventId=${fund.eventId}&fundId=${fund.id}`)"
         >
-          <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2rem] blur opacity-0 group-hover:opacity-20 transition duration-500" />
-          <div class="relative rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-none blur opacity-0 group-hover:opacity-20 transition duration-500" />
+          <div class="relative rounded-none border border-white/10 bg-white/[0.04] p-6">
             <div class="flex items-center justify-between gap-4 mb-4">
               <h3 class="text-xl font-black text-white truncate">
                 {{ fund.name }}
@@ -155,9 +155,9 @@
               </div>
             </div>
             
-            <div class="h-2 w-full bg-white/5 rounded-full overflow-hidden mb-4">
+            <div class="h-2 w-full bg-white/5 rounded-none overflow-hidden mb-4">
               <div 
-                class="h-full bg-gradient-to-r from-violet-600 to-cyan-400 rounded-full transition-all duration-1000"
+                class="h-full bg-gradient-to-r from-violet-600 to-cyan-400 rounded-none transition-all duration-1000"
                 :style="{ width: `${fund.progress}%` }"
               />
             </div>

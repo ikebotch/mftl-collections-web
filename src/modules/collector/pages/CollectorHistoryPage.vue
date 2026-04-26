@@ -10,9 +10,9 @@
     </header>
 
     <!-- Daily Summary -->
-    <div class="relative overflow-hidden p-8 rounded-[2.5rem] bg-gradient-to-br from-violet-600 to-indigo-700 shadow-premium group">
+    <div class="relative overflow-hidden p-8 rounded-none bg-gradient-to-br from-violet-600 to-indigo-700 shadow-premium group">
       <!-- Decorative glow -->
-      <div class="absolute -top-24 -right-24 w-48 h-48 bg-cyan-400/20 rounded-full blur-[80px]" />
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-cyan-400/20 rounded-none blur-[80px]" />
        
       <div class="relative z-10 flex items-center justify-between">
         <div>
@@ -23,23 +23,23 @@
             {{ formatCurrency(dailyTotal, 'GHS') }}
           </p>
           <div class="mt-4 flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded-md bg-white/10 text-[9px] font-black text-white uppercase tracking-widest">
+            <span class="px-2 py-0.5 rounded-none bg-white/10 text-[9px] font-black text-white uppercase tracking-widest">
               {{ query.data.value?.length || 0 }} Receipts
             </span>
           </div>
         </div>
-        <div class="w-14 h-14 rounded-3xl bg-white/10 flex items-center justify-center text-white border border-white/10">
+        <div class="w-14 h-14 rounded-none bg-white/10 flex items-center justify-center text-white border border-white/10">
           <Wallet class="w-7 h-7" />
         </div>
       </div>
     </div>
 
     <!-- Filters -->
-    <div class="flex gap-2 p-1.5 rounded-2xl bg-white/[0.03] border border-white/5 overflow-x-auto no-scrollbar">
+    <div class="flex gap-2 p-1.5 rounded-none bg-white/[0.03] border border-white/5 overflow-x-auto no-scrollbar">
       <button 
         v-for="filter in filters" 
         :key="filter.value"
-        class="px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all duration-300"
+        class="px-6 py-3 rounded-none text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all duration-300"
         :class="activeFilter === filter.value ? 'bg-white/10 text-white shadow-soft' : 'text-slate-500 hover:text-slate-300'"
         @click="activeFilter = filter.value"
       >
@@ -64,7 +64,7 @@
     <template v-else>
       <div
         v-if="filteredReceipts.length === 0"
-        class="rounded-[2rem] border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
+        class="rounded-none border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
       >
         <FileText class="w-12 h-12 text-slate-700 mx-auto mb-4" />
         <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">
@@ -82,13 +82,13 @@
           class="relative group active:scale-[0.98] transition-transform duration-200"
           @click="router.push(`/collector/receipts/${receipt.id}`)"
         >
-          <div class="relative p-6 rounded-[2rem] border border-white/10 bg-white/[0.04] flex justify-between items-center group-hover:bg-white/[0.06] transition-colors">
+          <div class="relative p-6 rounded-none border border-white/10 bg-white/[0.04] flex justify-between items-center group-hover:bg-white/[0.06] transition-colors">
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 mb-1.5">
                 <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
                   {{ receipt.receiptNumber }}
                 </p>
-                <div class="w-1 h-1 rounded-full bg-slate-700" />
+                <div class="w-1 h-1 rounded-none bg-slate-700" />
                 <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
                   {{ receipt.issuedAt.split(',')[0] }}
                 </p>
@@ -106,7 +106,7 @@
                 :status="receipt.status"
                 class="scale-90 origin-right"
               />
-              <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-600 group-hover:text-white transition-colors">
+              <div class="w-8 h-8 rounded-none bg-white/5 flex items-center justify-center text-slate-600 group-hover:text-white transition-colors">
                 <ChevronRight class="w-5 h-5" />
               </div>
             </div>

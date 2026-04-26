@@ -12,7 +12,7 @@
         :key="option.value"
         type="button"
         :class="[
-          'rounded-3xl border p-6 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500',
+          'rounded-none border p-6 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500',
           flowStore.draft.paymentMethod === option.value ? 'border-teal-500 bg-teal-50' : 'border-slate-200 bg-white',
         ]"
         @click="flowStore.patch({ paymentMethod: option.value })"

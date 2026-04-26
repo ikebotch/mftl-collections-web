@@ -14,7 +14,7 @@
       v-if="selected"
       class="absolute top-0 right-0 p-4"
     >
-      <div class="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/20">
+      <div class="w-6 h-6 rounded-none bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/20">
         <span class="text-white text-[10px]">✓</span>
       </div>
     </div>

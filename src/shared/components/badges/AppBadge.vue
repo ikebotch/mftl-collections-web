@@ -17,7 +17,7 @@ const props = withDefaults(
 )
 
 const classes = computed(() => {
-  const base = 'inline-flex items-center rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors duration-300'
+  const base = 'inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors duration-300'
   const toneMap = {
     neutral: 'bg-slate-100 text-slate-500 border border-slate-200',
     success: 'bg-emerald-50 text-emerald-600 border border-emerald-100',

@@ -10,7 +10,7 @@
       <AppCard class="md:col-span-2 !p-10 bg-slate-900 text-white overflow-hidden relative">
         <div class="relative z-10 space-y-6">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-md">
+            <div class="w-10 h-10 rounded-none bg-white/10 flex items-center justify-center backdrop-blur-md">
               <ShieldCheck class="w-5 h-5 text-emerald-400" />
             </div>
             <div>
@@ -104,13 +104,13 @@
               >
                 <div
                   v-if="role.permissions.includes(feature.key) || role.permissions.includes('all_access')"
-                  class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100"
+                  class="inline-flex items-center justify-center w-6 h-6 rounded-none bg-emerald-50 text-emerald-600 border border-emerald-100"
                 >
                   <Check class="w-3.5 h-3.5" />
                 </div>
                 <div
                   v-else
-                  class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-50 text-slate-200 border border-slate-100"
+                  class="inline-flex items-center justify-center w-6 h-6 rounded-none bg-slate-50 text-slate-200 border border-slate-100"
                 >
                   <Minus class="w-3.5 h-3.5" />
                 </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="py-32 flex flex-col items-center justify-center space-y-4">
-    <div class="w-12 h-12 rounded-2xl bg-violet-50 flex items-center justify-center animate-spin">
+    <div class="w-12 h-12 rounded-none bg-violet-50 flex items-center justify-center animate-spin">
       <Loader2 class="w-6 h-6 text-violet-600" />
     </div>
     <p class="text-xs font-black text-slate-400 uppercase tracking-widest">

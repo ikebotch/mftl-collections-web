@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm shadow-slate-200/50">
+  <div class="bg-white rounded-none border border-slate-100 p-6 shadow-sm shadow-slate-200/50">
     <div class="flex items-center justify-between mb-6">
       <h3 class="text-xs font-black text-slate-900 uppercase tracking-[0.2em]">
         {{ title }}

@@ -146,7 +146,7 @@
             v-if="isSubmitting"
             class="flex items-center gap-2"
           >
-            <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
+            <div class="w-2 h-2 rounded-none bg-slate-900 animate-pulse" />
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Initializing Hub...</span>
           </div>
         </div>
@@ -161,11 +161,22 @@
         Initialize Hub
       </AppButton>
     </StickyFormActions>
+
+    <!-- Context Validation Warning -->
+    <div 
+      v-if="isPlatformAdmin && !tenantStore.selectedTenantId"
+      class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 animate-bounce"
+    >
+      <div class="bg-amber-500 text-white px-6 py-3 rounded-none shadow-2xl flex items-center gap-3 border-2 border-white/20 backdrop-blur-md">
+        <AlertTriangle class="w-5 h-5" />
+        <span class="text-xs font-black uppercase tracking-widest">Select an Organisation context first</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCreateBranch } from '../composables/useBranches'
 import { useToastStore } from '@/shared/stores/useToastStore'
@@ -173,11 +184,18 @@ import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+import { useMe } from '@/modules/users/composables/useUsers'
+import { AlertTriangle } from 'lucide-vue-next'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 
 const router = useRouter()
 const toast = useToastStore()
+const tenantStore = useTenantStore()
+const { data: me } = useMe()
 const createBranchMutation = useCreateBranch()
+
+const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
 
 const steps = [
   { id: 'section-identity', title: 'Identity', subtitle: 'Designation & IDs' },
@@ -199,6 +217,11 @@ function handleCancel() {
 }
 
 async function submit() {
+  if (isPlatformAdmin.value && !tenantStore.selectedTenantId) {
+    toast.error('Strategic Context Missing: Select an organization before initializing hub.')
+    return
+  }
+
   if (!form.name || !form.identifier || !form.location) {
     toast.error('Strategic parameters missing. Please complete all fields.')
     return

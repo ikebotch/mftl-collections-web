@@ -110,7 +110,7 @@
         class="space-y-10"
       >
         <section class="flex flex-col items-center text-center">
-          <div class="w-24 h-24 rounded-[2.5rem] bg-slate-900 text-white flex items-center justify-center text-3xl font-black mb-6 shadow-premium">
+          <div class="w-24 h-24 rounded-none bg-slate-900 text-white flex items-center justify-center text-3xl font-black mb-6 shadow-premium">
             {{ selectedDonor.name.charAt(0) }}
           </div>
           <h3 class="text-2xl font-black text-slate-900">
@@ -183,10 +183,10 @@
             <div
               v-for="n in 3"
               :key="n"
-              class="p-4 rounded-2xl border border-slate-100 bg-white flex items-center justify-between opacity-50"
+              class="p-4 rounded-none border border-slate-100 bg-white flex items-center justify-between opacity-50"
             >
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                <div class="w-8 h-8 rounded-none bg-slate-100 flex items-center justify-center">
                   <FileText class="w-4 h-4 text-slate-400" />
                 </div>
                 <div>
@@ -207,13 +207,13 @@
       <template #actions>
         <AppButton
           variant="primary"
-          class="flex-1 !rounded-xl shadow-premium"
+          class="flex-1 !rounded-none shadow-premium"
         >
           Send Thank-you Note
         </AppButton>
         <AppButton
           variant="outline"
-          class="!rounded-xl"
+          class="!rounded-none"
         >
           Export History
         </AppButton>

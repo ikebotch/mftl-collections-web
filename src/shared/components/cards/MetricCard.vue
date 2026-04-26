@@ -2,12 +2,12 @@
   <AppCard
     rounded="2xl"
     shadow
-    class="relative overflow-hidden group hover:shadow-premium transition-all duration-500 border border-slate-100/50"
+    class="relative overflow-hidden group hover:shadow-premium transition-all duration-500 border border-slate-100/50 rounded-none"
   >
     <div class="p-6">
       <div class="flex items-center justify-between mb-4">
         <div 
-          class="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 shadow-soft"
+          class="w-12 h-12 rounded-xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 shadow-soft"
           :class="colorClasses"
         >
           <component
@@ -17,7 +17,7 @@
         </div>
         <div 
           v-if="trend"
-          class="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest"
+          class="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
           :class="trendPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'"
         >
           <span>{{ trendPositive ? '↑' : '↓' }}</span>

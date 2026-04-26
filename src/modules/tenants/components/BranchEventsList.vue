@@ -31,7 +31,7 @@
           @click="router.push(`/admin/events/${row.id}`)"
         >
           <div 
-            class="w-2 h-2 shrink-0 rounded-full"
+            class="w-2 h-2 shrink-0 rounded-none"
             :class="row.isActive ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'"
           />
           <div class="min-w-0">
