@@ -47,6 +47,11 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/modules/tenants/pages/BranchListPage.vue'),
       },
       {
+        path: 'branches/new',
+        name: 'admin-branches-new',
+        component: () => import('@/modules/tenants/pages/BranchCreatePage.vue'),
+      },
+      {
         path: 'branches/:id',
         name: 'admin-branches-detail',
         component: () => import('@/modules/tenants/pages/BranchDetailPage.vue'),

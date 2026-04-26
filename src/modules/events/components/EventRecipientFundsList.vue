@@ -87,11 +87,17 @@
         </div>
 
         <!-- View Mode -->
-        <div v-else class="p-6">
+        <div
+          v-else
+          class="p-6"
+        >
           <div class="flex items-start justify-between mb-6">
             <div class="space-y-1.5">
               <div class="flex items-center gap-2">
-                <p class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none max-w-[200px] truncate" :title="fund.name">
+                <p
+                  class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none max-w-[200px] truncate"
+                  :title="fund.name"
+                >
                   {{ fund.name }}
                 </p>
                 <button 

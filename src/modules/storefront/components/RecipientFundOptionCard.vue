@@ -31,8 +31,12 @@
       
       <div class="flex items-center gap-4 pt-4 border-t border-slate-50">
         <div class="space-y-0.5">
-          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Target Amount</p>
-          <p class="text-sm font-black text-slate-900 tracking-tight">{{ amount }}</p>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+            Target Amount
+          </p>
+          <p class="text-sm font-black text-slate-900 tracking-tight">
+            {{ amount }}
+          </p>
         </div>
       </div>
     </div>

@@ -18,10 +18,10 @@
           v-if="imageUrl" 
           :src="imageUrl" 
           class="w-full h-full object-cover"
-        />
+        >
         <component 
-          v-else
-          :is="icon" 
+          :is="icon"
+          v-else 
           class="w-4 h-4" 
           :class="[
             isAssigned ? 'text-violet-600' : 'text-slate-400',
@@ -49,7 +49,10 @@
             {{ badge }}
           </span>
         </div>
-        <p v-if="subtitle" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+        <p
+          v-if="subtitle"
+          class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none"
+        >
           {{ subtitle }}
         </p>
       </div>
@@ -63,12 +66,18 @@
         :class="isAssigned ? 'text-rose-500 hover:text-rose-600' : 'text-violet-600 hover:text-violet-700'"
         @click="$emit('action')"
       >
-        <component :is="actionIcon" class="w-4 h-4" />
+        <component
+          :is="actionIcon"
+          class="w-4 h-4"
+        />
         <span class="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:inline">
           {{ actionLabel }}
         </span>
       </button>
-      <div v-else-if="isAssigned && !isEditing" class="flex items-center gap-2 text-emerald-500">
+      <div
+        v-else-if="isAssigned && !isEditing"
+        class="flex items-center gap-2 text-emerald-500"
+      >
         <Check class="w-4 h-4" />
         <span class="text-[9px] font-black uppercase tracking-widest">Active Scope</span>
       </div>

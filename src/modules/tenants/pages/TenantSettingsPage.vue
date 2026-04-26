@@ -147,8 +147,12 @@
                 <Building2 class="w-7 h-7 text-violet-600" />
               </div>
               <div>
-                <h3 class="text-lg font-black text-slate-900 tracking-tight uppercase leading-none">Branch Infrastructure</h3>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 leading-none">Regional hub deployment and operational management.</p>
+                <h3 class="text-lg font-black text-slate-900 tracking-tight uppercase leading-none">
+                  Branch Infrastructure
+                </h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 leading-none">
+                  Regional hub deployment and operational management.
+                </p>
               </div>
             </div>
             <AppButton 

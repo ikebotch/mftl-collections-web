@@ -24,13 +24,20 @@
       title="Regional Hub Unit Inventory"
     >
       <template #cell:name="{ row }">
-        <RouterLink :to="`/admin/branches/${row.id}`" class="flex items-center gap-5 group/link">
+        <RouterLink
+          :to="`/admin/branches/${row.id}`"
+          class="flex items-center gap-5 group/link"
+        >
           <div class="w-12 h-12 bg-white border border-slate-100 flex items-center justify-center shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)] group-hover:border-violet-200 transition-colors">
             <Building2 class="w-5 h-5 text-slate-400 group-hover:text-violet-500 transition-colors" />
           </div>
           <div>
-            <p class="text-[14px] font-black text-slate-900 tracking-tight leading-none uppercase group-hover/link:text-violet-600 transition-colors">{{ row.name }}</p>
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-2 italic">Regional Hub Unit</p>
+            <p class="text-[14px] font-black text-slate-900 tracking-tight leading-none uppercase group-hover/link:text-violet-600 transition-colors">
+              {{ row.name }}
+            </p>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-2 italic">
+              Regional Hub Unit
+            </p>
           </div>
         </RouterLink>
       </template>
@@ -112,10 +119,7 @@ async function fetchBranches() {
 }
 
 function openCreateModal() {
-  // We'll eventually move create to a page too, but for now we can still use a modal or a separate route
-  // For now, let's keep it simple or redirect to a 'new' route if desired.
-  // The user only asked about the 'edit feature' being in place.
-  toast.info('New Hub deployment flow pending...');
+  router.push('/admin/branches/new');
 }
 
 async function confirmDelete(branch) {

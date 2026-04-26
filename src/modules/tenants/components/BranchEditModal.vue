@@ -5,7 +5,11 @@
     :subtitle="branch ? 'Update operational hub parameters' : 'Initialize a new regional office'"
     @close="$emit('close')"
   >
-    <form id="branch-form" @submit.prevent="saveBranch" class="space-y-10">
+    <form
+      id="branch-form"
+      class="space-y-10"
+      @submit.prevent="saveBranch"
+    >
       <div class="grid grid-cols-2 gap-10">
         <AppInput
           v-model="form.name"

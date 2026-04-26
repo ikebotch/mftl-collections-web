@@ -1,6 +1,9 @@
 <template>
   <div class="space-y-4">
-    <label v-if="label" class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">
+    <label
+      v-if="label"
+      class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1"
+    >
       {{ label }}
     </label>
     
@@ -15,9 +18,17 @@
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           @error="handleError"
         >
-        <div v-else class="flex flex-col items-center gap-3 text-slate-300">
-          <component :is="icon" class="w-10 h-10 stroke-[1.5]" />
-          <p class="text-[10px] font-black uppercase tracking-widest">Click to set image URL</p>
+        <div
+          v-else
+          class="flex flex-col items-center gap-3 text-slate-300"
+        >
+          <component
+            :is="icon"
+            class="w-10 h-10 stroke-[1.5]"
+          />
+          <p class="text-[10px] font-black uppercase tracking-widest">
+            Click to set image URL
+          </p>
         </div>
       </div>
 

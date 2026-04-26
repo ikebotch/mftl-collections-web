@@ -6,6 +6,7 @@ import { isApiEnvelope, unwrapApiEnvelope, type ApiEnvelope } from './apiEnvelop
 import type { RequestOptions } from './types'
 import { getAccessToken } from '@/core/auth/auth0'
 import { readSelectedTenantId } from '@/modules/tenants/store/tenantStore'
+import { readSelectedBranchId } from '@/modules/branches/store/branchStore'
 
 declare module 'axios' {
   interface AxiosRequestConfig {
@@ -35,6 +36,11 @@ export class HttpClient {
 
       if (tenantId) {
         headers[appConfig.api.tenantHeaderName] = tenantId
+      }
+
+      const branchId = readSelectedBranchId()
+      if (branchId) {
+        headers['X-Branch-Id'] = branchId
       }
 
       if (!config.skipAuth && !appConfig.auth.devBypass) {

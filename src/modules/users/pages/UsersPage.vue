@@ -116,7 +116,7 @@
             <div 
               class="w-1.5 h-1.5 rounded-full" 
               :class="value === 'Accepted' ? 'bg-emerald-500' : (value === 'Pending' ? 'bg-amber-500' : 'bg-slate-300')"
-            ></div>
+            />
             <span class="text-[10px] font-black uppercase tracking-widest text-slate-600">
               {{ value }}
             </span>

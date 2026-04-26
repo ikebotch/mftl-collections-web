@@ -43,7 +43,9 @@
             class="bg-white border-slate-100 px-6 whitespace-nowrap"
             @click="exportPerformance"
           >
-            <template #icon><Download class="w-3.5 h-3.5 mr-2.5 text-slate-400" /></template>
+            <template #icon>
+              <Download class="w-3.5 h-3.5 mr-2.5 text-slate-400" />
+            </template>
             Export Log
           </AppButton>
         </div>
@@ -219,7 +221,10 @@
                 </p>
                 
                 <!-- Search Interface (Edit Mode Only) -->
-                <div v-if="isEditing" class="space-y-6">
+                <div
+                  v-if="isEditing"
+                  class="space-y-6"
+                >
                   <div class="relative group">
                     <Search class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-violet-500 transition-colors" />
                     <input 
@@ -227,12 +232,17 @@
                       type="text"
                       placeholder="Search campaigns or specific funds..."
                       class="w-full bg-slate-50/50 border border-slate-100 py-4 pl-14 pr-6 text-xs font-bold uppercase tracking-widest placeholder:text-slate-300 focus:outline-none focus:border-violet-200 focus:bg-white transition-all"
-                    />
+                    >
                   </div>
 
                   <!-- Search Results -->
-                  <div v-if="searchQuery && groupedSearchResults.length > 0" class="space-y-6">
-                    <h4 class="text-[9px] font-black text-violet-600 uppercase tracking-[0.3em] mb-4">Available for Assignment</h4>
+                  <div
+                    v-if="searchQuery && groupedSearchResults.length > 0"
+                    class="space-y-6"
+                  >
+                    <h4 class="text-[9px] font-black text-violet-600 uppercase tracking-[0.3em] mb-4">
+                      Available for Assignment
+                    </h4>
                     <div class="grid gap-4">
                       <div 
                         v-for="group in groupedSearchResults" 
@@ -244,7 +254,10 @@
                           :is-editing="true"
                           @action="handleSearchAction(group.event)"
                         />
-                        <div v-if="group.funds.length > 0" class="bg-slate-50/10">
+                        <div
+                          v-if="group.funds.length > 0"
+                          class="bg-slate-50/10"
+                        >
                           <AssignmentListRow 
                             v-for="fund in group.funds" 
                             :key="fund.uniqueKey"
@@ -257,17 +270,33 @@
                       </div>
                     </div>
                   </div>
-                  <div v-else-if="searchQuery" class="py-12 border border-dashed border-slate-100 flex flex-col items-center justify-center gap-4">
+                  <div
+                    v-else-if="searchQuery"
+                    class="py-12 border border-dashed border-slate-100 flex flex-col items-center justify-center gap-4"
+                  >
                     <SearchX class="w-8 h-8 text-slate-100" />
-                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">No matching campaigns or funds</p>
+                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                      No matching campaigns or funds
+                    </p>
                   </div>
                 </div>
 
                 <!-- Assigned Scope (Read Mode or Edit Mode Bottom) -->
-                <div class="space-y-6" :class="{ 'pt-10 border-t border-slate-100': isEditing }">
-                  <h4 v-if="isEditing" class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Current Authorized Scope</h4>
+                <div
+                  class="space-y-6"
+                  :class="{ 'pt-10 border-t border-slate-100': isEditing }"
+                >
+                  <h4
+                    v-if="isEditing"
+                    class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4"
+                  >
+                    Current Authorized Scope
+                  </h4>
                   
-                  <div v-if="groupedAssignedItems.length > 0" class="grid gap-4">
+                  <div
+                    v-if="groupedAssignedItems.length > 0"
+                    class="grid gap-4"
+                  >
                     <div 
                       v-for="group in groupedAssignedItems" 
                       :key="group.eventId"
@@ -279,7 +308,10 @@
                         :is-editing="isEditing"
                         @action="handleRemoveAction(group.event)"
                       />
-                      <div v-if="group.funds.length > 0" class="bg-slate-50/10">
+                      <div
+                        v-if="group.funds.length > 0"
+                        class="bg-slate-50/10"
+                      >
                         <AssignmentListRow 
                           v-for="fund in group.funds" 
                           :key="fund.uniqueKey"
@@ -292,11 +324,21 @@
                       </div>
                     </div>
                   </div>
-                  <div v-else class="py-20 border border-dashed border-slate-100 flex flex-col items-center justify-center gap-4 bg-slate-50/30">
+                  <div
+                    v-else
+                    class="py-20 border border-dashed border-slate-100 flex flex-col items-center justify-center gap-4 bg-slate-50/30"
+                  >
                     <ShieldAlert class="w-8 h-8 text-slate-100" />
                     <div class="text-center space-y-2">
-                      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">No Active Assignments</p>
-                      <p v-if="!isEditing" class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Edit profile to establish campaign scope</p>
+                      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        No Active Assignments
+                      </p>
+                      <p
+                        v-if="!isEditing"
+                        class="text-[9px] font-bold text-slate-300 uppercase tracking-widest"
+                      >
+                        Edit profile to establish campaign scope
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -315,25 +357,42 @@
               
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-12">
                 <div class="space-y-3">
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Raised Today</p>
-                  <p class="text-2xl font-black text-slate-900 italic tracking-tighter">{{ formatCurrency(collector.totalCollectedToday, 'GHS') }}</p>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    Raised Today
+                  </p>
+                  <p class="text-2xl font-black text-slate-900 italic tracking-tighter">
+                    {{ formatCurrency(collector.totalCollectedToday, 'GHS') }}
+                  </p>
                 </div>
                 <div class="space-y-3">
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Receipts Issued</p>
-                  <p class="text-2xl font-black text-slate-900 tracking-tighter">{{ collector.receiptsIssuedToday }}</p>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    Receipts Issued
+                  </p>
+                  <p class="text-2xl font-black text-slate-900 tracking-tighter">
+                    {{ collector.receiptsIssuedToday }}
+                  </p>
                 </div>
                 <div class="space-y-3">
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Assigned Funds</p>
-                  <p class="text-2xl font-black text-slate-900 tracking-tighter">{{ collector.assignedFundCount }}</p>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    Assigned Funds
+                  </p>
+                  <p class="text-2xl font-black text-slate-900 tracking-tighter">
+                    {{ collector.assignedFundCount }}
+                  </p>
                 </div>
               </div>
             </AppCard>
           </AdminWizardLayout>
         </div>
 
-        <div v-else-if="activeTab === 'assignments'" class="space-y-12">
+        <div
+          v-else-if="activeTab === 'assignments'"
+          class="space-y-12"
+        >
           <div class="max-w-4xl mx-auto space-y-12">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">Active Campaigns</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80">
+              Active Campaigns
+            </h3>
             <div class="grid gap-6">
               <div 
                 v-for="e in collectorEvents" 
@@ -345,31 +404,58 @@
                     <Calendar class="w-6 h-6" />
                   </div>
                   <div class="space-y-2">
-                    <h4 class="text-lg font-black text-slate-900 tracking-tight uppercase leading-none">{{ e.title }}</h4>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{{ formatDate(e.eventDate) }}</p>
+                    <h4 class="text-lg font-black text-slate-900 tracking-tight uppercase leading-none">
+                      {{ e.title }}
+                    </h4>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+                      {{ formatDate(e.eventDate) }}
+                    </p>
                   </div>
                 </div>
-                <AppButton variant="ghost" size="sm" class="text-[10px] font-black uppercase tracking-widest" @click="router.push(`/admin/events/${e.id}`)">View Campaign →</AppButton>
+                <AppButton
+                  variant="ghost"
+                  size="sm"
+                  class="text-[10px] font-black uppercase tracking-widest"
+                  @click="router.push(`/admin/events/${e.id}`)"
+                >
+                  View Campaign →
+                </AppButton>
               </div>
             </div>
           </div>
         </div>
 
-        <div v-else-if="activeTab === 'history'" class="space-y-12">
+        <div
+          v-else-if="activeTab === 'history'"
+          class="space-y-12"
+        >
           <AppCard class="!p-16 border-slate-100">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">Operational History</h3>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest italic">Syncing collection stream from field mobile units...</p>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">
+              Operational History
+            </h3>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest italic">
+              Syncing collection stream from field mobile units...
+            </p>
           </AppCard>
         </div>
 
-        <div v-else-if="activeTab === 'settings'" class="space-y-16">
+        <div
+          v-else-if="activeTab === 'settings'"
+          class="space-y-16"
+        >
           <AppCard class="!p-16 max-w-4xl border-slate-100">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">Account Control</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400/80 mb-16">
+              Account Control
+            </h3>
             <div class="space-y-12">
               <div class="flex items-center justify-between p-12 bg-rose-50/30 border border-rose-100">
                 <div class="space-y-3">
-                  <p class="text-[13px] font-black text-rose-900 tracking-tighter uppercase">Suspend Staff</p>
-                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Immediately disable mobile access for this collector</p>
+                  <p class="text-[13px] font-black text-rose-900 tracking-tighter uppercase">
+                    Suspend Staff
+                  </p>
+                  <p class="text-[10px] font-bold text-rose-400 uppercase tracking-widest">
+                    Immediately disable mobile access for this collector
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -390,15 +476,34 @@
     <StickyFormActions v-if="isEditing || hasAssignmentChanges">
       <template #left>
         <div class="flex items-center gap-3">
-          <div v-if="updateMutation.isPending.value" class="flex items-center gap-2">
+          <div
+            v-if="updateMutation.isPending.value"
+            class="flex items-center gap-2"
+          >
             <div class="w-2 h-2 rounded-full bg-slate-900 animate-pulse" />
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Syncing cloud profile...</span>
           </div>
-          <span v-else class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">You have unsaved identity changes</span>
+          <span
+            v-else
+            class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic"
+          >You have unsaved identity changes</span>
         </div>
       </template>
-      <AppButton variant="outline" class="bg-transparent border-slate-200 px-10" @click="cancelEditing">Discard</AppButton>
-      <AppButton variant="primary" class="px-12" :loading="updateMutation.isPending.value" @click="handleSave">Save Profile</AppButton>
+      <AppButton
+        variant="outline"
+        class="bg-transparent border-slate-200 px-10"
+        @click="cancelEditing"
+      >
+        Discard
+      </AppButton>
+      <AppButton
+        variant="primary"
+        class="px-12"
+        :loading="updateMutation.isPending.value"
+        @click="handleSave"
+      >
+        Save Profile
+      </AppButton>
     </StickyFormActions>
   </div>
 </template>

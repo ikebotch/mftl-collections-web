@@ -23,8 +23,11 @@
             v-if="imageUrl" 
             :src="imageUrl" 
             class="w-full h-full object-cover"
+          >
+          <slot
+            v-else
+            name="prefix"
           />
-          <slot v-else name="prefix" />
         </div>
 
         <div class="min-w-0">

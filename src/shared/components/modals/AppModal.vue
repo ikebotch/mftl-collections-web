@@ -47,7 +47,10 @@
         </div>
 
         <!-- Modal Footer -->
-        <div v-if="$slots.actions" class="px-8 py-6 border-t border-slate-100 bg-slate-50/50 flex gap-4">
+        <div
+          v-if="$slots.actions"
+          class="px-8 py-6 border-t border-slate-100 bg-slate-50/50 flex gap-4"
+        >
           <slot name="actions" />
         </div>
       </div>

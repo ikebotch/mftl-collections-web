@@ -20,16 +20,26 @@
                 class="w-5 h-5 border-2 flex items-center justify-center transition-all duration-300"
                 :class="selectedIds.includes(collector.id) ? 'bg-violet-600 border-violet-600' : 'bg-white border-slate-200'"
               >
-                <Check v-if="selectedIds.includes(collector.id)" class="w-3.5 h-3.5 text-white" />
+                <Check
+                  v-if="selectedIds.includes(collector.id)"
+                  class="w-3.5 h-3.5 text-white"
+                />
               </div>
               <div>
-                <p class="text-xs font-black text-slate-900 uppercase tracking-tight">{{ collector.name }}</p>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">{{ collector.email }}</p>
+                <p class="text-xs font-black text-slate-900 uppercase tracking-tight">
+                  {{ collector.name }}
+                </p>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                  {{ collector.email }}
+                </p>
               </div>
             </div>
           </div>
           
-          <div v-if="availableStaff.length === 0" class="p-12 text-center">
+          <div
+            v-if="availableStaff.length === 0"
+            class="p-12 text-center"
+          >
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">
               All active staff members are already deployed to this stream.
             </p>

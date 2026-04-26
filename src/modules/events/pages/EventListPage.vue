@@ -83,8 +83,14 @@
           <div class="space-y-3">
             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Date Range</label>
             <div class="flex gap-2">
-              <input type="date" class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase" />
-              <input type="date" class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase" />
+              <input
+                type="date"
+                class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase"
+              >
+              <input
+                type="date"
+                class="flex-1 p-2 text-[10px] font-bold border border-slate-200 uppercase"
+              >
             </div>
           </div>
         </template>
@@ -123,7 +129,10 @@
                 :src="row.displayImageUrl"
                 class="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-700"
               >
-              <div v-else class="w-full h-full bg-slate-50 flex items-center justify-center">
+              <div
+                v-else
+                class="w-full h-full bg-slate-50 flex items-center justify-center"
+              >
                 <ImageIcon class="w-4 h-4 text-slate-300" />
               </div>
             </div>
@@ -149,7 +158,10 @@
             >
               {{ formatCurrency(total.amount, total.currency) }}
             </span>
-            <span v-if="!row.totals?.length" class="text-xs font-black text-slate-400 italic">
+            <span
+              v-if="!row.totals?.length"
+              class="text-xs font-black text-slate-400 italic"
+            >
               GHS 0.00
             </span>
           </div>

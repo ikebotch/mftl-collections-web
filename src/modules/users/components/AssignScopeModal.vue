@@ -2,28 +2,41 @@
   <AppModal
     :open="open"
     title="Manage User Access"
-    @close="$emit('close')"
     class="!max-w-2xl"
+    @close="$emit('close')"
   >
     <div class="space-y-8">
       <!-- Reusing Global Tabs -->
-      <DetailTabs v-model="activeTab" :tabs="assignmentTabs" />
+      <DetailTabs
+        v-model="activeTab"
+        :tabs="assignmentTabs"
+      />
 
       <!-- Step 1: Select Scope & Target -->
       <div class="space-y-8 min-h-[250px]">
-        <div v-if="activeTab === 'system'" class="space-y-4 animate-in fade-in slide-in-from-left-4 duration-500">
+        <div
+          v-if="activeTab === 'system'"
+          class="space-y-4 animate-in fade-in slide-in-from-left-4 duration-500"
+        >
           <div class="p-6 bg-slate-50 border border-slate-100 rounded-3xl flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-violet-600 flex items-center justify-center text-white shadow-lg shadow-violet-100">
               <Globe class="w-6 h-6" />
             </div>
             <div>
-              <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-widest">System Wide Access</h4>
-              <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight mt-1">Full platform capabilities across all tenants.</p>
+              <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-widest">
+                System Wide Access
+              </h4>
+              <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight mt-1">
+                Full platform capabilities across all tenants.
+              </p>
             </div>
           </div>
         </div>
 
-        <div v-if="activeTab === 'org'" class="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
+        <div
+          v-if="activeTab === 'org'"
+          class="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500"
+        >
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Organization</label>
@@ -31,8 +44,16 @@
                 v-model="form.tenantId"
                 class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
               >
-                <option value="">Current Organization</option>
-                <option v-for="t in tenants" :key="t.id" :value="t.id">{{ t.name }}</option>
+                <option value="">
+                  Current Organization
+                </option>
+                <option
+                  v-for="t in tenants"
+                  :key="t.id"
+                  :value="t.id"
+                >
+                  {{ t.name }}
+                </option>
               </select>
             </div>
             <div class="space-y-2">
@@ -41,14 +62,25 @@
                 v-model="form.branchId"
                 class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
               >
-                <option value="">Full Organization</option>
-                <option v-for="b in branches" :key="b.id" :value="b.id">{{ b.name }}</option>
+                <option value="">
+                  Full Organization
+                </option>
+                <option
+                  v-for="b in branches"
+                  :key="b.id"
+                  :value="b.id"
+                >
+                  {{ b.name }}
+                </option>
               </select>
             </div>
           </div>
         </div>
 
-        <div v-if="activeTab === 'events'" class="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
+        <div
+          v-if="activeTab === 'events'"
+          class="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500"
+        >
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Select Event</label>
@@ -56,8 +88,16 @@
                 v-model="form.eventId"
                 class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all"
               >
-                <option value="">Choose an event...</option>
-                <option v-for="e in events" :key="e.id" :value="e.id">{{ e.title }}</option>
+                <option value="">
+                  Choose an event...
+                </option>
+                <option
+                  v-for="e in events"
+                  :key="e.id"
+                  :value="e.id"
+                >
+                  {{ e.title }}
+                </option>
               </select>
             </div>
             <div class="space-y-2">
@@ -67,8 +107,16 @@
                 :disabled="!form.eventId"
                 class="w-full p-4 rounded-xl bg-slate-50 border-slate-100 text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all disabled:opacity-50"
               >
-                <option value="">All Event Funds</option>
-                <option v-for="f in filteredFunds" :key="f.id" :value="f.id">{{ f.name }}</option>
+                <option value="">
+                  All Event Funds
+                </option>
+                <option
+                  v-for="f in filteredFunds"
+                  :key="f.id"
+                  :value="f.id"
+                >
+                  {{ f.name }}
+                </option>
               </select>
             </div>
           </div>
@@ -89,8 +137,14 @@
               @click="toggleRole(role)"
             >
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase tracking-widest block" :class="form.roles.includes(role) ? 'text-violet-600' : 'text-slate-900'">{{ role }}</span>
-                <Check v-if="form.roles.includes(role)" class="w-3 h-3 text-violet-600" />
+                <span
+                  class="text-[10px] font-black uppercase tracking-widest block"
+                  :class="form.roles.includes(role) ? 'text-violet-600' : 'text-slate-900'"
+                >{{ role }}</span>
+                <Check
+                  v-if="form.roles.includes(role)"
+                  class="w-3 h-3 text-violet-600"
+                />
               </div>
             </button>
           </div>
@@ -99,7 +153,12 @@
     </div>
 
     <template #actions>
-      <AppButton variant="ghost" @click="$emit('close')">Cancel</AppButton>
+      <AppButton
+        variant="ghost"
+        @click="$emit('close')"
+      >
+        Cancel
+      </AppButton>
       <AppButton 
         variant="primary" 
         :loading="loading"

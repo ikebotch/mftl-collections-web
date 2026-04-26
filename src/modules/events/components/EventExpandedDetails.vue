@@ -22,7 +22,9 @@
             class="group py-6 flex items-center justify-between pr-4"
           >
             <div class="flex-1">
-              <p class="text-xs font-black text-slate-900 tracking-tight uppercase leading-none">{{ fund.name }}</p>
+              <p class="text-xs font-black text-slate-900 tracking-tight uppercase leading-none">
+                {{ fund.name }}
+              </p>
               <div class="flex items-center gap-3 mt-3">
                 <div class="w-1 h-1 rounded-full bg-slate-200" />
                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
@@ -48,9 +50,14 @@
             </div>
           </div>
           
-          <div v-if="!funds.length" class="py-16 flex items-center gap-4 opacity-30">
+          <div
+            v-if="!funds.length"
+            class="py-16 flex items-center gap-4 opacity-30"
+          >
             <Target class="w-5 h-5 text-slate-300" />
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Zero strategic allocations defined.</p>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+              Zero strategic allocations defined.
+            </p>
           </div>
         </div>
       </div>
@@ -87,7 +94,9 @@
               />
               <div>
                 <div class="flex items-center gap-3">
-                  <p class="text-[11px] font-black text-slate-900 tracking-tight uppercase leading-none">{{ op.name }}</p>
+                  <p class="text-[11px] font-black text-slate-900 tracking-tight uppercase leading-none">
+                    {{ op.name }}
+                  </p>
                   <span 
                     v-if="op.type !== 'staff'"
                     class="px-1.5 py-0.5 bg-violet-600 text-white text-[7px] font-black uppercase tracking-[0.2em]"
@@ -119,16 +128,27 @@
               Zero field activity recorded for this period.
             </p>
             <div class="flex items-center gap-3">
-              <AppButton variant="primary" size="sm" @click="showDeployModal = true">
+              <AppButton
+                variant="primary"
+                size="sm"
+                @click="showDeployModal = true"
+              >
                 Assign Existing
               </AppButton>
-              <AppButton variant="secondary" size="sm" @click="router.push('/admin/collectors/new')">
+              <AppButton
+                variant="secondary"
+                size="sm"
+                @click="router.push('/admin/collectors/new')"
+              >
                 Onboard New
               </AppButton>
             </div>
           </div>
 
-          <div v-if="loading" class="py-12 flex justify-center lg:justify-start">
+          <div
+            v-if="loading"
+            class="py-12 flex justify-center lg:justify-start"
+          >
             <div class="h-4 w-4 animate-spin border-2 border-slate-200 border-t-violet-600" />
           </div>
         </div>

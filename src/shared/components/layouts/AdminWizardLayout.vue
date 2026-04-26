@@ -3,7 +3,10 @@
     <!-- Left Sidebar: Section Navigation -->
     <aside class="sticky top-32 space-y-8 hidden lg:block">
       <div class="space-y-8">
-        <h3 v-if="title" class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 px-2 italic">
+        <h3
+          v-if="title"
+          class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 px-2 italic"
+        >
           {{ title }}
         </h3>
         
@@ -12,7 +15,10 @@
           <div class="absolute left-[31px] top-6 bottom-6 w-[1px] bg-slate-100 z-0" />
           
           <ul class="space-y-6 relative z-10">
-            <li v-for="(section, index) in sections" :key="section.id">
+            <li
+              v-for="(section, index) in sections"
+              :key="section.id"
+            >
               <button
                 class="w-full flex items-center gap-6 p-2 rounded-none transition-all duration-500 group text-left"
                 @click="scrollToSection(section.id)"

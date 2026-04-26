@@ -9,11 +9,18 @@
       <div class="grid grid-cols-2 gap-6">
         <div class="space-y-2">
           <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Full Name</label>
-          <AppInput v-model="form.name" placeholder="e.g. John Doe" />
+          <AppInput
+            v-model="form.name"
+            placeholder="e.g. John Doe"
+          />
         </div>
         <div class="space-y-2">
           <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Address</label>
-          <AppInput v-model="form.email" type="email" placeholder="john@example.com" />
+          <AppInput
+            v-model="form.email"
+            type="email"
+            placeholder="john@example.com"
+          />
         </div>
       </div>
 
@@ -53,8 +60,15 @@
               label="Scope Level"
             />
           </div>
-          <div v-if="form.scopeType !== 'Platform'" class="space-y-2">
-            <AppInput v-model="form.targetId" label="Target ID (Optional)" placeholder="Specific UUID if applicable" />
+          <div
+            v-if="form.scopeType !== 'Platform'"
+            class="space-y-2"
+          >
+            <AppInput
+              v-model="form.targetId"
+              label="Target ID (Optional)"
+              placeholder="Specific UUID if applicable"
+            />
           </div>
         </div>
       </div>

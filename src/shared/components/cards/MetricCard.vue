@@ -1,5 +1,9 @@
 <template>
-  <AppCard rounded="2xl" shadow class="relative overflow-hidden group hover:shadow-premium transition-all duration-500 border border-slate-100/50">
+  <AppCard
+    rounded="2xl"
+    shadow
+    class="relative overflow-hidden group hover:shadow-premium transition-all duration-500 border border-slate-100/50"
+  >
     <div class="p-6">
       <div class="flex items-center justify-between mb-4">
         <div 
