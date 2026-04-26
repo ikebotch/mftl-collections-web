@@ -344,7 +344,7 @@ const router = useRouter()
 const query = useDashboard()
 const contribQuery = useContributions()
 
-const contributions = computed(() => contribQuery.data.value || [])
+const contributions = computed(() => contribQuery.data.value?.items || [])
 
 const reportColumns = [
   { key: 'title', label: 'Campaign' },

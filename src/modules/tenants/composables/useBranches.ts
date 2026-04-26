@@ -10,11 +10,14 @@ export function useBranches(tenantId?: MaybeRefOrGetter<string | undefined>) {
   })
 }
 
-export function useBranch(id: MaybeRefOrGetter<string>) {
+export function useBranch(id: MaybeRefOrGetter<string | undefined>) {
   return useQuery({
     queryKey: ['branch', id],
-    queryFn: () => branchesService.getById(toValue(id)),
-    enabled: () => !!toValue(id),
+    queryFn: () => branchesService.getById(toValue(id) as string),
+    enabled: () => {
+      const val = toValue(id)
+      return !!val && val !== 'undefined'
+    },
   })
 }
 

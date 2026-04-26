@@ -9,11 +9,14 @@ export function useUsers() {
   })
 }
 
-export function useUser(id: MaybeRefOrGetter<string>) {
+export function useUser(id: MaybeRefOrGetter<string | undefined>) {
   return useQuery({
     queryKey: ['users', id],
-    queryFn: () => getUserById(toValue(id)),
-    enabled: computed(() => !!toValue(id))
+    queryFn: () => getUserById(toValue(id) as string),
+    enabled: () => {
+      const val = toValue(id)
+      return !!val && val !== 'undefined'
+    }
   })
 }
 
