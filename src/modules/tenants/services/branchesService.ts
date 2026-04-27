@@ -7,9 +7,13 @@ export interface BranchRow {
   tenantId: string
 }
 
-export async function listBranches(tenantId?: string): Promise<BranchRow[]> {
-  const url = tenantId ? `/branches?tenantId=${tenantId}` : '/branches'
-  const response = await httpClient.get<BranchRow[]>(url)
+export async function listBranches(tenantIds?: string | string[]): Promise<BranchRow[]> {
+  const url = new URL('/branches', 'http://localhost') // dummy base for URLSearchParams
+  if (tenantIds) {
+    const ids = Array.isArray(tenantIds) ? tenantIds.join(',') : tenantIds
+    url.searchParams.set('tenantId', ids)
+  }
+  const response = await httpClient.get<BranchRow[]>(url.pathname + url.search)
   return response.data || []
 }
 

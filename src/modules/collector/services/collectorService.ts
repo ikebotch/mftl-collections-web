@@ -139,7 +139,7 @@ export async function getCollectorDashboard(): Promise<CollectorDashboardSummary
   }
 }
 
-export async function listAllCollectors(params?: { eventId?: string }): Promise<CollectorProfile[]> {
+export async function listAllCollectors(params?: { eventId?: string; tenantId?: string; branchId?: string }): Promise<CollectorProfile[]> {
   const response = await httpClient.get<CollectorProfileDto[]>('/collectors', { params })
   return (response.data ?? []).map(mapProfile)
 }

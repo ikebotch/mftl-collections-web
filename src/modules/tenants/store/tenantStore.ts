@@ -53,10 +53,29 @@ export const useTenantStore = defineStore('tenant', () => {
     getStorage()?.setItem(TENANT_NAME_KEY, name)
   }
 
-  function setTenants(ids: string[]) {
+  function setTenants(ids: string[], name?: string) {
     selectedTenantIds.value = ids
     getStorage()?.setItem(TENANT_ID_KEY, JSON.stringify(ids))
+    
+    let resolvedName = name
+    if (!resolvedName) {
+      if (ids.length > 1) {
+        resolvedName = `${ids.length} Organizations`
+      } else {
+        // We don't have the name here, but we should clear it if no IDs
+        resolvedName = ids.length === 0 ? '' : selectedTenantName.value
+      }
+    }
+    
+    selectedTenantName.value = resolvedName
+    if (resolvedName) {
+      getStorage()?.setItem(TENANT_NAME_KEY, resolvedName)
+    } else {
+      getStorage()?.removeItem(TENANT_NAME_KEY)
+    }
   }
+
+  const selectedTenantIdsCSV = computed(() => selectedTenantIds.value.join(','))
 
   function clearTenant() {
     selectedTenantIds.value = []
@@ -68,6 +87,7 @@ export const useTenantStore = defineStore('tenant', () => {
   return {
     selectedTenantIds,
     selectedTenantId,
+    selectedTenantIdsCSV,
     selectedTenantName,
     hasTenant,
     setTenant,

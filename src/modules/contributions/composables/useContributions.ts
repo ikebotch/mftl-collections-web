@@ -9,8 +9,11 @@ import type { PagedResponse } from '@/core/api/types'
 export function useContributions(params?: MaybeRef<{ page?: number, pageSize?: number }>) {
   const branchStore = useBranchStore()
   return useQuery<PagedResponse<ContributionRow>, ApiError>({
-    queryKey: ['contributions', { branchId: branchStore.selectedBranchId }, params],
-    queryFn: () => listContributions(toValue(params)),
+    queryKey: ['contributions', { branchId: branchStore.multiBranchIdCSV }, params],
+    queryFn: () => listContributions({ 
+      ...toValue(params), 
+      branchId: branchStore.multiBranchIdCSV 
+    }),
   })
 }
 

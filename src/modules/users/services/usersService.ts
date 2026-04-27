@@ -36,8 +36,8 @@ export interface AuditLog {
   createdAt: string
 }
 
-export async function listUsers(): Promise<UserRow[]> {
-  const response = await httpClient.get<UserRow[]>('/users')
+export async function listUsers(params?: { tenantId?: string; branchId?: string }): Promise<UserRow[]> {
+  const response = await httpClient.get<UserRow[]>('/users', { params })
   return response.data || []
 }
 

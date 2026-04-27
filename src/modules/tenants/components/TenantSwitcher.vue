@@ -211,7 +211,7 @@
                   {{ branch.name }}
                 </p>
                 <p class="item-meta">
-                  {{ branch.isHeadquarters ? 'Headquarters' : 'Regional Branch' }}
+                  {{ branch.isHeadquarters ? 'Headquarters' : getTenantName(branch.tenantId) }}
                 </p>
               </div>
               <div
@@ -289,9 +289,9 @@ const { data: tenants, isPending: isPendingTenants } = useQuery({
 })
 
 const { data: branches, refetch: refetchBranches } = useQuery({
-  queryKey: ['branches-list', tenantStore.selectedTenantId],
-  queryFn: () => branchesService.list(tenantStore.selectedTenantId || undefined),
-  enabled: !!tenantStore.selectedTenantId || isPlatformAdmin.value
+  queryKey: ['branches-list', tenantStore.selectedTenantIdsCSV],
+  queryFn: () => branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
+  enabled: !!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value
 })
 
 watch(() => tenantStore.selectedTenantIds, () => {
@@ -302,6 +302,12 @@ watch(() => tenantStore.selectedTenantIds, () => {
 watch(() => branchStore.selectedBranchIds, () => {
   queryClient.invalidateQueries()
 }, { deep: true })
+
+function getTenantName(tenantId: string) {
+  if (!tenants.value) return 'Organization'
+  const tenant = tenants.value.find(t => t.id === tenantId)
+  return tenant ? tenant.name : 'Organization'
+}
 
 function isTenantSelected(id: string) {
   return tenantStore.selectedTenantIds.includes(id)
@@ -321,7 +327,13 @@ function toggleTenant(tenant: any) {
     ids.push(tenant.id)
   }
   
-  tenantStore.setTenants(ids)
+  let name = ''
+  if (ids.length === 1) {
+    const activeTenant = tenants.value?.find(t => t.id === ids[0])
+    name = activeTenant?.name || ''
+  }
+  
+  tenantStore.setTenants(ids, name)
   branchStore.clearBranch()
 }
 

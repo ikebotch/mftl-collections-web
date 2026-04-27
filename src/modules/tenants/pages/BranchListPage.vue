@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue';
 import DataTable from '@/shared/components/tables/DataTable.vue';
@@ -94,11 +94,16 @@ import AppBadge from '@/shared/components/badges/AppBadge.vue';
 import { Building2, Pencil, Trash2 } from 'lucide-vue-next';
 import { branchesService } from '@/modules/tenants/services/branchesService';
 import { useToastStore } from '@/shared/stores/useToastStore';
+import { useTenantStore } from '@/modules/tenants/store/tenantStore';
+import { useBranches } from '../composables/useBranches';
 
 const router = useRouter();
 const toast = useToastStore();
-const branches = ref([]);
-const isLoading = ref(true);
+const tenantStore = useTenantStore();
+
+const query = useBranches(computed(() => tenantStore.selectedTenantIdsCSV));
+const branches = computed(() => query.data.value || []);
+const isLoading = query.isLoading;
 
 const columns = [
   { key: 'name', label: 'Identity & Narrative' },
@@ -106,17 +111,6 @@ const columns = [
   { key: 'location', label: 'Geographic Parameters' },
   { key: 'isActive', label: 'Status' }
 ];
-
-async function fetchBranches() {
-  isLoading.value = true;
-  try {
-    branches.value = await branchesService.list();
-  } catch (error) {
-    toast.error('Failed to synchronize branch registry');
-  } finally {
-    isLoading.value = false;
-  }
-}
 
 function openCreateModal() {
   router.push('/admin/branches/new');
@@ -127,12 +121,10 @@ async function confirmDelete(branch) {
     try {
       await branchesService.delete(branch.id);
       toast.success('Branch state synchronized');
-      fetchBranches();
+      query.refetch();
     } catch (error) {
       toast.error('Failed to modify branch state');
     }
   }
 }
-
-onMounted(fetchBranches);
 </script>

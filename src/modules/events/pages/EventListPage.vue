@@ -247,7 +247,8 @@ import {
   Target,
   Users,
   FileText,
-  Coins
+  Coins,
+  ChevronDown
 } from 'lucide-vue-next'
 
 const router = useRouter()
