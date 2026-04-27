@@ -1,12 +1,23 @@
+import { toValue, type MaybeRefOrGetter } from 'vue'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { recipientFundsService } from '../services/recipientFundsService'
 import type { CreateRecipientFundInput, RecipientFund } from '../types/recipientFund'
 import type { ApiError } from '@/core/api/apiError'
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+import { useBranchStore } from '@/modules/branches/store/branchStore'
 
 export function useAllRecipientFunds() {
+  const tenantStore = useTenantStore()
+  const branchStore = useBranchStore()
   return useQuery<RecipientFund[], ApiError>({
-    queryKey: ['recipient-funds'],
-    queryFn: () => recipientFundsService.list(),
+    queryKey: () => ['recipient-funds', {
+      tenantId: tenantStore.selectedTenantIdsCSV,
+      branchId: branchStore.multiBranchIdCSV
+    }],
+    queryFn: () => recipientFundsService.list({
+      tenantId: tenantStore.selectedTenantIdsCSV,
+      branchId: branchStore.multiBranchIdCSV
+    }),
   })
 }
 

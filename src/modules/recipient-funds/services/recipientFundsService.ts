@@ -3,8 +3,8 @@ import type { CreateRecipientFundInput, RecipientFund, RecipientFundDto } from '
 import { mapRecipientFundDto } from '../mappers/recipientFundMappers'
 
 export const recipientFundsService = {
-  async list(): Promise<RecipientFund[]> {
-    const response = await httpClient.get<RecipientFundDto[]>('/recipient-funds')
+  async list(params?: { tenantId?: string; branchId?: string }): Promise<RecipientFund[]> {
+    const response = await httpClient.get<RecipientFundDto[]>('/recipient-funds', { params })
     return response.data.map(mapRecipientFundDto)
   },
   async getById(id: string): Promise<RecipientFund> {
