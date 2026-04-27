@@ -322,7 +322,7 @@ function toggleTenant(tenant: any) {
   const index = ids.indexOf(tenant.id)
   
   if (index > -1) {
-    if (ids.length > 1) ids.splice(index, 1)
+    ids.splice(index, 1)
   } else {
     ids.push(tenant.id)
   }
