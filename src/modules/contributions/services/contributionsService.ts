@@ -93,7 +93,12 @@ function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
   }
 }
 
-export async function listContributions(params?: { page?: number, pageSize?: number }): Promise<PagedResponse<ContributionRow>> {
+export async function listContributions(params?: { 
+  page?: number, 
+  pageSize?: number,
+  branchId?: string,
+  tenantId?: string
+}): Promise<PagedResponse<ContributionRow>> {
   try {
     const response = await httpClient.get<PagedResponse<ContributionListItemDto>>('/contributions', { params })
     const paged = response.data

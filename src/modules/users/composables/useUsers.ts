@@ -2,10 +2,22 @@ import { toValue, computed, type MaybeRefOrGetter } from 'vue'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { listUsers, getUserById, updateUser, getMe } from '../services/usersService'
 
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+import { useBranchStore } from '@/modules/branches/store/branchStore'
+
 export function useUsers() {
+  const tenantStore = useTenantStore()
+  const branchStore = useBranchStore()
+
   return useQuery({
-    queryKey: ['users'],
-    queryFn: listUsers,
+    queryKey: () => ['users', { 
+      tenantId: tenantStore.selectedTenantIdsCSV,
+      branchId: branchStore.multiBranchIdCSV
+    }],
+    queryFn: () => listUsers({
+      tenantId: tenantStore.selectedTenantIdsCSV,
+      branchId: branchStore.multiBranchIdCSV
+    }),
   })
 }
 

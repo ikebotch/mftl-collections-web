@@ -5,10 +5,22 @@ import type { CreateEventInput, UpdateEventInput, Event } from '../types/event'
 import type { ApiError } from '@/core/api/apiError'
 import { useBranchStore } from '@/modules/branches/store/branchStore'
 
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+
 export function useEvents(branchId?: MaybeRefOrGetter<string | undefined>) {
+  const tenantStore = useTenantStore()
+  const branchStore = useBranchStore()
+  const effectiveBranchId = computed(() => toValue(branchId) || branchStore.multiBranchIdCSV)
+
   return useQuery<Event[], ApiError>({
-    queryKey: ['events', { branchId }],
-    queryFn: () => eventsService.list(),
+    queryKey: () => ['events', { 
+      tenantId: tenantStore.selectedTenantIdsCSV,
+      branchId: effectiveBranchId.value 
+    }],
+    queryFn: () => eventsService.list({
+      tenantId: tenantStore.selectedTenantIdsCSV,
+      branchId: effectiveBranchId.value
+    }),
   })
 }
 

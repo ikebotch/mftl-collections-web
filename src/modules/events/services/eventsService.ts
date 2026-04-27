@@ -3,9 +3,8 @@ import type { Event, EventDto, CreateEventInput, UpdateEventInput } from '../typ
 import { mapEventDto } from '../mappers/eventMappers'
 
 export const eventsService = {
-  async list(branchId?: string): Promise<Event[]> {
-    const url = branchId ? `/events?branchId=${branchId}` : '/events'
-    const response = await httpClient.get<EventDto[]>(url)
+  async list(params?: { branchId?: string; tenantId?: string }): Promise<Event[]> {
+    const response = await httpClient.get<EventDto[]>('/events', { params })
     const data = response.data || []
     return Array.isArray(data) ? data.map(mapEventDto) : []
   },

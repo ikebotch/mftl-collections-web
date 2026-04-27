@@ -73,6 +73,7 @@ export const useBranchStore = defineStore('branch', () => {
     selectedBranchIds,
     selectedBranchId,
     selectedBranchName,
+    multiBranchIdCSV: computed(() => selectedBranchIds.value.join(',')),
     setBranch,
     setBranches,
     toggleBranch,
