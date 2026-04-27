@@ -6,8 +6,8 @@ export interface TenantRow {
   identifier: string
 }
 
-export async function listTenants(): Promise<TenantRow[]> {
-  const response = await httpClient.get<TenantRow[]>('/tenants')
+export async function listTenants(params?: { tenantId?: string }): Promise<TenantRow[]> {
+  const response = await httpClient.get<TenantRow[]>('/tenants', { params })
   return response.data || []
 }
 

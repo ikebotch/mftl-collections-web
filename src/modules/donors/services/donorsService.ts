@@ -30,9 +30,9 @@ function mapDonorDto(dto: DonorDto): Donor {
 }
 
 export const donorsService = {
-  async list(): Promise<Donor[]> {
+  async list(params?: { tenantId?: string }): Promise<Donor[]> {
     try {
-      const response = await httpClient.get<DonorDto[]>('/donors')
+      const response = await httpClient.get<DonorDto[]>('/donors', { params })
       if (response.data && response.data.length > 0) {
         return response.data.map(mapDonorDto)
       }
