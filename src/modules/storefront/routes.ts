@@ -12,19 +12,21 @@ export const storefrontRoutes: RouteRecordRaw[] = [
         component: () => import('./pages/StorefrontLandingPage.vue'),
       },
       {
+        path: 'contribute',
+        name: 'storefront-contribute',
+        component: () => import('./pages/StorefrontContributionPage.vue'),
+      },
+      {
         path: 'recipient',
-        name: 'storefront-recipient',
-        component: () => import('./pages/RecipientSelectionPage.vue'),
+        redirect: { name: 'storefront-contribute' }
       },
       {
         path: 'details',
-        name: 'storefront-details',
-        component: () => import('./pages/ContributionDetailsPage.vue'),
+        redirect: { name: 'storefront-contribute' }
       },
       {
         path: 'payment',
-        name: 'storefront-payment',
-        component: () => import('./pages/PaymentMethodPage.vue'),
+        redirect: { name: 'storefront-contribute' }
       },
       {
         path: 'confirm',
