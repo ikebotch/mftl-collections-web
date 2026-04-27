@@ -1,38 +1,42 @@
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-brand-100 selection:text-brand-900">
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
-      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 h-20">
+  <div class="min-h-screen bg-[#F9F9FB] text-slate-900 font-sans selection:bg-violet-100 selection:text-violet-900">
+    <header v-if="$route.name !== 'storefront-contribute'" class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-6 h-20">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-none bg-brand-600 flex items-center justify-center shadow-lg shadow-brand-600/20 rotate-3">
-            <span class="text-white font-bold text-xl font-display">M</span>
+          <div class="w-10 h-10 rounded-xl bg-[#7C3AED] flex items-center justify-center shadow-lg shadow-violet-600/20">
+            <span class="text-white font-black text-xl font-display">M</span>
           </div>
           <div>
-            <h1 class="text-lg font-bold font-display tracking-tight leading-none text-slate-900">
+            <h1 class="text-lg font-black font-display tracking-tight leading-none text-[#0F172A]">
               {{ appName }}
             </h1>
-            <p class="text-[10px] uppercase tracking-[0.2em] text-slate-500 mt-1 font-bold">
-              Public Contribution
+            <p class="text-[10px] uppercase tracking-[0.2em] text-[#64748B] mt-1 font-black">
+              Public Contribution Platform
             </p>
           </div>
         </div>
-        <div class="flex items-center gap-4">
-          <div class="hidden sm:block text-right">
-            <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">
-              Secure Payment
-            </p>
-            <p class="text-xs font-bold text-slate-600">
-              Verified by MFTL
-            </p>
+        
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-3 text-right">
+            <div class="w-8 h-8 rounded-full border-2 border-[#F5F3FF] flex items-center justify-center text-violet-600">
+              <ShieldCheck class="w-4 h-4" />
+            </div>
+            <div class="hidden sm:block">
+              <p class="text-[9px] uppercase tracking-[0.2em] text-[#64748B] font-black">Secure Payment</p>
+              <p class="text-[11px] font-black text-[#0F172A]">Verified by MFTL</p>
+            </div>
           </div>
-          <div class="w-px h-8 bg-slate-100 mx-2 hidden sm:block" />
-          <div class="p-2 rounded-none bg-emerald-50 text-emerald-600">
-            <span class="sr-only">Secure</span>
-            🔒
+          
+          <div class="w-px h-8 bg-slate-200 hidden sm:block" />
+          
+          <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] flex items-center justify-center text-[#10B981] shadow-sm">
+            <Lock class="w-4 h-4" />
           </div>
         </div>
       </div>
     </header>
-    <main class="max-w-3xl mx-auto px-6 py-12 md:py-24">
+
+    <main>
       <router-view v-slot="{ Component }">
         <transition 
           enter-active-class="transition duration-700 ease-out" 
@@ -44,34 +48,18 @@
         </transition>
       </router-view>
     </main>
-    <footer class="py-12 border-t border-slate-100 mt-12 bg-white">
-      <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-        <div class="flex items-center gap-3 grayscale opacity-50">
-          <div class="w-8 h-8 rounded-none bg-slate-900 flex items-center justify-center">
-            <span class="text-white font-bold text-sm font-display">M</span>
-          </div>
-          <span class="font-bold font-display text-slate-900 tracking-tight">{{ appName }}</span>
-        </div>
-        <p class="text-xs font-medium text-slate-500">
-          &copy; 2026 {{ appName }}. Powered by MFTL Ecosystem. All payments are securely processed.
-        </p>
-        <div class="flex gap-6">
-          <a
-            href="#"
-            class="text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors uppercase tracking-widest"
-          >Privacy</a>
-          <a
-            href="#"
-            class="text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors uppercase tracking-widest"
-          >Terms</a>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 import { appConfig } from '@/core/config/appConfig'
+import { ShieldCheck, Lock } from 'lucide-vue-next'
 
 const appName = appConfig.appName
 </script>
+
+<style scoped>
+.font-black {
+  font-weight: 950;
+}
+</style>

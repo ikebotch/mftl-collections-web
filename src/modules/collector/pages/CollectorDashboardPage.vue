@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-5 pb-4">
+  <div class="space-y-8 pb-10 transition-colors duration-500">
     <LoadingState
       v-if="query.isLoading.value"
       text="Loading collector dashboard…"
@@ -13,183 +13,173 @@
       @retry="query.refetch"
     />
     <template v-else-if="query.data.value">
-      <section class="space-y-4">
-        <div class="flex items-start justify-between gap-4">
-          <div>
-            <p class="text-sm text-slate-300">
-              Good morning,
-            </p>
-            <h2 class="mt-1 text-2xl font-semibold text-white">
-              {{ query.data.value.profile.name }}
-            </h2>
-            <p class="mt-1 text-xs uppercase tracking-[0.18em] text-slate-500">
-              Collector ID: {{ query.data.value.profile.id.slice(0, 8) }}
-            </p>
-          </div>
-          <div class="rounded-none border border-white/10 bg-white/5 px-4 py-3 text-right">
-            <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-              Sync
-            </p>
-            <p class="mt-2 text-sm font-semibold text-emerald-300">
-              {{ query.data.value.syncStatusLabel }}
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between rounded-none border border-emerald-400/15 bg-emerald-400/8 px-4 py-3">
-          <div class="flex items-center gap-2 text-sm font-medium text-emerald-300">
-            <span class="h-2.5 w-2.5 rounded-none bg-emerald-400" />
-            {{ query.data.value.syncStatusLabel }}
-          </div>
-          <p class="text-xs text-slate-400">
-            {{ query.data.value.syncStatusDescription }}
+      <!-- Welcome Header -->
+      <section class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 lg:border-b lg:border-slate-200 lg:pb-10">
+        <div class="space-y-1">
+          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 lg:text-slate-400">
+            Collector Overview
           </p>
-        </div>
-      </section>
-
-      <section
-        v-if="!query.data.value.profile.hasAssignments"
-        class="rounded-none border border-amber-400/15 bg-amber-400/8 p-5"
-      >
-        <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-300">
-          Collection blocked
-        </p>
-        <h3 class="mt-3 text-lg font-semibold text-white">
-          Assign events and funds before collecting
-        </h3>
-        <p class="mt-2 text-sm leading-6 text-slate-300">
-          {{ query.data.value.profile.blockedReason || query.data.value.assignments.blockedReason }}
-        </p>
-      </section>
-
-      <section class="grid grid-cols-2 gap-3">
-        <article class="rounded-none border border-white/10 bg-white/5 p-4">
-          <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-            Today collected
-          </p>
-          <p class="mt-3 text-2xl font-semibold text-white">
-            {{ query.data.value.todayTotal }}
-          </p>
-        </article>
-        <article class="rounded-none border border-white/10 bg-white/5 p-4">
-          <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-            Receipts issued
-          </p>
-          <p class="mt-3 text-2xl font-semibold text-white">
-            {{ query.data.value.receiptsIssued }}
-          </p>
-        </article>
-        <article class="rounded-none border border-white/10 bg-white/5 p-4">
-          <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-            Assigned events
-          </p>
-          <p class="mt-3 text-2xl font-semibold text-white">
-            {{ query.data.value.assignedEvents }}
-          </p>
-        </article>
-        <article class="rounded-none border border-white/10 bg-white/5 p-4">
-          <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-            Assigned funds
-          </p>
-          <p class="mt-3 text-2xl font-semibold text-white">
-            {{ query.data.value.assignedFunds }}
-          </p>
-        </article>
-      </section>
-
-      <section class="space-y-3">
-        <article class="rounded-none border border-white/10 bg-white/5 p-5">
-          <div class="flex items-center justify-between gap-3">
-            <div>
-              <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-                Current shift
-              </p>
-              <h3 class="mt-2 text-lg font-semibold text-white">
-                {{ query.data.value.currentShiftLabel }}
-              </h3>
-            </div>
-            <span class="rounded-none bg-violet-500/20 px-3 py-1 text-xs font-semibold text-violet-200">
-              {{ query.data.value.profile.status }}
+          <h2 class="text-3xl lg:text-5xl font-black tracking-tight uppercase italic transition-colors duration-500" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+            {{ query.data.value.profile.name }}
+          </h2>
+          <div class="flex items-center gap-3 mt-2">
+            <span class="px-2 py-0.5 bg-violet-100 text-violet-600 text-[9px] font-black uppercase tracking-widest border border-violet-200">
+              Terminal: {{ query.data.value.profile.id.slice(0, 8) }}
+            </span>
+            <span class="text-[10px] font-bold text-slate-400 italic">
+              Ready for collection
             </span>
           </div>
-        </article>
+        </div>
 
-        <article class="rounded-none border border-white/10 bg-white/5 p-5">
-          <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-            Sync status
-          </p>
-          <h3 class="mt-2 text-lg font-semibold text-white">
-            {{ query.data.value.syncStatusLabel }}
-          </h3>
-          <p class="mt-2 text-sm text-slate-300">
-            {{ query.data.value.syncStatusDescription }}
-          </p>
-        </article>
-      </section>
-
-      <AppButton
-        class="!mt-1 w-full !rounded-none !py-4 text-base"
-        size="lg"
-        :disabled="!query.data.value.profile.hasAssignments"
-        @click="$router.push('/collector/contributions/new')"
-      >
-        Start New Collection
-      </AppButton>
-
-      <section class="space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold text-white">
-            Recent receipts
-          </h3>
+        <div class="flex items-center gap-4 lg:gap-8">
+          <div class="text-right hidden lg:block">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Shift</p>
+            <p class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ query.data.value.currentShiftLabel }}</p>
+          </div>
           <AppButton
-            variant="ghost"
-            size="sm"
-            @click="$router.push('/collector/history')"
+            variant="primary"
+            class="hidden lg:flex !rounded-none !px-8 !py-6 text-xs font-black uppercase tracking-widest shadow-xl shadow-violet-500/20"
+            @click="$router.push('/collector/contributions/new')"
           >
-            View history
+            New Collection
           </AppButton>
         </div>
+      </section>
 
-        <div
-          v-if="query.data.value.recentReceipts.length === 0"
-          class="rounded-none border border-dashed border-white/10 bg-white/[0.03] p-5 text-sm text-slate-300"
+      <!-- Stats Grid -->
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <article 
+          v-for="(stat, index) in stats" 
+          :key="index"
+          class="p-6 transition-all duration-500 border group cursor-default"
+          :class="isDesktop 
+            ? 'bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-violet-500/30' 
+            : 'bg-white/5 border-white/10 hover:border-violet-500/30'"
         >
-          No receipts issued yet.
+          <p class="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300" 
+             :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'">
+            {{ stat.label }}
+          </p>
+          <p class="mt-4 text-3xl lg:text-4xl font-black transition-colors duration-300"
+             :class="isDesktop ? 'text-slate-900' : 'text-white'">
+            {{ stat.value }}
+          </p>
+          <div class="mt-4 h-1 w-8 bg-violet-500/20 group-hover:w-full transition-all duration-500" />
+        </article>
+      </section>
+
+      <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <!-- Main Content Area -->
+        <div class="lg:col-span-8 space-y-10">
+          <!-- Assignments Section -->
+          <section class="space-y-6">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black uppercase tracking-[0.25em]" :class="isDesktop ? 'text-slate-400' : 'text-slate-500'">Current Assignments</h3>
+              <div class="h-px flex-1 bg-slate-200 mx-6 hidden lg:block" />
+            </div>
+
+            <div v-if="!query.data.value.profile.hasAssignments" class="p-10 border border-dashed border-slate-300 bg-slate-50 text-center">
+              <p class="text-xs font-black uppercase tracking-widest text-slate-400">No active assignments found</p>
+            </div>
+
+            <div v-else class="grid gap-4">
+              <article 
+                v-for="event in query.data.value.assignments.events" 
+                :key="event.id"
+                class="p-6 border transition-all duration-300 group flex items-center justify-between"
+                :class="isDesktop ? 'bg-white border-slate-200 hover:border-violet-500/50' : 'bg-white/5 border-white/10'"
+              >
+                <div>
+                  <h4 class="text-lg font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">{{ event.title }}</h4>
+                  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ event.branchName }}</p>
+                </div>
+                <AppButton variant="ghost" size="sm" class="text-[9px] font-black uppercase tracking-widest">Details</AppButton>
+              </article>
+            </div>
+          </section>
+
+          <!-- System Status Area (Desktop Only) -->
+          <section v-if="isDesktop" class="grid grid-cols-2 gap-6 p-8 bg-slate-900 text-white border-l-4 border-emerald-500 shadow-2xl">
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Sync Status</p>
+              <h4 class="text-xl font-black mt-2 uppercase tracking-tight">{{ query.data.value.syncStatusLabel }}</h4>
+              <p class="text-xs text-slate-400 mt-2 font-medium leading-relaxed">{{ query.data.value.syncStatusDescription }}</p>
+            </div>
+            <div class="flex flex-col justify-end items-end text-right">
+              <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Connection</p>
+              <p class="text-xs font-black text-white mt-1">PRIMARY TERMINAL 01</p>
+              <div class="flex gap-1 mt-3">
+                <div v-for="i in 5" :key="i" class="h-1 w-4 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              </div>
+            </div>
+          </section>
         </div>
 
-        <template v-else>
-          <button
-            v-for="receipt in query.data.value.recentReceipts"
-            :key="receipt.id"
-            type="button"
-            class="w-full rounded-none border border-white/10 bg-white/[0.04] p-4 text-left"
-            @click="$router.push(`/collector/receipts/${receipt.id}`)"
-          >
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <p class="text-sm font-semibold text-white">
-                  {{ receipt.receiptNumber }}
-                </p>
-                <p class="mt-1 text-lg font-semibold text-white">
-                  {{ receipt.amount }}
-                </p>
-                <p class="mt-2 text-sm text-slate-300">
-                  {{ receipt.eventTitle }} · {{ receipt.recipientFundName }}
-                </p>
-                <p class="mt-1 text-xs text-slate-500">
-                  {{ receipt.issuedAt }}
-                </p>
-              </div>
-              <ReceiptStatusBadge :status="receipt.status" />
+        <!-- Sidebar Activity Area -->
+        <div class="lg:col-span-4 space-y-8">
+          <section class="space-y-6">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black uppercase tracking-[0.25em]" :class="isDesktop ? 'text-slate-400' : 'text-slate-500'">Recent Receipts</h3>
+              <AppButton
+                variant="ghost"
+                size="sm"
+                class="text-[9px] font-black uppercase tracking-widest !text-violet-500 hover:!bg-violet-100"
+                @click="$router.push('/collector/history')"
+              >
+                Full History
+              </AppButton>
             </div>
-          </button>
-        </template>
-      </section>
+
+            <div v-if="query.data.value.recentReceipts.length === 0" class="p-8 text-center border border-dashed border-slate-300">
+              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">No activity recorded</p>
+            </div>
+
+            <div v-else class="space-y-4">
+              <button
+                v-for="receipt in query.data.value.recentReceipts"
+                :key="receipt.id"
+                class="w-full p-5 text-left border transition-all duration-300 group"
+                :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500 hover:shadow-lg' : 'bg-white/5 border-white/5'"
+                @click="$router.push(`/collector/receipts/${receipt.id}`)"
+              >
+                <div class="flex items-start justify-between">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-[9px] font-black uppercase tracking-widest" :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'">
+                      {{ receipt.receiptNumber }}
+                    </p>
+                    <p class="text-2xl font-black mt-2 tracking-tight" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+                      {{ receipt.amount }}
+                    </p>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-2 truncate">
+                      {{ receipt.eventTitle }}
+                    </p>
+                  </div>
+                  <ReceiptStatusBadge :status="receipt.status" class="scale-75 origin-top-right" />
+                </div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Mobile-only Action -->
+          <div class="lg:hidden pt-4">
+             <AppButton
+              class="w-full !rounded-none !py-6 text-sm font-black uppercase tracking-widest shadow-[0_10px_40px_rgba(139,92,246,0.3)]"
+              size="lg"
+              :disabled="!query.data.value.profile.hasAssignments"
+              @click="$router.push('/collector/contributions/new')"
+            >
+              Start Collection
+            </AppButton>
+          </div>
+        </div>
+      </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useCollectorDashboard } from '../composables/useCollector'
 import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
@@ -197,4 +187,35 @@ import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 
 const query = useCollectorDashboard()
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
+
+const isDesktop = computed(() => windowWidth.value >= 1024)
+
+const handleResize = () => {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
+const stats = computed(() => {
+  if (!query.data.value) return []
+  return [
+    { label: 'Today collected', value: query.data.value.todayTotal },
+    { label: 'Receipts issued', value: query.data.value.receiptsIssued },
+    { label: 'Assigned events', value: query.data.value.assignedEvents },
+    { label: 'Assigned funds', value: query.data.value.assignedFunds }
+  ]
+})
 </script>
+
+<style scoped>
+.italic {
+  font-style: italic;
+}
+</style>

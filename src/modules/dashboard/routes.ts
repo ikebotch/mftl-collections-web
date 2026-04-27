@@ -72,6 +72,11 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('@/modules/tenants/pages/BranchDetailPage.vue'),
       },
       {
+        path: 'collect',
+        name: 'admin-collect',
+        component: () => import('@/modules/contributions/pages/AdminCollectionPage.vue'),
+      },
+      {
         path: 'self-donations',
         name: 'admin-self-donations',
         component: () => import('@/modules/self-donations/pages/SelfDonationAdminPage.vue'),

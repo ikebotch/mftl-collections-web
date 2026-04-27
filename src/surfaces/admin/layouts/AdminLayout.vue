@@ -250,6 +250,7 @@ import {
   LogOut,
   ShieldCheck,
   UserCheck,
+  PlusCircle,
   Globe,
   Building2,
   User
@@ -305,6 +306,7 @@ const navGroups = computed(() => [
   {
     title: copy.value.admin.sidebar.groups.finance,
     items: [
+      { label: copy.value.admin.sidebar.nav.quickCollect, to: '/admin/collect', icon: PlusCircle, badge: 'TERMINAL' },
       { label: copy.value.admin.sidebar.nav.contributions, to: '/admin/contributions', icon: CircleDollarSign },
       { label: copy.value.admin.sidebar.nav.selfDonations, to: '/admin/self-donations', icon: Heart, badge: 'NEW' },
       { label: copy.value.admin.sidebar.nav.payments, to: '/admin/payments', icon: Wallet },
