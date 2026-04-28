@@ -24,6 +24,7 @@ export interface DashboardSummary {
   totalDonors: number
   totalReceipts: number
   recentContributions: RecentContribution[]
+  isAuth0Configured: boolean
 }
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
