@@ -15,6 +15,14 @@
       </template>
     </AdminPageHeader>
 
+    <div v-if="dashboardQuery.data.value && !dashboardQuery.data.value.isAuth0Configured" class="p-4 bg-amber-50 border-l-4 border-amber-500 flex items-start gap-3">
+      <ShieldAlert class="w-5 h-5 text-amber-600 mt-0.5" />
+      <div>
+        <p class="text-xs font-black uppercase tracking-widest text-amber-900">Auth0 Management API Not Configured</p>
+        <p class="text-[10px] font-bold text-amber-700 uppercase mt-1">Automatic user creation and invitation links are disabled. Users must be manually created in Auth0 or register themselves.</p>
+      </div>
+    </div>
+
     <AdminMetricGrid>
       <MetricCard
         label="Total Users"
@@ -124,7 +132,7 @@
               :class="value === 'Accepted' ? 'bg-emerald-500' : (value === 'Pending' ? 'bg-amber-500' : 'bg-slate-300')"
             />
             <span class="text-[10px] font-black uppercase tracking-widest text-slate-600">
-              {{ value }}
+              {{ value === 'Pending' ? 'Invited (Awaiting Login)' : (value === 'Accepted' ? 'Linked to Auth0' : value) }}
             </span>
           </div>
         </template>
@@ -164,6 +172,8 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCopy } from '@/core/i18n/useCopy'
 import { useUsers } from '../composables/useUsers'
+import { useQuery } from '@tanstack/vue-query'
+import { getDashboardSummary } from '@/modules/dashboard/services/dashboardService'
 import { usersService } from '../services/usersService'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
@@ -174,12 +184,16 @@ import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import InviteUserModal from '../components/InviteUserModal.vue'
-import { UserPlus } from 'lucide-vue-next'
+import { UserPlus, ShieldAlert } from 'lucide-vue-next'
 import { useToastStore } from '@/shared/stores/useToastStore'
 
 const { copy } = useCopy()
 const router = useRouter()
 const query = useUsers()
+const dashboardQuery = useQuery({
+  queryKey: ['admin-dashboard-summary'],
+  queryFn: getDashboardSummary
+})
 const toast = useToastStore()
 const searchQuery = ref('')
 const activeFilters = ref({
