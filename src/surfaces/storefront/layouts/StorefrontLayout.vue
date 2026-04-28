@@ -1,6 +1,9 @@
 <template>
   <div class="min-h-screen bg-[#F9F9FB] text-slate-900 font-sans selection:bg-violet-100 selection:text-violet-900">
-    <header v-if="$route.name !== 'storefront-contribute'" class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+    <header
+      v-if="$route.name !== 'storefront-contribute'"
+      class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100"
+    >
       <div class="mx-auto flex max-w-7xl items-center justify-between px-6 h-20">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-[#7C3AED] flex items-center justify-center shadow-lg shadow-violet-600/20">
@@ -22,8 +25,12 @@
               <ShieldCheck class="w-4 h-4" />
             </div>
             <div class="hidden sm:block">
-              <p class="text-[9px] uppercase tracking-[0.2em] text-[#64748B] font-black">Secure Payment</p>
-              <p class="text-[11px] font-black text-[#0F172A]">Verified by MFTL</p>
+              <p class="text-[9px] uppercase tracking-[0.2em] text-[#64748B] font-black">
+                Secure Payment
+              </p>
+              <p class="text-[11px] font-black text-[#0F172A]">
+                Verified by MFTL
+              </p>
             </div>
           </div>
           

@@ -104,9 +104,15 @@
                 class="appearance-none bg-transparent border-none p-0 pr-4 text-[10px] font-bold text-slate-400 focus:text-violet-600 outline-none cursor-pointer uppercase tracking-widest transition-colors"
                 @click.stop
               >
-                <option value="">All</option>
-                <option value="GHS">GHS Only</option>
-                <option value="USD">USD Only</option>
+                <option value="">
+                  All
+                </option>
+                <option value="GHS">
+                  GHS Only
+                </option>
+                <option value="USD">
+                  USD Only
+                </option>
               </select>
               <ChevronDown class="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-slate-300 pointer-events-none group-hover/select:text-violet-400 transition-colors" />
             </div>

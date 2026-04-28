@@ -15,11 +15,33 @@
       </template>
     </AdminPageHeader>
 
-    <div v-if="dashboardQuery.data.value && !dashboardQuery.data.value.isAuth0Configured" class="p-4 bg-amber-50 border-l-4 border-amber-500 flex items-start gap-3">
+    <div
+      v-if="dashboardQuery.data.value && !dashboardQuery.data.value.isAuth0Configured"
+      class="p-4 bg-amber-50 border-l-4 border-amber-500 flex items-start gap-3"
+    >
       <ShieldAlert class="w-5 h-5 text-amber-600 mt-0.5" />
       <div>
-        <p class="text-xs font-black uppercase tracking-widest text-amber-900">Auth0 Management API Not Configured</p>
-        <p class="text-[10px] font-bold text-amber-700 uppercase mt-1">Automatic user creation and invitation links are disabled. Users must be manually created in Auth0 or register themselves.</p>
+        <p class="text-xs font-black uppercase tracking-widest text-amber-900">
+          Auth0 Automation Not Configured
+        </p>
+        <p class="text-[10px] font-bold text-amber-700 uppercase mt-1">
+          Automatic invitation links are disabled, but users can still be linked on first login.
+        </p>
+      </div>
+    </div>
+
+    <div
+      v-if="dashboardQuery.data.value && !dashboardQuery.data.value.isAuth0WebhookConfigured"
+      class="p-4 bg-slate-50 border-l-4 border-slate-400 flex items-start gap-3"
+    >
+      <Info class="w-5 h-5 text-slate-500 mt-0.5" />
+      <div>
+        <p class="text-xs font-black uppercase tracking-widest text-slate-900">
+          Push Sync Disabled
+        </p>
+        <p class="text-[10px] font-bold text-slate-600 uppercase mt-1">
+          Users created directly in Auth0 will appear after their first login. Enable the optional Auth0 webhook if you want users to appear before login.
+        </p>
       </div>
     </div>
 
@@ -184,7 +206,11 @@ import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import InviteUserModal from '../components/InviteUserModal.vue'
-import { UserPlus, ShieldAlert } from 'lucide-vue-next'
+import { 
+  UserPlus, 
+  ShieldAlert, 
+  Info 
+} from 'lucide-vue-next'
 import { useToastStore } from '@/shared/stores/useToastStore'
 
 const { copy } = useCopy()
@@ -277,7 +303,7 @@ async function handleStatusAction(id: string, action: string) {
     await usersService.updateStatus(id, action)
     toast.success(`User ${action.toLowerCase()}d`)
     query.refetch()
-  } catch (err: any) {
+  } catch {
     toast.error('Failed to update user status')
   }
 }

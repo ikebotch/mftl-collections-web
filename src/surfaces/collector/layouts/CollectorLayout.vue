@@ -1,5 +1,8 @@
 <template>
-  <div class="min-h-screen font-sans selection:bg-violet-100 selection:text-violet-900 transition-colors duration-500" :class="isDesktop ? 'bg-[#f8fafc]' : 'bg-[#060B16]'">
+  <div
+    class="min-h-screen font-sans selection:bg-violet-100 selection:text-violet-900 transition-colors duration-500"
+    :class="isDesktop ? 'bg-[#f8fafc]' : 'bg-[#060B16]'"
+  >
     <!-- Premium Desktop Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 hidden w-72 bg-[#060b13] text-white lg:block shadow-2xl border-r border-navy-900 transition-transform duration-500">
       <div class="flex h-full flex-col">
@@ -10,8 +13,12 @@
               <Plus class="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 class="text-xl font-black tracking-tight text-white uppercase">MFTL</h1>
-              <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.25em]">Collector Pro</p>
+              <h1 class="text-xl font-black tracking-tight text-white uppercase">
+                MFTL
+              </h1>
+              <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.25em]">
+                Collector Pro
+              </p>
             </div>
           </div>
         </div>
@@ -42,8 +49,12 @@
               FC
             </div>
             <div class="min-w-0">
-              <p class="text-[10px] font-black text-white uppercase tracking-widest truncate">Field Collector</p>
-              <p class="text-[9px] text-slate-500 font-bold uppercase truncate">Active Session</p>
+              <p class="text-[10px] font-black text-white uppercase tracking-widest truncate">
+                Field Collector
+              </p>
+              <p class="text-[9px] text-slate-500 font-bold uppercase truncate">
+                Active Session
+              </p>
             </div>
           </div>
         </div>
@@ -81,8 +92,12 @@
         
         <div class="flex items-center gap-6">
           <div class="text-right">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Local Station</p>
-            <p class="text-xs font-black text-slate-900 uppercase tracking-tight">Accra Terminal 01</p>
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+              Local Station
+            </p>
+            <p class="text-xs font-black text-slate-900 uppercase tracking-tight">
+              Accra Terminal 01
+            </p>
           </div>
           <div class="h-10 w-px bg-slate-200" />
           <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 p-1.5 px-4 rounded-none">
@@ -92,7 +107,10 @@
         </div>
       </header>
 
-      <main class="flex-1 transition-all duration-500" :class="isDesktop ? 'p-12 lg:p-16 max-w-[1400px]' : 'px-5 py-8'">
+      <main
+        class="flex-1 transition-all duration-500"
+        :class="isDesktop ? 'p-12 lg:p-16 max-w-[1400px]' : 'px-5 py-8'"
+      >
         <router-view v-slot="{ Component }">
           <transition
             name="fade-slide"

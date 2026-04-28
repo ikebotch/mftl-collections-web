@@ -42,13 +42,19 @@
 
       <div class="max-w-[1200px] mx-auto">
         <!-- Hub Overview Tab -->
-        <div v-if="activeTab === 'overview'" class="animate-in fade-in duration-500">
+        <div
+          v-if="activeTab === 'overview'"
+          class="animate-in fade-in duration-500"
+        >
           <AdminWizardLayout
             :sections="overviewSections"
             title="Branch Details"
           >
             <!-- Identity Section -->
-            <AppCard id="identity" class="!p-12 space-y-10 border-slate-200 scroll-mt-24">
+            <AppCard
+              id="identity"
+              class="!p-12 space-y-10 border-slate-200 scroll-mt-24"
+            >
               <EditorialHeader title="About">
                 <template #actions>
                   <button
@@ -63,24 +69,42 @@
                 </template>
               </EditorialHeader>
 
-              <div v-if="!isEditingOverview" class="space-y-12 animate-in fade-in duration-700">
+              <div
+                v-if="!isEditingOverview"
+                class="space-y-12 animate-in fade-in duration-700"
+              >
                 <div class="grid md:grid-cols-2 gap-12">
                   <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Hub Name</p>
-                    <p class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ branch.name }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                      Hub Name
+                    </p>
+                    <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
+                      {{ branch.name }}
+                    </p>
                   </div>
                   <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">System ID</p>
-                    <p class="text-sm font-black text-violet-600 tracking-tight font-mono">{{ branch.identifier }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                      System ID
+                    </p>
+                    <p class="text-sm font-black text-violet-600 tracking-tight font-mono">
+                      {{ branch.identifier }}
+                    </p>
                   </div>
                   <div class="md:col-span-2 space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Geographic Parameters</p>
-                    <p class="text-sm font-black text-slate-900 tracking-tight leading-relaxed uppercase">{{ branch.location || 'No specific geographic constraints established.' }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                      Geographic Parameters
+                    </p>
+                    <p class="text-sm font-black text-slate-900 tracking-tight leading-relaxed uppercase">
+                      {{ branch.location || 'No specific geographic constraints established.' }}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div v-else class="space-y-8 animate-in slide-in-from-top-4 duration-500">
+              <div
+                v-else
+                class="space-y-8 animate-in slide-in-from-top-4 duration-500"
+              >
                 <div class="grid md:grid-cols-2 gap-10">
                   <AppInput
                     v-model="form.name"
@@ -100,7 +124,10 @@
             </AppCard>
 
             <!-- Topology Section -->
-            <AppCard id="topology" class="!p-12 space-y-10 border-slate-200 scroll-mt-24">
+            <AppCard
+              id="topology"
+              class="!p-12 space-y-10 border-slate-200 scroll-mt-24"
+            >
               <EditorialHeader title="Hub Structure">
                 <template #actions>
                   <button
@@ -115,24 +142,38 @@
                 </template>
               </EditorialHeader>
               
-              <div v-if="!isEditingOverview" class="grid md:grid-cols-2 gap-10">
+              <div
+                v-if="!isEditingOverview"
+                class="grid md:grid-cols-2 gap-10"
+              >
                 <div class="space-y-2">
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active State</p>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    Active State
+                  </p>
                   <div class="flex items-center gap-2">
                     <div class="w-1.5 h-1.5 rounded-none bg-emerald-500" />
                     <span class="text-[10px] font-black uppercase">{{ branch.isActive ? 'Hub Online' : 'Offline' }}</span>
                   </div>
                 </div>
               </div>
-              <div v-else class="flex items-center gap-4 py-4 animate-in slide-in-from-top-2">
+              <div
+                v-else
+                class="flex items-center gap-4 py-4 animate-in slide-in-from-top-2"
+              >
                 <AppSwitch v-model="form.isActive" />
                 <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Active Hub Status</span>
               </div>
             </AppCard>
 
             <!-- Health Matrix Section (Standardized) -->
-            <AppCard id="health" class="!p-12 space-y-12 border-slate-200 scroll-mt-24">
-              <EditorialHeader title="Operational Health Matrix" subtitle="Step 03" />
+            <AppCard
+              id="health"
+              class="!p-12 space-y-12 border-slate-200 scroll-mt-24"
+            >
+              <EditorialHeader
+                title="Operational Health Matrix"
+                subtitle="Step 03"
+              />
               
               <div class="grid md:grid-cols-2 gap-12">
                 <div class="p-12 border border-slate-100 bg-slate-50/50 flex items-start gap-8 relative overflow-hidden">
@@ -141,9 +182,11 @@
                     <Check class="w-8 h-8 text-emerald-500 stroke-[3]" />
                   </div>
                   <div>
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Regional Status</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">
+                      Regional Status
+                    </p>
                     <h3 class="text-xl font-black text-slate-900 leading-tight uppercase">
-                      Localized<br/>Operational Hub
+                      Localized<br>Operational Hub
                     </h3>
                     <div class="flex items-center gap-2 mt-4">
                       <div class="w-1.5 h-1.5 rounded-none bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
@@ -153,12 +196,18 @@
                 </div>
 
                 <div class="p-12 border border-slate-100 bg-slate-50/50 flex flex-col justify-center">
-                  <h4 class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 mb-10">Localized Telemetry</h4>
+                  <h4 class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 mb-10">
+                    Localized Telemetry
+                  </h4>
                   <div class="space-y-8">
                     <div class="flex items-center justify-between pb-6 border-b border-slate-200/50">
                       <div class="space-y-1">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Resource Allocation</p>
-                        <p class="text-xs font-black text-slate-900 uppercase tracking-tight">System Optimal</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                          Resource Allocation
+                        </p>
+                        <p class="text-xs font-black text-slate-900 uppercase tracking-tight">
+                          System Optimal
+                        </p>
                       </div>
                       <span class="text-[10px] font-black uppercase text-emerald-500">Live</span>
                     </div>
@@ -170,17 +219,25 @@
         </div>
 
         <!-- Campaigns Tab -->
-        <div v-else-if="activeTab === 'events'" class="animate-in fade-in duration-500">
+        <div
+          v-else-if="activeTab === 'events'"
+          class="animate-in fade-in duration-500"
+        >
           <BranchEventsList :branch-id="branchId" />
         </div>
 
         <!-- Audit Trail Tab -->
-        <div v-else-if="activeTab === 'activity'" class="animate-in fade-in duration-500">
+        <div
+          v-else-if="activeTab === 'activity'"
+          class="animate-in fade-in duration-500"
+        >
           <AppCard class="!p-12 border-slate-200">
             <EditorialHeader title="Regional Audit Stream" />
             <div class="py-24 flex flex-col items-center justify-center gap-4 text-slate-200">
               <History class="w-10 h-10" />
-              <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">No recent operational logs detected</p>
+              <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                No recent operational logs detected
+              </p>
             </div>
           </AppCard>
         </div>

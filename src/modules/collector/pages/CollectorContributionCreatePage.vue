@@ -1,7 +1,13 @@
 <template>
-  <div class="min-h-screen font-sans selection:bg-violet-100 selection:text-violet-900 transition-colors duration-500" :class="isDesktop ? 'bg-[#f8fafc]' : 'bg-[#060B16] text-white'">
+  <div
+    class="min-h-screen font-sans selection:bg-violet-100 selection:text-violet-900 transition-colors duration-500"
+    :class="isDesktop ? 'bg-[#f8fafc]' : 'bg-[#060B16] text-white'"
+  >
     <!-- Desktop Header -->
-    <header v-if="isDesktop" class="h-20 bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-40 px-12 flex items-center justify-between">
+    <header
+      v-if="isDesktop"
+      class="h-20 bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-40 px-12 flex items-center justify-between"
+    >
       <div class="flex items-center gap-4">
         <button 
           class="h-10 w-10 flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-colors"
@@ -22,7 +28,10 @@
     </header>
 
     <!-- Mobile Header -->
-    <header v-else class="sticky top-0 z-30 bg-[#060B16]/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between">
+    <header
+      v-else
+      class="sticky top-0 z-30 bg-[#060B16]/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between"
+    >
       <button 
         class="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center text-white active:scale-90 transition-transform"
         @click="router.back()"
@@ -38,7 +47,10 @@
     <div class="max-w-5xl mx-auto px-6 py-10 lg:py-16 space-y-12 pb-40">
       <!-- Stepper -->
       <nav class="relative flex justify-between items-start w-full max-w-2xl mx-auto">
-        <div class="absolute top-5 left-0 right-0 h-[2px] transition-colors duration-500" :class="isDesktop ? 'bg-slate-200' : 'bg-white/10'" />
+        <div
+          class="absolute top-5 left-0 right-0 h-[2px] transition-colors duration-500"
+          :class="isDesktop ? 'bg-slate-200' : 'bg-white/10'"
+        />
         <div 
           class="absolute top-5 left-0 h-[2px] bg-violet-600 transition-all duration-700 shadow-[0_0_15px_rgba(139,92,246,0.5)]"
           :style="{ width: `${((activeStep - 1) / 3) * 100}%` }"
@@ -55,7 +67,10 @@
               ? 'bg-violet-600 border-violet-600 text-white shadow-xl shadow-violet-500/20' 
               : (isDesktop ? 'bg-white border-slate-200 text-slate-300' : 'bg-slate-900 border-white/10 text-slate-600')"
           >
-            <Check v-if="i + 1 < activeStep" class="w-5 h-5" />
+            <Check
+              v-if="i + 1 < activeStep"
+              class="w-5 h-5"
+            />
             <span v-else>{{ i + 1 }}</span>
           </div>
           <span
@@ -87,7 +102,10 @@
             <!-- Event Selection -->
             <div class="space-y-4">
               <div class="flex items-center justify-between px-1">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.25em]" :class="isDesktop ? 'text-slate-400' : 'text-slate-500'">
+                <h3
+                  class="text-[10px] font-black uppercase tracking-[0.25em]"
+                  :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
+                >
                   1. Target Event
                 </h3>
                 <button 
@@ -99,7 +117,10 @@
                 </button>
               </div>
 
-              <div v-if="!form.eventId" class="grid gap-3">
+              <div
+                v-if="!form.eventId"
+                class="grid gap-3"
+              >
                 <button
                   v-for="event in assignmentsQuery.data.value.events"
                   :key="event.id"
@@ -107,33 +128,58 @@
                   :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500/50 hover:shadow-lg' : 'bg-white/5 border-white/5'"
                   @click="selectEvent(event.id)"
                 >
-                  <div class="w-14 h-14 border flex items-center justify-center transition-colors"
-                       :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500' : 'bg-slate-900 border-white/10 text-slate-800'">
+                  <div
+                    class="w-14 h-14 border flex items-center justify-center transition-colors"
+                    :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500' : 'bg-slate-900 border-white/10 text-slate-800'"
+                  >
                     <Calendar class="w-7 h-7" />
                   </div>
                   <div class="min-w-0 flex-1">
-                    <h4 class="text-lg font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">{{ event.title }}</h4>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ event.dateLabel }} · {{ event.location }}</p>
+                    <h4
+                      class="text-lg font-black uppercase italic"
+                      :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                    >
+                      {{ event.title }}
+                    </h4>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                      {{ event.dateLabel }} · {{ event.location }}
+                    </p>
                   </div>
                 </button>
               </div>
 
-              <div v-else class="p-6 border flex items-center gap-6"
-                   :class="isDesktop ? 'bg-white border-violet-500/30 shadow-md shadow-violet-500/5' : 'bg-violet-600/10 border-violet-500/30'">
+              <div
+                v-else
+                class="p-6 border flex items-center gap-6"
+                :class="isDesktop ? 'bg-white border-violet-500/30 shadow-md shadow-violet-500/5' : 'bg-violet-600/10 border-violet-500/30'"
+              >
                 <div class="w-14 h-14 bg-violet-600 flex items-center justify-center text-white">
                   <Calendar class="w-7 h-7" />
                 </div>
                 <div class="min-w-0 flex-1">
-                  <h4 class="text-lg font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">{{ selectedEvent?.title }}</h4>
-                  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ selectedEvent?.dateLabel }}</p>
+                  <h4
+                    class="text-lg font-black uppercase italic"
+                    :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                  >
+                    {{ selectedEvent?.title }}
+                  </h4>
+                  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                    {{ selectedEvent?.dateLabel }}
+                  </p>
                 </div>
               </div>
             </div>
 
             <!-- Fund Selection -->
-            <div v-if="form.eventId" class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div
+              v-if="form.eventId"
+              class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
+            >
               <div class="flex items-center justify-between px-1">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.25em]" :class="isDesktop ? 'text-slate-400' : 'text-slate-500'">
+                <h3
+                  class="text-[10px] font-black uppercase tracking-[0.25em]"
+                  :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
+                >
                   2. Destination Fund
                 </h3>
                 <button 
@@ -145,7 +191,10 @@
                 </button>
               </div>
 
-              <div v-if="!form.recipientFundId" class="grid gap-3">
+              <div
+                v-if="!form.recipientFundId"
+                class="grid gap-3"
+              >
                 <button
                   v-for="fund in availableFunds"
                   :key="fund.id"
@@ -153,26 +202,46 @@
                   :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500/50 hover:shadow-lg' : 'bg-white/5 border-white/5'"
                   @click="form.recipientFundId = fund.id"
                 >
-                  <div class="w-14 h-14 border flex items-center justify-center transition-colors"
-                       :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500' : 'bg-slate-900 border-white/10 text-slate-800'">
+                  <div
+                    class="w-14 h-14 border flex items-center justify-center transition-colors"
+                    :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500' : 'bg-slate-900 border-white/10 text-slate-800'"
+                  >
                     <Target class="w-7 h-7" />
                   </div>
                   <div class="min-w-0 flex-1">
-                    <h4 class="text-lg font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">{{ fund.name }}</h4>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Target: {{ formatCurrency(fund.targetAmount, 'GHS') }}</p>
+                    <h4
+                      class="text-lg font-black uppercase italic"
+                      :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                    >
+                      {{ fund.name }}
+                    </h4>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                      Target: {{ formatCurrency(fund.targetAmount, 'GHS') }}
+                    </p>
                   </div>
                 </button>
               </div>
 
-              <div v-else class="p-6 border flex items-center gap-6"
-                   :class="isDesktop ? 'bg-white border-violet-500/30 shadow-md shadow-violet-500/5' : 'bg-violet-600/10 border-violet-500/30'">
+              <div
+                v-else
+                class="p-6 border flex items-center gap-6"
+                :class="isDesktop ? 'bg-white border-violet-500/30 shadow-md shadow-violet-500/5' : 'bg-violet-600/10 border-violet-500/30'"
+              >
                 <div class="w-14 h-14 bg-violet-600 flex items-center justify-center text-white">
                   <Target class="w-7 h-7" />
                 </div>
                 <div class="min-w-0 flex-1">
-                  <h4 class="text-lg font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">{{ selectedFund?.name }}</h4>
+                  <h4
+                    class="text-lg font-black uppercase italic"
+                    :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                  >
+                    {{ selectedFund?.name }}
+                  </h4>
                   <div class="mt-2 h-1 w-full bg-black/5 rounded-none overflow-hidden">
-                    <div class="h-full bg-violet-600" :style="{ width: `${selectedFund?.progress}%` }" />
+                    <div
+                      class="h-full bg-violet-600"
+                      :style="{ width: `${selectedFund?.progress}%` }"
+                    />
                   </div>
                 </div>
               </div>
@@ -181,10 +250,14 @@
 
           <!-- Form Column -->
           <div class="lg:col-span-5">
-            <div v-if="form.recipientFundId" class="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-              <div class="p-8 lg:p-10 border transition-all duration-500 shadow-2xl"
-                   :class="isDesktop ? 'bg-white border-slate-200' : 'bg-white/5 border-white/5'">
-                
+            <div
+              v-if="form.recipientFundId"
+              class="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700"
+            >
+              <div
+                class="p-8 lg:p-10 border transition-all duration-500 shadow-2xl"
+                :class="isDesktop ? 'bg-white border-slate-200' : 'bg-white/5 border-white/5'"
+              >
                 <div class="space-y-8">
                   <div class="space-y-3">
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Collection Amount</label>
@@ -203,12 +276,18 @@
                   <div class="space-y-6">
                     <div class="flex items-center justify-between">
                       <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contributor Info</label>
-                      <button @click="form.anonymous = !form.anonymous" class="text-[10px] font-black uppercase text-violet-600 hover:underline">
+                      <button
+                        class="text-[10px] font-black uppercase text-violet-600 hover:underline"
+                        @click="form.anonymous = !form.anonymous"
+                      >
                         {{ form.anonymous ? 'Clear Anonymous' : 'Set Anonymous' }}
                       </button>
                     </div>
 
-                    <div v-if="!form.anonymous" class="space-y-4">
+                    <div
+                      v-if="!form.anonymous"
+                      class="space-y-4"
+                    >
                       <input 
                         v-model="form.contributorName"
                         placeholder="Full Name"
@@ -221,9 +300,16 @@
                       >
                     </div>
 
-                    <div v-else class="p-6 bg-slate-900 border-l-4 border-violet-500">
-                      <p class="text-xs font-black text-white uppercase tracking-widest">Anonymous Entry Active</p>
-                      <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">Identity will be suppressed on receipt</p>
+                    <div
+                      v-else
+                      class="p-6 bg-slate-900 border-l-4 border-violet-500"
+                    >
+                      <p class="text-xs font-black text-white uppercase tracking-widest">
+                        Anonymous Entry Active
+                      </p>
+                      <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">
+                        Identity will be suppressed on receipt
+                      </p>
                     </div>
                   </div>
 
@@ -246,14 +332,21 @@
               </div>
 
               <!-- Desktop only payment summary -->
-              <div v-if="isDesktop" class="p-6 bg-slate-950 text-white flex items-center justify-between border border-slate-900 shadow-xl">
+              <div
+                v-if="isDesktop"
+                class="p-6 bg-slate-950 text-white flex items-center justify-between border border-slate-900 shadow-xl"
+              >
                 <div class="flex items-center gap-4">
                   <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                     <Banknote class="w-5 h-5" />
                   </div>
                   <div>
-                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-500">Payment Type</p>
-                    <p class="text-xs font-black uppercase tracking-tight">Hard Currency (Cash)</p>
+                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-500">
+                      Payment Type
+                    </p>
+                    <p class="text-xs font-black uppercase tracking-tight">
+                      Hard Currency (Cash)
+                    </p>
                   </div>
                 </div>
                 <Check class="w-5 h-5 text-emerald-500" />

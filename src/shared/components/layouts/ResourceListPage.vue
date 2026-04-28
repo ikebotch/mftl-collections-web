@@ -62,8 +62,14 @@
         @retry="$emit('retry')"
       >
         <!-- Pass through all DataTable slots -->
-        <template v-for="(_, slotName) in $slots" #[slotName]="slotProps">
-          <slot :name="slotName" v-bind="slotProps" />
+        <template
+          v-for="(_, slotName) in $slots"
+          #[slotName]="slotProps"
+        >
+          <slot
+            :name="slotName"
+            v-bind="slotProps"
+          />
         </template>
       </DataTable>
     </div>

@@ -38,8 +38,12 @@
                       {{ currentUser.name?.charAt(0) }}
                     </div>
                     <div>
-                      <p class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none">{{ name }}</p>
-                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">{{ email }}</p>
+                      <p class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none">
+                        {{ name }}
+                      </p>
+                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
+                        {{ email }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -75,7 +79,10 @@
             </AppCard>
 
             <!-- Identity Section -->
-            <AppCard id="identity" class="!p-10 space-y-10 border-slate-200 scroll-mt-24">
+            <AppCard
+              id="identity"
+              class="!p-10 space-y-10 border-slate-200 scroll-mt-24"
+            >
               <EditorialHeader 
                 title="Identity Details"
                 class="!mb-8"
@@ -93,7 +100,10 @@
                 </template>
               </EditorialHeader>
 
-              <div v-if="!isEditingProfile" class="space-y-12 animate-in fade-in duration-700">
+              <div
+                v-if="!isEditingProfile"
+                class="space-y-12 animate-in fade-in duration-700"
+              >
                 <div class="flex items-center gap-8 mb-12">
                   <div class="w-24 h-24 rounded-none bg-slate-100 border border-slate-200 overflow-hidden shadow-sm">
                     <img
@@ -121,21 +131,36 @@
 
                 <div class="grid md:grid-cols-2 gap-x-12 gap-y-10">
                   <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Display Name</p>
-                    <p class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ name }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                      Display Name
+                    </p>
+                    <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
+                      {{ name }}
+                    </p>
                   </div>
                   <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Operational Email</p>
-                    <p class="text-sm font-black text-slate-900 tracking-tight italic">{{ email }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                      Operational Email
+                    </p>
+                    <p class="text-sm font-black text-slate-900 tracking-tight italic">
+                      {{ email }}
+                    </p>
                   </div>
                   <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Phone Number</p>
-                    <p class="text-sm font-black text-slate-900 tracking-tight">{{ phoneNumber || 'Not Configured' }}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                      Phone Number
+                    </p>
+                    <p class="text-sm font-black text-slate-900 tracking-tight">
+                      {{ phoneNumber || 'Not Configured' }}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <section v-else class="space-y-8 animate-in slide-in-from-top-4 duration-500">
+              <section
+                v-else
+                class="space-y-8 animate-in slide-in-from-top-4 duration-500"
+              >
                 <div class="flex items-center gap-8 mb-12">
                   <div class="relative group">
                     <div class="w-24 h-24 rounded-none bg-slate-100 border border-slate-200 overflow-hidden shadow-sm">
@@ -188,7 +213,10 @@
             </AppCard>
 
             <!-- Preferences Section -->
-            <AppCard id="preferences" class="!p-10 space-y-8 border-slate-200 scroll-mt-24">
+            <AppCard
+              id="preferences"
+              class="!p-10 space-y-8 border-slate-200 scroll-mt-24"
+            >
               <EditorialHeader 
                 title="Regional Preferences"
                 class="!mb-8"
@@ -206,18 +234,32 @@
                 </template>
               </EditorialHeader>
               
-              <div v-if="!isEditingProfile" class="grid md:grid-cols-2 gap-10">
+              <div
+                v-if="!isEditingProfile"
+                class="grid md:grid-cols-2 gap-10"
+              >
                 <div class="space-y-2">
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Preferred Language</p>
-                  <p class="text-sm font-black text-slate-900 uppercase tracking-tight">English (Ghana)</p>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                    Preferred Language
+                  </p>
+                  <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
+                    English (Ghana)
+                  </p>
                 </div>
                 <div class="space-y-2">
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Local Timezone</p>
-                  <p class="text-sm font-black text-slate-900 uppercase tracking-tight italic">Greenwich Mean Time (GMT)</p>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                    Local Timezone
+                  </p>
+                  <p class="text-sm font-black text-slate-900 uppercase tracking-tight italic">
+                    Greenwich Mean Time (GMT)
+                  </p>
                 </div>
               </div>
 
-              <div v-else class="grid md:grid-cols-2 gap-10 animate-in slide-in-from-top-2 duration-500">
+              <div
+                v-else
+                class="grid md:grid-cols-2 gap-10 animate-in slide-in-from-top-2 duration-500"
+              >
                 <AppSelect 
                   label="Preferred Language" 
                   :model-value="'en-GH'"
@@ -240,7 +282,9 @@
             <template #sidebar-footer>
               <div class="pt-10 space-y-6">
                 <div class="p-4 bg-slate-50 border border-slate-100 rounded-none">
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Sync Status</p>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                    Sync Status
+                  </p>
                   <div class="flex items-center gap-2">
                     <div class="w-1.5 h-1.5 rounded-none bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
                     <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Auth0 Synchronized</span>
@@ -257,7 +301,10 @@
             :sections="rolesSections"
             title="Authorization"
           >
-            <AppCard id="matrix" class="!p-10 space-y-10 border-slate-200 scroll-mt-24">
+            <AppCard
+              id="matrix"
+              class="!p-10 space-y-10 border-slate-200 scroll-mt-24"
+            >
               <EditorialHeader 
                 title="Current Authorization Matrix"
                 class="!mb-8"
@@ -274,8 +321,13 @@
                 v-else-if="me?.scopeAssignments.length || me?.isPlatformAdmin || me?.auth0Roles.length"
                 class="space-y-8"
               >
-                <div v-if="me?.auth0Roles.length" class="space-y-4">
-                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Auth0 Identity Roles</p>
+                <div
+                  v-if="me?.auth0Roles.length"
+                  class="space-y-4"
+                >
+                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Auth0 Identity Roles
+                  </p>
                   <div class="flex flex-wrap gap-2">
                     <span 
                       v-for="role in me.auth0Roles" 
@@ -288,7 +340,9 @@
                 </div>
 
                 <div class="space-y-4">
-                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Local Matrix Assignments</p>
+                  <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                    Local Matrix Assignments
+                  </p>
                   <div class="border border-slate-100 rounded-none overflow-hidden shadow-sm divide-y divide-slate-50">
                     <AssignmentListRow 
                       v-if="me.isPlatformAdmin"
@@ -326,7 +380,10 @@
               </div>
             </AppCard>
 
-            <AppCard id="guide" class="!p-10 border-slate-200 bg-slate-900 text-white overflow-hidden relative scroll-mt-24">
+            <AppCard
+              id="guide"
+              class="!p-10 border-slate-200 bg-slate-900 text-white overflow-hidden relative scroll-mt-24"
+            >
               <ShieldCheck class="absolute -right-4 -bottom-4 w-32 h-32 opacity-[0.03] text-white" />
               <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-8">
                 Role Definition Guide
@@ -367,7 +424,10 @@
             :sections="securitySections"
             title="Cyber Security"
           >
-            <AppCard id="mfa" class="!p-10 space-y-10 border-slate-200 scroll-mt-24">
+            <AppCard
+              id="mfa"
+              class="!p-10 space-y-10 border-slate-200 scroll-mt-24"
+            >
               <EditorialHeader 
                 title="Security & Verification"
                 class="!mb-8"
@@ -379,11 +439,20 @@
                       <ShieldCheck class="w-6 h-6 text-emerald-500" />
                     </div>
                     <div>
-                      <p class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none">Password Protected</p>
-                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 leading-none">Last changed 3 months ago</p>
+                      <p class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none">
+                        Password Protected
+                      </p>
+                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 leading-none">
+                        Last changed 3 months ago
+                      </p>
                     </div>
                   </div>
-                  <AppButton variant="outline" class="bg-white text-[10px] uppercase tracking-widest">Update</AppButton>
+                  <AppButton
+                    variant="outline"
+                    class="bg-white text-[10px] uppercase tracking-widest"
+                  >
+                    Update
+                  </AppButton>
                 </div>
 
                 <div class="p-8 bg-violet-50/30 border border-violet-100 flex items-center justify-between">
@@ -392,16 +461,28 @@
                       <Fingerprint class="w-6 h-6 text-violet-600" />
                     </div>
                     <div>
-                      <p class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none">Two-Factor Auth</p>
-                      <p class="text-[10px] font-bold text-violet-600 uppercase tracking-widest mt-2 leading-none italic">Active</p>
+                      <p class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none">
+                        Two-Factor Auth
+                      </p>
+                      <p class="text-[10px] font-bold text-violet-600 uppercase tracking-widest mt-2 leading-none italic">
+                        Active
+                      </p>
                     </div>
                   </div>
-                  <AppButton variant="primary" class="text-[10px] uppercase tracking-widest">Manage</AppButton>
+                  <AppButton
+                    variant="primary"
+                    class="text-[10px] uppercase tracking-widest"
+                  >
+                    Manage
+                  </AppButton>
                 </div>
               </div>
             </AppCard>
 
-            <AppCard id="sessions" class="!p-10 border-slate-200 bg-slate-50/30 scroll-mt-24">
+            <AppCard
+              id="sessions"
+              class="!p-10 border-slate-200 bg-slate-50/30 scroll-mt-24"
+            >
               <EditorialHeader 
                 title="Session Control"
                 class="!mb-8"
@@ -414,16 +495,31 @@
                   </div>
                   <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Now</span>
                 </div>
-                <AppButton variant="danger" class="w-full text-[10px] uppercase tracking-widest bg-transparent border-rose-200 text-rose-600">Terminate All Sessions</AppButton>
+                <AppButton
+                  variant="danger"
+                  class="w-full text-[10px] uppercase tracking-widest bg-transparent border-rose-200 text-rose-600"
+                >
+                  Terminate All Sessions
+                </AppButton>
               </div>
             </AppCard>
 
-            <AppCard id="danger" class="!p-10 border-slate-200 bg-rose-900 text-white relative overflow-hidden scroll-mt-24">
-              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-rose-300 mb-10 italic">Management</h3>
+            <AppCard
+              id="danger"
+              class="!p-10 border-slate-200 bg-rose-900 text-white relative overflow-hidden scroll-mt-24"
+            >
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-rose-300 mb-10 italic">
+                Management
+              </h3>
               <p class="text-sm font-bold text-rose-100 uppercase tracking-tight leading-relaxed mb-8">
                 Permanently deactivate your identity and wipe all associated security tokens.
               </p>
-              <AppButton variant="danger" class="bg-white text-rose-900 hover:bg-rose-50 border-none px-12 py-4 text-[10px] font-black uppercase tracking-[0.2em]">Purge Account</AppButton>
+              <AppButton
+                variant="danger"
+                class="bg-white text-rose-900 hover:bg-rose-50 border-none px-12 py-4 text-[10px] font-black uppercase tracking-[0.2em]"
+              >
+                Purge Account
+              </AppButton>
             </AppCard>
           </AdminWizardLayout>
         </div>
@@ -434,7 +530,10 @@
             :sections="notificationsSections"
             title="Dispatch Control"
           >
-            <AppCard id="alerts" class="!p-10 space-y-10 border-slate-200 scroll-mt-24">
+            <AppCard
+              id="alerts"
+              class="!p-10 space-y-10 border-slate-200 scroll-mt-24"
+            >
               <EditorialHeader 
                 title="Dispatch Preferences"
                 class="!mb-8"
@@ -452,20 +551,49 @@
                 </template>
               </EditorialHeader>
 
-              <div v-if="!isEditingNotifications" class="space-y-8 animate-in fade-in duration-700">
-                <div v-for="alert in [{t:'Contribution Alerts', d:'Active'}, {t:'System Health', d:'Active'}, {t:'Weekly Analytics', d:'Inactive'}]" :key="alert.t" class="flex items-center justify-between p-6 bg-slate-50 border border-slate-100 rounded-none">
+              <div
+                v-if="!isEditingNotifications"
+                class="space-y-8 animate-in fade-in duration-700"
+              >
+                <div
+                  v-for="alert in [{t:'Contribution Alerts', d:'Active'}, {t:'System Health', d:'Active'}, {t:'Weekly Analytics', d:'Inactive'}]"
+                  :key="alert.t"
+                  class="flex items-center justify-between p-6 bg-slate-50 border border-slate-100 rounded-none"
+                >
                   <div>
-                    <p class="text-xs font-black text-slate-900 uppercase tracking-tight">{{ alert.t }}</p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{{ alert.d }}</p>
+                    <p class="text-xs font-black text-slate-900 uppercase tracking-tight">
+                      {{ alert.t }}
+                    </p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                      {{ alert.d }}
+                    </p>
                   </div>
-                  <div class="w-2 h-2 rounded-none" :class="alert.d === 'Active' ? 'bg-emerald-500' : 'bg-slate-300'" />
+                  <div
+                    class="w-2 h-2 rounded-none"
+                    :class="alert.d === 'Active' ? 'bg-emerald-500' : 'bg-slate-300'"
+                  />
                 </div>
               </div>
 
-              <div v-else class="space-y-8 animate-in slide-in-from-top-2 duration-500">
-                <ToggleCard title="Contribution Alerts" description="Real-time notifications." :model-value="true" />
-                <ToggleCard title="System Health" description="Critical alerts." :model-value="true" />
-                <ToggleCard title="Weekly Analytics" description="Automated reports." :model-value="false" />
+              <div
+                v-else
+                class="space-y-8 animate-in slide-in-from-top-2 duration-500"
+              >
+                <ToggleCard
+                  title="Contribution Alerts"
+                  description="Real-time notifications."
+                  :model-value="true"
+                />
+                <ToggleCard
+                  title="System Health"
+                  description="Critical alerts."
+                  :model-value="true"
+                />
+                <ToggleCard
+                  title="Weekly Analytics"
+                  description="Automated reports."
+                  :model-value="false"
+                />
               </div>
             </AppCard>
           </AdminWizardLayout>

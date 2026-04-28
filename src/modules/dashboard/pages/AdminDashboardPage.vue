@@ -79,8 +79,12 @@
           <AppCard class="!p-0 border-slate-200/60 shadow-premium overflow-hidden bg-white/40">
             <div class="p-10 border-b border-slate-100 flex items-center justify-between">
               <div class="space-y-1">
-                <h3 class="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Campaign Performance Ledger</h3>
-                <p class="text-base font-black text-slate-900 tracking-tight italic">Detailed financial auditing</p>
+                <h3 class="text-xs font-black uppercase tracking-[0.3em] text-slate-400">
+                  Campaign Performance Ledger
+                </h3>
+                <p class="text-base font-black text-slate-900 tracking-tight italic">
+                  Detailed financial auditing
+                </p>
               </div>
               <span class="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-violet-50 text-violet-600 text-[10px] font-black uppercase tracking-widest border border-violet-100">
                 <span class="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
@@ -99,8 +103,12 @@
                     <Calendar class="w-5 h-5" />
                   </div>
                   <div>
-                    <p class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none">{{ row.title }}</p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">{{ row.count }} Records Audited</p>
+                    <p class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none">
+                      {{ row.title }}
+                    </p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
+                      {{ row.count }} Records Audited
+                    </p>
                   </div>
                 </div>
               </template>
@@ -121,7 +129,10 @@
                 <div class="flex items-center gap-4">
                   <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{{ row.percent }}%</span>
                   <div class="w-32 bg-slate-100 h-1 rounded-full overflow-hidden">
-                    <div class="h-full bg-emerald-500" :style="{ width: row.percent + '%' }" />
+                    <div
+                      class="h-full bg-emerald-500"
+                      :style="{ width: row.percent + '%' }"
+                    />
                   </div>
                 </div>
               </template>

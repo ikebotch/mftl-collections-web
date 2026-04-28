@@ -19,7 +19,10 @@
           <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 lg:text-slate-400">
             Collector Overview
           </p>
-          <h2 class="text-3xl lg:text-5xl font-black tracking-tight uppercase italic transition-colors duration-500" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+          <h2
+            class="text-3xl lg:text-5xl font-black tracking-tight uppercase italic transition-colors duration-500"
+            :class="isDesktop ? 'text-slate-900' : 'text-white'"
+          >
             {{ query.data.value.profile.name }}
           </h2>
           <div class="flex items-center gap-3 mt-2">
@@ -34,8 +37,12 @@
 
         <div class="flex items-center gap-4 lg:gap-8">
           <div class="text-right hidden lg:block">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Shift</p>
-            <p class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ query.data.value.currentShiftLabel }}</p>
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+              Active Shift
+            </p>
+            <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
+              {{ query.data.value.currentShiftLabel }}
+            </p>
           </div>
           <AppButton
             variant="primary"
@@ -57,12 +64,16 @@
             ? 'bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-violet-500/30' 
             : 'bg-white/5 border-white/10 hover:border-violet-500/30'"
         >
-          <p class="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300" 
-             :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'">
+          <p
+            class="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300" 
+            :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'"
+          >
             {{ stat.label }}
           </p>
-          <p class="mt-4 text-3xl lg:text-4xl font-black transition-colors duration-300"
-             :class="isDesktop ? 'text-slate-900' : 'text-white'">
+          <p
+            class="mt-4 text-3xl lg:text-4xl font-black transition-colors duration-300"
+            :class="isDesktop ? 'text-slate-900' : 'text-white'"
+          >
             {{ stat.value }}
           </p>
           <div class="mt-4 h-1 w-8 bg-violet-500/20 group-hover:w-full transition-all duration-500" />
@@ -75,15 +86,28 @@
           <!-- Assignments Section -->
           <section class="space-y-6">
             <div class="flex items-center justify-between">
-              <h3 class="text-xs font-black uppercase tracking-[0.25em]" :class="isDesktop ? 'text-slate-400' : 'text-slate-500'">Current Assignments</h3>
+              <h3
+                class="text-xs font-black uppercase tracking-[0.25em]"
+                :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
+              >
+                Current Assignments
+              </h3>
               <div class="h-px flex-1 bg-slate-200 mx-6 hidden lg:block" />
             </div>
 
-            <div v-if="!query.data.value.profile.hasAssignments" class="p-10 border border-dashed border-slate-300 bg-slate-50 text-center">
-              <p class="text-xs font-black uppercase tracking-widest text-slate-400">No active assignments found</p>
+            <div
+              v-if="!query.data.value.profile.hasAssignments"
+              class="p-10 border border-dashed border-slate-300 bg-slate-50 text-center"
+            >
+              <p class="text-xs font-black uppercase tracking-widest text-slate-400">
+                No active assignments found
+              </p>
             </div>
 
-            <div v-else class="grid gap-4">
+            <div
+              v-else
+              class="grid gap-4"
+            >
               <article 
                 v-for="event in query.data.value.assignments.events" 
                 :key="event.id"
@@ -91,26 +115,56 @@
                 :class="isDesktop ? 'bg-white border-slate-200 hover:border-violet-500/50' : 'bg-white/5 border-white/10'"
               >
                 <div>
-                  <h4 class="text-lg font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">{{ event.title }}</h4>
-                  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ event.branchName }}</p>
+                  <h4
+                    class="text-lg font-black uppercase italic"
+                    :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                  >
+                    {{ event.title }}
+                  </h4>
+                  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                    {{ event.branchName }}
+                  </p>
                 </div>
-                <AppButton variant="ghost" size="sm" class="text-[9px] font-black uppercase tracking-widest">Details</AppButton>
+                <AppButton
+                  variant="ghost"
+                  size="sm"
+                  class="text-[9px] font-black uppercase tracking-widest"
+                >
+                  Details
+                </AppButton>
               </article>
             </div>
           </section>
 
           <!-- System Status Area (Desktop Only) -->
-          <section v-if="isDesktop" class="grid grid-cols-2 gap-6 p-8 bg-slate-900 text-white border-l-4 border-emerald-500 shadow-2xl">
+          <section
+            v-if="isDesktop"
+            class="grid grid-cols-2 gap-6 p-8 bg-slate-900 text-white border-l-4 border-emerald-500 shadow-2xl"
+          >
             <div>
-              <p class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Sync Status</p>
-              <h4 class="text-xl font-black mt-2 uppercase tracking-tight">{{ query.data.value.syncStatusLabel }}</h4>
-              <p class="text-xs text-slate-400 mt-2 font-medium leading-relaxed">{{ query.data.value.syncStatusDescription }}</p>
+              <p class="text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                Sync Status
+              </p>
+              <h4 class="text-xl font-black mt-2 uppercase tracking-tight">
+                {{ query.data.value.syncStatusLabel }}
+              </h4>
+              <p class="text-xs text-slate-400 mt-2 font-medium leading-relaxed">
+                {{ query.data.value.syncStatusDescription }}
+              </p>
             </div>
             <div class="flex flex-col justify-end items-end text-right">
-              <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Connection</p>
-              <p class="text-xs font-black text-white mt-1">PRIMARY TERMINAL 01</p>
+              <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                Connection
+              </p>
+              <p class="text-xs font-black text-white mt-1">
+                PRIMARY TERMINAL 01
+              </p>
               <div class="flex gap-1 mt-3">
-                <div v-for="i in 5" :key="i" class="h-1 w-4 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                <div
+                  v-for="i in 5"
+                  :key="i"
+                  class="h-1 w-4 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                />
               </div>
             </div>
           </section>
@@ -120,7 +174,12 @@
         <div class="lg:col-span-4 space-y-8">
           <section class="space-y-6">
             <div class="flex items-center justify-between">
-              <h3 class="text-xs font-black uppercase tracking-[0.25em]" :class="isDesktop ? 'text-slate-400' : 'text-slate-500'">Recent Receipts</h3>
+              <h3
+                class="text-xs font-black uppercase tracking-[0.25em]"
+                :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
+              >
+                Recent Receipts
+              </h3>
               <AppButton
                 variant="ghost"
                 size="sm"
@@ -131,11 +190,19 @@
               </AppButton>
             </div>
 
-            <div v-if="query.data.value.recentReceipts.length === 0" class="p-8 text-center border border-dashed border-slate-300">
-              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">No activity recorded</p>
+            <div
+              v-if="query.data.value.recentReceipts.length === 0"
+              class="p-8 text-center border border-dashed border-slate-300"
+            >
+              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                No activity recorded
+              </p>
             </div>
 
-            <div v-else class="space-y-4">
+            <div
+              v-else
+              class="space-y-4"
+            >
               <button
                 v-for="receipt in query.data.value.recentReceipts"
                 :key="receipt.id"
@@ -145,17 +212,26 @@
               >
                 <div class="flex items-start justify-between">
                   <div class="min-w-0 flex-1">
-                    <p class="text-[9px] font-black uppercase tracking-widest" :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'">
+                    <p
+                      class="text-[9px] font-black uppercase tracking-widest"
+                      :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'"
+                    >
                       {{ receipt.receiptNumber }}
                     </p>
-                    <p class="text-2xl font-black mt-2 tracking-tight" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+                    <p
+                      class="text-2xl font-black mt-2 tracking-tight"
+                      :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                    >
                       {{ receipt.amount }}
                     </p>
                     <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-2 truncate">
                       {{ receipt.eventTitle }}
                     </p>
                   </div>
-                  <ReceiptStatusBadge :status="receipt.status" class="scale-75 origin-top-right" />
+                  <ReceiptStatusBadge
+                    :status="receipt.status"
+                    class="scale-75 origin-top-right"
+                  />
                 </div>
               </button>
             </div>
@@ -163,7 +239,7 @@
 
           <!-- Mobile-only Action -->
           <div class="lg:hidden pt-4">
-             <AppButton
+            <AppButton
               class="w-full !rounded-none !py-6 text-sm font-black uppercase tracking-widest shadow-[0_10px_40px_rgba(139,92,246,0.3)]"
               size="lg"
               :disabled="!query.data.value.profile.hasAssignments"

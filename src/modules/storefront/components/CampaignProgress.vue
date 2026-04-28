@@ -23,7 +23,11 @@
     <div class="flex justify-between items-center pt-2">
       <div class="flex items-center gap-2">
         <div class="flex -space-x-2">
-          <div v-for="i in 3" :key="i" class="w-7 h-7 rounded-full border-2 border-white bg-slate-200" />
+          <div
+            v-for="i in 3"
+            :key="i"
+            class="w-7 h-7 rounded-full border-2 border-white bg-slate-200"
+          />
         </div>
         <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ donorCount }} donors</span>
       </div>

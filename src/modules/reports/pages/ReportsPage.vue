@@ -95,8 +95,12 @@
       <div class="lg:col-span-7 space-y-6">
         <div class="flex items-center justify-between">
           <div class="space-y-1">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Campaign Ledger</h3>
-            <p class="text-xs font-bold text-slate-900 mt-1 uppercase tracking-tight italic">Performance Audit across active nodes</p>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+              Campaign Ledger
+            </h3>
+            <p class="text-xs font-bold text-slate-900 mt-1 uppercase tracking-tight italic">
+              Performance Audit across active nodes
+            </p>
           </div>
         </div>
         <DataTable
@@ -113,7 +117,6 @@
         />
       </div>
     </div>
-
   </div>
 </template>
 

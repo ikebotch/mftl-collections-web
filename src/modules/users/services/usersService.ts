@@ -71,7 +71,7 @@ export async function getUserAuditLogs(id: string): Promise<AuditLog[]> {
   return response.data || []
 }
 
-export async function assignScope(userId: string, payload: { role: string, scopeType: string, targetId?: string }): Promise<string> {
+export async function assignScope(userId: string, payload: { roles: string[], scopeType: string, targetId?: string }): Promise<string> {
   const response = await httpClient.post<string, any>(`/users/${userId}/scopes`, payload)
   return response.data
 }
@@ -84,6 +84,7 @@ export async function revokeScope(assignmentId: string): Promise<boolean> {
 export const usersService = {
   list: listUsers,
   getById: getUserById,
+  getMe,
   update: updateUser,
   invite: inviteUser,
   updateStatus: updateUserStatus,
