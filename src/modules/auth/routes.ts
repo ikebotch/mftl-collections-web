@@ -6,4 +6,9 @@ export const authRoutes: RouteRecordRaw[] = [
     name: 'auth-callback',
     component: () => import('./pages/AuthCallbackPage.vue'),
   },
+  {
+    path: '/pending-access',
+    name: 'pending-access',
+    component: () => import('./pages/PendingAccessPage.vue'),
+  },
 ]

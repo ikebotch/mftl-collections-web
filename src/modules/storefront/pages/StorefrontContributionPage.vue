@@ -1,9 +1,7 @@
 <template>
   <div class="h-screen bg-slate-50 overflow-hidden flex flex-col lg:flex-row relative selection:bg-violet-100 selection:text-violet-900">
-    
     <!-- Left Column: Cinematic Showcase (Fixed) -->
     <div class="hidden lg:flex lg:w-[48%] xl:w-[53%] h-full flex-col p-10 xl:p-14 relative z-10 overflow-hidden">
-      
       <!-- Top Branding with Contributors -->
       <div class="flex items-center justify-between mb-12 animate-in fade-in slide-in-from-left-4 duration-700">
         <div class="flex items-center gap-4">
@@ -23,147 +21,173 @@
         <!-- Contributors moved to top right -->
         <div class="flex flex-col items-end gap-2">
           <div class="flex -space-x-3">
-            <div v-for="i in 3" :key="i" class="w-8 h-8 rounded-full border-[3px] border-white bg-slate-100 shadow-sm"></div>
+            <div
+              v-for="i in 3"
+              :key="i"
+              class="w-8 h-8 rounded-full border-[3px] border-white bg-slate-100 shadow-sm"
+            />
           </div>
           <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">320 Contributors</span>
         </div>
       </div>
 
-        <!-- Main Showcase -->
-        <div class="flex-1 flex flex-col gap-10 min-h-0 pb-10">
-          <!-- Hero Section -->
-          <div class="space-y-4 animate-in fade-in slide-in-from-left-8 duration-1000 delay-200">
-            
-            <div class="relative inline-flex items-start gap-5">
-              <h2 class="text-5xl xl:text-6xl font-black text-[#0F172A] leading-[0.85] tracking-tighter">
-                {{ eventQuery.data.value?.name || 'Again' }}<span class="text-[#7C3AED]">.</span>
-              </h2>
+      <!-- Main Showcase -->
+      <div class="flex-1 flex flex-col gap-10 min-h-0 pb-10">
+        <!-- Hero Section -->
+        <div class="space-y-4 animate-in fade-in slide-in-from-left-8 duration-1000 delay-200">
+          <div class="relative inline-flex items-start gap-5">
+            <h2 class="text-5xl xl:text-6xl font-black text-[#0F172A] leading-[0.85] tracking-tighter">
+              {{ eventQuery.data.value?.name || 'Again' }}<span class="text-[#7C3AED]">.</span>
+            </h2>
               
-              <!-- Badges Top-Aligned with Heading -->
-              <div class="flex items-center gap-2 mt-1.5">
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-slate-100 text-[#0F172A] text-[6px] font-black uppercase tracking-widest shadow-sm">
-                  <div class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></div>
-                  Live
-                </div>
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-slate-100 text-[#7C3AED] text-[6px] font-black uppercase tracking-widest shadow-sm">
-                  <ShieldCheck class="w-2 h-2 fill-current opacity-30" />
-                  Verified
-                </div>
+            <!-- Badges Top-Aligned with Heading -->
+            <div class="flex items-center gap-2 mt-1.5">
+              <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-slate-100 text-[#0F172A] text-[6px] font-black uppercase tracking-widest shadow-sm">
+                <div class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                Live
+              </div>
+              <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-slate-100 text-[#7C3AED] text-[6px] font-black uppercase tracking-widest shadow-sm">
+                <ShieldCheck class="w-2 h-2 fill-current opacity-30" />
+                Verified
               </div>
             </div>
-  
-            <div class="space-y-2">
-              <p class="text-[10px] font-black text-[#7C3AED]/40 uppercase tracking-[0.4em] font-display italic">Community Support</p>
-              <p class="text-base text-slate-500 font-medium leading-relaxed max-w-[646px]">
-                Many families are struggling to put food on the table. Your support can provide meals.
-              </p>
-            </div>
           </div>
+  
+          <div class="space-y-2">
+            <p class="text-[10px] font-black text-[#7C3AED]/40 uppercase tracking-[0.4em] font-display italic">
+              Community Support
+            </p>
+            <p class="text-base text-slate-500 font-medium leading-relaxed max-w-[646px]">
+              Many families are struggling to put food on the table. Your support can provide meals.
+            </p>
+          </div>
+        </div>
   
         <!-- Showcase Column: Cinematic Branding -->
-      <div class="flex-1 flex flex-col justify-center max-w-[760px]">
-        
-        <!-- Hero Image with Integrated Metrics -->
-        <div class="relative group mb-10 animate-in fade-in zoom-in-95 duration-1000">
-          <div class="aspect-[21/9] rounded-[40px] overflow-hidden border-2 border-slate-100 relative">
-            <img 
-              src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop" 
-              class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[3000ms]"
-              alt="Campaign Hero"
-            >
+        <div class="flex-1 flex flex-col justify-center max-w-[760px]">
+          <!-- Hero Image with Integrated Metrics -->
+          <div class="relative group mb-10 animate-in fade-in zoom-in-95 duration-1000">
+            <div class="aspect-[21/9] rounded-[40px] overflow-hidden border-2 border-slate-100 relative">
+              <img 
+                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop" 
+                class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[3000ms]"
+                alt="Campaign Hero"
+              >
             
 
 
-            <!-- Impact Floating Card (Bottom Left) -->
-            <div class="absolute bottom-6 left-6 p-4 rounded-2xl border border-white/20 backdrop-blur-xl flex items-center gap-3 animate-in zoom-in-95 duration-1000 delay-700">
-              <div class="w-8 h-8 rounded-xl bg-white text-[#7C3AED] flex items-center justify-center">
-                <Utensils class="w-4 h-4" />
+              <!-- Impact Floating Card (Bottom Left) -->
+              <div class="absolute bottom-6 left-6 p-4 rounded-2xl border border-white/20 backdrop-blur-xl flex items-center gap-3 animate-in zoom-in-95 duration-1000 delay-700">
+                <div class="w-8 h-8 rounded-xl bg-white text-[#7C3AED] flex items-center justify-center">
+                  <Utensils class="w-4 h-4" />
+                </div>
+                <div>
+                  <p class="text-[11px] font-black text-white leading-tight">
+                    GHS 50 feeds a family
+                  </p>
+                  <p class="text-[7px] font-black text-white/50 uppercase tracking-widest mt-0.5">
+                    Hope for 3 Days
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="flex items-center gap-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            <div class="flex items-center gap-3">
+              <Clock class="w-4 h-4 text-[#7C3AED]" />
+              <div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                  Time Left
+                </p>
+                <p class="text-xs font-black text-[#0F172A] mt-1">
+                  25 Days
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <Users class="w-4 h-4 text-[#7C3AED]" />
+              <div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                  Supporters
+                </p>
+                <p class="text-xs font-black text-[#0F172A] mt-1">
+                  320 People
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-5 ml-auto bg-white/50 backdrop-blur-sm p-3 rounded-[24px] border border-slate-100/50 shadow-sm">
+              <div class="relative w-12 h-12 flex items-center justify-center">
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    fill="transparent"
+                    class="text-slate-100"
+                  />
+                  <circle 
+                    cx="24"
+                    cy="24"
+                    r="20" 
+                    stroke="currentColor"
+                    stroke-width="4" 
+                    fill="transparent" 
+                    stroke-dasharray="125.66" 
+                    stroke-dashoffset="64.08" 
+                    class="text-[#7C3AED] transition-all duration-[2000ms] ease-out"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-[10px] font-black text-[#7C3AED]">49%</span>
+                </div>
               </div>
               <div>
-                <p class="text-[11px] font-black text-white leading-tight">GHS 50 feeds a family</p>
-                <p class="text-[7px] font-black text-white/50 uppercase tracking-widest mt-0.5">Hope for 3 Days</p>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                  Total Raised
+                </p>
+                <p class="text-sm font-black text-[#0F172A] mt-1.5 flex items-baseline gap-1">
+                  24,500 <span class="text-[10px] text-slate-300">GHS</span>
+                </p>
               </div>
             </div>
           </div>
-        </div>
-  
-        <div class="flex items-center gap-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-          <div class="flex items-center gap-3">
-            <Clock class="w-4 h-4 text-[#7C3AED]" />
-            <div>
-              <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Time Left</p>
-              <p class="text-xs font-black text-[#0F172A] mt-1">25 Days</p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <Users class="w-4 h-4 text-[#7C3AED]" />
-            <div>
-              <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Supporters</p>
-              <p class="text-xs font-black text-[#0F172A] mt-1">320 People</p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-5 ml-auto bg-white/50 backdrop-blur-sm p-3 rounded-[24px] border border-slate-100/50 shadow-sm">
-            <div class="relative w-12 h-12 flex items-center justify-center">
-              <svg class="w-full h-full transform -rotate-90">
-                <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" fill="transparent" class="text-slate-100" />
-                <circle 
-                  cx="24" cy="24" r="20" 
-                  stroke="currentColor" stroke-width="4" 
-                  fill="transparent" 
-                  stroke-dasharray="125.66" 
-                  stroke-dashoffset="64.08" 
-                  class="text-[#7C3AED] transition-all duration-[2000ms] ease-out"
-                  stroke-linecap="round"
-                />
-              </svg>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-[10px] font-black text-[#7C3AED]">49%</span>
-              </div>
-            </div>
-            <div>
-              <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Total Raised</p>
-              <p class="text-sm font-black text-[#0F172A] mt-1.5 flex items-baseline gap-1">
-                24,500 <span class="text-[10px] text-slate-300">GHS</span>
-              </p>
-            </div>
-          </div>
-        </div>
-  
         </div>
       </div>
 
       <!-- Trust Footer -->
       <div class="mt-auto flex items-center gap-8 text-slate-300 animate-in fade-in duration-1000 delay-1000">
         <div class="flex items-center gap-2.5">
-          <div class="w-1 h-1 rounded-full bg-violet-400/40"></div>
+          <div class="w-1 h-1 rounded-full bg-violet-400/40" />
           <span class="text-[8px] font-black uppercase tracking-[0.2em]">Encrypted Protocol</span>
         </div>
         <div class="flex items-center gap-2.5">
-          <div class="w-1 h-1 rounded-full bg-emerald-400/40"></div>
+          <div class="w-1 h-1 rounded-full bg-emerald-400/40" />
           <span class="text-[8px] font-black uppercase tracking-[0.2em]">Transparent Ledger</span>
         </div>
       </div>
-</div>
+    </div>
 
     <!-- Right Column: Interaction Zone (Fixed Shell) -->
     <div class="flex-1 h-screen relative z-20 overflow-hidden flex flex-col items-end justify-end">
-      
       <!-- Content Wrapper: Constrained to screen but scrolls internally -->
       <div class="w-full max-w-[640px] max-h-[calc(100vh-80px)] flex flex-col animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
-        
         <!-- Unified Donation Card Shell: Fixed Shape -->
         <div class="bg-white rounded-tl-[64px] border-t border-l border-slate-100 overflow-hidden flex flex-col shadow-[-40px_0_100px_rgba(0,0,0,0.03)]">
-          
           <!-- Internal Scrollable Area -->
           <div class="flex-1 overflow-y-auto custom-scrollbar p-8 lg:p-12 xl:p-14 space-y-10">
-            
             <div class="space-y-3">
               <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-100 shadow-sm text-[#7C3AED] text-[9px] font-black uppercase tracking-[0.3em]">
                 Secure Contribution flow
               </span>
-              <h3 class="text-3xl font-black text-[#0F172A] tracking-tighter">Your Support Matters</h3>
+              <h3 class="text-3xl font-black text-[#0F172A] tracking-tighter">
+                Your Support Matters
+              </h3>
             </div>
 
             <!-- Fund Selection -->
@@ -215,10 +239,10 @@
                       type="tel" 
                       placeholder="Phone Number"
                       class="flex-1 bg-transparent border-none outline-none text-sm font-bold text-[#0F172A] placeholder:text-slate-300 placeholder:font-bold"
-                    />
+                    >
+                  </div>
                 </div>
               </div>
-            </div>
             </div>
   
             <!-- Amount Selection -->
@@ -249,7 +273,10 @@
                 v-model="paymentMethod"
               />
 
-              <div v-if="paymentMethod === 'momo'" class="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+              <div
+                v-if="paymentMethod === 'momo'"
+                class="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500"
+              >
                 <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Select Network</label>
                 <NetworkSelector v-model="network" />
               </div>
@@ -259,14 +286,20 @@
             <div class="pt-10 space-y-8">
               <div class="bg-white/80 backdrop-blur-xl rounded-[32px] p-10 border border-white shadow-sm flex justify-between items-center">
                 <div class="space-y-1">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Final Amount</p>
-                  <p class="text-5xl font-black text-[#7C3AED] tracking-tighter">{{ amountStr || '0' }}<span class="text-slate-200 ml-2">GHS</span></p>
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Final Amount
+                  </p>
+                  <p class="text-5xl font-black text-[#7C3AED] tracking-tighter">
+                    {{ amountStr || '0' }}<span class="text-slate-200 ml-2">GHS</span>
+                  </p>
                 </div>
                 <div class="text-right space-y-2">
                   <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-100 text-emerald-600 text-[9px] font-black uppercase tracking-widest">
                     <ShieldCheck class="w-3 h-3" /> Secure
                   </div>
-                  <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest block">Instant Receipt</p>
+                  <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest block">
+                    Instant Receipt
+                  </p>
                 </div>
               </div>
 
@@ -285,8 +318,8 @@
               </div>
             </div>
           </div>
+        </div>
       </div>
-    </div>
     </div>
 
     <!-- Mobile Button -->
@@ -295,7 +328,6 @@
         <Heart class="w-8 h-8 fill-white" />
       </button>
     </div>
-
   </div>
 </template>
 

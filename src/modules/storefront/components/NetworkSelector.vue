@@ -15,11 +15,17 @@
         class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors"
         :class="modelValue === network.id ? 'border-[#7C3AED] bg-[#7C3AED]' : 'border-slate-200 bg-white'"
       >
-        <div v-if="modelValue === network.id" class="w-1 h-1 rounded-full bg-white" />
+        <div
+          v-if="modelValue === network.id"
+          class="w-1 h-1 rounded-full bg-white"
+        />
       </div>
       
       <div class="flex items-center gap-1.5 min-w-0">
-        <div class="w-6 h-6 rounded bg-slate-50 flex items-center justify-center overflow-hidden grayscale group-hover:grayscale-0 transition-all flex-shrink-0" :class="{ 'grayscale-0': modelValue === network.id }">
+        <div
+          class="w-6 h-6 rounded bg-slate-50 flex items-center justify-center overflow-hidden grayscale group-hover:grayscale-0 transition-all flex-shrink-0"
+          :class="{ 'grayscale-0': modelValue === network.id }"
+        >
           <span class="text-[7px] font-black uppercase text-slate-400">{{ network.id.slice(0, 3) }}</span>
         </div>
         <span class="text-[9px] font-black uppercase tracking-tight text-[#0F172A] truncate">

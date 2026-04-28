@@ -21,11 +21,18 @@
       class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
       :class="selected ? 'bg-[#F5F3FF] text-[#7C3AED]' : 'bg-slate-50 text-slate-400'"
     >
-      <component :is="icon || Heart" class="w-5 h-5" />
+      <component
+        :is="icon || Heart"
+        class="w-5 h-5"
+      />
     </div>
 
-    <h4 class="text-[13px] font-black text-[#0F172A] leading-tight mb-1 uppercase tracking-tight">{{ title }}</h4>
-    <p class="text-[11px] font-medium text-slate-400 line-clamp-2 leading-relaxed">{{ description }}</p>
+    <h4 class="text-[13px] font-black text-[#0F172A] leading-tight mb-1 uppercase tracking-tight">
+      {{ title }}
+    </h4>
+    <p class="text-[11px] font-medium text-slate-400 line-clamp-2 leading-relaxed">
+      {{ description }}
+    </p>
   </button>
 </template>
 

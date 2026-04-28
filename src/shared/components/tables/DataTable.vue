@@ -62,7 +62,10 @@
                   @sort="$emit('sort', $event)"
                 >
                   <template #default>
-                    <slot :name="`header:${column.key}`" :column="column" />
+                    <slot
+                      :name="`header:${column.key}`"
+                      :column="column"
+                    />
                   </template>
                 </TableSortHeader>
                 <th
@@ -71,7 +74,10 @@
                   :class="[column.headerClass, column.width ? `w-[${column.width}]` : '']"
                   :style="column.width ? { width: column.width, minWidth: column.width } : {}"
                 >
-                  <slot :name="`header:${column.key}`" :column="column">
+                  <slot
+                    :name="`header:${column.key}`"
+                    :column="column"
+                  >
                     {{ column.label }}
                   </slot>
                 </th>

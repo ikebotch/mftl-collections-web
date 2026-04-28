@@ -54,7 +54,6 @@
             </div>
           </div>
         </nav>
-
       </div>
     </aside>
 
@@ -153,9 +152,15 @@
               class="absolute top-full right-0 mt-4 w-72 bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-2xl z-[70] animate-in fade-in slide-in-from-top-2 duration-300"
             >
               <div class="p-6 border-b border-slate-100 bg-slate-50/30">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Authenticated as</p>
-                <p class="text-sm font-black text-slate-900 truncate uppercase tracking-tight mb-1">{{ currentUser.name }}</p>
-                <p class="text-[11px] font-medium text-slate-500 truncate italic">{{ currentUser.email }}</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                  Authenticated as
+                </p>
+                <p class="text-sm font-black text-slate-900 truncate uppercase tracking-tight mb-1">
+                  {{ currentUser.name }}
+                </p>
+                <p class="text-[11px] font-medium text-slate-500 truncate italic">
+                  {{ currentUser.email }}
+                </p>
               </div>
               
               <div class="p-2">

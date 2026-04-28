@@ -21,8 +21,12 @@
 
       <div class="flex items-center gap-4">
         <div class="text-right hidden lg:block">
-          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Status</p>
-          <p class="text-sm font-black text-slate-900 uppercase tracking-tight">System Ready</p>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+            Status
+          </p>
+          <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
+            System Ready
+          </p>
         </div>
         <div class="h-10 w-px bg-slate-200 mx-2" />
         <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 p-1.5 px-4 rounded-none">
@@ -50,8 +54,15 @@
             </button>
           </div>
 
-          <div v-if="!form.eventId" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <LoadingState v-if="eventsQuery.isLoading.value" text="Loading active events..." variant="light" />
+          <div
+            v-if="!form.eventId"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <LoadingState
+              v-if="eventsQuery.isLoading.value"
+              text="Loading active events..."
+              variant="light"
+            />
             <button
               v-for="event in eventsQuery.data.value?.data"
               :key="event.id"
@@ -61,24 +72,38 @@
               <div class="w-12 h-12 bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-violet-500 transition-colors mb-4">
                 <Calendar class="w-6 h-6" />
               </div>
-              <h4 class="text-sm font-black uppercase italic text-slate-900 truncate">{{ event.title }}</h4>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ event.branchName }}</p>
+              <h4 class="text-sm font-black uppercase italic text-slate-900 truncate">
+                {{ event.title }}
+              </h4>
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                {{ event.branchName }}
+              </p>
             </button>
           </div>
 
-          <div v-else class="p-6 bg-white border border-violet-500/30 shadow-md flex items-center gap-6 animate-in fade-in zoom-in-95 duration-300">
+          <div
+            v-else
+            class="p-6 bg-white border border-violet-500/30 shadow-md flex items-center gap-6 animate-in fade-in zoom-in-95 duration-300"
+          >
             <div class="w-14 h-14 bg-violet-600 flex items-center justify-center text-white shadow-lg">
               <Calendar class="w-7 h-7" />
             </div>
             <div class="min-w-0 flex-1">
-              <h4 class="text-xl font-black uppercase italic text-slate-900">{{ selectedEvent?.title }}</h4>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ selectedEvent?.branchName }} · {{ selectedEvent?.location }}</p>
+              <h4 class="text-xl font-black uppercase italic text-slate-900">
+                {{ selectedEvent?.title }}
+              </h4>
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                {{ selectedEvent?.branchName }} · {{ selectedEvent?.location }}
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Fund Selection -->
-        <div v-if="form.eventId" class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div
+          v-if="form.eventId"
+          class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        >
           <div class="flex items-center justify-between px-1">
             <h3 class="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">
               2. Destination Fund
@@ -92,7 +117,10 @@
             </button>
           </div>
 
-          <div v-if="!form.recipientFundId" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div
+            v-if="!form.recipientFundId"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
             <button
               v-for="fund in availableFunds"
               :key="fund.id"
@@ -102,19 +130,31 @@
               <div class="w-12 h-12 bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-violet-500 transition-colors mb-4">
                 <Target class="w-6 h-6" />
               </div>
-              <h4 class="text-sm font-black uppercase italic text-slate-900 truncate">{{ fund.name }}</h4>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Goal: {{ formatCurrency(fund.targetAmount, 'GHS') }}</p>
+              <h4 class="text-sm font-black uppercase italic text-slate-900 truncate">
+                {{ fund.name }}
+              </h4>
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                Goal: {{ formatCurrency(fund.targetAmount, 'GHS') }}
+              </p>
             </button>
           </div>
 
-          <div v-else class="p-6 bg-white border border-violet-500/30 shadow-md flex items-center gap-6 animate-in fade-in zoom-in-95 duration-300">
+          <div
+            v-else
+            class="p-6 bg-white border border-violet-500/30 shadow-md flex items-center gap-6 animate-in fade-in zoom-in-95 duration-300"
+          >
             <div class="w-14 h-14 bg-violet-600 flex items-center justify-center text-white shadow-lg">
               <Target class="w-7 h-7" />
             </div>
             <div class="min-w-0 flex-1">
-              <h4 class="text-xl font-black uppercase italic text-slate-900">{{ selectedFund?.name }}</h4>
+              <h4 class="text-xl font-black uppercase italic text-slate-900">
+                {{ selectedFund?.name }}
+              </h4>
               <div class="mt-2 h-1 w-full bg-slate-100 rounded-none overflow-hidden">
-                <div class="h-full bg-violet-600" :style="{ width: `${selectedFund?.progress}%` }" />
+                <div
+                  class="h-full bg-violet-600"
+                  :style="{ width: `${selectedFund?.progress}%` }"
+                />
               </div>
             </div>
           </div>
@@ -123,7 +163,10 @@
 
       <!-- Right Column: Collection Form -->
       <div class="lg:col-span-5">
-        <div v-if="form.recipientFundId" class="space-y-8 animate-in fade-in slide-in-from-right-8 duration-700">
+        <div
+          v-if="form.recipientFundId"
+          class="space-y-8 animate-in fade-in slide-in-from-right-8 duration-700"
+        >
           <div class="p-8 lg:p-10 bg-white border border-slate-200 shadow-2xl shadow-slate-200/50">
             <div class="space-y-8">
               <!-- Amount -->
@@ -145,12 +188,19 @@
                 <div class="flex items-center justify-between">
                   <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Donor Information</label>
                   <label class="flex items-center gap-2 cursor-pointer group">
-                    <input v-model="form.anonymous" type="checkbox" class="w-3 h-3 rounded-none border-slate-300 text-violet-600 focus:ring-violet-500">
+                    <input
+                      v-model="form.anonymous"
+                      type="checkbox"
+                      class="w-3 h-3 rounded-none border-slate-300 text-violet-600 focus:ring-violet-500"
+                    >
                     <span class="text-[10px] font-black uppercase text-slate-400 group-hover:text-violet-600 transition-colors">Anonymous</span>
                   </label>
                 </div>
 
-                <div v-if="!form.anonymous" class="grid gap-4">
+                <div
+                  v-if="!form.anonymous"
+                  class="grid gap-4"
+                >
                   <div class="relative">
                     <User class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                     <input 
@@ -177,9 +227,16 @@
                   </div>
                 </div>
 
-                <div v-else class="p-6 bg-slate-900 border-l-4 border-violet-500 shadow-xl">
-                  <p class="text-xs font-black text-white uppercase tracking-widest italic">Confidential Entry</p>
-                  <p class="text-[9px] text-slate-500 font-bold uppercase mt-1">Identity suppressed for public reports</p>
+                <div
+                  v-else
+                  class="p-6 bg-slate-900 border-l-4 border-violet-500 shadow-xl"
+                >
+                  <p class="text-xs font-black text-white uppercase tracking-widest italic">
+                    Confidential Entry
+                  </p>
+                  <p class="text-[9px] text-slate-500 font-bold uppercase mt-1">
+                    Identity suppressed for public reports
+                  </p>
                 </div>
               </div>
 
@@ -206,7 +263,9 @@
           <!-- Quick Recap Card -->
           <article class="p-6 bg-slate-50 border border-slate-200 rounded-none flex items-center justify-between">
             <div>
-              <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target Context</p>
+              <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                Target Context
+              </p>
               <p class="text-xs font-black text-slate-900 uppercase tracking-tight mt-1">
                 {{ selectedEvent?.title.slice(0, 20) }}... / {{ selectedFund?.name }}
               </p>
@@ -218,8 +277,13 @@
         </div>
         
         <!-- Placeholder when no context -->
-        <div v-else class="lg:sticky lg:top-24 p-12 border border-dashed border-slate-300 bg-slate-50 text-center animate-pulse">
-          <p class="text-xs font-black uppercase tracking-widest text-slate-400">Awaiting selection context...</p>
+        <div
+          v-else
+          class="lg:sticky lg:top-24 p-12 border border-dashed border-slate-300 bg-slate-50 text-center animate-pulse"
+        >
+          <p class="text-xs font-black uppercase tracking-widest text-slate-400">
+            Awaiting selection context...
+          </p>
         </div>
       </div>
     </div>

@@ -16,8 +16,15 @@
         class="absolute top-2 right-2 w-3 h-3 rounded-full bg-[#7C3AED] border-2 border-white shadow-sm"
       />
       
-      <div class="h-10 flex items-center justify-center mb-3 grayscale group-hover:grayscale-0 transition-all" :class="{ 'grayscale-0': modelValue === method.id }">
-        <component :is="method.icon" class="w-8 h-8" :class="modelValue === method.id ? 'text-[#7C3AED]' : 'text-slate-300'" />
+      <div
+        class="h-10 flex items-center justify-center mb-3 grayscale group-hover:grayscale-0 transition-all"
+        :class="{ 'grayscale-0': modelValue === method.id }"
+      >
+        <component
+          :is="method.icon"
+          class="w-8 h-8"
+          :class="modelValue === method.id ? 'text-[#7C3AED]' : 'text-slate-300'"
+        />
       </div>
       
       <span class="text-[10px] font-black uppercase tracking-widest text-[#0F172A] text-center leading-tight">

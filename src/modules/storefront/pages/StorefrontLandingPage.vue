@@ -3,7 +3,6 @@
     <!-- Main Content Container -->
     <div class="max-w-[1340px] mx-auto px-6">
       <section class="grid gap-10 lg:grid-cols-[1fr_390px] items-start">
-        
         <!-- Hero Main Card -->
         <div class="relative group">
           <div class="bg-white rounded-[48px] shadow-[0_40px_100px_rgba(124,58,237,0.06)] overflow-hidden flex flex-col min-h-[720px] border border-white">
@@ -18,7 +17,7 @@
               <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
                 <div>
                   <h2 class="text-[64px] md:text-[84px] font-black leading-[1.0] text-[#0F172A] tracking-tighter mb-10">
-                    Let's do<br />this <span class="text-[#7C3AED] italic font-serif font-normal">Again</span>
+                    Let's do<br>this <span class="text-[#7C3AED] italic font-serif font-normal">Again</span>
                   </h2>
                   
                   <p class="text-[17px] md:text-[19px] text-[#64748B] font-medium leading-relaxed mb-14 max-w-[420px]">
@@ -49,8 +48,12 @@
                 <!-- 3D Illustration Area -->
                 <div class="relative flex justify-center">
                   <!-- Decorative icons -->
-                  <div class="absolute top-0 right-0 text-violet-300/40 text-2xl animate-pulse">✦</div>
-                  <div class="absolute bottom-10 left-[-20px] text-violet-200/60 text-xl rotate-45">✦</div>
+                  <div class="absolute top-0 right-0 text-violet-300/40 text-2xl animate-pulse">
+                    ✦
+                  </div>
+                  <div class="absolute bottom-10 left-[-20px] text-violet-200/60 text-xl rotate-45">
+                    ✦
+                  </div>
                   
                   <div class="absolute inset-0 bg-gradient-to-tr from-violet-200/20 to-transparent blur-[120px] rounded-full scale-150" />
                   <img 
@@ -68,8 +71,12 @@
                     <ShieldCheck class="w-6 h-6" />
                   </div>
                   <div>
-                    <p class="text-[12px] font-black uppercase tracking-[0.1em] text-[#0F172A]">Secure</p>
-                    <p class="text-[11px] font-medium text-[#94A3B8] mt-1">Your data is protected</p>
+                    <p class="text-[12px] font-black uppercase tracking-[0.1em] text-[#0F172A]">
+                      Secure
+                    </p>
+                    <p class="text-[11px] font-medium text-[#94A3B8] mt-1">
+                      Your data is protected
+                    </p>
                   </div>
                 </div>
                 <div class="flex items-center gap-5 group">
@@ -77,8 +84,12 @@
                     <Activity class="w-6 h-6" />
                   </div>
                   <div>
-                    <p class="text-[12px] font-black uppercase tracking-[0.1em] text-[#0F172A]">Real-time</p>
-                    <p class="text-[11px] font-medium text-[#94A3B8] mt-1">Track funds live</p>
+                    <p class="text-[12px] font-black uppercase tracking-[0.1em] text-[#0F172A]">
+                      Real-time
+                    </p>
+                    <p class="text-[11px] font-medium text-[#94A3B8] mt-1">
+                      Track funds live
+                    </p>
                   </div>
                 </div>
                 <div class="flex items-center gap-5 group">
@@ -86,8 +97,12 @@
                     <FileText class="w-6 h-6" />
                   </div>
                   <div>
-                    <p class="text-[12px] font-black uppercase tracking-[0.1em] text-[#0F172A]">Transparent</p>
-                    <p class="text-[11px] font-medium text-[#94A3B8] mt-1">See where it goes</p>
+                    <p class="text-[12px] font-black uppercase tracking-[0.1em] text-[#0F172A]">
+                      Transparent
+                    </p>
+                    <p class="text-[11px] font-medium text-[#94A3B8] mt-1">
+                      See where it goes
+                    </p>
                   </div>
                 </div>
               </div>
@@ -115,13 +130,21 @@
             </p>
             
             <div class="space-y-10">
-              <div v-for="(item, i) in benefits" :key="i" class="flex items-start gap-5 group">
+              <div
+                v-for="(item, i) in benefits"
+                :key="i"
+                class="flex items-start gap-5 group"
+              >
                 <div class="mt-1 w-7 h-7 rounded-full bg-[#ECFDF5] text-[#10B981] flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-sm">
                   <Check class="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 class="text-[14px] font-black text-[#0F172A] uppercase tracking-wider">{{ item.title }}</h4>
-                  <p class="text-[12px] font-medium text-[#94A3B8] mt-1.5 leading-relaxed">{{ item.description }}</p>
+                  <h4 class="text-[14px] font-black text-[#0F172A] uppercase tracking-wider">
+                    {{ item.title }}
+                  </h4>
+                  <p class="text-[12px] font-medium text-[#94A3B8] mt-1.5 leading-relaxed">
+                    {{ item.description }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -129,9 +152,15 @@
 
           <!-- Network Logos Area -->
           <div class="px-8 pt-4">
-            <h5 class="text-[11px] font-black text-[#94A3B8] uppercase tracking-[0.25em] text-center mb-6">Accepted Networks</h5>
+            <h5 class="text-[11px] font-black text-[#94A3B8] uppercase tracking-[0.25em] text-center mb-6">
+              Accepted Networks
+            </h5>
             <div class="flex justify-center gap-6 opacity-30 grayscale saturate-0 contrast-125">
-              <div v-for="i in 3" :key="i" class="w-16 h-8 bg-[#CBD5E1] rounded-lg" />
+              <div
+                v-for="i in 3"
+                :key="i"
+                class="w-16 h-8 bg-[#CBD5E1] rounded-lg"
+              />
             </div>
           </div>
         </aside>
@@ -143,12 +172,17 @@
           <div class="w-9 h-9 rounded-full bg-[#F1F5F9] flex items-center justify-center">
             <Lock class="w-4.5 h-4.5 text-[#64748B]" />
           </div>
-          <p class="text-[12px] font-semibold text-[#64748B]">Your security is our priority. All payments are encrypted and strictly monitored.</p>
+          <p class="text-[12px] font-semibold text-[#64748B]">
+            Your security is our priority. All payments are encrypted and strictly monitored.
+          </p>
         </div>
         <div class="flex items-center gap-10">
           <div class="flex items-center gap-3">
             <span class="text-[12px] font-semibold text-[#64748B]">Need help?</span>
-            <a href="#" class="text-[12px] font-black text-[#7C3AED] uppercase tracking-[0.1em] hover:underline underline-offset-4 decoration-2">Contact support</a>
+            <a
+              href="#"
+              class="text-[12px] font-black text-[#7C3AED] uppercase tracking-[0.1em] hover:underline underline-offset-4 decoration-2"
+            >Contact support</a>
           </div>
           <div class="w-10 h-10 rounded-full bg-[#F5F3FF] flex items-center justify-center text-[#7C3AED] shadow-sm">
             <Headphones class="w-5 h-5" />

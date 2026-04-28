@@ -1,16 +1,56 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, ref } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useRouter } from 'vue-router'
+import { usersService } from '@/modules/users/services/usersService'
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
+import { useUsersStore } from '@/modules/users/store/usersStore'
 
 const { isAuthenticated, isLoading, error } = useAuth0()
 const router = useRouter()
+const tenantStore = useTenantStore()
+const usersStore = useUsersStore()
 
-function navigate() {
+const isSyncing = ref(false)
+const syncError = ref<string | null>(null)
+
+async function syncAndNavigate() {
   if (isAuthenticated.value) {
-    // If we have a state from Auth0, it might contain the original path
-    // But for now, just go to admin
-    router.replace('/admin')
+    try {
+      isSyncing.value = true
+      syncError.value = null
+      
+      // 1. Force backend provisioning and get user context
+      const me = await usersService.getMe()
+      usersStore.setMe(me)
+      
+      // 2. Setup initial tenant/branch context if not set
+      if (me.accessState === 'pending-access') {
+        router.replace('/pending-access')
+        return
+      }
+
+      if (me.accessState === 'suspended') {
+        // We could have a suspended page, for now just show error
+        syncError.value = 'Your account has been suspended. Please contact support.'
+        return
+      }
+
+      // If we have tenant scopes, activate the first one if none selected
+      const hasScopes = me.scopeAssignments && me.scopeAssignments.length > 0
+      if (hasScopes && !tenantStore.hasTenant) {
+        const tenantScope = me.scopeAssignments.find(s => s.scopeType === 'Tenant' || s.scopeType === 'Organisation')
+        if (tenantScope && tenantScope.targetId) {
+          tenantStore.setTenant(tenantScope.targetId, tenantScope.targetName || 'Default Organization')
+        }
+      }
+
+      router.replace('/admin')
+    } catch (err: any) {
+      console.error('Failed to sync user context:', err)
+      syncError.value = 'We encountered an error while preparing your workspace. Please try again.'
+      isSyncing.value = false
+    }
   } else if (error.value) {
     console.error('Auth error:', error.value)
     router.replace('/auth/login')
@@ -19,13 +59,13 @@ function navigate() {
 
 onMounted(() => {
   if (!isLoading.value) {
-    navigate()
+    syncAndNavigate()
   }
 })
 
 watch([isLoading, isAuthenticated], ([loading]) => {
   if (!loading) {
-    navigate()
+    syncAndNavigate()
   }
 })
 </script>
@@ -34,7 +74,7 @@ watch([isLoading, isAuthenticated], ([loading]) => {
   <main class="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-50">
     <div class="w-full max-w-md rounded-none border border-white/10 bg-white/5 p-8 text-center shadow-2xl shadow-slate-950/40">
       <div
-        v-if="!error"
+        v-if="!error && !syncError"
         class="mx-auto mb-4 h-12 w-12 animate-spin rounded-none border-4 border-slate-300/20 border-t-teal-300"
       />
       <div
@@ -58,14 +98,14 @@ watch([isLoading, isAuthenticated], ([loading]) => {
       </div>
 
       <h1 class="text-2xl font-semibold">
-        {{ error ? 'Authentication Error' : 'Completing sign-in' }}
+        {{ error || syncError ? 'Authentication Error' : 'Preparing Workspace' }}
       </h1>
       <p class="mt-3 text-sm text-slate-300">
-        {{ error ? error.message : 'Your secure session is being prepared. You’ll be redirected in a moment.' }}
+        {{ error ? error.message : (syncError || 'Your secure session is being prepared. We are synchronizing your workspace and permissions.') }}
       </p>
 
       <div
-        v-if="error"
+        v-if="error || syncError"
         class="mt-6"
       >
         <button 

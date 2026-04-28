@@ -61,12 +61,20 @@
         <AppCard class="lg:col-span-2 !p-12 border-slate-100">
           <div class="flex items-center justify-between mb-12">
             <div>
-              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Campaign Velocity</h3>
-              <p class="text-xs font-bold text-slate-900 mt-1">Collections Trend over time</p>
+              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                Campaign Velocity
+              </h3>
+              <p class="text-xs font-bold text-slate-900 mt-1">
+                Collections Trend over time
+              </p>
             </div>
             <div class="flex gap-2">
-              <button class="px-3 py-1 text-[8px] font-black uppercase tracking-widest bg-slate-900 text-white rounded-full">Daily</button>
-              <button class="px-3 py-1 text-[8px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">Weekly</button>
+              <button class="px-3 py-1 text-[8px] font-black uppercase tracking-widest bg-slate-900 text-white rounded-full">
+                Daily
+              </button>
+              <button class="px-3 py-1 text-[8px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">
+                Weekly
+              </button>
             </div>
           </div>
           
@@ -74,16 +82,58 @@
           <div class="h-64 w-full relative pt-10">
             <svg class="w-full h-full overflow-visible">
               <defs>
-                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.1" />
-                  <stop offset="100%" stop-color="#7c3aed" stop-opacity="0" />
+                <linearGradient
+                  id="chartGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#7c3aed"
+                    stop-opacity="0.1"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#7c3aed"
+                    stop-opacity="0"
+                  />
                 </linearGradient>
               </defs>
               <!-- Grid Lines -->
-              <line x1="0" y1="20%" x2="100%" y2="20%" stroke="#f1f5f9" stroke-dasharray="4" />
-              <line x1="0" y1="40%" x2="100%" y2="40%" stroke="#f1f5f9" stroke-dasharray="4" />
-              <line x1="0" y1="60%" x2="100%" y2="60%" stroke="#f1f5f9" stroke-dasharray="4" />
-              <line x1="0" y1="80%" x2="100%" y2="80%" stroke="#f1f5f9" stroke-dasharray="4" />
+              <line
+                x1="0"
+                y1="20%"
+                x2="100%"
+                y2="20%"
+                stroke="#f1f5f9"
+                stroke-dasharray="4"
+              />
+              <line
+                x1="0"
+                y1="40%"
+                x2="100%"
+                y2="40%"
+                stroke="#f1f5f9"
+                stroke-dasharray="4"
+              />
+              <line
+                x1="0"
+                y1="60%"
+                x2="100%"
+                y2="60%"
+                stroke="#f1f5f9"
+                stroke-dasharray="4"
+              />
+              <line
+                x1="0"
+                y1="80%"
+                x2="100%"
+                y2="80%"
+                stroke="#f1f5f9"
+                stroke-dasharray="4"
+              />
               
               <!-- Area -->
               <path
@@ -103,9 +153,31 @@
               />
               
               <!-- Dots -->
-              <circle cx="200" cy="100" r="4" fill="white" stroke="#7c3aed" stroke-width="2" class="cursor-pointer hover:r-6 transition-all" />
-              <circle cx="400" cy="60" r="4" fill="white" stroke="#7c3aed" stroke-width="2" />
-              <circle cx="600" cy="40" r="4" fill="white" stroke="#7c3aed" stroke-width="2" />
+              <circle
+                cx="200"
+                cy="100"
+                r="4"
+                fill="white"
+                stroke="#7c3aed"
+                stroke-width="2"
+                class="cursor-pointer hover:r-6 transition-all"
+              />
+              <circle
+                cx="400"
+                cy="60"
+                r="4"
+                fill="white"
+                stroke="#7c3aed"
+                stroke-width="2"
+              />
+              <circle
+                cx="600"
+                cy="40"
+                r="4"
+                fill="white"
+                stroke="#7c3aed"
+                stroke-width="2"
+              />
             </svg>
             <div class="absolute bottom-[-24px] w-full flex justify-between text-[8px] font-black text-slate-300 uppercase tracking-widest">
               <span>Launch</span>
@@ -120,7 +192,9 @@
 
         <!-- Channel Mix -->
         <AppCard class="!p-12 border-slate-100">
-          <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-12">Channel Distribution</h3>
+          <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-12">
+            Channel Distribution
+          </h3>
           <div class="space-y-10">
             <div
               v-for="channel in stats.channels"
@@ -149,7 +223,9 @@
                 <Zap class="w-5 h-5" />
               </div>
               <div class="space-y-1">
-                <p class="text-[10px] font-black text-slate-900 uppercase tracking-tight">System insight</p>
+                <p class="text-[10px] font-black text-slate-900 uppercase tracking-tight">
+                  System insight
+                </p>
                 <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed">
                   Mobile Money continues to be the primary growth driver for this campaign.
                 </p>
@@ -160,7 +236,9 @@
 
         <!-- Top Funds -->
         <AppCard class="!p-12 border-slate-100">
-          <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-12">Fund Performance</h3>
+          <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-12">
+            Fund Performance
+          </h3>
           <div class="space-y-8">
             <div 
               v-for="fund in stats.funds" 
@@ -172,10 +250,16 @@
                   {{ fund.name.charAt(0) }}
                 </div>
                 <div class="flex-1">
-                  <p class="text-xs font-black text-slate-900 leading-none">{{ fund.name }}</p>
-                  <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">{{ fund.count }} contributions</p>
+                  <p class="text-xs font-black text-slate-900 leading-none">
+                    {{ fund.name }}
+                  </p>
+                  <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">
+                    {{ fund.count }} contributions
+                  </p>
                 </div>
-                <p class="text-xs font-black text-slate-900">{{ formatCurrency(fund.amount, 'GHS') }}</p>
+                <p class="text-xs font-black text-slate-900">
+                  {{ formatCurrency(fund.amount, 'GHS') }}
+                </p>
               </div>
               <div class="h-1 w-full bg-slate-50 rounded-none overflow-hidden">
                 <div 
@@ -190,8 +274,16 @@
         <!-- Top Contributors -->
         <AppCard class="lg:col-span-2 !p-12 border-slate-100">
           <div class="flex items-center justify-between mb-12">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">High-Value Donors</h3>
-            <AppButton variant="ghost" size="xs" class="text-[9px] uppercase tracking-widest font-black">View All</AppButton>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+              High-Value Donors
+            </h3>
+            <AppButton
+              variant="ghost"
+              size="xs"
+              class="text-[9px] uppercase tracking-widest font-black"
+            >
+              View All
+            </AppButton>
           </div>
           <DataTable
             :columns="contributorColumns"
