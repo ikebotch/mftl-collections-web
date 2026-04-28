@@ -313,6 +313,24 @@
                     </div>
                   </div>
 
+                  <div class="space-y-3">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Collector Authorization PIN</label>
+                    <div class="relative group">
+                      <input 
+                        v-model="form.pin"
+                        type="password"
+                        maxlength="4"
+                        placeholder="••••"
+                        class="w-full bg-slate-50 border border-slate-200 p-4 text-2xl font-black tracking-[1em] text-center focus:border-violet-500 outline-none"
+                        :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                      >
+                      <div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300">
+                        <Lock class="w-5 h-5" />
+                      </div>
+                    </div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Enter your 4-digit security PIN to authorize</p>
+                  </div>
+
                   <div class="pt-6">
                     <AppButton
                       variant="primary"
@@ -377,7 +395,8 @@ import {
   Target,
   ArrowRight,
   Plus,
-  Banknote
+  Banknote,
+  Lock
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -412,6 +431,7 @@ const form = reactive({
   currency: 'GHS',
   paymentMethod: 'cash',
   note: '',
+  pin: '',
 })
 
 const submissionError = ref<ApiError | null>(null)
@@ -444,6 +464,7 @@ const canSubmit = computed(() => {
     form.recipientFundId &&
     form.amount &&
     Number(form.amount) > 0 &&
+    form.pin.length === 4 &&
     (form.anonymous || (form.contributorName && form.contributorPhone))
   )
 })
@@ -480,6 +501,7 @@ async function onSubmit() {
       anonymous: form.anonymous,
       paymentMethod: form.paymentMethod,
       note: form.note,
+      pin: form.pin,
     }, shouldBypassAuth()
       ? {
           headers: { 'X-Dev-User-Id': 'dev-collector' },

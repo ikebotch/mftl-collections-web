@@ -29,6 +29,7 @@ export interface RecordCashContributionInput {
   anonymous: boolean
   paymentMethod: string
   note?: string
+  pin: string
 }
 
 interface ContributionListItemDto {
