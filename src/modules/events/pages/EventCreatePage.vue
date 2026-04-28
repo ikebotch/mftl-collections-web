@@ -314,8 +314,6 @@ import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
-import { Plus, Trash2, Image as ImageIcon, Printer } from 'lucide-vue-next'
-
 import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { useMe } from '@/modules/users/composables/useUsers'
 import { Plus, Trash2, Image as ImageIcon, Printer, AlertTriangle } from 'lucide-vue-next'
