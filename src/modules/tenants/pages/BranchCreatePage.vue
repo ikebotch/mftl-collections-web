@@ -231,6 +231,7 @@ async function submit() {
   
   try {
     const branch = await createBranchMutation.mutateAsync({
+      tenantId: tenantStore.selectedTenantId,
       name: form.name,
       identifier: form.identifier,
       location: form.location,
