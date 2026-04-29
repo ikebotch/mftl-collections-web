@@ -325,9 +325,14 @@ onMounted(async () => {
     await usersStore.fetchMe()
     isInitializing.value = false
     console.log('AdminLayout: Initialization complete.')
-  } catch (err) {
+  } catch (err: any) {
     console.error('AdminLayout: Initialization failed:', err)
-    // We stay in initializing state on error to prevent broken UI
+    isInitializing.value = false
+    
+    // If we're unauthorized, we should clear the session and go to login
+    if (err.statusCode === 401 || err.statusCode === 403) {
+      handleLogout()
+    }
   }
 })
 
@@ -337,47 +342,56 @@ onUnmounted(() => {
 
 const appName = appConfig.appName
 
-const navGroups = computed(() => [
-  {
-    title: copy.value.admin.sidebar.groups.general,
-    items: [
-      { label: copy.value.admin.sidebar.nav.overview, to: '/admin', icon: LayoutDashboard },
-    ]
-  },
-  {
-    title: copy.value.admin.sidebar.groups.management,
-    items: [
-      { label: copy.value.admin.sidebar.nav.events, to: '/admin/events', icon: Calendar },
-    ]
-  },
-  {
-    title: copy.value.admin.sidebar.groups.finance,
-    items: [
-      { label: copy.value.admin.sidebar.nav.quickCollect, to: '/admin/collect', icon: PlusCircle, badge: 'TERMINAL' },
-      { label: copy.value.admin.sidebar.nav.contributions, to: '/admin/contributions', icon: CircleDollarSign },
-      { label: copy.value.admin.sidebar.nav.selfDonations, to: '/admin/self-donations', icon: Heart, badge: 'NEW' },
-      { label: copy.value.admin.sidebar.nav.payments, to: '/admin/payments', icon: Wallet },
-      { label: copy.value.admin.sidebar.nav.donors, to: '/admin/donors', icon: Users },
-    ]
-  },
-  {
-    title: copy.value.admin.sidebar.groups.operations,
-    items: [
-      { label: copy.value.admin.sidebar.nav.collectors, to: '/admin/collectors', icon: UserCheck, badge: 'NEW' },
-      { label: copy.value.admin.sidebar.nav.reports, to: '/admin/reports', icon: BarChart3 },
-    ]
-  },
-  {
-    title: copy.value.admin.sidebar.groups.system,
-    items: [
-      { label: copy.value.admin.sidebar.nav.settlements, to: '/admin/settlements', icon: ShieldCheck },
-      { label: 'Branches', to: '/admin/branches', icon: Building2 },
-      { label: copy.value.admin.sidebar.nav.users, to: '/admin/users', icon: UserCheck },
-      { label: copy.value.admin.sidebar.nav.organization, to: '/admin/organization', icon: Building2 },
-      { label: copy.value.admin.sidebar.nav.settings, to: '/admin/settings', icon: Settings },
-    ]
-  },
-])
+const navGroups = computed(() => {
+  const groups = [
+    {
+      title: copy.value.admin.sidebar.groups.general,
+      items: [
+        { label: copy.value.admin.sidebar.nav.overview, to: '/admin', icon: LayoutDashboard, permission: 'dashboard.view' },
+      ]
+    },
+    {
+      title: copy.value.admin.sidebar.groups.management,
+      items: [
+        { label: copy.value.admin.sidebar.nav.events, to: '/admin/events', icon: Calendar, permission: 'events.view' },
+      ]
+    },
+    {
+      title: copy.value.admin.sidebar.groups.finance,
+      items: [
+        { label: copy.value.admin.sidebar.nav.quickCollect, to: '/admin/collect', icon: PlusCircle, badge: 'TERMINAL', permission: 'contributions.record_cash' },
+        { label: copy.value.admin.sidebar.nav.contributions, to: '/admin/contributions', icon: CircleDollarSign, permission: 'contributions.view' },
+        { label: copy.value.admin.sidebar.nav.selfDonations, to: '/admin/self-donations', icon: Heart, badge: 'NEW', permission: 'donations.view' },
+        { label: copy.value.admin.sidebar.nav.payments, to: '/admin/payments', icon: Wallet, permission: 'payments.view' },
+        { label: copy.value.admin.sidebar.nav.donors, to: '/admin/donors', icon: Users, permission: 'donors.view' },
+      ]
+    },
+    {
+      title: copy.value.admin.sidebar.groups.operations,
+      items: [
+        { label: copy.value.admin.sidebar.nav.collectors, to: '/admin/collectors', icon: UserCheck, badge: 'NEW', permission: 'collectors.view' },
+        { label: copy.value.admin.sidebar.nav.reports, to: '/admin/reports', icon: BarChart3, permission: 'reports.view' },
+      ]
+    },
+    {
+      title: copy.value.admin.sidebar.groups.system,
+      items: [
+        { label: copy.value.admin.sidebar.nav.settlements, to: '/admin/settlements', icon: ShieldCheck, permission: 'settlements.view' },
+        { label: 'Branches', to: '/admin/branches', icon: Building2, permission: 'branches.view' },
+        { label: copy.value.admin.sidebar.nav.users, to: '/admin/users', icon: UserCheck, permission: 'users.view' },
+        { label: copy.value.admin.sidebar.nav.organization, to: '/admin/organization', icon: Building2, permission: 'organisations.view' },
+        { label: copy.value.admin.sidebar.nav.settings, to: '/admin/settings', icon: Settings, permission: 'settings.view' },
+      ]
+    },
+  ]
+
+  return groups
+    .map(group => ({
+      ...group,
+      items: group.items.filter(item => !item.permission || usersStore.hasPermission(item.permission))
+    }))
+    .filter(group => group.items.length > 0)
+})
 
 function handleLogout() {
   if (!auth0) {

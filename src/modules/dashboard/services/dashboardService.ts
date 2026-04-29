@@ -28,7 +28,10 @@ export interface DashboardSummary {
   isAuth0WebhookConfigured: boolean
 }
 
-export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const response = await api.get<DashboardSummary>('/dashboards/admin')
+export async function getDashboardSummary(params?: { 
+  tenantId?: string; 
+  branchId?: string 
+}): Promise<DashboardSummary> {
+  const response = await api.get<DashboardSummary>('/dashboards/admin', { params })
   return response.data
 }

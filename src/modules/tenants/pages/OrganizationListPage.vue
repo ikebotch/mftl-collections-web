@@ -6,6 +6,7 @@
     >
       <template #actions>
         <AppButton
+          v-if="usersStore.hasPermission('organisations.create')"
           variant="primary"
           class="px-8 shadow-lg shadow-violet-100"
           @click="router.push('/admin/organization/new')"

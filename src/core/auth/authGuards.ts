@@ -76,12 +76,19 @@ export function requireAdmin(
   const usersStore = useUsersStore()
   
   const finish = () => {
+    if (usersStore.accessState === 'suspended') {
+      return next('/access-suspended')
+    }
+
     const roles = usersStore.roles || []
-    const isAdmin = roles.some((r: string) => r.includes('Admin') || r.includes('Finance') || r.includes('Reporting') || r.includes('Manager')) || usersStore.isPlatformAdmin
+    const isAdmin = roles.some((r: string) => 
+      ['Platform Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'System Manager'].includes(r) ||
+      r.includes('Admin') || r.includes('Finance') || r.includes('Reporting')
+    ) || usersStore.isPlatformAdmin
     
     if (isAdmin) {
       next()
-    } else if (roles.includes('Collector')) {
+    } else if (roles.some(r => ['Collector', 'Collector Supervisor'].includes(r))) {
       next('/collector')
     } else {
       next('/pending-access')
@@ -91,7 +98,12 @@ export function requireAdmin(
   if (usersStore.me) {
     finish()
   } else {
-    // Wait for me to be loaded if it's currently loading
+    // Trigger fetch and wait for it
+    usersStore.fetchMe().catch(err => {
+      console.error('Guard: Failed to fetch user profile:', err)
+      next('/pending-access')
+    })
+
     const unwatch = watch(() => usersStore.me, (me) => {
       if (me) {
         unwatch()
@@ -109,9 +121,16 @@ export function requireCollector(
   const usersStore = useUsersStore()
   
   const finish = () => {
+    if (usersStore.accessState === 'suspended') {
+      return next('/access-suspended')
+    }
+
     const roles = usersStore.roles || []
-    const isCollector = roles.includes('Collector') || roles.includes('Collector Supervisor')
-    const isAdmin = roles.some((r: string) => r.includes('Admin') || r.includes('Finance') || r.includes('Reporting') || r.includes('Manager')) || usersStore.isPlatformAdmin
+    const isCollector = roles.some(r => ['Collector', 'Collector Supervisor'].includes(r))
+    const isAdmin = roles.some((r: string) => 
+      ['Platform Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'System Manager'].includes(r) ||
+      r.includes('Admin') || r.includes('Finance') || r.includes('Reporting')
+    ) || usersStore.isPlatformAdmin
     
     if (isCollector || isAdmin) {
       next()
@@ -123,6 +142,12 @@ export function requireCollector(
   if (usersStore.me) {
     finish()
   } else {
+    // Trigger fetch and wait for it
+    usersStore.fetchMe().catch(err => {
+      console.error('Guard: Failed to fetch user profile:', err)
+      next('/pending-access')
+    })
+
     const unwatch = watch(() => usersStore.me, (me) => {
       if (me) {
         unwatch()

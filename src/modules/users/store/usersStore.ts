@@ -10,8 +10,20 @@ export const useUsersStore = defineStore('users-module', () => {
   const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false)
   const accessState = computed(() => me.value?.accessState ?? 'pending-access')
   
-  const roles = computed(() => me.value?.auth0Roles ?? [])
+  const roles = computed(() => me.value?.effectiveRoles ?? [])
   const scopes = computed(() => me.value?.scopeAssignments ?? [])
+  const permissions = computed(() => me.value?.permissions ?? [])
+  
+  function hasPermission(permission: string) {
+    if (isPlatformAdmin.value) return true
+    if (permissions.value.includes('*')) return true
+    if (permissions.value.includes(permission)) return true
+    
+    const parts = permission.split('.')
+    if (parts.length > 0 && permissions.value.includes(`${parts[0]}.*`)) return true
+    
+    return false
+  }
 
   function setMe(profile: UserDetail | null) {
     me.value = profile
@@ -35,6 +47,8 @@ export const useUsersStore = defineStore('users-module', () => {
     accessState,
     roles,
     scopes,
+    permissions,
+    hasPermission,
     setMe,
     fetchMe,
     clear

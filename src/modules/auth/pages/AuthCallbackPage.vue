@@ -6,7 +6,7 @@ import { usersService } from '@/modules/users/services/usersService'
 import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { useUsersStore } from '@/modules/users/store/usersStore'
 
-const { isAuthenticated, isLoading, error } = useAuth0()
+const { isAuthenticated, isLoading, error, loginWithRedirect } = useAuth0()
 const router = useRouter()
 const usersStore = useUsersStore()
 
@@ -68,9 +68,14 @@ async function syncAndNavigate() {
       syncError.value = 'We encountered an error while preparing your workspace. Please try again.'
       isSyncing.value = false
     }
+  } else if (!isLoading.value) {
+    // Not authenticated and finished loading - likely after logout
+    console.log('AuthCallback: Not authenticated, redirecting to login...')
+    loginWithRedirect()
   } else if (error.value) {
     console.error('Auth error:', error.value)
-    router.replace('/auth/login')
+    // If we have an error, we should show the error UI in the template
+    // which is already handled by syncError/error reactive vars
   }
 }
 
@@ -127,7 +132,7 @@ watch([isLoading, isAuthenticated], ([loading]) => {
       >
         <button 
           class="rounded-none bg-white px-6 py-2 text-sm font-bold text-slate-950 transition hover:bg-slate-200"
-          @click="router.replace('/auth/login')"
+          @click="router.replace('/')"
         >
           Back to Login
         </button>

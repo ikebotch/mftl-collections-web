@@ -15,6 +15,9 @@ export function useDashboard() {
       tenantIds: computed(() => tenantStore.selectedTenantIds.join(',')),
       branchIds: computed(() => branchStore.selectedBranchIds.join(','))
     }],
-    queryFn: getDashboardSummary,
+    queryFn: () => getDashboardSummary({
+      tenantId: tenantStore.selectedTenantIdsCSV,
+      branchId: branchStore.multiBranchIdCSV
+    }),
   })
 }
