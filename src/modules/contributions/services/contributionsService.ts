@@ -21,7 +21,7 @@ export interface CashContributionResultDto {
 export interface RecordCashContributionInput {
   eventId: string
   recipientFundId: string
-  amountValue: number
+  amount: number
   currency: string
   contributorName?: string
   contributorPhone: string
