@@ -6,17 +6,20 @@ import { createPinia, setActivePinia } from 'pinia'
 vi.mock('../composables/useContributions', () => ({
   useContributions: () => ({
     data: {
-      value: [
-        {
-          id: 'c-1',
-          date: '2026-04-24',
-          contributorName: 'Community fundraiser',
-          recipientFund: 'Medical support',
-          paymentMethod: 'cash',
-          status: 'Recorded',
-          amount: 'GBP 50.00',
-        },
-      ],
+      value: {
+        items: [
+          {
+            id: 'c-1',
+            date: '2026-04-24',
+            contributorName: 'Community fundraiser',
+            recipientFund: 'Medical support',
+            paymentMethod: 'cash',
+            status: 'Recorded',
+            amount: 'GBP 50.00',
+          },
+        ],
+        totalCount: 1
+      }
     },
     isLoading: { value: false },
     isError: { value: false }

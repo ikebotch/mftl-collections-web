@@ -8,7 +8,6 @@ import { useUsersStore } from '@/modules/users/store/usersStore'
 
 const { isAuthenticated, isLoading, error } = useAuth0()
 const router = useRouter()
-const tenantStore = useTenantStore()
 const usersStore = useUsersStore()
 
 const isSyncing = ref(false)

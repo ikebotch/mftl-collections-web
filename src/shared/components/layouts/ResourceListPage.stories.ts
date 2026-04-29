@@ -29,9 +29,9 @@ const mockItems = [
 ]
 
 const mockMetrics = [
-  { label: 'Total Items', value: '3', icon: Users, color: 'purple' as const },
-  { label: 'Total Value', value: 'GHS 2,050.00', icon: Wallet, color: 'green' as const },
-  { label: 'Active Targets', value: '1', icon: Target, color: 'blue' as const },
+  { label: 'Total Items', value: '3', icon: 'Users', color: 'purple' as const },
+  { label: 'Total Value', value: 'GHS 2,050.00', icon: 'Wallet', color: 'green' as const },
+  { label: 'Active Targets', value: '1', icon: 'Target', color: 'blue' as const },
 ]
 
 export const Default: Story = {

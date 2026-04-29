@@ -1,0 +1,1078 @@
+
+> frontend@0.0.0 test
+> vitest run
+
+ DEPRECATED  The `test.workspace` option is deprecated and will be removed in the next major. To hide this warning, rename `test.workspace` option to `test.projects`.
+
+ RUN  v3.2.4 /Users/ikebotch/dev/mftl-collections/frontend
+
+stdout | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to admin when user has admin roles
+AuthCallback: Fetching me...
+
+stderr | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to admin when user has admin roles
+[Vue Router warn]: No match found for location with path "/"
+[Vue warn]: Invalid watch source:  { value: false } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at <AuthCallbackPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Invalid watch source:  { value: true } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at <AuthCallbackPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+stdout | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to admin when user has admin roles
+AuthCallback: User fetched: {
+  id: '1',
+  email: 'admin@test.com',
+  isPlatformAdmin: false,
+  accessState: 'active',
+  roles: [],
+  scopesCount: 0
+}
+AuthCallback: Routing logic: {
+  effectiveRoles: [ 'Organisation Admin' ],
+  isCollector: false,
+  isAdmin: true,
+  accessState: 'active'
+}
+AuthCallback: Redirecting to /admin
+
+stdout | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to collector when user has only collector roles
+AuthCallback: Fetching me...
+
+stderr | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to collector when user has only collector roles
+[Vue warn]: Invalid watch source:  { value: false } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at <AuthCallbackPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Invalid watch source:  { value: true } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at <AuthCallbackPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+stdout | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to collector when user has only collector roles
+AuthCallback: User fetched: {
+  id: '2',
+  email: 'collector@test.com',
+  isPlatformAdmin: false,
+  accessState: 'active',
+  roles: [],
+  scopesCount: 0
+}
+AuthCallback: Routing logic: {
+  effectiveRoles: [ 'Collector' ],
+  isCollector: true,
+  isAdmin: false,
+  accessState: 'active'
+}
+AuthCallback: Redirecting to /collector
+
+stdout | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to access-pending when accessState is pending-access
+AuthCallback: Fetching me...
+
+stderr | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to access-pending when accessState is pending-access
+[Vue warn]: Invalid watch source:  { value: false } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at <AuthCallbackPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Invalid watch source:  { value: true } A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types. 
+  at <AuthCallbackPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+stdout | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to access-pending when accessState is pending-access
+AuthCallback: User fetched: {
+  id: '3',
+  email: 'new@test.com',
+  isPlatformAdmin: false,
+  accessState: 'pending-access',
+  roles: [],
+  scopesCount: 0
+}
+AuthCallback: Routing logic: {
+  effectiveRoles: [],
+  isCollector: false,
+  isAdmin: false,
+  accessState: 'pending-access'
+}
+AuthCallback: No effective roles or pending, redirecting to /pending-access
+
+stderr | src/modules/auth/pages/AuthCallbackPage.test.ts > AuthCallbackPage > routes to access-pending when accessState is pending-access
+[Vue Router warn]: No match found for location with path "/pending-access"
+
+ ✓ |0| src/modules/auth/pages/AuthCallbackPage.test.ts (3 tests) 181ms
+ ❯ |0| src/modules/collector/pages/CollectorDashboardPage.test.ts (2 tests | 2 failed) 26ms
+   × CollectorDashboardPage > renders collector-scoped metrics and recent receipts 21ms
+     → expected 'Collector Overview Abena Osei Termina…' to contain 'Start New Collection'
+   × CollectorDashboardPage > renders blocked state when collector has no assignments 5ms
+     → expected 'Collector Overview Abena Osei Termina…' to contain 'Collection blocked'
+stderr | src/modules/collector/pages/CollectorContributionCreatePage.test.ts > CollectorContributionCreatePage > preselects event from the query string
+[Vue Router warn]: No match found for location with path ""
+
+stderr | src/modules/collector/pages/CollectorContributionCreatePage.test.ts > CollectorContributionCreatePage > shows empty fund state when selected event has no assigned funds
+[Vue Router warn]: No match found for location with path ""
+
+stderr | src/modules/collector/pages/CollectorContributionCreatePage.test.ts > CollectorContributionCreatePage > submits the full collector cash payload and navigates to the receipt
+[Vue Router warn]: No match found for location with path ""
+
+ ✓ |0| src/modules/collector/pages/CollectorHistoryPage.test.ts (1 test) 32ms
+ ❯ |0| src/modules/collector/pages/CollectorContributionCreatePage.test.ts (3 tests | 3 failed) 43ms
+   × CollectorContributionCreatePage > preselects event from the query string 27ms
+     → expected 'Terminal / New Contribution Active Se…' to contain 'Selected Fund'
+   × CollectorContributionCreatePage > shows empty fund state when selected event has no assigned funds 5ms
+     → expected 'Terminal / New Contribution Active Se…' to contain 'No recipient funds found for this eve…'
+   × CollectorContributionCreatePage > submits the full collector cash payload and navigates to the receipt 11ms
+     → Cannot call setValue on an empty DOMWrapper.
+ ❯ |0| src/modules/reports/pages/ReportsPage.test.ts (1 test | 1 failed) 60ms
+   × ReportsPage > renders report filters and export placeholder 59ms
+     → [🍍]: "getActivePinia()" was called but there was no active Pinia. Are you trying to use a store before calling "app.use(pinia)"?
+See https://pinia.vuejs.org/core-concepts/outside-component-usage.html for help.
+This will fail in production.
+ ❯ |0| src/modules/contributions/pages/ContributionsPage.test.ts (1 test | 1 failed) 29ms
+   × ContributionsPage > renders the contribution table 29ms
+     → expected 'ContributionsReview incoming collecti…' to contain 'Community fundraiser'
+stderr | src/shared/components/buttons/AppButton.stories.ts > Primary
+[@vue/compiler-core] decodeEntities option is passed but will be ignored in non-browser builds.
+ ❯ |0| src/modules/receipts/pages/ReceiptsPage.test.ts (1 test | 1 failed) 27ms
+   × ReceiptsPage > renders the empty state when there are no receipts 27ms
+     → expected 'ReceiptsReview issued receipts and ve…' to contain 'No data available'
+stderr | src/shared/components/cards/MetricCard.stories.ts > Default
+Addon controls: Control of type color only supports string, received "union" instead
+stderr | src/stories/Header.stories.ts > Logged In
+[@vue/compiler-core] decodeEntities option is passed but will be ignored in non-browser builds.
+stderr | src/stories/Page.stories.ts > Logged In
+[@vue/compiler-core] decodeEntities option is passed but will be ignored in non-browser builds.
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Default
+[Vue warn]: injection "Symbol(router)" not found. 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Default
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Total Items" ref_for=true label="Total Items"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Default
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Total Value" ref_for=true label="Total Value"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Default
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Active Targets" ref_for=true label="Active Targets"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Default
+[Vue warn]: Unhandled error during execution of app errorHandler 
+  at <DataTable columns= [
+  {
+    "key": "name",
+    "label": "Name",
+    "sortable": true,
+  },
+  {
+    "key": "status",
+    "label": "Status",
+    "sortable": true,
+  },
+  {
+    "key": "amount",
+    "label": "Amount",
+    "sortable": true,
+  },
+] rows= [
+  {
+    "amount": "GHS 1,200.00",
+    "id": 1,
+    "name": "Sample Item 1",
+    "status": "Active",
+  },
+  {
+    "amount": "GHS 850.00",
+    "id": 2,
+    "name": "Sample Item 2",
+    "status": "Inactive",
+  },
+  {
+    "amount": "GHS 0.00",
+    "id": 3,
+    "name": "Sample Item 3",
+    "status": "Pending",
+  },
+] loading=false  ... > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Loading
+[Vue warn]: injection "Symbol(router)" not found. 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Loading
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Total Items" ref_for=true label="Total Items"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Loading
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Total Value" ref_for=true label="Total Value"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Loading
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Active Targets" ref_for=true label="Active Targets"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Loading
+[Vue warn]: Unhandled error during execution of app errorHandler 
+  at <DataTable columns= [
+  {
+    "key": "name",
+    "label": "Name",
+    "sortable": true,
+  },
+  {
+    "key": "status",
+    "label": "Status",
+    "sortable": true,
+  },
+  {
+    "key": "amount",
+    "label": "Amount",
+    "sortable": true,
+  },
+] rows= [] loading=true  ... > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Empty
+[Vue warn]: injection "Symbol(router)" not found. 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Empty
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Total Items" ref_for=true label="Total Items"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Empty
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Total Value" ref_for=true label="Total Value"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Empty
+[Vue warn]: Invalid prop: type check failed for prop "icon". Expected String with value "(props, { slots, attrs }) => h(
+  Icon,
+  {
+    ...attrs,
+    ...props,
+    iconNode,
+    name: iconName
+  },
+  slots
+)", got Function  
+  at <MetricCard key="Active Targets" ref_for=true label="Active Targets"  ... > 
+  at <AdminMetricGrid key=0 > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/layouts/ResourceListPage.stories.ts > Empty
+[Vue warn]: Unhandled error during execution of app errorHandler 
+  at <DataTable columns= [
+  {
+    "key": "name",
+    "label": "Name",
+    "sortable": true,
+  },
+  {
+    "key": "status",
+    "label": "Status",
+    "sortable": true,
+  },
+  {
+    "key": "amount",
+    "label": "Amount",
+    "sortable": true,
+  },
+] rows= [] loading=false  ... > 
+  at <ResourceListPage title="Resource List" description="A standardized layout for managing resources." metrics= [
+  {
+    "color": "purple",
+    "icon": [Function anonymous],
+    "label": "Total Items",
+    "value": "3",
+  },
+  {
+    "color": "green",
+    "icon": [Function anonymous],
+    "label": "Total Value",
+    "value": "GHS 2,050.00",
+  },
+  {
+    "color": "blue",
+    "icon": [Function anonymous],
+    "label": "Active Targets",
+    "value": "1",
+  },
+]  ... > 
+  at <Anonymous> 
+  at <App>
+stderr | src/shared/components/cards/MetricCard.stories.ts > With Trend
+Addon controls: Control of type color only supports string, received "union" instead
+ ❯ |storybook (chromium)| src/shared/components/layouts/ResourceListPage.stories.ts (3 tests | 3 failed) 86ms
+   × Default 32ms
+     → 
+[34mClick to debug the error directly in Storybook: http://localhost:6006/?path=/story/layouts-resourcelistpage--default&addonPanel=storybook/interactions/panel[39m
+
+[🍍]: "getActivePinia()" was called but there was no active Pinia. Are you trying to use a store before calling "app.use(pinia)"?
+See https://pinia.vuejs.org/core-concepts/outside-component-usage.html for help.
+This will fail in production.
+   × Loading 6ms
+     → 
+[34mClick to debug the error directly in Storybook: http://localhost:6006/?path=/story/layouts-resourcelistpage--loading&addonPanel=storybook/interactions/panel[39m
+
+[🍍]: "getActivePinia()" was called but there was no active Pinia. Are you trying to use a store before calling "app.use(pinia)"?
+See https://pinia.vuejs.org/core-concepts/outside-component-usage.html for help.
+This will fail in production.
+   × Empty 47ms
+     → 
+[34mClick to debug the error directly in Storybook: http://localhost:6006/?path=/story/layouts-resourcelistpage--empty&addonPanel=storybook/interactions/panel[39m
+
+[🍍]: "getActivePinia()" was called but there was no active Pinia. Are you trying to use a store before calling "app.use(pinia)"?
+See https://pinia.vuejs.org/core-concepts/outside-component-usage.html for help.
+This will fail in production.
+ ✓ |0| src/modules/collector/pages/CollectorEventsPage.test.ts (1 test) 95ms
+ ✓ |storybook (chromium)| src/stories/Header.stories.ts (2 tests) 491ms
+   ✓ Logged In  445ms
+stderr | src/shared/components/cards/MetricCard.stories.ts > With Progress
+Addon controls: Control of type color only supports string, received "union" instead
+ ✓ |storybook (chromium)| src/stories/Page.stories.ts (2 tests) 509ms
+   ✓ Logged In  460ms
+stderr | src/shared/components/buttons/AppButton.stories.ts > With Icon
+[@vue/compiler-core] decodeEntities option is passed but will be ignored in non-browser builds.
+ ✓ |storybook (chromium)| src/stories/Button.stories.ts (4 tests) 523ms
+   ✓ Primary  443ms
+stderr | src/shared/components/cards/MetricCard.stories.ts > Warning
+Addon controls: Control of type color only supports string, received "union" instead
+ ✓ |0| src/modules/collector/pages/CollectorReceiptPage.test.ts (1 test) 41ms
+ ✓ |storybook (chromium)| src/shared/components/cards/MetricCard.stories.ts (4 tests) 559ms
+   ✓ Default  452ms
+ ✓ |storybook (chromium)| src/shared/components/buttons/AppButton.stories.ts (6 tests) 620ms
+   ✓ Primary  499ms
+ ✓ |0| src/shared/components/buttons/AppButton.test.ts (2 tests) 36ms
+ ✓ |0| src/modules/settlements/pages/SettlementsPage.test.ts (1 test) 157ms
+stderr | src/modules/storefront/pages/RecipientSelectionPage.test.ts > RecipientSelectionPage > renders recipient selection cards
+[Vue Router warn]: No match found for location with path "/"
+
+ ✓ |0| src/modules/storefront/pages/RecipientSelectionPage.test.ts (1 test) 42ms
+stderr | src/modules/events/pages/EventCreatePage.test.ts > EventCreatePage > renders the create event form
+[Vue Router warn]: No match found for location with path "/"
+[Vue warn]: injection "VUE_QUERY_CLIENT" not found. 
+  at <EventCreatePage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Invalid vnode type when creating vnode: undefined. 
+  at <EventCreatePage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Invalid vnode type when creating vnode: undefined. 
+  at <EventCreatePage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+ ❯ |0| src/modules/events/pages/EventCreatePage.test.ts (1 test | 1 failed) 21ms
+   × EventCreatePage > renders the create event form 21ms
+     → No 'queryClient' found in Vue context, use 'VueQueryPlugin' to properly initialize the library.
+ ✓ |0| src/modules/events/pages/EventListPage.test.ts (1 test) 69ms
+stdout | src/surfaces/admin/layouts/AdminLayout.test.ts > AdminLayout > renders admin navigation links
+AdminLayout: Initializing...
+
+stderr | src/surfaces/admin/layouts/AdminLayout.test.ts > AdminLayout > renders admin navigation links
+[Vue Router warn]: No match found for location with path "/"
+[Vue Router warn]: No match found for location with path "/admin/events"
+[Vue Router warn]: No match found for location with path "/admin/collect"
+[Vue Router warn]: No match found for location with path "/admin/contributions"
+[Vue Router warn]: No match found for location with path "/admin/self-donations"
+[Vue Router warn]: No match found for location with path "/admin/payments"
+[Vue Router warn]: No match found for location with path "/admin/donors"
+[Vue Router warn]: No match found for location with path "/admin/collectors"
+[Vue Router warn]: No match found for location with path "/admin/reports"
+[Vue Router warn]: No match found for location with path "/admin/settlements"
+[Vue Router warn]: No match found for location with path "/admin/branches"
+[Vue Router warn]: No match found for location with path "/admin/users"
+[Vue Router warn]: No match found for location with path "/admin/organization"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+
+stdout | src/surfaces/admin/layouts/AdminLayout.test.ts > AdminLayout > renders admin navigation links
+AdminLayout: Initialization complete.
+
+stdout | src/surfaces/admin/layouts/AdminLayout.test.ts > AdminLayout > renders current user name and email from store
+AdminLayout: Initializing...
+AdminLayout: Initialization complete.
+
+stderr | src/surfaces/admin/layouts/AdminLayout.test.ts > AdminLayout > renders current user name and email from store
+[Vue Router warn]: No match found for location with path "/"
+[Vue Router warn]: No match found for location with path "/admin/events"
+[Vue Router warn]: No match found for location with path "/admin/collect"
+[Vue Router warn]: No match found for location with path "/admin/contributions"
+[Vue Router warn]: No match found for location with path "/admin/self-donations"
+[Vue Router warn]: No match found for location with path "/admin/payments"
+[Vue Router warn]: No match found for location with path "/admin/donors"
+[Vue Router warn]: No match found for location with path "/admin/collectors"
+[Vue Router warn]: No match found for location with path "/admin/reports"
+[Vue Router warn]: No match found for location with path "/admin/settlements"
+[Vue Router warn]: No match found for location with path "/admin/branches"
+[Vue Router warn]: No match found for location with path "/admin/users"
+[Vue Router warn]: No match found for location with path "/admin/organization"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/users"
+
+stderr | src/surfaces/admin/layouts/AdminLayout.test.ts > AdminLayout > renders current user name and email from store
+[Vue Router warn]: No match found for location with path "/admin/events"
+[Vue Router warn]: No match found for location with path "/admin/collect"
+[Vue Router warn]: No match found for location with path "/admin/contributions"
+[Vue Router warn]: No match found for location with path "/admin/self-donations"
+[Vue Router warn]: No match found for location with path "/admin/payments"
+[Vue Router warn]: No match found for location with path "/admin/donors"
+[Vue Router warn]: No match found for location with path "/admin/collectors"
+[Vue Router warn]: No match found for location with path "/admin/reports"
+[Vue Router warn]: No match found for location with path "/admin/settlements"
+[Vue Router warn]: No match found for location with path "/admin/branches"
+[Vue Router warn]: No match found for location with path "/admin/users"
+[Vue Router warn]: No match found for location with path "/admin/organization"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+
+stderr | src/surfaces/admin/layouts/AdminLayout.test.ts
+[Vue Router warn]: No match found for location with path "/admin/events"
+[Vue Router warn]: No match found for location with path "/admin/collect"
+[Vue Router warn]: No match found for location with path "/admin/contributions"
+[Vue Router warn]: No match found for location with path "/admin/self-donations"
+[Vue Router warn]: No match found for location with path "/admin/payments"
+[Vue Router warn]: No match found for location with path "/admin/donors"
+[Vue Router warn]: No match found for location with path "/admin/collectors"
+[Vue Router warn]: No match found for location with path "/admin/reports"
+[Vue Router warn]: No match found for location with path "/admin/settlements"
+[Vue Router warn]: No match found for location with path "/admin/branches"
+[Vue Router warn]: No match found for location with path "/admin/users"
+[Vue Router warn]: No match found for location with path "/admin/organization"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/settings"
+[Vue Router warn]: No match found for location with path "/admin/users"
+
+ ✓ |0| src/surfaces/admin/layouts/AdminLayout.test.ts (2 tests) 57ms
+stderr | src/modules/events/pages/EventDetailPage.test.ts > EventDetailPage > renders event details and does not show Edit button in header
+[Vue warn]: Failed to resolve component: AppSwitch
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <EventDetailPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+stderr | src/modules/events/pages/EventDetailPage.test.ts > EventDetailPage > activates inline edit mode when Edit Details is clicked
+[Vue warn]: Failed to resolve component: AppSwitch
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <EventDetailPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Failed to resolve component: RouterLink
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <EventDetailPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+Failed to sync funds for editing: ReferenceError: recipientFundsService is not defined
+    at startEditing (/Users/ikebotch/dev/mftl-collections/frontend/src/modules/events/pages/EventDetailPage.vue:627:21)
+    at callWithErrorHandling (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:200:19)
+    at Object.callWithAsyncErrorHandling (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:207:17)
+    at HTMLButtonElement.invoker (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/@vue/runtime-dom/dist/runtime-dom.cjs.js:680:17)
+    at HTMLButtonElement.callTheUserObjectsOperation (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLButtonElementImpl._dispatch (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLButtonElementImpl.dispatchEvent (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+    at HTMLButtonElement.dispatchEvent (/Users/ikebotch/dev/mftl-collections/frontend/node_modules/jsdom/lib/generated/idl/EventTarget.js:241:34)
+[Vue warn]: Failed to resolve component: AppSwitch
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <EventDetailPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Failed to resolve component: RouterLink
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <EventDetailPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Missing required prop: "id" 
+  at <AppTextarea modelValue="Test description" onUpdate:modelValue=fn label="Operational Narrative"  ... > 
+  at <AppCard id="section-detail" class="!p-20 scroll-mt-10 border-slate-200/50 shadow-sm" > 
+  at <AdminWizardLayout sections= [
+  { id: 'section-detail', title: 'Identity', subtitle: 'Step 01' },
+  { id: 'section-funds', title: 'Funds', subtitle: 'Step 02' },
+  { id: 'section-images', title: 'Branding', subtitle: 'Step 03' }
+] title="Overview Sections" > 
+  at <EventDetailPage ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+ ✓ |0| src/modules/events/pages/EventDetailPage.test.ts (2 tests) 84ms
+stderr | src/modules/events/pages/EventDetailPage.vue:560:13
+Failed to load branch records: ApiError: Network Error
+    at mapApiError (/Users/ikebotch/dev/mftl-collections/frontend/src/core/api/httpClient.ts:155:12)
+    at HttpClient.request (/Users/ikebotch/dev/mftl-collections/frontend/src/core/api/httpClient.ts:119:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.listBranches [as list] (/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/services/branchesService.ts:16:20)
+    at /Users/ikebotch/dev/mftl-collections/frontend/src/modules/events/pages/EventDetailPage.vue:557:26 {
+  statusCode: undefined,
+  errors: [],
+  correlationId: ''
+}
+
+stderr | src/modules/events/pages/EventDetailPage.vue:560:13
+Failed to load branch records: ApiError: Network Error
+    at mapApiError (/Users/ikebotch/dev/mftl-collections/frontend/src/core/api/httpClient.ts:155:12)
+    at HttpClient.request (/Users/ikebotch/dev/mftl-collections/frontend/src/core/api/httpClient.ts:119:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.listBranches [as list] (/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/services/branchesService.ts:16:20)
+    at /Users/ikebotch/dev/mftl-collections/frontend/src/modules/events/pages/EventDetailPage.vue:557:26 {
+  statusCode: undefined,
+  errors: [],
+  correlationId: ''
+}
+
+ ✓ |0| src/modules/events/pages/EventEditPage.test.ts (1 test) 9ms
+ ✓ |0| src/shared/components/empty-states/EmptyState.test.ts (1 test) 12ms
+ ✓ |0| src/core/api/apiEnvelope.test.ts (2 tests) 1ms
+ ✓ |0| src/modules/payments/components/PaymentStatusBadge.test.ts (1 test) 7ms
+ ✓ |0| src/modules/storefront/validators/storefrontValidators.test.ts (3 tests) 12ms
+ ✓ |0| src/modules/collector/validators/collectorValidators.test.ts (2 tests) 4ms
+ ✓ |0| src/core/config/env.test.ts (1 test) 2ms
+ ✓ |0| src/modules/tenants/store/tenantStore.test.ts (1 test) 4ms
+ ✓ |0| src/modules/events/validators/eventValidators.test.ts (1 test) 2ms
+ ✓ |0| src/core/auth/authGuards.test.ts (4 tests) 9ms
+ ✓ |0| src/core/api/httpClient.test.ts (2 tests) 2ms
+ ✓ |0| src/app/router/index.test.ts (1 test) 1ms
+ ✓ |0| src/modules/recipient-funds/validators/recipientFundValidators.test.ts (1 test) 1ms
+ ✓ |0| src/core/api/apiError.test.ts (1 test) 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |storybook (chromium)| src/shared/components/layouts/ResourceListPage.stories.ts > Default
+ FAIL  |storybook (chromium)| src/shared/components/layouts/ResourceListPage.stories.ts > Loading
+ FAIL  |storybook (chromium)| src/shared/components/layouts/ResourceListPage.stories.ts > Empty
+Error: 
+[34mClick to debug the error directly in Storybook: http://localhost:6006/?path=/story/layouts-resourcelistpage--default&addonPanel=storybook/interactions/panel[39m
+
+[🍍]: "getActivePinia()" was called but there was no active Pinia. Are you trying to use a store before calling "app.use(pinia)"?
+See https://pinia.vuejs.org/core-concepts/outside-component-usage.html for help.
+This will fail in production.
+ ❯ useStore node_modules/pinia/dist/pinia.mjs:1706:18
+ ❯ setup src/shared/components/tables/DataTable.vue:299:14
+    297| const internalPage = ref(props.page)
+    298| const expandedRows = ref<Set<string | number>>(new Set())
+    299| const toast = useToastStore()
+       |              ^
+    300| 
+    301| // Sync internal page with prop
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  |0| src/modules/contributions/pages/ContributionsPage.test.ts > ContributionsPage > renders the contribution table
+AssertionError: expected 'ContributionsReview incoming collecti…' to contain 'Community fundraiser'
+
+Expected: "Community fundraiser"
+Received: "ContributionsReview incoming collections, payment status, receipts, and donor activity.↑0%Total RaisedGHS 0.00Total Records0Verified Funds0Failed Payments0 More FiltersContribution Audit LogDate/TimeDonorAmountEventFundMethodStatus No records found  Try adjusting filters or refreshing the sync"
+
+ ❯ src/modules/contributions/pages/ContributionsPage.test.ts:37:28
+     35|   it('renders the contribution table', () => {
+     36|     const wrapper = mount(ContributionsPage)
+     37|     expect(wrapper.text()).toContain('Community fundraiser')
+       |                            ^
+     38|   })
+     39| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  |0| src/modules/collector/pages/CollectorContributionCreatePage.test.ts > CollectorContributionCreatePage > preselects event from the query string
+AssertionError: expected 'Terminal / New Contribution Active Se…' to contain 'Selected Fund'
+
+Expected: "Selected Fund"
+Received: "Terminal / New Contribution Active Session1Event2Fund3Review 1. Target Event Youth Conference 202610 May 2026 · Main Site"
+
+ ❯ src/modules/collector/pages/CollectorContributionCreatePage.test.ts:83:28
+     81|     expect(wrapper.text()).toContain('Youth Conference 2026')
+     82|     // Should show fund selection step
+     83|     expect(wrapper.text()).toContain('Selected Fund')
+       |                            ^
+     84|   })
+     85| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  |0| src/modules/collector/pages/CollectorContributionCreatePage.test.ts > CollectorContributionCreatePage > shows empty fund state when selected event has no assigned funds
+AssertionError: expected 'Terminal / New Contribution Active Se…' to contain 'No recipient funds found for this eve…'
+
+Expected: "No recipient funds found for this event"
+Received: "Terminal / New Contribution Active Session1Event2Fund3Review 1. Target Event Youth Conference 202610 May 2026 · Main SiteCommunity Outreach01 Jun 2026 · Town Hall"
+
+ ❯ src/modules/collector/pages/CollectorContributionCreatePage.test.ts:109:28
+    107|     await flushPromises()
+    108| 
+    109|     expect(wrapper.text()).toContain('No recipient funds found for thi…
+       |                            ^
+    110|   })
+    111| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  |0| src/modules/collector/pages/CollectorContributionCreatePage.test.ts > CollectorContributionCreatePage > submits the full collector cash payload and navigates to the receipt
+Error: Cannot call setValue on an empty DOMWrapper.
+ ❯ Object.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:1574:27
+    1572|                     return function () { return false; };
+    1573|                 default:
+    1574|                     throw new Error("Cannot call ".concat(String(prop)…
+       |                           ^
+    1575|             }
+    1576|         }
+ ❯ src/modules/collector/pages/CollectorContributionCreatePage.test.ts:134:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  |0| src/modules/collector/pages/CollectorDashboardPage.test.ts > CollectorDashboardPage > renders collector-scoped metrics and recent receipts
+AssertionError: expected 'Collector Overview Abena Osei Termina…' to contain 'Start New Collection'
+
+Expected: "Start New Collection"
+Received: "Collector Overview Abena Osei Terminal: collecto Ready for collection  Active Shift Main Site New Collection Today collectedGHS 1,245.00Receipts issued18Assigned events2Assigned funds3 Current Assignments  Sync Status OnlineLast activity 24 Apr 2026 Connection  PRIMARY TERMINAL 01  Recent Receipts  Full History RCT-1001GHS 150.00Community FundraiserIssued Start Collection"
+
+ ❯ src/modules/collector/pages/CollectorDashboardPage.test.ts:63:28
+     61|     expect(wrapper.text()).toContain('Abena Osei')
+     62|     expect(wrapper.text()).toContain('GHS 1,245.00')
+     63|     expect(wrapper.text()).toContain('Start New Collection')
+       |                            ^
+     64|     expect(wrapper.text()).toContain('RCT-1001')
+     65|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  |0| src/modules/collector/pages/CollectorDashboardPage.test.ts > CollectorDashboardPage > renders blocked state when collector has no assignments
+AssertionError: expected 'Collector Overview Abena Osei Termina…' to contain 'Collection blocked'
+
+Expected: "Collection blocked"
+Received: "Collector Overview Abena Osei Terminal: collecto Ready for collection  Active Shift Main Site New Collection Today collectedGHS 1,245.00Receipts issued18Assigned events2Assigned funds3 Current Assignments  No active assignments found  Sync Status OnlineLast activity 24 Apr 2026 Connection  PRIMARY TERMINAL 01  Recent Receipts  Full History  No activity recorded  Start Collection"
+
+ ❯ src/modules/collector/pages/CollectorDashboardPage.test.ts:86:28
+     84|     const wrapper = mount(CollectorDashboardPage)
+     85| 
+     86|     expect(wrapper.text()).toContain('Collection blocked')
+       |                            ^
+     87|     expect(wrapper.text()).toContain('No event and fund assignments ar…
+     88|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  |0| src/modules/events/pages/EventCreatePage.test.ts > EventCreatePage > renders the create event form
+Error: No 'queryClient' found in Vue context, use 'VueQueryPlugin' to properly initialize the library.
+ ❯ useQueryClient node_modules/@tanstack/vue-query/src/useQueryClient.ts:18:11
+ ❯ useBaseQuery node_modules/@tanstack/vue-query/src/useBaseQuery.ts:82:33
+ ❯ useQuery node_modules/@tanstack/vue-query/src/useQuery.ts:136:10
+ ❯ useMe src/modules/users/composables/useUsers.ts:36:10
+     34| 
+     35| export function useMe() {
+     36|   return useQuery({
+       |          ^
+     37|     queryKey: ['users', 'me'],
+     38|     queryFn: getMe,
+ ❯ setup src/modules/events/pages/EventCreatePage.vue:324:22
+ ❯ callWithErrorHandling node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:200:19
+ ❯ setupStatefulComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:8071:25
+ ❯ setupComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:8033:36
+ ❯ mountComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:5958:7
+ ❯ processComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:5924:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  |0| src/modules/receipts/pages/ReceiptsPage.test.ts > ReceiptsPage > renders the empty state when there are no receipts
+AssertionError: expected 'ReceiptsReview issued receipts and ve…' to contain 'No data available'
+
+Expected: "No data available"
+Received: "ReceiptsReview issued receipts and verify contribution records across all channels. Export Ledger Total Receipts0Verified ValueGHS 12,450.00Issued Today14Audit Integrity100% More FiltersDigital Receipt ArchiveReceiptContributorEvent / FundAmountStatusIssued No records found  Try adjusting filters or refreshing the sync"
+
+ ❯ src/modules/receipts/pages/ReceiptsPage.test.ts:23:28
+     21|   it('renders the empty state when there are no receipts', () => {
+     22|     const wrapper = mount(ReceiptsPage)
+     23|     expect(wrapper.text()).toContain('No data available')
+       |                            ^
+     24|   })
+     25| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  |0| src/modules/reports/pages/ReportsPage.test.ts > ReportsPage > renders report filters and export placeholder
+Error: [🍍]: "getActivePinia()" was called but there was no active Pinia. Are you trying to use a store before calling "app.use(pinia)"?
+See https://pinia.vuejs.org/core-concepts/outside-component-usage.html for help.
+This will fail in production.
+ ❯ useStore node_modules/pinia/dist/pinia.mjs:1706:19
+    1704|             setActivePinia(pinia);
+    1705|         if ((process.env.NODE_ENV !== 'production') && !activePinia) {
+    1706|             throw new Error(`[🍍]: "getActivePinia()" was called but t…
+       |                   ^
+    1707|                 `See https://pinia.vuejs.org/core-concepts/outside-com…
+    1708|                 `This will fail in production.`);
+ ❯ setup src/shared/components/tables/DataTable.vue:299:15
+ ❯ callWithErrorHandling node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:200:19
+ ❯ setupStatefulComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:8071:25
+ ❯ setupComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:8033:36
+ ❯ mountComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:5958:7
+ ❯ processComponent node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:5924:9
+ ❯ patch node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:5434:11
+ ❯ mountChildren node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:5685:7
+ ❯ mountElement node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:5601:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+
+ Test Files  7 failed | 29 passed (36)
+      Tests  12 failed | 55 passed (67)
+   Start at  07:19:18
+   Duration  5.55s (transform 7.36s, setup 7.69s, collect 29.27s, tests 3.86s, environment 18.68s, prepare 19.37s)
+

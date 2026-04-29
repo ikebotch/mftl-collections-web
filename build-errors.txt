@@ -1,0 +1,311 @@
+
+> frontend@0.0.0 build
+> vue-tsc -b && vite build
+
+src/core/api/httpClient.ts(6,15): error TS2305: Module '"./types"' has no exported member 'RequestOptions'.
+src/modules/auth/pages/AuthCallbackPage.vue(11,7): error TS6133: 'tenantStore' is declared but its value is never read.
+src/modules/collector/composables/useCollectors.ts(1,1): error TS6133: 'computed' is declared but its value is never read.
+src/modules/collector/composables/useCollectors.ts(13,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(options: DefinedInitialQueryOptions<CollectorProfile[], ApiError, CollectorProfile[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryDefinedReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 2 of 3, '(options: UndefinedInitialQueryOptions<CollectorProfile[], ApiError, CollectorProfile[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 3 of 3, '(options: MaybeRefOrGetter<UseQueryOptions<CollectorProfile[], ApiError, CollectorProfile[], CollectorProfile[], readonly unknown[]>>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(207,28): error TS2339: Property 'isEditingCampaigns' does not exist on type '{ query: UseQueryReturnType<CollectorProfile, ApiError>; collector: CollectorProfile | undefined; exportPerformance: () => void; ... 47 more ...; $auth0: Auth0VueClient; }'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(210,29): error TS2339: Property 'isEditingCampaigns' does not exist on type '{ query: UseQueryReturnType<CollectorProfile, ApiError>; collector: CollectorProfile | undefined; exportPerformance: () => void; ... 47 more ...; $auth0: Auth0VueClient; }'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(532,3): error TS6133: 'Plus' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(533,3): error TS6133: 'History' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(534,3): error TS6133: 'Users' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(535,3): error TS6133: 'Settings' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(539,3): error TS6133: 'Check' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(542,3): error TS6133: 'Target' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(569,5): error TS2322: Type '{ label: string; value: string; }[]' is not assignable to type 'never[]'.
+  Type '{ label: string; value: string; }' is not assignable to type 'never'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(640,10): error TS6133: 'isEventAssigned' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(644,10): error TS6133: 'isFundAssigned' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(673,10): error TS6133: 'getFundsForEvent' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(683,41): error TS2339: Property 'find' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'find' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(683,46): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(707,45): error TS2339: Property 'find' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'find' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(707,50): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(745,25): error TS2339: Property 'forEach' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'forEach' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(745,33): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(824,32): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(824,39): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(828,9): error TS2339: Property 'info' does not exist on type 'Store<"toast", Pick<{ toasts: Ref<{ id: string; message: string; type: "error" | "success" | "info" | "warning"; duration?: number | undefined; }[], Toast[] | { id: string; message: string; type: "error" | ... 2 more ... | "warning"; duration?: number | undefined; }[]>; add: (message: string, type?: "error" | ... 2 ...'.
+src/modules/collector/pages/AdminCollectorDetailPage.vue(832,9): error TS2339: Property 'info' does not exist on type 'Store<"toast", Pick<{ toasts: Ref<{ id: string; message: string; type: "error" | "success" | "info" | "warning"; duration?: number | undefined; }[], Toast[] | { id: string; message: string; type: "error" | ... 2 more ... | "warning"; duration?: number | undefined; }[]>; add: (message: string, type?: "error" | ... 2 ...'.
+src/modules/collector/pages/AdminCollectorsPage.vue(142,42): error TS2554: Expected 0-1 arguments, but got 2.
+src/modules/collector/pages/AdminCollectorsPage.vue(273,1): error TS6133: 'AppSelect' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(275,1): error TS6133: 'RowActions' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(276,1): error TS6133: 'MultiSelectFilter' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(278,26): error TS6133: 'Users' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(278,33): error TS6133: 'TrendingUp' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(278,45): error TS6133: 'Clock' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(278,52): error TS6133: 'Trophy' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(278,65): error TS6133: 'Edit3' is declared but its value is never read.
+src/modules/collector/pages/AdminCollectorsPage.vue(305,28): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/collector/pages/AdminCollectorsPage.vue(305,35): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/collector/pages/AdminCollectorsPage.vue(306,33): error TS2339: Property 'reduce' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'reduce' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/collector/pages/AdminCollectorsPage.vue(306,41): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/modules/collector/pages/AdminCollectorsPage.vue(306,46): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/collector/pages/AdminCollectorsPage.vue(307,34): error TS2339: Property 'length' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'length' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/collector/pages/AdminCollectorsPage.vue(382,9): error TS2339: Property 'info' does not exist on type 'Store<"toast", Pick<{ toasts: Ref<{ id: string; message: string; type: "error" | "success" | "info" | "warning"; duration?: number | undefined; }[], Toast[] | { id: string; message: string; type: "error" | ... 2 more ... | "warning"; duration?: number | undefined; }[]>; add: (message: string, type?: "error" | ... 2 ...'.
+src/modules/collector/pages/CollectorContributionCreatePage.vue(399,3): error TS6133: 'Plus' is declared but its value is never read.
+src/modules/collector/pages/CollectorCreatePage.vue(261,1): error TS6133: 'AppSwitch' is declared but its value is never read.
+src/modules/collector/pages/CollectorCreatePage.vue(301,5): error TS2322: Type '{ label: string; value: string; }[]' is not assignable to type 'never[]'.
+  Type '{ label: string; value: string; }' is not assignable to type 'never'.
+src/modules/collector/pages/CollectorDashboardPage.vue(125,30): error TS2339: Property 'branchName' does not exist on type 'CollectorAssignedEvent'.
+src/modules/contributions/composables/useContributions.ts(14,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(options: DefinedInitialQueryOptions<PagedResponse<ContributionRow>, ApiError, PagedResponse<ContributionRow>, readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryDefinedReturnType<...>', gave the following error.
+    Type '() => (string | { page?: number; pageSize?: number; tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 2 of 3, '(options: UndefinedInitialQueryOptions<PagedResponse<ContributionRow>, ApiError, PagedResponse<ContributionRow>, readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { page?: number; pageSize?: number; tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 3 of 3, '(options: MaybeRefOrGetter<UseQueryOptions<PagedResponse<ContributionRow>, ApiError, PagedResponse<ContributionRow>, PagedResponse<ContributionRow>, readonly unknown[]>>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { page?: number; pageSize?: number; tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+src/modules/contributions/pages/AdminCollectionPage.vue(67,55): error TS2339: Property 'data' does not exist on type 'Event[]'.
+src/modules/contributions/pages/AdminCollectionPage.vue(323,5): error TS2353: Object literal may only specify known properties, and 'status' does not exist in type '{ branchId?: string | undefined; tenantId?: string | undefined; }'.
+src/modules/contributions/pages/AdminCollectionPage.vue(342,27): error TS2339: Property 'data' does not exist on type 'Event[]'.
+src/modules/contributions/pages/AdminCollectionPage.vue(342,37): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/contributions/pages/AdminCollectionPage.vue(350,29): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/modules/contributions/pages/AdminCollectionPage.vue(376,7): error TS2353: Object literal may only specify known properties, and 'amountValue' does not exist in type 'RecordCashContributionInput'.
+src/modules/contributions/pages/ContributionsPage.vue(24,45): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/contributions/pages/ContributionsPage.vue(30,45): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/contributions/pages/ContributionsPage.vue(40,10): error TS2322: Type 'string | boolean' is not assignable to type 'boolean | undefined'.
+  Type 'string' is not assignable to type 'boolean | undefined'.
+src/modules/contributions/pages/ContributionsPage.vue(346,56): error TS2339: Property 'items' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/contributions/pages/ContributionsPage.vue(347,58): error TS2339: Property 'totalCount' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/contributions/pages/ContributionsPage.vue(354,26): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/contributions/pages/ContributionsPage.vue(362,26): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/contributions/pages/ContributionsPage.vue(366,26): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/contributions/pages/ContributionsPage.vue(370,26): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/contributions/pages/ContributionsPage.vue(378,31): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/contributions/services/contributionsService.ts(2,15): error TS2305: Module '"@/core/api/types"' has no exported member 'RequestOptions'.
+src/modules/dashboard/pages/AdminDashboardPage.vue(123,44): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'string | undefined'.
+  Type 'number' is not assignable to type 'string'.
+src/modules/dashboard/pages/AdminDashboardPage.vue(348,3): error TS6133: 'Wallet' is declared but its value is never read.
+src/modules/dashboard/pages/AdminDashboardPage.vue(349,3): error TS6133: 'Users' is declared but its value is never read.
+src/modules/dashboard/pages/AdminDashboardPage.vue(350,3): error TS6133: 'ShieldCheck' is declared but its value is never read.
+src/modules/dashboard/pages/AdminDashboardPage.vue(358,63): error TS2339: Property 'items' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/dashboard/pages/AdminDashboardPage.vue(368,31): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/dashboard/pages/AdminDashboardPage.vue(377,31): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/donors/composables/useDonors.ts(11,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(options: DefinedInitialQueryOptions<Donor[], ApiError, Donor[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryDefinedReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 2 of 3, '(options: UndefinedInitialQueryOptions<Donor[], ApiError, Donor[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 3 of 3, '(options: MaybeRefOrGetter<UseQueryOptions<Donor[], ApiError, Donor[], Donor[], readonly unknown[]>>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+src/modules/donors/pages/DonorsPage.vue(11,24): error TS2339: Property 'length' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'length' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/donors/pages/DonorsPage.vue(17,24): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/donors/pages/DonorsPage.vue(17,31): error TS7006: Parameter 'd' implicitly has an 'any' type.
+src/modules/donors/pages/DonorsPage.vue(23,24): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/donors/pages/DonorsPage.vue(23,31): error TS7006: Parameter 'd' implicitly has an 'any' type.
+src/modules/donors/pages/DonorsPage.vue(248,20): error TS2339: Property 'length' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'length' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/donors/pages/DonorsPage.vue(249,30): error TS2339: Property 'reduce' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'reduce' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/donors/pages/DonorsPage.vue(249,38): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/modules/donors/pages/DonorsPage.vue(249,43): error TS7006: Parameter 'd' implicitly has an 'any' type.
+src/modules/donors/pages/DonorsPage.vue(250,46): error TS2339: Property 'length' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'length' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/donors/pages/DonorsPage.vue(268,23): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/donors/pages/DonorsPage.vue(268,30): error TS7006: Parameter 'd' implicitly has an 'any' type.
+src/modules/donors/services/donorsService.ts(48,21): error TS2339: Property 'forEach' does not exist on type 'PagedResponse<ContributionRow>'.
+src/modules/donors/services/donorsService.ts(48,29): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/events/components/EventExpandedDetails.vue(171,18): error TS6133: 'Users' is declared but its value is never read.
+src/modules/events/components/EventExpandedDetails.vue(171,25): error TS6133: 'UserPlus' is declared but its value is never read.
+src/modules/events/components/EventExpandedDetails.vue(171,35): error TS6133: 'Plus' is declared but its value is never read.
+src/modules/events/components/EventRecipientFundsList.vue(214,20): error TS2339: Property 'isActive' does not exist on type 'RecipientFund'.
+src/modules/events/components/EventRecipientFundsList.vue(232,7): error TS2353: Object literal may only specify known properties, and 'isActive' does not exist in type 'CreateRecipientFundInput'.
+src/modules/events/composables/useEvents.ts(16,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(options: DefinedInitialQueryOptions<Event[], ApiError, Event[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryDefinedReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 2 of 3, '(options: UndefinedInitialQueryOptions<Event[], ApiError, Event[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 3 of 3, '(options: MaybeRefOrGetter<UseQueryOptions<Event[], ApiError, Event[], Event[], readonly unknown[]>>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+src/modules/events/pages/EventAnalyticsPage.vue(42,11): error TS2322: Type '"violet"' is not assignable to type '"purple" | "green" | "amber" | "blue" | "red" | "slate" | undefined'.
+src/modules/events/pages/EventAnalyticsPage.vue(331,3): error TS6133: 'TrendingUp' is declared but its value is never read.
+src/modules/events/pages/EventAnalyticsPage.vue(332,3): error TS6133: 'Users' is declared but its value is never read.
+src/modules/events/pages/EventAnalyticsPage.vue(334,3): error TS6133: 'Globe' is declared but its value is never read.
+src/modules/events/pages/EventAnalyticsPage.vue(335,3): error TS6133: 'ChevronDown' is declared but its value is never read.
+src/modules/events/pages/EventCreatePage.vue(327,44): error TS2339: Property 'isPlatformAdmin' does not exist on type 'Ref<UserDetail, UserDetail> | Ref<undefined, undefined>'.
+  Property 'isPlatformAdmin' does not exist on type 'Ref<UserDetail, UserDetail>'.
+src/modules/events/pages/EventCreatePage.vue(370,5): error TS2322: Type '{ label: string; value: string; }[]' is not assignable to type 'never[]'.
+  Type '{ label: string; value: string; }' is not assignable to type 'never'.
+src/modules/events/pages/EventCreatePage.vue(413,7): error TS2353: Object literal may only specify known properties, and 'branchId' does not exist in type 'CreateEventInput'.
+src/modules/events/pages/EventDetailPage.vue(182,36): error TS2339: Property 'branchId' does not exist on type '{ title: string; description: string; eventDate: string; isActive: boolean; slug: string; displayImageUrl?: string | undefined; receiptLogoUrl?: string | undefined; }'.
+src/modules/events/pages/EventDetailPage.vue(202,18): error TS2345: Argument of type '{ modelValue: string; label: string; placeholder: string; rows: number; }' is not assignable to parameter of type '{ readonly id: string; readonly modelValue: string; readonly label: string; readonly rows?: number | undefined; readonly placeholder?: string | undefined; readonly error?: string | undefined; readonly srOnly?: boolean | undefined; readonly "onUpdate:modelValue"?: ((value: string) => any) | undefined; } & VNodeProps ...'.
+  Property 'id' is missing in type '{ modelValue: string; label: string; placeholder: string; rows: number; }' but required in type '{ readonly id: string; readonly modelValue: string; readonly label: string; readonly rows?: number | undefined; readonly placeholder?: string | undefined; readonly error?: string | undefined; readonly srOnly?: boolean | undefined; readonly "onUpdate:modelValue"?: ((value: string) => any) | undefined; }'.
+src/modules/events/pages/EventDetailPage.vue(558,5): error TS2322: Type '{ label: string; value: string; }[]' is not assignable to type 'never[]'.
+  Type '{ label: string; value: string; }' is not assignable to type 'never'.
+src/modules/events/pages/EventDetailPage.vue(615,5): error TS2353: Object literal may only specify known properties, and 'branchId' does not exist in type 'UpdateEventInput | { title: string; description: string; eventDate: string; isActive: boolean; slug: string; displayImageUrl?: string | undefined; receiptLogoUrl?: string | undefined; }'.
+src/modules/events/pages/EventDetailPage.vue(615,27): error TS2339: Property 'branchId' does not exist on type 'Event'.
+src/modules/events/pages/EventDetailPage.vue(627,27): error TS2304: Cannot find name 'recipientFundsService'.
+src/modules/events/pages/EventDetailPage.vue(628,38): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/modules/events/pages/EventDetailPage.vue(663,39): error TS2339: Property 'branchId' does not exist on type '{ title: string; description: string; eventDate: string; isActive: boolean; slug: string; displayImageUrl?: string | undefined; receiptLogoUrl?: string | undefined; }'.
+src/modules/events/pages/EventDetailPage.vue(679,11): error TS2304: Cannot find name 'recipientFundsService'.
+src/modules/events/pages/EventDetailPage.vue(745,9): error TS2339: Property 'info' does not exist on type 'Store<"toast", Pick<{ toasts: Ref<{ id: string; message: string; type: "error" | "success" | "info" | "warning"; duration?: number | undefined; }[], Toast[] | { id: string; message: string; type: "error" | ... 2 more ... | "warning"; duration?: number | undefined; }[]>; add: (message: string, type?: "error" | ... 2 ...'.
+src/modules/events/pages/EventListPage.vue(39,24): error TS2339: Property 'length' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'length' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/events/pages/EventListPage.vue(45,33): error TS2345: Argument of type 'never[] | NonNullable<TQueryFnData>' is not assignable to parameter of type 'any[]'.
+  Type '{}' is missing the following properties from type 'any[]': length, pop, push, concat, and 29 more.
+src/modules/events/pages/EventListPage.vue(196,60): error TS2554: Expected 0-1 arguments, but got 2.
+src/modules/events/pages/EventListPage.vue(240,1): error TS6133: 'AppSelect' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(242,1): error TS6133: 'MultiSelectFilter' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(247,3): error TS6133: 'Calendar' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(249,3): error TS6133: 'Eye' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(251,3): error TS6133: 'BarChart2' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(252,3): error TS6133: 'Wallet' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(253,3): error TS6133: 'Target' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(254,3): error TS6133: 'Users' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(256,3): error TS6133: 'Coins' is declared but its value is never read.
+src/modules/events/pages/EventListPage.vue(290,18): error TS2488: Type 'never[] | NonNullable<TQueryFnData>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/modules/events/pages/EventListPage.vue(359,23): error TS2339: Property 'reduce' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'reduce' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/events/pages/EventListPage.vue(359,31): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/modules/events/pages/EventListPage.vue(359,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/events/pages/EventListPage.vue(363,23): error TS2339: Property 'reduce' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'reduce' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/events/pages/EventListPage.vue(363,31): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/modules/events/pages/EventListPage.vue(363,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/events/pages/EventListPage.vue(378,9): error TS2339: Property 'info' does not exist on type 'Store<"toast", Pick<{ toasts: Ref<{ id: string; message: string; type: "error" | "success" | "info" | "warning"; duration?: number | undefined; }[], Toast[] | { id: string; message: string; type: "error" | ... 2 more ... | "warning"; duration?: number | undefined; }[]>; add: (message: string, type?: "error" | ... 2 ...'.
+src/modules/events/pages/EventListPage.vue(386,9): error TS2339: Property 'info' does not exist on type 'Store<"toast", Pick<{ toasts: Ref<{ id: string; message: string; type: "error" | "success" | "info" | "warning"; duration?: number | undefined; }[], Toast[] | { id: string; message: string; type: "error" | ... 2 more ... | "warning"; duration?: number | undefined; }[]>; add: (message: string, type?: "error" | ... 2 ...'.
+src/modules/events/pages/EventListPage.vue(395,45): error TS2554: Expected 0-1 arguments, but got 2.
+src/modules/events/pages/EventListPage.vue(409,76): error TS2554: Expected 0-1 arguments, but got 2.
+src/modules/recipient-funds/composables/useRecipientFunds.ts(13,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(options: DefinedInitialQueryOptions<RecipientFund[], ApiError, RecipientFund[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryDefinedReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 2 of 3, '(options: UndefinedInitialQueryOptions<RecipientFund[], ApiError, RecipientFund[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 3 of 3, '(options: MaybeRefOrGetter<UseQueryOptions<RecipientFund[], ApiError, RecipientFund[], RecipientFund[], readonly unknown[]>>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; branchId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+src/modules/recipient-funds/pages/RecipientFundCreatePage.vue(170,34): error TS2339: Property 'map' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'map' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/recipient-funds/pages/RecipientFundCreatePage.vue(170,38): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(21,23): error TS2339: Property 'length' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'length' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(28,23): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(28,30): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(35,23): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(35,30): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(41,33): error TS2345: Argument of type 'never[] | NonNullable<TQueryFnData>' is not assignable to parameter of type 'any[]'.
+  Type '{}' is missing the following properties from type 'any[]': length, pop, push, concat, and 29 more.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(153,22): error TS2339: Property 'filter' does not exist on type 'never[] | NonNullable<TQueryFnData>'.
+  Property 'filter' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/recipient-funds/pages/RecipientFundListPage.vue(153,29): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/modules/reports/pages/ReportsPage.vue(129,1): error TS6133: 'AdminFilterBar' is declared but its value is never read.
+src/modules/reports/pages/ReportsPage.vue(138,3): error TS6133: 'Calendar' is declared but its value is never read.
+src/modules/reports/pages/ReportsPage.vue(139,3): error TS6133: 'PieChart' is declared but its value is never read.
+src/modules/reports/pages/ReportsPage.vue(143,56): error TS2339: Property 'items' does not exist on type 'NonNullable<TQueryFnData>'.
+src/modules/reports/pages/ReportsPage.vue(144,7): error TS6133: 'searchQuery' is declared but its value is never read.
+src/modules/reports/pages/ReportsPage.vue(145,7): error TS6133: 'timeRange' is declared but its value is never read.
+src/modules/reports/pages/ReportsPage.vue(147,7): error TS6133: 'reportColumns' is declared but its value is never read.
+src/modules/reports/pages/ReportsPage.vue(155,31): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/reports/pages/ReportsPage.vue(171,44): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/reports/pages/ReportsPage.vue(178,31): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/reports/pages/ReportsPage.vue(190,31): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/modules/storefront/components/RecipientFundOptionCard.vue(47,1): error TS6133: 'AppBadge' is declared but its value is never read.
+src/modules/storefront/pages/RecipientSelectionPage.vue(25,56): error TS2339: Property 'isActive' does not exist on type 'RecipientFund'.
+src/modules/storefront/pages/RecipientSelectionPage.vue(35,48): error TS2339: Property 'isActive' does not exist on type 'RecipientFund'.
+src/modules/storefront/pages/RecipientSelectionPage.vue(97,1): error TS6133: 'AppCard' is declared but its value is never read.
+src/modules/storefront/pages/RecipientSelectionPage.vue(98,1): error TS6133: 'AppInput' is declared but its value is never read.
+src/modules/storefront/pages/RecipientSelectionPage.vue(99,1): error TS6133: 'PageHeader' is declared but its value is never read.
+src/modules/storefront/pages/StorefrontContributionPage.vue(40,41): error TS2339: Property 'name' does not exist on type 'StorefrontEvent'.
+src/modules/storefront/pages/StorefrontContributionPage.vue(197,18): error TS2345: Argument of type '{ key: string; fund: RecipientFund; isSelected: boolean; onSelect: any; }' is not assignable to parameter of type '{ readonly title: string; readonly description: string; readonly selected?: boolean | undefined; readonly icon?: Component | undefined; readonly onSelect?: ((...args: any[]) => any) | undefined; } & VNodeProps & AllowedComponentProps & ComponentCustomProps & Record<...>'.
+  Type '{ key: string; fund: RecipientFund; isSelected: boolean; onSelect: any; }' is missing the following properties from type '{ readonly title: string; readonly description: string; readonly selected?: boolean | undefined; readonly icon?: Component | undefined; readonly onSelect?: ((...args: any[]) => any) | undefined; }': title, description
+src/modules/storefront/pages/StorefrontContributionPage.vue(198,71): error TS2339: Property 'isActive' does not exist on type 'RecipientFund'.
+src/modules/storefront/pages/StorefrontContributionPage.vue(214,46): error TS2339: Property 'donorName' does not exist on type '{ eventSlug: string; recipientFundId: string; amount: number; contributorName: string; contributorPhone: string; contributorEmail: string; anonymous: boolean; note: string; paymentMethod: "cash" | ... 1 more ... | "card"; }'.
+src/modules/storefront/pages/StorefrontContributionPage.vue(223,46): error TS2339: Property 'donorEmail' does not exist on type '{ eventSlug: string; recipientFundId: string; amount: number; contributorName: string; contributorPhone: string; contributorEmail: string; anonymous: boolean; note: string; paymentMethod: "cash" | ... 1 more ... | "card"; }'.
+src/modules/storefront/pages/StorefrontContributionPage.vue(238,48): error TS2339: Property 'donorPhone' does not exist on type '{ eventSlug: string; recipientFundId: string; amount: number; contributorName: string; contributorPhone: string; contributorEmail: string; anonymous: boolean; note: string; paymentMethod: "cash" | ... 1 more ... | "card"; }'.
+src/modules/storefront/pages/StorefrontContributionPage.vue(340,23): error TS6133: 'MapPin' is declared but its value is never read.
+src/modules/storefront/pages/StorefrontContributionPage.vue(340,31): error TS6133: 'Calendar' is declared but its value is never read.
+src/modules/storefront/pages/StorefrontContributionPage.vue(340,48): error TS6133: 'Eye' is declared but its value is never read.
+src/modules/storefront/pages/StorefrontContributionPage.vue(340,53): error TS6133: 'Activity' is declared but its value is never read.
+src/modules/storefront/pages/StorefrontContributionPage.vue(358,7): error TS6133: 'selectedFundName' is declared but its value is never read.
+src/modules/storefront/pages/StorefrontLandingPage.vue(217,7): error TS6133: 'eventQuery' is declared but its value is never read.
+src/modules/tenants/components/BranchEventsList.vue(113,5): error TS2322: Type 'Event[]' is not assignable to type 'never[]'.
+  Type 'Event' is not assignable to type 'never'.
+src/modules/tenants/components/BranchEventsList.vue(113,45): error TS2559: Type 'string' has no properties in common with type '{ branchId?: string | undefined; tenantId?: string | undefined; }'.
+src/modules/tenants/components/TenantSwitcher.vue(227,29): error TS2339: Property 'isHeadquarters' does not exist on type 'BranchRow'.
+src/modules/tenants/composables/useBranches.ts(4,1): error TS6133: 'BranchDto' is declared but its value is never read.
+src/modules/tenants/composables/useBranches.ts(4,15): error TS2305: Module '"../services/branchesService"' has no exported member 'BranchDto'.
+src/modules/tenants/composables/useBranches.ts(13,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(options: DefinedInitialQueryOptions<BranchRow[], Error, BranchRow[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryDefinedReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 2 of 3, '(options: UndefinedInitialQueryOptions<BranchRow[], Error, BranchRow[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 3 of 3, '(options: MaybeRefOrGetter<UseQueryOptions<BranchRow[], Error, BranchRow[], BranchRow[], readonly unknown[]>>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+src/modules/tenants/composables/useTenants.ts(9,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(options: DefinedInitialQueryOptions<TenantRow[], Error, TenantRow[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryDefinedReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 2 of 3, '(options: UndefinedInitialQueryOptions<TenantRow[], Error, TenantRow[], readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+  Overload 3 of 3, '(options: MaybeRefOrGetter<UseQueryOptions<TenantRow[], Error, TenantRow[], TenantRow[], readonly unknown[]>>, queryClient?: QueryClient | undefined): UseQueryReturnType<...>', gave the following error.
+    Type '() => (string | { tenantId: string; })[]' is not assignable to type 'MaybeRefDeep<readonly unknown[]>'.
+src/modules/tenants/pages/BranchCreatePage.vue(198,44): error TS2339: Property 'isPlatformAdmin' does not exist on type 'Ref<UserDetail, UserDetail> | Ref<undefined, undefined>'.
+  Property 'isPlatformAdmin' does not exist on type 'Ref<UserDetail, UserDetail>'.
+src/modules/tenants/pages/BranchCreatePage.vue(242,43): error TS2339: Property 'id' does not exist on type 'string'.
+src/modules/tenants/pages/BranchDetailPage.vue(4,8): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/modules/tenants/pages/BranchDetailPage.vue(13,29): error TS2339: Property 'isActive' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/BranchDetailPage.vue(16,24): error TS2339: Property 'isActive' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/BranchDetailPage.vue(98,33): error TS2339: Property 'location' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/BranchDetailPage.vue(118,18): error TS2345: Argument of type '{ modelValue: string; label: string; rows: number; }' is not assignable to parameter of type '{ readonly id: string; readonly modelValue: string; readonly label: string; readonly rows?: number | undefined; readonly placeholder?: string | undefined; readonly error?: string | undefined; readonly srOnly?: boolean | undefined; readonly "onUpdate:modelValue"?: ((value: string) => any) | undefined; } & VNodeProps ...'.
+  Property 'id' is missing in type '{ modelValue: string; label: string; rows: number; }' but required in type '{ readonly id: string; readonly modelValue: string; readonly label: string; readonly rows?: number | undefined; readonly placeholder?: string | undefined; readonly error?: string | undefined; readonly srOnly?: boolean | undefined; readonly "onUpdate:modelValue"?: ((value: string) => any) | undefined; }'.
+src/modules/tenants/pages/BranchDetailPage.vue(155,78): error TS2339: Property 'isActive' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/BranchDetailPage.vue(292,1): error TS6133: 'ErrorState' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(294,17): error TS6133: 'Building2' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(294,28): error TS6133: 'Settings' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(294,55): error TS6133: 'LayoutGrid' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(294,67): error TS6133: 'Trash2' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(294,75): error TS6133: 'Calendar' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(294,85): error TS6133: 'Activity' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(297,7): error TS6133: 'router' is declared but its value is never read.
+src/modules/tenants/pages/BranchDetailPage.vue(332,30): error TS2339: Property 'location' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/BranchDetailPage.vue(333,30): error TS2339: Property 'isActive' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/BranchDetailPage.vue(345,7): error TS2322: Type 'ComputedRef<string>' is not assignable to type 'string'.
+src/modules/tenants/pages/BranchListPage.vue(88,10): error TS6133: 'ref' is declared but its value is never read.
+src/modules/tenants/pages/BranchListPage.vue(119,30): error TS7006: Parameter 'branch' implicitly has an 'any' type.
+src/modules/tenants/pages/OrganizationCreatePage.vue(72,14): error TS2345: Argument of type '{ modelValue: string; label: string; placeholder: string; rows: number; }' is not assignable to parameter of type '{ readonly id: string; readonly modelValue: string; readonly label: string; readonly rows?: number | undefined; readonly placeholder?: string | undefined; readonly error?: string | undefined; readonly srOnly?: boolean | undefined; readonly "onUpdate:modelValue"?: ((value: string) => any) | undefined; } & VNodeProps ...'.
+  Property 'id' is missing in type '{ modelValue: string; label: string; placeholder: string; rows: number; }' but required in type '{ readonly id: string; readonly modelValue: string; readonly label: string; readonly rows?: number | undefined; readonly placeholder?: string | undefined; readonly error?: string | undefined; readonly srOnly?: boolean | undefined; readonly "onUpdate:modelValue"?: ((value: string) => any) | undefined; }'.
+src/modules/tenants/pages/OrganizationDetailPage.vue(439,42): error TS2339: Property 'isActive' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/OrganizationDetailPage.vue(441,111): error TS2339: Property 'isActive' does not exist on type 'BranchRow'.
+src/modules/tenants/pages/OrganizationDetailPage.vue(627,1): error TS6133: 'DetailSummaryCard' is declared but its value is never read.
+src/modules/tenants/pages/OrganizationDetailPage.vue(635,25): error TS6133: 'CopyIcon' is declared but its value is never read.
+src/modules/tenants/pages/OrganizationDetailPage.vue(635,75): error TS6133: 'Settings2' is declared but its value is never read.
+src/modules/tenants/pages/OrganizationDetailPage.vue(635,86): error TS6133: 'Globe' is declared but its value is never read.
+src/modules/tenants/pages/OrganizationDetailPage.vue(635,93): error TS6133: 'Network' is declared but its value is never read.
+src/modules/tenants/pages/OrganizationDetailPage.vue(709,10): error TS6133: 'copyTenantId' is declared but its value is never read.
+src/modules/tenants/services/tenantSettingsService.ts(1,41): error TS6133: 'tenantId' is declared but its value is never read.
+src/modules/users/components/AssignScopeModal.vue(184,24): error TS6133: 'Building2' is declared but its value is never read.
+src/modules/users/components/AssignScopeModal.vue(184,35): error TS6133: 'Calendar' is declared but its value is never read.
+src/modules/users/pages/UserSettingsPage.vue(655,3): error TS6133: 'Bell' is declared but its value is never read.
+src/modules/users/pages/UsersPage.vue(284,42): error TS2551: Property 'inviteState' does not exist on type 'UserRow'. Did you mean 'inviteStatus'?
+src/shared/components/buttons/AppButton.stories.ts(3,16): error TS6133: 'Download' is declared but its value is never read.
+src/shared/components/buttons/AppButton.stories.ts(3,26): error TS6133: 'Mail' is declared but its value is never read.
+src/shared/components/buttons/AppButton.stories.ts(4,1): error TS6133: 'h' is declared but its value is never read.
+src/shared/components/forms/ModernImageInput.vue(70,30): error TS6133: 'Plus' is declared but its value is never read.
+src/shared/components/layouts/ResourceListPage.stories.ts(3,10): error TS6133: 'Calendar' is declared but its value is never read.
+src/shared/components/layouts/ResourceListPage.stories.ts(4,1): error TS6133: 'h' is declared but its value is never read.
+src/shared/components/layouts/ResourceListPage.vue(35,8): error TS2345: Argument of type '{ label: string; value: string; icon: any; color?: "purple" | "green" | "blue" | "amber" | "rose" | "slate"; trend?: string; trendValue?: string; key: string; }' is not assignable to parameter of type '{ readonly label: string; readonly value: string | number; readonly icon?: string | undefined; readonly color?: "purple" | "green" | "amber" | "blue" | "red" | "slate" | undefined; readonly trend?: string | undefined; readonly trendPositive?: boolean | undefined; readonly progress?: number | undefined; readonly prog...'.
+  Type '{ label: string; value: string; icon: any; color?: "purple" | "green" | "blue" | "amber" | "rose" | "slate"; trend?: string; trendValue?: string; key: string; }' is not assignable to type '{ readonly label: string; readonly value: string | number; readonly icon?: string | undefined; readonly color?: "purple" | "green" | "amber" | "blue" | "red" | "slate" | undefined; readonly trend?: string | undefined; readonly trendPositive?: boolean | undefined; readonly progress?: number | undefined; readonly prog...'.
+    Types of property 'color' are incompatible.
+      Type '"purple" | "green" | "amber" | "blue" | "slate" | "rose" | undefined' is not assignable to type '"purple" | "green" | "amber" | "blue" | "red" | "slate" | undefined'.
+        Type '"rose"' is not assignable to type '"purple" | "green" | "amber" | "blue" | "red" | "slate" | undefined'.
+src/shared/components/rows/AssignmentListRow.vue(96,8): error TS6133: 'LucideIcon' is declared but its value is never read.

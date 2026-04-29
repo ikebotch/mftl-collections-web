@@ -1,4 +1,4 @@
-import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from 'axios'
 import { appConfig } from '@/core/config/appConfig'
 import { ApiError } from './apiError'
 import { CORRELATION_HEADER_NAME, createCorrelationId } from './correlation'
@@ -91,7 +91,7 @@ export class HttpClient {
     return this.request<T>(mergeRequestOptions({ method: 'DELETE', url }, options))
   }
 
-  async request<T>(config: AxiosRequestConfig): Promise<ApiEnvelope<T>> {
+  async request<T>(config: InternalAxiosRequestConfig): Promise<ApiEnvelope<T>> {
     try {
       const response = await this.client.request<ApiEnvelope<T> | T>(config)
       if (isApiEnvelope<T>(response.data)) {
@@ -121,7 +121,7 @@ export class HttpClient {
   }
 }
 
-function mergeRequestOptions(config: AxiosRequestConfig, options?: RequestOptions): AxiosRequestConfig {
+function mergeRequestOptions(config: any, options?: RequestOptions): InternalAxiosRequestConfig {
   return {
     ...config,
     signal: options?.signal,
