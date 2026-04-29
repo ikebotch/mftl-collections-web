@@ -16,6 +16,7 @@ export interface EventDto {
   slug: string
   displayImageUrl?: string
   receiptLogoUrl?: string
+  metadata?: string
 }
 
 export interface Event extends EventDto {
@@ -27,8 +28,10 @@ export interface CreateEventInput {
   description: string
   eventDate: string | null
   slug: string
+  branchId: string
   displayImageUrl?: string
   receiptLogoUrl?: string
+  metadata?: string
 }
 
 export interface UpdateEventInput {
@@ -39,4 +42,5 @@ export interface UpdateEventInput {
   slug: string
   displayImageUrl?: string
   receiptLogoUrl?: string
+  metadata?: string
 }
