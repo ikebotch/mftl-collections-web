@@ -6,21 +6,12 @@
     <!-- Premium Desktop Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 hidden w-72 bg-[#060b13] text-white lg:block shadow-2xl border-r border-navy-900 transition-transform duration-500">
       <div class="flex h-full flex-col">
-        <!-- Logo Section -->
-        <div class="px-8 py-12">
-          <div class="flex items-center gap-3">
-            <div class="h-10 w-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-none flex items-center justify-center shadow-lg shadow-violet-500/20">
-              <Plus class="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 class="text-xl font-black tracking-tight text-white uppercase">
-                MFTL
-              </h1>
-              <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.25em]">
-                Collector Pro
-              </p>
-            </div>
-          </div>
+        <!-- Logo & Switcher Section -->
+        <div class="px-8 py-10">
+          <TenantSwitcher />
+          <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.25em] mt-4">
+            Collector Terminal
+          </p>
         </div>
 
         <nav class="flex-1 px-4 space-y-1">
@@ -40,20 +31,37 @@
               <span class="tracking-tight uppercase text-[11px] tracking-[0.1em]">{{ item.label }}</span>
             </div>
           </router-link>
+
+          <!-- Admin Link for Hybrid Users -->
+          <router-link
+            v-if="hasAdminAccess"
+            to="/admin"
+            class="group flex items-center justify-between px-4 py-3.5 rounded-none text-sm font-bold transition-all duration-300 hover:bg-white/5 mt-4 border-t border-white/5 pt-6"
+          >
+            <div class="flex items-center gap-4">
+              <ShieldCheck class="w-5 h-5 text-amber-500" />
+              <span class="tracking-tight uppercase text-[11px] tracking-[0.1em] text-slate-400 group-hover:text-white">Admin Hub</span>
+            </div>
+          </router-link>
         </nav>
 
         <!-- Sidebar Footer -->
         <div class="p-6 mt-auto border-t border-white/5 bg-white/[0.02]">
           <div class="flex items-center gap-4">
-            <div class="h-10 w-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase">
-              FC
+            <div class="h-10 w-10 rounded-none bg-slate-800 border border-white/10 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase overflow-hidden">
+              <img
+                v-if="usersStore.me?.picture"
+                :src="usersStore.me.picture"
+                class="w-full h-full object-cover"
+              >
+              <span v-else>{{ usersStore.me?.name?.charAt(0) || 'C' }}</span>
             </div>
             <div class="min-w-0">
               <p class="text-[10px] font-black text-white uppercase tracking-widest truncate">
-                Field Collector
+                {{ usersStore.me?.name || 'Field Collector' }}
               </p>
               <p class="text-[9px] text-slate-500 font-bold uppercase truncate">
-                Active Session
+                {{ usersStore.me?.email || 'Active Session' }}
               </p>
             </div>
           </div>
@@ -158,19 +166,30 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { appConfig } from '@/core/config/appConfig'
-import { CalendarDays, FileText, Home, LayoutGrid, Plus } from 'lucide-vue-next'
+import { CalendarDays, FileText, Home, LayoutGrid, Plus, ShieldCheck } from 'lucide-vue-next'
+import { useUsersStore } from '@/modules/users/store/usersStore'
+import TenantSwitcher from '@/modules/tenants/components/TenantSwitcher.vue'
 
 const appName = appConfig.appName
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
+const usersStore = useUsersStore()
 
 const isDesktop = computed(() => windowWidth.value >= 1024)
+
+const hasAdminAccess = computed(() => {
+  const roles = usersStore.me?.effectiveRoles || []
+  return roles.some(r => r.includes('Admin') || r === 'Platform Admin')
+})
 
 const handleResize = () => {
   windowWidth.value = window.innerWidth
 }
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('resize', handleResize)
+  if (!usersStore.me) {
+    await usersStore.fetchMe()
+  }
 })
 
 onUnmounted(() => {

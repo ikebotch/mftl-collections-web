@@ -92,8 +92,7 @@ import {
   Target, 
   Plus, 
   X, 
-  Check,
-  type LucideIcon 
+  Check
 } from 'lucide-vue-next'
 
 const props = defineProps<{

@@ -348,6 +348,13 @@ const navGroups = computed(() => {
       title: copy.value.admin.sidebar.groups.general,
       items: [
         { label: copy.value.admin.sidebar.nav.overview, to: '/admin', icon: LayoutDashboard, permission: 'dashboard.view' },
+        { 
+          label: 'Collector Terminal', 
+          to: '/collector', 
+          icon: UserCheck, 
+          permission: 'contributions.create',
+          badge: 'FIELD'
+        },
       ]
     },
     {
