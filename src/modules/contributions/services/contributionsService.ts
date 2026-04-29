@@ -1,6 +1,6 @@
 import { httpClient } from '@/core/api/httpClient'
 import type { RequestOptions, PagedResponse } from '@/core/api/types'
-import { formatCurrency, formatDate } from '@/core/formatting/formatters'
+import { formatCurrency, formatDateTime } from '@/core/formatting/formatters'
 import type { ContributionRow } from '../types/contribution'
 
 export interface CashContributionResult {
@@ -77,7 +77,7 @@ function mapContributionRow(dto: ContributionListItemDto): ContributionRow {
 
   return {
     id: dto.id ?? dto.Id ?? '',
-    date: formatDate(dto.createdAt ?? dto.CreatedAt),
+    date: formatDateTime(dto.createdAt ?? dto.CreatedAt),
     event: dto.eventTitle ?? dto.EventTitle ?? 'Unknown event',
     recipientFund: dto.recipientFundName ?? dto.RecipientFundName ?? 'Unknown fund',
     paymentMethod: dto.paymentMethod ?? dto.PaymentMethod ?? 'Unknown',
