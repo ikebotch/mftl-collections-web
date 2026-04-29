@@ -137,30 +137,10 @@
             <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
               Contributor Info
             </h2>
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Who is making this contribution?</p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Capture details for internal records</p>
           </div>
 
-          <!-- Quick Actions -->
-          <div class="grid grid-cols-2 gap-4">
-            <button 
-              class="p-6 border flex flex-col items-center gap-4 transition-all duration-300"
-              :class="form.anonymous ? 'bg-slate-900 border-slate-900 text-white' : (isDesktop ? 'bg-white border-slate-200 text-slate-400 hover:border-violet-500' : 'bg-white/5 border-white/10')"
-              @click="form.anonymous = true; nextStep()"
-            >
-              <UserX class="w-8 h-8" />
-              <span class="text-[10px] font-black uppercase tracking-widest">Anonymous</span>
-            </button>
-            <button 
-              class="p-6 border flex flex-col items-center gap-4 transition-all duration-300"
-              :class="!form.anonymous ? 'bg-slate-900 border-slate-900 text-white' : (isDesktop ? 'bg-white border-slate-200 text-slate-400 hover:border-violet-500' : 'bg-white/5 border-white/10')"
-              @click="form.anonymous = false"
-            >
-              <UserCheck class="w-8 h-8" />
-              <span class="text-[10px] font-black uppercase tracking-widest">Identify</span>
-            </button>
-          </div>
-
-          <div v-if="!form.anonymous" class="space-y-6">
+          <div class="space-y-8">
             <div class="relative">
               <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 block mb-3">Full Name</label>
               <input 
@@ -179,6 +159,25 @@
                 class="w-full bg-slate-50 border border-slate-200 p-5 text-xl font-black uppercase tracking-tight focus:border-violet-500 outline-none transition-all"
                 :class="isDesktop ? 'text-slate-900' : 'text-slate-900 bg-white'"
               >
+            </div>
+
+            <!-- Anonymous Toggle Checkbox -->
+            <div 
+              class="flex items-center gap-4 p-6 border cursor-pointer transition-all duration-300"
+              :class="form.anonymous 
+                ? 'bg-slate-900 border-slate-900 text-white' 
+                : (isDesktop ? 'bg-white border-slate-200 text-slate-400 hover:border-violet-500' : 'bg-white/5 border-white/10')"
+              @click="form.anonymous = !form.anonymous"
+            >
+              <div class="relative w-6 h-6 border flex items-center justify-center" :class="form.anonymous ? 'border-violet-400' : 'border-slate-300'">
+                <Check v-if="form.anonymous" class="w-4 h-4 text-violet-400" />
+              </div>
+              <div class="flex-1">
+                <span class="text-[10px] font-black uppercase tracking-widest block">Anonymous Donation</span>
+                <p class="text-[8px] font-bold uppercase tracking-tighter opacity-60">Hide name on public/admin platform displays</p>
+              </div>
+              <UserX v-if="form.anonymous" class="w-5 h-5 text-violet-400" />
+              <UserCheck v-else class="w-5 h-5 opacity-20" />
             </div>
             
             <AppButton
@@ -360,7 +359,8 @@ import {
   Lock,
   UserX,
   UserCheck,
-  CheckCircle2
+  CheckCircle2,
+  Check
 } from 'lucide-vue-next'
 
 const router = useRouter()

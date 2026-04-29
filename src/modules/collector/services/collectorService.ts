@@ -43,6 +43,11 @@ function mapProfile(dto: CollectorProfileDto): CollectorProfile {
     phoneNumber: dto.phoneNumber ?? '',
     eventIds: dto.eventIds || [],
     fundIds: dto.fundIds || [],
+    totalsPerCurrency: (dto.totalsPerCurrency || []).map(t => ({
+      currency: t.currency,
+      total: t.total,
+      label: t.label || t.currency
+    }))
   }
 }
 
@@ -78,8 +83,8 @@ function mapAssignments(dto: CollectorAssignmentsDto): CollectorAssignments {
   return {
     hasAssignments: dto.hasAssignments,
     blockedReason: dto.blockedReason ?? '',
-    events: dto.events.map(mapAssignedEvent),
-    funds: dto.funds.map(mapAssignedFund),
+    events: (dto.events || []).map(mapAssignedEvent),
+    funds: (dto.funds || []).map(mapAssignedFund),
   }
 }
 

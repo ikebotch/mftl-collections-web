@@ -45,7 +45,7 @@
       </div>
       <div class="flex justify-between items-center">
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Target Fund</span>
-        <span class="text-xs font-black text-slate-900 uppercase italic">{{ contribution.recipientFund || contribution.fundName }}</span>
+        <span class="text-xs font-black text-slate-900 uppercase italic">{{ contribution.recipientFund || contribution.recipientFundName || contribution.fundName }}</span>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Receipt ID</span>
