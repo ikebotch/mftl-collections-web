@@ -270,7 +270,10 @@
                 </label>
               </div>
               
-              <div v-if="config.methods.length === 0" class="mt-4 text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-2">
+              <div
+                v-if="config.methods.length === 0"
+                class="mt-4 text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-2"
+              >
                 <AlertTriangle class="w-3 h-3" /> Select at least one payment method for this currency
               </div>
             </div>
