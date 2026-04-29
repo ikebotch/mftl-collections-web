@@ -55,6 +55,7 @@
           />
           <div class="tabs-grid">
             <button 
+              v-if="!isSingleTenant || isPlatformAdmin"
               class="tab-btn"
               :class="{ active: activeView === 'tenants' }"
               @click="activeView = 'tenants'"
@@ -63,7 +64,10 @@
             </button>
             <button 
               class="tab-btn"
-              :class="{ active: activeView === 'branches' }"
+              :class="{ 
+                active: activeView === 'branches',
+                'full-width': isSingleTenant && !isPlatformAdmin
+              }"
               @click="activeView = 'branches'"
             >
               Branches
@@ -252,6 +256,48 @@ const { data: me } = useMe()
 
 const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
 
+const { data: tenants, isPending: isPendingTenants } = useQuery({
+  queryKey: ['tenants-list'],
+  queryFn: () => tenantsService.list()
+})
+
+const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
+
+const { data: branches, refetch: refetchBranches } = useQuery({
+  queryKey: ['branches-list', tenantStore.selectedTenantIdsCSV],
+  queryFn: () => branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
+  enabled: !!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value
+})
+
+const isSingleBranch = computed(() => (branches.value?.length ?? 0) === 1)
+
+const canOpenSwitcher = computed(() => {
+  if (isPlatformAdmin.value) return true
+  
+  const tenantCount = tenants.value?.length ?? 0
+  const branchCount = branches.value?.length ?? 0
+  
+  if (tenantCount > 1) return true
+  if (tenantCount === 1) return branchCount > 1
+  
+  return false
+})
+
+function handleToggle() {
+  if (!canOpenSwitcher.value && !isPlatformAdmin.value) return
+  isOpen.value = !isOpen.value
+}
+
+// Auto-initialize context for single-tenant users
+watch(tenants, (newTenants) => {
+  if (newTenants?.length === 1 && !isPlatformAdmin.value) {
+    activeView.value = 'branches'
+    if (!tenantStore.selectedTenantId) {
+      tenantStore.setTenants([newTenants[0].id], newTenants[0].name)
+    }
+  }
+}, { immediate: true })
+
 const displayTitle = computed(() => {
   if (branchStore.selectedBranchIds.includes('all')) return 'All Branches'
   if (branchStore.selectedBranchIds.length > 1) return `${branchStore.selectedBranchIds.length} Branches`
@@ -284,38 +330,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
-})
-
-const { data: tenants, isPending: isPendingTenants } = useQuery({
-  queryKey: ['tenants-list'],
-  queryFn: () => tenantsService.list()
-})
-
-const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
-const isSingleBranch = computed(() => (branches.value?.length ?? 0) === 1)
-const canOpenSwitcher = computed(() => {
-  if (isPlatformAdmin.value) return true
-  if (!isSingleTenant.value) return true
-  if (!isSingleBranch.value) return true
-  return false
-})
-
-function handleToggle() {
-  if (!canOpenSwitcher.value && !isPlatformAdmin.value) return
-  isOpen.value = !isOpen.value
-}
-
-// Auto-switch to branches if single tenant
-watch([tenants, isPlatformAdmin], ([newTenants, admin]) => {
-  if (newTenants?.length === 1 && !admin) {
-    activeView.value = 'branches'
-  }
-}, { immediate: true })
-
-const { data: branches, refetch: refetchBranches } = useQuery({
-  queryKey: ['branches-list', tenantStore.selectedTenantIdsCSV],
-  queryFn: () => branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
-  enabled: !!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value
 })
 
 watch(() => tenantStore.selectedTenantIds, () => {
@@ -723,5 +737,8 @@ function selectMainHub() {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+.tab-btn.full-width {
+  grid-column: span 2;
 }
 </style>
