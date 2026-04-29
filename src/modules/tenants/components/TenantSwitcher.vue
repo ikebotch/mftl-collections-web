@@ -248,14 +248,6 @@ const branchStore = useBranchStore()
 const { data: me } = useMe()
 
 const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
-const isSingleTenant = computed(() => (tenants.value?.length ?? 0) <= 1)
-
-// Auto-switch to branches if single tenant
-watch([tenants, isPlatformAdmin], ([newTenants, admin]) => {
-  if (newTenants?.length === 1 && !admin) {
-    activeView.value = 'branches'
-  }
-}, { immediate: true })
 
 const displayTitle = computed(() => {
   if (branchStore.selectedBranchIds.includes('all')) return 'All Branches'
@@ -295,6 +287,15 @@ const { data: tenants, isPending: isPendingTenants } = useQuery({
   queryKey: ['tenants-list'],
   queryFn: () => tenantsService.list()
 })
+
+const isSingleTenant = computed(() => (tenants.value?.length ?? 0) <= 1)
+
+// Auto-switch to branches if single tenant
+watch([tenants, isPlatformAdmin], ([newTenants, admin]) => {
+  if (newTenants?.length === 1 && !admin) {
+    activeView.value = 'branches'
+  }
+}, { immediate: true })
 
 const { data: branches, refetch: refetchBranches } = useQuery({
   queryKey: ['branches-list', tenantStore.selectedTenantIdsCSV],
