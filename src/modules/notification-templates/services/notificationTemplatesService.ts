@@ -1,4 +1,4 @@
-import apiClient from '@/core/api/apiClient'
+import { httpClient } from '@/core/api/httpClient'
 
 export interface NotificationTemplate {
   id: string
@@ -43,31 +43,34 @@ const BASE = '/notification-templates'
 
 export const notificationTemplatesService = {
   async list(params?: { templateKey?: string; channel?: string }): Promise<NotificationTemplate[]> {
-    const { data } = await apiClient.get(BASE, { params })
-    return data.data
+    const response = await httpClient.get<NotificationTemplate[]>(BASE, { params })
+    return response.data
   },
 
   async getById(id: string): Promise<NotificationTemplate> {
-    const { data } = await apiClient.get(`${BASE}/${id}`)
-    return data.data
+    const response = await httpClient.get<NotificationTemplate>(`${BASE}/${id}`)
+    return response.data
   },
 
   async create(payload: CreateNotificationTemplatePayload): Promise<string> {
-    const { data } = await apiClient.post(BASE, payload)
-    return data.data
+    const response = await httpClient.post<string, CreateNotificationTemplatePayload>(BASE, payload)
+    return response.data
   },
 
   async update(id: string, payload: UpdateNotificationTemplatePayload): Promise<boolean> {
-    const { data } = await apiClient.put(`${BASE}/${id}`, payload)
-    return data.data
+    const response = await httpClient.put<boolean, UpdateNotificationTemplatePayload>(`${BASE}/${id}`, payload)
+    return response.data
   },
 
   async preview(id: string, variables: Record<string, string>): Promise<RenderedTemplate> {
-    const { data } = await apiClient.post(`${BASE}/${id}/preview`, variables)
-    return data.data
+    const response = await httpClient.post<RenderedTemplate, Record<string, string>>(
+      `${BASE}/${id}/preview`,
+      variables,
+    )
+    return response.data
   },
 
   async sendTest(id: string, recipient: string): Promise<void> {
-    await apiClient.post(`${BASE}/${id}/send-test`, { recipient })
+    await httpClient.post<void, { recipient: string }>(`${BASE}/${id}/send-test`, { recipient })
   },
 }

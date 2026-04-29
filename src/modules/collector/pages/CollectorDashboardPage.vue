@@ -96,7 +96,10 @@
                 :class="showFigures ? 'text-violet-600' : 'text-slate-400'"
                 @click.stop="showFigures = !showFigures"
               >
-                <component :is="showFigures ? Eye : EyeOff" class="w-5 h-5" />
+                <component
+                  :is="showFigures ? Eye : EyeOff"
+                  class="w-5 h-5"
+                />
               </button>
             </div>
 
@@ -193,8 +196,13 @@
                       :class="{ 'rotate-180': isMoreExpanded }"
                     />
                   </button>
-                  <div v-if="isMoreExpanded" class="p-8 text-center bg-slate-50/30">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Additional currencies available via FX Terminal</p>
+                  <div
+                    v-if="isMoreExpanded"
+                    class="p-8 text-center bg-slate-50/30"
+                  >
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                      Additional currencies available via FX Terminal
+                    </p>
                   </div>
                 </div>
               </article>
@@ -205,8 +213,12 @@
                 <Building2 class="w-6 h-6" />
               </div>
               <div class="flex-1">
-                <h5 class="text-sm font-black uppercase italic text-slate-900">Connect a non-MFTL account</h5>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">View your balances with other banks.</p>
+                <h5 class="text-sm font-black uppercase italic text-slate-900">
+                  Connect a non-MFTL account
+                </h5>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  View your balances with other banks.
+                </p>
               </div>
               <Plus class="w-6 h-6 text-slate-300 group-hover:text-violet-600" />
             </div>
@@ -220,27 +232,41 @@
               <h3 class="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
                 Recent activity
               </h3>
-              <router-link to="/collector/history" class="text-[10px] font-black uppercase text-violet-600 underline underline-offset-4">
+              <router-link
+                to="/collector/history"
+                class="text-[10px] font-black uppercase text-violet-600 underline underline-offset-4"
+              >
                 Full history
               </router-link>
             </div>
 
             <div class="space-y-2">
-              <div v-for="receipt in query.data.value.recentReceipts" :key="receipt.id" class="p-4 border-b border-slate-100 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors cursor-pointer" @click="openReceipt(receipt)">
+              <div
+                v-for="receipt in query.data.value.recentReceipts"
+                :key="receipt.id"
+                class="p-4 border-b border-slate-100 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors cursor-pointer"
+                @click="openReceipt(receipt)"
+              >
                 <div class="flex items-center gap-4 min-w-0">
                   <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
                     <Wallet class="w-5 h-5" />
                   </div>
                   <div class="min-w-0">
-                    <p class="text-xs font-black text-slate-900 uppercase truncate">INTERNET TRANSFER</p>
+                    <p class="text-xs font-black text-slate-900 uppercase truncate">
+                      INTERNET TRANSFER
+                    </p>
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                       {{ receipt.receiptNumber.split('-').pop() }} · {{ receipt.issuedAt.split(',')[1]?.trim() }}
                     </p>
                   </div>
                 </div>
                 <div class="text-right shrink-0">
-                  <p class="text-sm font-black text-slate-900">- {{ receipt.amount }}</p>
-                  <p class="text-[9px] font-black uppercase text-slate-400 tracking-tighter">TFR</p>
+                  <p class="text-sm font-black text-slate-900">
+                    - {{ receipt.amount }}
+                  </p>
+                  <p class="text-[9px] font-black uppercase text-slate-400 tracking-tighter">
+                    TFR
+                  </p>
                 </div>
               </div>
             </div>
