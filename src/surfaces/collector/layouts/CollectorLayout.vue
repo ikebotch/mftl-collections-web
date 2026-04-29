@@ -198,10 +198,10 @@ onUnmounted(() => {
 
 const navItems = [
   { label: 'Feed', to: '/collector', icon: Home },
-  { label: 'Events', to: '/collector/events', icon: CalendarDays },
-  { label: 'Collect', to: '/collector/contributions/new', icon: Plus },
   { label: 'History', to: '/collector/history', icon: FileText },
-  { label: 'Menu', to: '/collector/history', icon: LayoutGrid },
+  { label: 'Collect', to: '/collector/contributions/new', icon: Plus },
+  { label: 'Ledger', to: '/collector/ledger', icon: LayoutGrid },
+  { label: 'More', to: '/collector/more', icon: CalendarDays },
 ]
 </script>
 

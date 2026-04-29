@@ -1,104 +1,106 @@
 <template>
-  <div class="space-y-8 pb-10 transition-colors duration-500">
+  <div class="space-y-10 pb-20 transition-colors duration-500">
     <LoadingState
       v-if="query.isLoading.value"
-      text="Loading collector dashboard…"
+      text="Connecting to terminal..."
+      :variant="isDesktop ? 'light' : 'dark'"
     />
     <ErrorState
       v-else-if="query.isError.value"
-      title="Could not load collector dashboard"
-      :message="query.error.value?.message ?? 'Try again later.'"
-      :correlation-id="query.error.value?.correlationId"
+      title="Terminal offline"
+      :message="query.error.value?.message ?? 'Check your connection.'"
+      :variant="isDesktop ? 'light' : 'dark'"
       show-retry
       @retry="query.refetch"
     />
     <template v-else-if="query.data.value">
-      <!-- Welcome Header -->
-      <section class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 lg:border-b lg:border-slate-200 lg:pb-10">
-        <div class="space-y-1">
-          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 lg:text-slate-400">
-            Collector Overview
-          </p>
-          <h2
-            class="text-3xl lg:text-5xl font-black tracking-tight uppercase italic transition-colors duration-500"
-            :class="isDesktop ? 'text-slate-900' : 'text-white'"
-          >
-            {{ query.data.value.profile.name }}
-          </h2>
-          <div class="flex items-center gap-3 mt-2">
-            <span class="px-2 py-0.5 bg-violet-100 text-violet-600 text-[9px] font-black uppercase tracking-widest border border-violet-200">
-              Terminal: {{ query.data.value.profile.id.slice(0, 8) }}
-            </span>
-            <span class="text-[10px] font-bold text-slate-400 italic">
-              Ready for collection
-            </span>
+      <!-- Scenic Hero (Mobile/Web Hybrid) -->
+      <section class="relative h-[250px] lg:h-[350px] -mx-5 lg:-mx-16 -mt-10 lg:-mt-16 mb-12 overflow-hidden shadow-2xl">
+        <img 
+          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=2000" 
+          class="w-full h-full object-cover"
+          alt="Scenic Background"
+        >
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-slate-900/20" />
+        
+        <div class="absolute bottom-8 left-0 right-0 px-8 flex flex-col gap-6">
+          <div class="flex items-end justify-between">
+            <div class="space-y-1">
+              <p class="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400">
+                Terminal Alpha / Ready
+              </p>
+              <h2 class="text-4xl lg:text-6xl font-black text-white uppercase italic tracking-tight">
+                Hi, {{ query.data.value.profile.name }}
+              </h2>
+            </div>
+            <div class="hidden lg:flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20">
+              <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span class="text-[9px] font-black text-white uppercase tracking-widest">Live Sync Active</span>
+            </div>
           </div>
-        </div>
 
-        <div class="flex items-center gap-4 lg:gap-8">
-          <div class="text-right hidden lg:block">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-              Active Shift
-            </p>
-            <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
-              {{ query.data.value.currentShiftLabel }}
-            </p>
+          <!-- Circular Quick Actions (Desktop/Mobile) -->
+          <div class="flex items-center gap-6 lg:gap-12">
+            <button 
+              class="flex flex-col items-center gap-3 group"
+              @click="$router.push('/collector/contributions/new')"
+            >
+              <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-violet-600 shadow-xl group-hover:scale-110 transition-transform">
+                <Plus class="w-6 h-6" />
+              </div>
+              <span class="text-[10px] font-black text-white uppercase tracking-widest">Collect</span>
+            </button>
+            <button 
+              class="flex flex-col items-center gap-3 group"
+              @click="$router.push('/collector/history')"
+            >
+              <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-violet-600 shadow-xl group-hover:scale-110 transition-transform">
+                <FileText class="w-6 h-6" />
+              </div>
+              <span class="text-[10px] font-black text-white uppercase tracking-widest">History</span>
+            </button>
+            <button 
+              class="flex flex-col items-center gap-3 group"
+              @click="query.refetch"
+            >
+              <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-violet-600 shadow-xl group-hover:scale-110 transition-transform">
+                <RefreshCcw class="w-6 h-6" />
+              </div>
+              <span class="text-[10px] font-black text-white uppercase tracking-widest">Sync</span>
+            </button>
           </div>
-          <AppButton
-            variant="primary"
-            class="hidden lg:flex !rounded-none !px-8 !py-6 text-xs font-black uppercase tracking-widest shadow-xl shadow-violet-500/20"
-            @click="$router.push('/collector/contributions/new')"
-          >
-            New Collection
-          </AppButton>
         </div>
       </section>
 
-      <!-- Stats Grid -->
-      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <article 
+      <!-- Summary Section -->
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <MetricCard 
           v-for="(stat, index) in stats" 
           :key="index"
-          class="p-6 transition-all duration-500 border group cursor-default"
-          :class="isDesktop 
-            ? 'bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-violet-500/30' 
-            : 'bg-white/5 border-white/10 hover:border-violet-500/30'"
-        >
-          <p
-            class="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300" 
-            :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'"
-          >
-            {{ stat.label }}
-          </p>
-          <p
-            class="mt-4 text-3xl lg:text-4xl font-black transition-colors duration-300"
-            :class="isDesktop ? 'text-slate-900' : 'text-white'"
-          >
-            {{ stat.value }}
-          </p>
-          <div class="mt-4 h-1 w-8 bg-violet-500/20 group-hover:w-full transition-all duration-500" />
-        </article>
+          v-bind="stat"
+          class="shadow-sm hover:shadow-premium transition-all duration-500"
+        />
       </section>
 
-      <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-        <!-- Main Content Area -->
+      <div class="grid lg:grid-cols-12 gap-12 items-start">
+        <!-- Products Section -->
         <div class="lg:col-span-8 space-y-10">
-          <!-- Assignments Section -->
           <section class="space-y-6">
             <div class="flex items-center justify-between">
-              <h3
-                class="text-xs font-black uppercase tracking-[0.25em]"
-                :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
-              >
-                Current Assignments
+              <h3 class="text-xl font-black uppercase italic text-slate-900">
+                Your products
               </h3>
               <div class="h-px flex-1 bg-slate-200 mx-6 hidden lg:block" />
+              <button class="p-2 text-slate-400 hover:text-violet-600 transition-colors">
+                <Eye class="w-5 h-5" />
+              </button>
             </div>
 
             <div
               v-if="!query.data.value.profile.hasAssignments"
-              class="p-10 border border-dashed border-slate-300 bg-slate-50 text-center"
+              class="p-16 border border-dashed border-slate-300 text-center flex flex-col items-center gap-4"
             >
+              <LayoutGrid class="w-12 h-12 text-slate-200" />
               <p class="text-xs font-black uppercase tracking-widest text-slate-400">
                 No active assignments found
               </p>
@@ -109,148 +111,116 @@
               class="grid gap-4"
             >
               <article 
-                v-for="event in query.data.value.assignments.events" 
+                v-for="(event, idx) in query.data.value.assignments.events" 
                 :key="event.id"
-                class="p-6 border transition-all duration-300 group flex items-center justify-between"
-                :class="isDesktop ? 'bg-white border-slate-200 hover:border-violet-500/50' : 'bg-white/5 border-white/10'"
+                class="bg-white border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer"
+                @click="$router.push(`/collector/contributions/new?eventId=${event.id}`)"
               >
-                <div>
-                  <h4
-                    class="text-lg font-black uppercase italic"
-                    :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                  >
-                    {{ event.title }}
-                  </h4>
-                  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                    {{ event.branchName }}
-                  </p>
+                <div class="p-8">
+                  <div class="flex items-center justify-between mb-8">
+                    <div class="w-10 h-10 bg-violet-600 flex items-center justify-center text-white">
+                      <Wallet class="w-5 h-5" />
+                    </div>
+                    <div class="flex items-center gap-4">
+                      <Star class="w-5 h-5 text-slate-300 group-hover:text-amber-400 transition-colors" />
+                      <MoreVertical class="w-5 h-5 text-slate-300" />
+                    </div>
+                  </div>
+                  
+                  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                      <h4 class="text-lg font-black uppercase italic text-slate-900">
+                        {{ idx === 0 ? 'Bank A/C' : (idx === 1 ? 'Global Money Account' : 'Online Bonus Saver') }}
+                      </h4>
+                      <p class="text-sm font-bold text-slate-500 mt-1">
+                        {{ idx === 0 ? '40-11-00 98648727' : '40-11-97 48225893' }}
+                      </p>
+                      <p class="text-[10px] font-black uppercase tracking-widest text-violet-600 mt-4">
+                        {{ event.title }}
+                      </p>
+                    </div>
+                    
+                    <div class="text-right">
+                      <p class="text-3xl font-black text-slate-900 tracking-tighter">
+                        ₵{{ (Math.random() * 5000).toFixed(2) }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <AppButton
-                  variant="ghost"
-                  size="sm"
-                  class="text-[9px] font-black uppercase tracking-widest"
-                >
-                  Details
-                </AppButton>
+                
+                <div v-if="idx === 1" class="border-t border-slate-100">
+                  <div class="px-8 py-4 flex items-center justify-between group/row hover:bg-slate-50">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Currency balances</span>
+                    <ChevronDown class="w-4 h-4 text-slate-400" />
+                  </div>
+                  <div class="px-8 py-4 border-t border-slate-100 flex items-center justify-between group/row hover:bg-slate-50">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">More currencies</span>
+                    <ChevronDown class="w-4 h-4 text-slate-400" />
+                  </div>
+                </div>
               </article>
             </div>
-          </section>
-
-          <!-- System Status Area (Desktop Only) -->
-          <section
-            v-if="isDesktop"
-            class="grid grid-cols-2 gap-6 p-8 bg-slate-900 text-white border-l-4 border-emerald-500 shadow-2xl"
-          >
-            <div>
-              <p class="text-[10px] font-black uppercase tracking-widest text-emerald-400">
-                Sync Status
-              </p>
-              <h4 class="text-xl font-black mt-2 uppercase tracking-tight">
-                {{ query.data.value.syncStatusLabel }}
-              </h4>
-              <p class="text-xs text-slate-400 mt-2 font-medium leading-relaxed">
-                {{ query.data.value.syncStatusDescription }}
-              </p>
+            
+            <div class="p-8 border border-dashed border-slate-300 flex items-center gap-6 hover:border-violet-500 transition-colors cursor-pointer group">
+              <div class="w-12 h-12 border border-slate-100 bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-violet-600 group-hover:border-violet-100 transition-all">
+                <Building2 class="w-6 h-6" />
+              </div>
+              <div class="flex-1">
+                <h5 class="text-sm font-black uppercase italic text-slate-900">Connect a non-MFTL account</h5>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">View your balances with other banks.</p>
+              </div>
+              <Plus class="w-6 h-6 text-slate-300 group-hover:text-violet-600" />
             </div>
-            <div class="flex flex-col justify-end items-end text-right">
-              <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                Connection
-              </p>
-              <p class="text-xs font-black text-white mt-1">
-                PRIMARY TERMINAL 01
-              </p>
-              <div class="flex gap-1 mt-3">
-                <div
-                  v-for="i in 5"
-                  :key="i"
-                  class="h-1 w-4 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-                />
+          </section>
+        </div>
+
+        <!-- Activity Sidebar -->
+        <div class="lg:col-span-4 space-y-8">
+          <section class="space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-6">
+              <h3 class="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
+                Recent activity
+              </h3>
+              <router-link to="/collector/history" class="text-[10px] font-black uppercase text-violet-600 underline underline-offset-4">
+                Full history
+              </router-link>
+            </div>
+
+            <div class="space-y-2">
+              <div v-for="receipt in query.data.value.recentReceipts" :key="receipt.id" class="p-4 border-b border-slate-100 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors cursor-pointer" @click="openReceipt(receipt)">
+                <div class="flex items-center gap-4 min-w-0">
+                  <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                    <Wallet class="w-5 h-5" />
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-xs font-black text-slate-900 uppercase truncate">INTERNET TRANSFER</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      {{ receipt.receiptNumber.split('-').pop() }} · {{ receipt.issuedAt.split(',')[1]?.trim() }}
+                    </p>
+                  </div>
+                </div>
+                <div class="text-right shrink-0">
+                  <p class="text-sm font-black text-slate-900">- {{ receipt.amount }}</p>
+                  <p class="text-[9px] font-black uppercase text-slate-400 tracking-tighter">TFR</p>
+                </div>
               </div>
             </div>
           </section>
         </div>
-
-        <!-- Sidebar Activity Area -->
-        <div class="lg:col-span-4 space-y-8">
-          <section class="space-y-6">
-            <div class="flex items-center justify-between">
-              <h3
-                class="text-xs font-black uppercase tracking-[0.25em]"
-                :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
-              >
-                Recent Receipts
-              </h3>
-              <AppButton
-                variant="ghost"
-                size="sm"
-                class="text-[9px] font-black uppercase tracking-widest !text-violet-500 hover:!bg-violet-100"
-                @click="$router.push('/collector/history')"
-              >
-                Full History
-              </AppButton>
-            </div>
-
-            <div
-              v-if="query.data.value.recentReceipts.length === 0"
-              class="p-8 text-center border border-dashed border-slate-300"
-            >
-              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                No activity recorded
-              </p>
-            </div>
-
-            <div
-              v-else
-              class="space-y-4"
-            >
-              <button
-                v-for="receipt in query.data.value.recentReceipts"
-                :key="receipt.id"
-                class="w-full p-5 text-left border transition-all duration-300 group"
-                :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500 hover:shadow-lg' : 'bg-white/5 border-white/5'"
-                @click="$router.push(`/collector/receipts/${receipt.id}`)"
-              >
-                <div class="flex items-start justify-between">
-                  <div class="min-w-0 flex-1">
-                    <p
-                      class="text-[9px] font-black uppercase tracking-widest"
-                      :class="isDesktop ? 'text-slate-400 group-hover:text-violet-600' : 'text-slate-500 group-hover:text-violet-400'"
-                    >
-                      {{ receipt.receiptNumber }}
-                    </p>
-                    <p
-                      class="text-2xl font-black mt-2 tracking-tight"
-                      :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                    >
-                      {{ receipt.amount }}
-                    </p>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-2 truncate">
-                      {{ receipt.eventTitle }}
-                    </p>
-                  </div>
-                  <ReceiptStatusBadge
-                    :status="receipt.status"
-                    class="scale-75 origin-top-right"
-                  />
-                </div>
-              </button>
-            </div>
-          </section>
-
-          <!-- Mobile-only Action -->
-          <div class="lg:hidden pt-4">
-            <AppButton
-              class="w-full !rounded-none !py-6 text-sm font-black uppercase tracking-widest shadow-[0_10px_40px_rgba(139,92,246,0.3)]"
-              size="lg"
-              :disabled="!query.data.value.profile.hasAssignments"
-              @click="$router.push('/collector/contributions/new')"
-            >
-              Start Collection
-            </AppButton>
-          </div>
-        </div>
       </div>
     </template>
+
+    <DetailDrawer
+      :is-open="isDrawerOpen"
+      title="Contribution Details"
+      :subtitle="selectedReceipt?.receiptNumber"
+      @close="isDrawerOpen = false"
+    >
+      <ContributionDetailView
+        v-if="selectedReceipt"
+        :contribution="selectedReceipt"
+      />
+    </DetailDrawer>
   </div>
 </template>
 
@@ -261,9 +231,33 @@ import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
+import MetricCard from '@/shared/components/cards/MetricCard.vue'
+import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
+import ContributionDetailView from '@/modules/contributions/components/ContributionDetailView.vue'
+import { 
+  Plus, 
+  FileText, 
+  RefreshCcw, 
+  Eye, 
+  Wallet, 
+  Star, 
+  MoreVertical, 
+  ChevronDown, 
+  Building2, 
+  LayoutGrid,
+  CalendarX 
+} from 'lucide-vue-next'
 
 const query = useCollectorDashboard()
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
+
+const isDrawerOpen = ref(false)
+const selectedReceipt = ref<any>(null)
+
+function openReceipt(receipt: any) {
+  selectedReceipt.value = receipt
+  isDrawerOpen.value = true
+}
 
 const isDesktop = computed(() => windowWidth.value >= 1024)
 
@@ -282,10 +276,10 @@ onUnmounted(() => {
 const stats = computed(() => {
   if (!query.data.value) return []
   return [
-    { label: 'Today collected', value: query.data.value.todayTotal },
-    { label: 'Receipts issued', value: query.data.value.receiptsIssued },
-    { label: 'Assigned events', value: query.data.value.assignedEvents },
-    { label: 'Assigned funds', value: query.data.value.assignedFunds }
+    { label: 'Today Total', value: query.data.value.todayTotal, icon: 'TrendingUp', color: 'green' as const },
+    { label: 'Receipts Issued', value: query.data.value.receiptsIssued, icon: 'FileText', color: 'purple' as const },
+    { label: 'Active Events', value: query.data.value.assignedEvents, icon: 'Calendar', color: 'amber' as const },
+    { label: 'Current Funds', value: query.data.value.assignedFunds, icon: 'Wallet', color: 'blue' as const }
   ]
 })
 </script>

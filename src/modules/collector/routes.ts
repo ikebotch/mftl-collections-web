@@ -37,6 +37,16 @@ export const collectorRoutes: RouteRecordRaw[] = [
         name: 'collector-history',
         component: () => import('./pages/CollectorHistoryPage.vue'),
       },
+      {
+        path: 'ledger',
+        name: 'collector-ledger',
+        component: () => import('./pages/CollectorLedgerPage.vue'),
+      },
+      {
+        path: 'more',
+        name: 'collector-more',
+        component: () => import('./pages/CollectorMorePage.vue'),
+      },
     ],
   },
 ]

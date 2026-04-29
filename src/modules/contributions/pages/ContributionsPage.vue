@@ -112,6 +112,10 @@
           <span class="text-xs font-bold text-slate-500">{{ value }}</span>
         </template>
 
+        <template #cell:collector="{ row }">
+          <span class="text-xs font-black text-slate-900 lowercase">{{ row.collectorName || 'system' }}</span>
+        </template>
+
         <template #cell:method="{ value }">
           <span class="text-[10px] font-black text-slate-900 tracking-widest uppercase">{{ value }}</span>
         </template>
@@ -148,74 +152,7 @@
       >
         <!-- Read Mode -->
         <template v-if="!isEditing">
-          <section class="p-8 rounded-none bg-slate-50 border border-slate-100 flex flex-col items-center text-center">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-              Total Amount
-            </p>
-            <p class="text-4xl font-black text-slate-900 tracking-tighter">
-              {{ selectedContribution.amount }}
-            </p>
-            <div class="mt-4 flex items-center gap-2">
-              <StatusBadge
-                :status="selectedContribution.status"
-                tone="success"
-              />
-              <span class="text-xs font-bold text-slate-400">{{ selectedContribution.paymentMethod }}</span>
-            </div>
-          </section>
-
-          <div class="grid grid-cols-2 gap-8">
-            <div>
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
-                Donor
-              </h4>
-              <p class="text-sm font-black text-slate-900">
-                {{ selectedContribution.contributorName }}
-              </p>
-              <p class="text-xs font-bold text-slate-500 mt-1">
-                {{ selectedContribution.contributorPhone }}
-              </p>
-            </div>
-            <div>
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
-                Method
-              </h4>
-              <p class="text-sm font-black text-slate-900 uppercase tracking-widest">
-                {{ selectedContribution.paymentMethod }}
-              </p>
-            </div>
-          </div>
-
-          <div class="space-y-6 pt-6 border-t border-slate-100">
-            <div class="flex justify-between items-center">
-              <span class="text-xs font-bold text-slate-400">Event</span>
-              <span class="text-xs font-black text-slate-900">{{ selectedContribution.event }}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs font-bold text-slate-400">Target Fund</span>
-              <span class="text-xs font-black text-slate-900">{{ selectedContribution.recipientFund }}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs font-bold text-slate-400">Receipt ID</span>
-              <span class="text-xs font-mono text-slate-900">{{ selectedContribution.receiptId || 'N/A' }}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs font-bold text-slate-400">Collector</span>
-              <span class="text-xs font-black text-slate-900">{{ selectedContribution.collectorName || 'System Admin' }}</span>
-            </div>
-          </div>
-
-          <div
-            v-if="selectedContribution.note"
-            class="p-6 rounded-none bg-amber-50 text-amber-700"
-          >
-            <p class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-70">
-              Note
-            </p>
-            <p class="text-sm font-medium italic">
-              "{{ selectedContribution.note }}"
-            </p>
-          </div>
+          <ContributionDetailView :contribution="selectedContribution" />
         </template>
 
         <!-- Edit Mode -->
@@ -321,6 +258,7 @@ import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
+import ContributionDetailView from '@/modules/contributions/components/ContributionDetailView.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
@@ -404,6 +342,7 @@ const columns = computed(() => [
   { key: 'amount', label: 'Amount', sortable: !!activeFilters.value.currency },
   { key: 'event', label: 'Event', sortable: true },
   { key: 'fund', label: 'Fund', sortable: true },
+  { key: 'collector', label: 'Collector', sortable: true },
   { key: 'method', label: 'Method', sortable: true },
   { key: 'status', label: 'Status', sortable: true }
 ])

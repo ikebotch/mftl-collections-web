@@ -11,19 +11,21 @@
       <div class="flex items-center gap-4">
         <button 
           class="h-10 w-10 flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-colors"
-          @click="router.back()"
+          @click="handleBack"
         >
           <ChevronLeft class="w-5 h-5 text-slate-400" />
         </button>
         <div class="h-4 w-px bg-slate-200 mx-2" />
         <h1 class="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
-          Terminal / New Contribution
+          Terminal / New Collection / Step {{ currentStep }}
         </h1>
       </div>
       
-      <div class="flex items-center gap-3 bg-violet-50 border border-violet-100 p-1.5 px-4 rounded-none">
-        <div class="h-2 w-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.5)]" />
-        <span class="text-[10px] font-black text-violet-700 uppercase tracking-widest">Active Session</span>
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3 bg-violet-50 border border-violet-100 p-1.5 px-4 rounded-none">
+          <div class="h-2 w-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.5)]" />
+          <span class="text-[10px] font-black text-violet-700 uppercase tracking-widest">Live Terminal</span>
+        </div>
       </div>
     </header>
 
@@ -34,379 +36,339 @@
     >
       <button 
         class="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center text-white active:scale-90 transition-transform"
-        @click="router.back()"
+        @click="handleBack"
       >
         <ChevronLeft class="w-6 h-6" />
       </button>
       <h1 class="text-lg font-black tracking-tight uppercase italic">
-        Contribution
+        Collect
       </h1>
-      <div class="w-10" />
+      <div class="w-10 flex flex-col items-end">
+        <span class="text-[10px] font-black text-violet-400 leading-none">{{ currentStep }}</span>
+        <span class="text-[8px] font-bold text-slate-500 uppercase tracking-tighter">of 5</span>
+      </div>
     </header>
 
-    <div class="max-w-5xl mx-auto px-6 py-10 lg:py-16 space-y-12 pb-40">
-      <!-- Stepper -->
-      <nav class="relative flex justify-between items-start w-full max-w-2xl mx-auto">
-        <div
-          class="absolute top-5 left-0 right-0 h-[2px] transition-colors duration-500"
-          :class="isDesktop ? 'bg-slate-200' : 'bg-white/10'"
-        />
+    <div class="max-w-4xl mx-auto px-6 py-8 lg:py-12 space-y-10 pb-40">
+      <!-- Stepper Progress -->
+      <div class="relative h-1 w-full bg-slate-200 overflow-hidden lg:max-w-md mx-auto">
         <div 
-          class="absolute top-5 left-0 h-[2px] bg-violet-600 transition-all duration-700 shadow-[0_0_15px_rgba(139,92,246,0.5)]"
-          :style="{ width: `${((activeStep - 1) / 3) * 100}%` }"
+          class="absolute top-0 left-0 h-full bg-violet-600 transition-all duration-700 ease-out shadow-[0_0_15px_rgba(139,92,246,0.5)]"
+          :style="{ width: `${(currentStep / 5) * 100}%` }"
         />
-        
-        <div
-          v-for="(step, i) in steps"
-          :key="i"
-          class="relative z-10 flex flex-col items-center gap-3"
-        >
-          <div 
-            class="w-10 h-10 rounded-none flex items-center justify-center text-[10px] font-black transition-all duration-500 border-2"
-            :class="i + 1 <= activeStep 
-              ? 'bg-violet-600 border-violet-600 text-white shadow-xl shadow-violet-500/20' 
-              : (isDesktop ? 'bg-white border-slate-200 text-slate-300' : 'bg-slate-900 border-white/10 text-slate-600')"
-          >
-            <Check
-              v-if="i + 1 < activeStep"
-              class="w-5 h-5"
-            />
-            <span v-else>{{ i + 1 }}</span>
+      </div>
+
+      <main class="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <!-- Step 1: Event Selection -->
+        <section v-if="currentStep === 1" class="space-y-8">
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+              Select Target Event
+            </h2>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Which campaign are you collecting for?</p>
           </div>
-          <span
-            class="text-[9px] font-black uppercase tracking-[0.2em] transition-colors duration-500"
-            :class="i + 1 <= activeStep ? 'text-violet-600' : 'text-slate-400'"
-          >{{ step }}</span>
-        </div>
-      </nav>
 
-      <LoadingState
-        v-if="assignmentsQuery.isLoading.value"
-        text="Authorizing collector session..."
-        :variant="isDesktop ? 'light' : 'dark'"
-      />
-      
-      <ErrorState
-        v-else-if="assignmentsQuery.isError.value"
-        title="Session failed"
-        :variant="isDesktop ? 'light' : 'dark'"
-        :message="assignmentsQuery.error.value?.message ?? 'Connection error.'"
-        show-retry
-        @retry="assignmentsQuery.refetch"
-      />
+          <div class="grid gap-3">
+            <button
+              v-for="event in assignmentsQuery.data.value?.events"
+              :key="event.id"
+              class="w-full p-6 text-left border transition-all duration-300 flex items-center gap-6 group"
+              :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500/50 hover:shadow-xl' : 'bg-white/5 border-white/5'"
+              @click="selectEvent(event)"
+            >
+              <div
+                class="w-14 h-14 border flex items-center justify-center transition-colors shrink-0"
+                :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500 group-hover:border-violet-100' : 'bg-slate-900 border-white/10 text-slate-800'"
+              >
+                <Calendar class="w-7 h-7" />
+              </div>
+              <div class="min-w-0 flex-1">
+                <h4 class="text-xl font-black uppercase italic truncate" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+                  {{ event.title }}
+                </h4>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                  {{ event.dateLabel }} · {{ event.location }}
+                </p>
+              </div>
+              <ArrowRight class="w-5 h-5 text-slate-300 group-hover:text-violet-500 group-hover:translate-x-2 transition-all" />
+            </button>
+          </div>
+        </section>
 
-      <template v-else-if="assignmentsQuery.data.value">
-        <div class="grid lg:grid-cols-12 gap-12 items-start">
-          <!-- Selection Column -->
-          <div class="lg:col-span-7 space-y-10">
-            <!-- Event Selection -->
+        <!-- Step 2: Fund Selection -->
+        <section v-if="currentStep === 2" class="space-y-8">
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+              Select Destination Fund
+            </h2>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Direct the funds to a specific cause</p>
+          </div>
+
+          <div class="grid gap-3">
+            <button
+              v-for="fund in availableFunds"
+              :key="fund.id"
+              class="w-full p-6 text-left border transition-all duration-300 flex items-center gap-6 group"
+              :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500/50 hover:shadow-xl' : 'bg-white/5 border-white/5'"
+              @click="selectFund(fund)"
+            >
+              <div
+                class="w-14 h-14 border flex items-center justify-center transition-colors shrink-0"
+                :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500' : 'bg-slate-900 border-white/10 text-slate-800'"
+              >
+                <Target class="w-7 h-7" />
+              </div>
+              <div class="min-w-0 flex-1">
+                <h4 class="text-xl font-black uppercase italic truncate" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+                  {{ fund.name }}
+                </h4>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 truncate">
+                  {{ fund.description || 'General collection fund' }}
+                </p>
+              </div>
+              <ArrowRight class="w-5 h-5 text-slate-300 group-hover:text-violet-500 group-hover:translate-x-2 transition-all" />
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 3: Contributor Info -->
+        <section v-if="currentStep === 3" class="space-y-10">
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+              Contributor Info
+            </h2>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Who is making this contribution?</p>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="grid grid-cols-2 gap-4">
+            <button 
+              class="p-6 border flex flex-col items-center gap-4 transition-all duration-300"
+              :class="form.anonymous ? 'bg-slate-900 border-slate-900 text-white' : (isDesktop ? 'bg-white border-slate-200 text-slate-400 hover:border-violet-500' : 'bg-white/5 border-white/10')"
+              @click="form.anonymous = true; nextStep()"
+            >
+              <UserX class="w-8 h-8" />
+              <span class="text-[10px] font-black uppercase tracking-widest">Anonymous</span>
+            </button>
+            <button 
+              class="p-6 border flex flex-col items-center gap-4 transition-all duration-300"
+              :class="!form.anonymous ? 'bg-slate-900 border-slate-900 text-white' : (isDesktop ? 'bg-white border-slate-200 text-slate-400 hover:border-violet-500' : 'bg-white/5 border-white/10')"
+              @click="form.anonymous = false"
+            >
+              <UserCheck class="w-8 h-8" />
+              <span class="text-[10px] font-black uppercase tracking-widest">Identify</span>
+            </button>
+          </div>
+
+          <div v-if="!form.anonymous" class="space-y-6">
+            <div class="relative">
+              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 block mb-3">Full Name</label>
+              <input 
+                v-model="form.contributorName"
+                placeholder="Enter Name"
+                class="w-full bg-slate-50 border border-slate-200 p-5 text-xl font-black uppercase tracking-tight focus:border-violet-500 outline-none transition-all"
+                :class="isDesktop ? 'text-slate-900' : 'text-slate-900 bg-white'"
+              >
+            </div>
+            <div class="relative">
+              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 block mb-3">Phone Number</label>
+              <input 
+                v-model="form.contributorPhone"
+                type="tel"
+                placeholder="024 XXX XXXX"
+                class="w-full bg-slate-50 border border-slate-200 p-5 text-xl font-black uppercase tracking-tight focus:border-violet-500 outline-none transition-all"
+                :class="isDesktop ? 'text-slate-900' : 'text-slate-900 bg-white'"
+              >
+            </div>
+            
+            <AppButton
+              variant="primary"
+              class="w-full !rounded-none !py-6 text-sm font-black uppercase tracking-widest mt-4"
+              :disabled="!form.contributorName || !form.contributorPhone"
+              @click="nextStep"
+            >
+              Continue
+            </AppButton>
+          </div>
+        </section>
+
+        <!-- Step 4: Amount & Payment -->
+        <section v-if="currentStep === 4" class="space-y-10">
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+              Amount & Payment
+            </h2>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Enter value and select method</p>
+          </div>
+
+          <div class="space-y-12">
+            <!-- Amount Input -->
+            <div class="relative group max-w-sm mx-auto text-center">
+              <span class="absolute left-0 top-1/2 -translate-y-1/2 text-4xl font-black text-violet-500">₵</span>
+              <input 
+                v-model="form.amount"
+                type="number"
+                placeholder="0.00"
+                class="w-full bg-transparent border-b-4 border-slate-200 focus:border-violet-500 py-8 pl-10 text-7xl font-black outline-none transition-all text-center"
+                :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                ref="amountInput"
+              >
+            </div>
+
+            <!-- Payment Methods -->
             <div class="space-y-4">
-              <div class="flex items-center justify-between px-1">
-                <h3
-                  class="text-[10px] font-black uppercase tracking-[0.25em]"
-                  :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
-                >
-                  1. Target Event
-                </h3>
-                <button 
-                  v-if="form.eventId" 
-                  class="text-[10px] font-black uppercase tracking-widest text-violet-500 underline underline-offset-4"
-                  @click="resetToStep(1)"
-                >
-                  Reset
-                </button>
-              </div>
-
-              <div
-                v-if="!form.eventId"
-                class="grid gap-3"
-              >
+              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 block text-center">Payment Method</label>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <button
-                  v-for="event in assignmentsQuery.data.value.events"
-                  :key="event.id"
-                  class="w-full p-6 text-left border transition-all duration-300 flex items-center gap-6 group"
-                  :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500/50 hover:shadow-lg' : 'bg-white/5 border-white/5'"
-                  @click="selectEvent(event.id)"
+                  v-for="method in paymentMethods"
+                  :key="method.id"
+                  class="p-6 border flex items-center gap-4 transition-all duration-300"
+                  :class="form.paymentMethod === method.id 
+                    ? 'bg-violet-600 border-violet-600 text-white shadow-lg' 
+                    : (isDesktop ? 'bg-white border-slate-200 text-slate-600 hover:border-violet-300' : 'bg-white/5 border-white/10')"
+                  @click="form.paymentMethod = method.id"
                 >
-                  <div
-                    class="w-14 h-14 border flex items-center justify-center transition-colors"
-                    :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500' : 'bg-slate-900 border-white/10 text-slate-800'"
-                  >
-                    <Calendar class="w-7 h-7" />
-                  </div>
-                  <div class="min-w-0 flex-1">
-                    <h4
-                      class="text-lg font-black uppercase italic"
-                      :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                    >
-                      {{ event.title }}
-                    </h4>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                      {{ event.dateLabel }} · {{ event.location }}
-                    </p>
+                  <component :is="method.icon" class="w-6 h-6 shrink-0" />
+                  <div class="text-left">
+                    <p class="text-[10px] font-black uppercase tracking-widest">{{ method.label }}</p>
                   </div>
                 </button>
-              </div>
-
-              <div
-                v-else
-                class="p-6 border flex items-center gap-6"
-                :class="isDesktop ? 'bg-white border-violet-500/30 shadow-md shadow-violet-500/5' : 'bg-violet-600/10 border-violet-500/30'"
-              >
-                <div class="w-14 h-14 bg-violet-600 flex items-center justify-center text-white">
-                  <Calendar class="w-7 h-7" />
-                </div>
-                <div class="min-w-0 flex-1">
-                  <h4
-                    class="text-lg font-black uppercase italic"
-                    :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                  >
-                    {{ selectedEvent?.title }}
-                  </h4>
-                  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                    {{ selectedEvent?.dateLabel }}
-                  </p>
-                </div>
               </div>
             </div>
 
-            <!-- Fund Selection -->
-            <div
-              v-if="form.eventId"
-              class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
+            <AppButton
+              variant="primary"
+              class="w-full !rounded-none !py-6 text-sm font-black uppercase tracking-widest"
+              :disabled="!form.amount || Number(form.amount) <= 0"
+              @click="nextStep"
             >
-              <div class="flex items-center justify-between px-1">
-                <h3
-                  class="text-[10px] font-black uppercase tracking-[0.25em]"
-                  :class="isDesktop ? 'text-slate-400' : 'text-slate-500'"
-                >
-                  2. Destination Fund
-                </h3>
-                <button 
-                  v-if="form.recipientFundId" 
-                  class="text-[10px] font-black uppercase tracking-widest text-violet-500 underline underline-offset-4"
-                  @click="resetToStep(2)"
-                >
-                  Change
-                </button>
-              </div>
+              Review Transaction
+            </AppButton>
+          </div>
+        </section>
 
-              <div
-                v-if="!form.recipientFundId"
-                class="grid gap-3"
-              >
-                <button
-                  v-for="fund in availableFunds"
-                  :key="fund.id"
-                  class="w-full p-6 text-left border transition-all duration-300 flex items-center gap-6 group"
-                  :class="isDesktop ? 'bg-white border-slate-100 hover:border-violet-500/50 hover:shadow-lg' : 'bg-white/5 border-white/5'"
-                  @click="form.recipientFundId = fund.id"
-                >
-                  <div
-                    class="w-14 h-14 border flex items-center justify-center transition-colors"
-                    :class="isDesktop ? 'bg-slate-50 border-slate-100 text-slate-300 group-hover:text-violet-500' : 'bg-slate-900 border-white/10 text-slate-800'"
-                  >
-                    <Target class="w-7 h-7" />
-                  </div>
-                  <div class="min-w-0 flex-1">
-                    <h4
-                      class="text-lg font-black uppercase italic"
-                      :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                    >
-                      {{ fund.name }}
-                    </h4>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                      Target: {{ formatCurrency(fund.targetAmount, 'GHS') }}
-                    </p>
-                  </div>
-                </button>
-              </div>
-
-              <div
-                v-else
-                class="p-6 border flex items-center gap-6"
-                :class="isDesktop ? 'bg-white border-violet-500/30 shadow-md shadow-violet-500/5' : 'bg-violet-600/10 border-violet-500/30'"
-              >
-                <div class="w-14 h-14 bg-violet-600 flex items-center justify-center text-white">
-                  <Target class="w-7 h-7" />
-                </div>
-                <div class="min-w-0 flex-1">
-                  <h4
-                    class="text-lg font-black uppercase italic"
-                    :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                  >
-                    {{ selectedFund?.name }}
-                  </h4>
-                  <div class="mt-2 h-1 w-full bg-black/5 rounded-none overflow-hidden">
-                    <div
-                      class="h-full bg-violet-600"
-                      :style="{ width: `${selectedFund?.progress}%` }"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+        <!-- Step 5: Review & PIN -->
+        <section v-if="currentStep === 5" class="space-y-10">
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
+              Final Review
+            </h2>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Authorize this collection</p>
           </div>
 
-          <!-- Form Column -->
-          <div class="lg:col-span-5">
-            <div
-              v-if="form.recipientFundId"
-              class="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700"
-            >
-              <div
-                class="p-8 lg:p-10 border transition-all duration-500 shadow-2xl"
-                :class="isDesktop ? 'bg-white border-slate-200' : 'bg-white/5 border-white/5'"
-              >
-                <div class="space-y-8">
-                  <div class="space-y-3">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Collection Amount</label>
-                    <div class="relative group">
-                      <span class="absolute left-0 top-1/2 -translate-y-1/2 text-4xl font-black text-violet-500 group-focus-within:scale-110 transition-transform duration-500">₵</span>
-                      <input 
-                        v-model="form.amount"
-                        type="number"
-                        placeholder="0.00"
-                        class="w-full bg-transparent border-b-2 border-slate-200 focus:border-violet-500 py-6 pl-10 text-5xl font-black outline-none transition-all placeholder:text-slate-100"
-                        :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                      >
-                    </div>
-                  </div>
-
-                  <div class="space-y-6">
-                    <div class="flex items-center justify-between">
-                      <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contributor Info</label>
-                      <button
-                        class="text-[10px] font-black uppercase text-violet-600 hover:underline"
-                        @click="form.anonymous = !form.anonymous"
-                      >
-                        {{ form.anonymous ? 'Clear Anonymous' : 'Set Anonymous' }}
-                      </button>
-                    </div>
-
-                    <div
-                      v-if="!form.anonymous"
-                      class="space-y-4"
-                    >
-                      <input 
-                        v-model="form.contributorName"
-                        placeholder="Full Name"
-                        class="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-black uppercase tracking-tight focus:border-violet-500 outline-none"
-                      >
-                      <input 
-                        v-model="form.contributorPhone"
-                        placeholder="Phone Number"
-                        class="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-black uppercase tracking-tight focus:border-violet-500 outline-none"
-                      >
-                    </div>
-
-                    <div
-                      v-else
-                      class="p-6 bg-slate-900 border-l-4 border-violet-500"
-                    >
-                      <p class="text-xs font-black text-white uppercase tracking-widest">
-                        Anonymous Entry Active
-                      </p>
-                      <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">
-                        Identity will be suppressed on receipt
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="space-y-3">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Collector Authorization PIN</label>
-                    <div class="relative group">
-                      <input 
-                        v-model="form.pin"
-                        type="password"
-                        maxlength="4"
-                        placeholder="••••"
-                        class="w-full bg-slate-50 border border-slate-200 p-4 text-2xl font-black tracking-[1em] text-center focus:border-violet-500 outline-none"
-                        :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                      >
-                      <div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300">
-                        <Lock class="w-5 h-5" />
-                      </div>
-                    </div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                      Enter your 4-digit security PIN to authorize
-                    </p>
-                  </div>
-
-                  <div class="pt-6">
-                    <AppButton
-                      variant="primary"
-                      class="w-full !rounded-none !py-6 text-sm font-black uppercase tracking-[0.2em] shadow-xl shadow-violet-500/30 group"
-                      :disabled="!canSubmit || isSubmitting"
-                      :loading="isSubmitting"
-                      @click="onSubmit"
-                    >
-                      <span>Finalize Collection</span>
-                      <ArrowRight class="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform" />
-                    </AppButton>
-                    <p class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-6">
-                      Transactions are final once recorded
-                    </p>
-                  </div>
+          <div class="bg-slate-900 p-8 text-white space-y-6 shadow-2xl relative overflow-hidden">
+            <div class="relative z-10 grid gap-6">
+              <div class="flex justify-between items-start border-b border-white/10 pb-6">
+                <div>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contribution Value</p>
+                  <h3 class="text-5xl font-black mt-2 tracking-tighter">{{ formatCurrency(form.amount, 'GHS') }}</h3>
+                </div>
+                <div class="text-right">
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Method</p>
+                  <p class="text-sm font-black uppercase mt-1">{{ form.paymentMethod }}</p>
                 </div>
               </div>
 
-              <!-- Desktop only payment summary -->
-              <div
-                v-if="isDesktop"
-                class="p-6 bg-slate-950 text-white flex items-center justify-between border border-slate-900 shadow-xl"
-              >
-                <div class="flex items-center gap-4">
-                  <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                    <Banknote class="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-500">
-                      Payment Type
-                    </p>
-                    <p class="text-xs font-black uppercase tracking-tight">
-                      Hard Currency (Cash)
-                    </p>
-                  </div>
+              <div class="grid grid-cols-2 gap-8">
+                <div>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Event</p>
+                  <p class="text-xs font-black uppercase mt-1 truncate">{{ selectedEvent?.title }}</p>
                 </div>
-                <Check class="w-5 h-5 text-emerald-500" />
+                <div>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contributor</p>
+                  <p class="text-xs font-black uppercase mt-1 truncate">{{ form.anonymous ? 'Anonymous' : form.contributorName }}</p>
+                </div>
               </div>
             </div>
+            
+            <!-- Decorative icon -->
+            <CheckCircle2 class="absolute -right-6 -bottom-6 w-32 h-32 text-white opacity-[0.03]" />
           </div>
-        </div>
-      </template>
+
+          <div class="space-y-6">
+            <div class="space-y-3">
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 text-center block">Collector Authorization PIN</label>
+              <div class="relative max-w-[200px] mx-auto">
+                <input 
+                  v-model="form.pin"
+                  type="password"
+                  maxlength="4"
+                  placeholder="••••"
+                  class="w-full bg-slate-50 border border-slate-200 p-5 text-4xl font-black tracking-[0.5em] text-center focus:border-violet-500 outline-none transition-all"
+                  :class="isDesktop ? 'text-slate-900' : 'text-slate-900 bg-white'"
+                >
+                <Lock class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+              </div>
+            </div>
+
+            <AppButton
+              variant="primary"
+              class="w-full !rounded-none !py-8 text-lg font-black uppercase tracking-[0.2em] shadow-2xl shadow-violet-500/20"
+              :disabled="form.pin.length !== 4 || isSubmitting"
+              :loading="isSubmitting"
+              @click="onSubmit"
+            >
+              Commit Collection
+            </AppButton>
+            
+            <p class="text-center text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em]">
+              Encrypted · Secure Transaction · Terminal {{ terminalId }}
+            </p>
+          </div>
+        </section>
+      </main>
     </div>
+
+    <!-- Mobile Navigation Bottom Bar (Back/Next) -->
+    <footer 
+      v-if="!isDesktop && currentStep < 5" 
+      class="fixed inset-x-0 bottom-0 p-6 bg-[#060B16]/95 backdrop-blur-xl border-t border-white/5 flex items-center justify-between gap-4 z-50"
+    >
+      <button 
+        class="flex-1 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border border-white/10 active:scale-95 transition-all"
+        @click="currentStep > 1 ? currentStep-- : router.back()"
+      >
+        {{ currentStep === 1 ? 'Cancel' : 'Back' }}
+      </button>
+      <button 
+        v-if="canGoNext"
+        class="flex-[2] py-4 bg-violet-600 text-white text-[11px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-violet-600/20"
+        @click="nextStep"
+      >
+        {{ currentStep === 4 ? 'Review' : 'Continue' }}
+      </button>
+    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, ref, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useCollectorAssignments } from '../composables/useCollector'
 import { contributionsService } from '@/modules/contributions/services/contributionsService'
-import type { ApiError } from '@/core/api/apiError'
 import { shouldBypassAuth } from '@/core/auth/auth0'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
-import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { formatCurrency } from '@/core/formatting/formatters'
 import { 
-  Check, 
   ChevronLeft,
   Calendar,
   Target,
   ArrowRight,
-  Plus,
   Banknote,
-  Lock
+  Smartphone,
+  CreditCard,
+  Lock,
+  UserX,
+  UserCheck,
+  CheckCircle2
 } from 'lucide-vue-next'
 
-const route = useRoute()
 const router = useRouter()
 const assignmentsQuery = useCollectorAssignments()
-
-const activeStepOverride = ref<number | null>(null)
+const currentStep = ref(1)
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
+const terminalId = ref('ACC-01-A')
+const isSubmitting = ref(false)
 
 const isDesktop = computed(() => windowWidth.value >= 1024)
 
@@ -423,8 +385,8 @@ onUnmounted(() => {
 })
 
 const form = reactive({
-  eventId: typeof route.query.eventId === 'string' ? route.query.eventId : '',
-  recipientFundId: typeof route.query.fundId === 'string' ? route.query.fundId : '',
+  eventId: '',
+  recipientFundId: '',
   contributorName: '',
   contributorPhone: '',
   contributorEmail: '',
@@ -436,21 +398,15 @@ const form = reactive({
   pin: '',
 })
 
-const submissionError = ref<ApiError | null>(null)
-const isSubmitting = ref(false)
+const paymentMethods = [
+  { id: 'cash', label: 'Hard Cash', icon: Banknote },
+  { id: 'momo', label: 'Mobile Money', icon: Smartphone },
+  { id: 'pos', label: 'Card / POS', icon: CreditCard }
+]
 
 const availableFunds = computed(() =>
   (assignmentsQuery.data.value?.funds ?? []).filter(fund => fund.eventId === form.eventId),
 )
-
-const steps = ['Event', 'Fund', 'Review']
-
-const activeStep = computed(() => {
-  if (activeStepOverride.value) return activeStepOverride.value
-  if (!form.eventId) return 1
-  if (!form.recipientFundId) return 2
-  return 3
-})
 
 const selectedEvent = computed(() => 
   assignmentsQuery.data.value?.events.find(e => e.id === form.eventId)
@@ -460,37 +416,41 @@ const selectedFund = computed(() =>
   assignmentsQuery.data.value?.funds.find(f => f.id === form.recipientFundId)
 )
 
-const canSubmit = computed(() => {
-  return Boolean(
-    form.eventId &&
-    form.recipientFundId &&
-    form.amount &&
-    Number(form.amount) > 0 &&
-    form.pin.length === 4 &&
-    (form.anonymous || (form.contributorName && form.contributorPhone))
-  )
+const canGoNext = computed(() => {
+  if (currentStep.value === 1) return !!form.eventId
+  if (currentStep.value === 2) return !!form.recipientFundId
+  if (currentStep.value === 3) return form.anonymous || (form.contributorName && form.contributorPhone)
+  if (currentStep.value === 4) return form.amount && Number(form.amount) > 0
+  return false
 })
 
-function resetToStep(step: number) {
-  if (step === 1) {
-    form.eventId = ''
-    form.recipientFundId = ''
-  } else if (step === 2) {
-    form.recipientFundId = ''
+function nextStep() {
+  if (canGoNext.value) {
+    currentStep.value++
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
-  activeStepOverride.value = step
 }
 
-function selectEvent(id: string) {
-  form.eventId = id
-  form.recipientFundId = ''
-  activeStepOverride.value = 2
+function handleBack() {
+  if (currentStep.value > 1) {
+    currentStep.value--
+  } else {
+    router.back()
+  }
+}
+
+function selectEvent(event: any) {
+  form.eventId = event.id
+  nextStep()
+}
+
+function selectFund(fund: any) {
+  form.recipientFundId = fund.id
+  nextStep()
 }
 
 async function onSubmit() {
-  submissionError.value = null
   isSubmitting.value = true
-
   try {
     const result = await contributionsService.recordCash({
       eventId: form.eventId,
@@ -514,7 +474,7 @@ async function onSubmit() {
       router.push(`/collector/receipts/${result.receiptId}`)
     }
   } catch (error) {
-    submissionError.value = error as ApiError
+    console.error('Submission failed', error)
   } finally {
     isSubmitting.value = false
   }
@@ -524,5 +484,17 @@ async function onSubmit() {
 <style scoped>
 .italic {
   font-style: italic;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 </style>

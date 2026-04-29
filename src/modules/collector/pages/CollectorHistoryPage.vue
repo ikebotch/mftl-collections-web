@@ -62,58 +62,59 @@
     />
     
     <template v-else>
-      <div
-        v-if="filteredReceipts.length === 0"
-        class="rounded-none border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
-      >
-        <FileText class="w-12 h-12 text-slate-700 mx-auto mb-4" />
-        <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">
-          No matching receipts
-        </p>
-      </div>
-
-      <div
-        v-else
-        class="space-y-4"
-      >
-        <article
-          v-for="receipt in filteredReceipts"
-          :key="receipt.id"
-          class="relative group active:scale-[0.98] transition-transform duration-200"
-          @click="router.push(`/collector/receipts/${receipt.id}`)"
+      <div class="bg-white border border-slate-200 shadow-sm overflow-hidden">
+        <DataTable
+          :columns="columns"
+          :rows="filteredReceipts"
+          :loading="query.isLoading.value"
+          title="Collection History"
         >
-          <div class="relative p-6 rounded-none border border-white/10 bg-white/[0.04] flex justify-between items-center group-hover:bg-white/[0.06] transition-colors">
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 mb-1.5">
-                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
-                  {{ receipt.receiptNumber }}
-                </p>
-                <div class="w-1 h-1 rounded-none bg-slate-700" />
-                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
-                  {{ receipt.issuedAt.split(',')[0] }}
-                </p>
-              </div>
-              <p class="text-xl font-black text-white mb-2">
-                {{ receipt.amount }}
-              </p>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate">
-                {{ receipt.eventTitle }}
-              </p>
-            </div>
-            
-            <div class="flex flex-col items-end gap-3 shrink-0 ml-4">
-              <ReceiptStatusBadge
-                :status="receipt.status"
-                class="scale-90 origin-right"
-              />
-              <div class="w-8 h-8 rounded-none bg-white/5 flex items-center justify-center text-slate-600 group-hover:text-white transition-colors">
-                <ChevronRight class="w-5 h-5" />
-              </div>
-            </div>
-          </div>
-        </article>
+          <template #cell:receiptNumber="{ value }">
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ value }}</span>
+          </template>
+
+          <template #cell:amount="{ value }">
+            <span class="text-sm font-black text-slate-900">{{ value }}</span>
+          </template>
+
+          <template #cell:eventTitle="{ value }">
+            <span class="text-xs font-bold text-slate-600">{{ value }}</span>
+          </template>
+
+          <template #cell:issuedAt="{ value }">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ value }}</span>
+          </template>
+
+          <template #cell:status="{ row }">
+            <ReceiptStatusBadge
+              :status="row.status"
+              class="scale-75 origin-left"
+            />
+          </template>
+
+          <template #rowActions="{ row }">
+            <button
+              class="p-2 text-slate-400 hover:text-violet-600 transition-colors"
+              @click="openReceipt(row)"
+            >
+              <ChevronRight class="w-5 h-5" />
+            </button>
+          </template>
+        </DataTable>
       </div>
     </template>
+
+    <DetailDrawer
+      :is-open="isDrawerOpen"
+      title="Contribution Details"
+      :subtitle="selectedReceipt?.receiptNumber"
+      @close="isDrawerOpen = false"
+    >
+      <ContributionDetailView
+        v-if="selectedReceipt"
+        :contribution="selectedReceipt"
+      />
+    </DetailDrawer>
   </div>
 </template>
 
@@ -122,18 +123,36 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCollectorHistory } from '../composables/useCollector'
 import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
+import DataTable from '@/shared/components/tables/DataTable.vue'
+import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
+import ContributionDetailView from '@/modules/contributions/components/ContributionDetailView.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { formatCurrency } from '@/core/formatting/formatters'
 import { 
   Wallet, 
-  FileText, 
   ChevronRight 
 } from 'lucide-vue-next'
 
 const router = useRouter()
 const query = useCollectorHistory()
 const activeFilter = ref<'all' | 'issued' | 'pending' | 'voided'>('all')
+
+const isDrawerOpen = ref(false)
+const selectedReceipt = ref<any>(null)
+
+function openReceipt(receipt: any) {
+  selectedReceipt.value = receipt
+  isDrawerOpen.value = true
+}
+
+const columns = [
+  { key: 'issuedAt', label: 'Date', sortable: true },
+  { key: 'receiptNumber', label: 'Receipt #', sortable: true },
+  { key: 'eventTitle', label: 'Event/Campaign', sortable: true },
+  { key: 'amount', label: 'Amount', sortable: true },
+  { key: 'status', label: 'Status', sortable: true },
+]
 
 const filters = [
   { label: 'All', value: 'all' as const },
