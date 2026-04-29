@@ -233,6 +233,7 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { useUsersStore } from '@/modules/users/store/usersStore'
 import { appConfig } from '@/core/config/appConfig'
 import { useCurrentUser } from '@/core/auth/currentUser'
 import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
@@ -263,13 +264,26 @@ import {
 
 const { copy, setLocale, currentLocale, availableLocales } = useCopy()
 const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
-const { currentUser } = useCurrentUser()
+const { currentUser: auth0User } = useCurrentUser()
+const usersStore = useUsersStore()
 const isUserDropdownOpen = ref(false)
 const isLanguageDropdownOpen = ref(false)
 
+const currentUser = computed(() => {
+  if (usersStore.me) {
+    return {
+      name: usersStore.me.name,
+      email: usersStore.me.email,
+      picture: auth0User.value.picture || (usersStore.me as any).picture,
+    }
+  }
+  return auth0User.value
+})
+
 const formattedUserName = computed(() => {
-  if (!currentUser.value.name) return ''
-  const parts = currentUser.value.name.split(' ')
+  const name = currentUser.value.name
+  if (!name) return 'User'
+  const parts = name.split(' ')
   return parts[0]
 })
 

@@ -36,7 +36,10 @@
         </div>
       </div>
       
-      <div v-if="canOpenSwitcher || isPlatformAdmin" class="chevron-wrapper">
+      <div
+        v-if="canOpenSwitcher || isPlatformAdmin"
+        class="chevron-wrapper"
+      >
         <ChevronDown class="chevron" />
       </div>
     </button>
@@ -48,7 +51,10 @@
     >
       <div class="dropdown-inner">
         <!-- Modern Sliding Tab Switcher -->
-        <div v-if="!isSingleTenant || isPlatformAdmin" class="sliding-tabs">
+        <div
+          v-if="!isSingleTenant || isPlatformAdmin"
+          class="sliding-tabs"
+        >
           <div 
             class="tab-indicator"
             :style="{ transform: `translateX(${activeView === 'tenants' ? '0' : '100%'})` }"
@@ -254,11 +260,17 @@ const tenantStore = useTenantStore()
 const branchStore = useBranchStore()
 const { data: me } = useMe()
 
-const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
+const isCollector = computed(() => {
+  const roles = me.value?.auth0Roles || []
+  return roles.includes('Collector') || roles.includes('Collector Supervisor')
+})
+
+const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false)
 
 const { data: tenants, isPending: isPendingTenants } = useQuery({
   queryKey: ['tenants-list'],
-  queryFn: () => tenantsService.list()
+  queryFn: () => tenantsService.list(),
+  enabled: computed(() => !isCollector.value || isPlatformAdmin.value)
 })
 
 const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
@@ -266,10 +278,10 @@ const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
 const { data: branches, refetch: refetchBranches } = useQuery({
   queryKey: ['branches-list', tenantStore.selectedTenantIdsCSV],
   queryFn: () => branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
-  enabled: !!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value
+  enabled: computed(() => (!isCollector.value && (!!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value)) || isPlatformAdmin.value)
 })
 
-const isSingleBranch = computed(() => (branches.value?.length ?? 0) === 1)
+
 
 const canOpenSwitcher = computed(() => {
   if (isPlatformAdmin.value) return true

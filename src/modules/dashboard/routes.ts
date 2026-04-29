@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { requireAuth } from '@/core/auth/authGuards'
+import { requireAuth, requireAdmin } from '@/core/auth/authGuards'
 import { eventRoutes } from '@/modules/events/routes'
 import { recipientFundRoutes } from '@/modules/recipient-funds/routes'
 
@@ -7,7 +7,7 @@ export const adminRoutes: RouteRecordRaw[] = [
   {
     path: '/admin',
     component: () => import('@/surfaces/admin/layouts/AdminLayout.vue'),
-    beforeEnter: requireAuth,
+    beforeEnter: [requireAuth, requireAdmin],
     children: [
       {
         path: '',

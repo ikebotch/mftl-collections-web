@@ -25,6 +25,7 @@ export interface DashboardSummary {
   totalReceipts: number
   recentContributions: RecentContribution[]
   isAuth0Configured: boolean
+  isAuth0WebhookConfigured: boolean
 }
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
