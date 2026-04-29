@@ -15,3 +15,14 @@ export function formatDate(value?: string | null): string {
     dateStyle: 'medium',
   }).format(new Date(value))
 }
+
+export function formatDateTime(value?: string | null): string {
+  if (!value) {
+    return 'TBD'
+  }
+
+  return new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(value))
+}
