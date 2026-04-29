@@ -1,166 +1,156 @@
 <template>
-  <div class="space-y-8 pb-24">
-    <LoadingState
-      v-if="query.isLoading.value"
-      text="Verifying receipt…"
-      variant="dark"
-      class="pt-20"
-    />
-    
+  <div class="space-y-8 pb-20">
+    <LoadingState v-if="query.isLoading.value" text="Loading receipt…" />
+
     <ErrorState
       v-else-if="query.isError.value"
       title="Receipt Not Found"
-      variant="dark"
       :message="query.error.value?.message ?? 'The receipt link may be invalid or expired.'"
       show-retry
       @retry="query.refetch"
     />
 
     <template v-else-if="query.data.value">
-      <header class="text-center pt-6 animate-in fade-in zoom-in duration-700">
-        <div class="w-20 h-20 rounded-none bg-emerald-500/20 flex items-center justify-center text-emerald-500 mx-auto mb-6 border border-emerald-500/30">
-          <CheckCircle2 class="w-10 h-10" />
+      <!-- Page Header -->
+      <AdminPageHeader
+        title="Collection Receipt"
+        :description="query.data.value.receiptNumber"
+      >
+        <template #actions>
+          <AppButton variant="outline" size="sm" @click="$router.push('/collector/history')">
+            <ArrowLeft class="w-4 h-4 mr-2" />
+            Back to History
+          </AppButton>
+          <AppButton variant="primary" size="sm" @click="$router.push('/collector/contributions/new')">
+            <Plus class="w-4 h-4 mr-2" />
+            New Collection
+          </AppButton>
+        </template>
+      </AdminPageHeader>
+
+      <!-- Success Banner -->
+      <div class="bg-emerald-50 border border-emerald-200 p-5 flex items-center gap-4">
+        <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center shrink-0">
+          <CheckCircle2 class="w-5 h-5 text-white" />
         </div>
-        <h2 class="text-3xl font-black text-white tracking-tight">
-          Gift Recorded
-        </h2>
-        <p class="text-slate-400 mt-2 font-medium">
-          Digital receipt issued successfully.
-        </p>
-      </header>
-
-      <div class="relative animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-        <!-- Receipt Top Cutout Decoration -->
-        <div class="absolute -top-3 left-0 right-0 h-6 bg-[#060B16] rounded-b-[2rem] z-10" />
-        
-        <article class="bg-white rounded-none p-8 text-slate-900 shadow-2xl relative overflow-hidden">
-          <!-- Background Pattern -->
-          <div class="absolute inset-0 opacity-[0.03] pointer-events-none select-none">
-            <div class="absolute inset-0 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px]" />
-          </div>
-
-          <div class="relative z-20">
-            <div class="flex justify-between items-start mb-12">
-              <div>
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                  Receipt No.
-                </p>
-                <p class="text-xl font-black font-display tracking-tight mt-1">
-                  {{ query.data.value.receiptNumber }}
-                </p>
-              </div>
-              <div class="px-3 py-1.5 rounded-none bg-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-600 border border-slate-200/50">
-                {{ query.data.value.status }}
-              </div>
-            </div>
-
-            <div class="space-y-8">
-              <div class="flex flex-col items-center border-b border-slate-100 pb-10">
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Total Contribution</span>
-                <span class="text-5xl font-black tracking-tighter">{{ query.data.value.amount }}</span>
-              </div>
-
-              <div class="grid grid-cols-2 gap-y-10 gap-x-8">
-                <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1.5">
-                    Donor
-                  </p>
-                  <p class="text-sm font-bold text-slate-900 truncate">
-                    {{ query.data.value.isAnonymous ? 'Anonymous' : query.data.value.contributorName }}
-                  </p>
-                </div>
-                <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1.5">
-                    Event
-                  </p>
-                  <p class="text-sm font-bold text-slate-900 truncate">
-                    {{ query.data.value.eventTitle }}
-                  </p>
-                </div>
-                <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1.5">
-                    Method
-                  </p>
-                  <p class="text-sm font-bold text-slate-900">
-                    {{ query.data.value.paymentMethod }}
-                  </p>
-                </div>
-                <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1.5">
-                    Date
-                  </p>
-                  <p class="text-sm font-bold text-slate-900">
-                    {{ query.data.value.issuedAt.split(',')[0] }}
-                  </p>
-                </div>
-                <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1.5">
-                    Collector
-                  </p>
-                  <p class="text-sm font-bold text-slate-900 truncate">
-                    {{ query.data.value.collectorName }}
-                  </p>
-                </div>
-              </div>
-
-              <div class="p-6 rounded-none bg-slate-50 border border-slate-100/50 text-center mt-10">
-                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">
-                  Verification Hash
-                </p>
-                <p class="text-[8px] font-mono text-slate-400 break-all leading-relaxed uppercase opacity-60">
-                  MFTL-COL-{{ query.data.value.receiptNumber }}-{{ Date.now().toString(16) }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Receipt Bottom Cutout Decoration -->
-        <div class="absolute -bottom-3 left-0 right-0 h-6 bg-[#060B16] rounded-t-[2rem] z-10" />
+        <div>
+          <p class="text-sm font-black text-emerald-800 uppercase tracking-tight">Collection Recorded Successfully</p>
+          <p class="text-xs text-emerald-600 font-medium mt-0.5">A digital receipt has been generated for this contribution.</p>
+        </div>
+        <div class="ml-auto">
+          <span
+            class="text-xs font-black uppercase tracking-widest px-3 py-1.5 border"
+            :class="statusClass"
+          >
+            {{ query.data.value.status }}
+          </span>
+        </div>
       </div>
 
-      <div class="space-y-4 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
-        <AppButton 
-          variant="primary" 
-          class="w-full !rounded-none !py-6 text-lg bg-white text-slate-950 hover:bg-slate-100 shadow-[0_20px_40px_rgba(255,255,255,0.05)]" 
-          @click="router.push('/collector/contributions/new')"
+      <!-- Receipt Card -->
+      <div class="bg-white border border-slate-200 shadow-sm">
+        <!-- Amount Header -->
+        <div class="bg-slate-900 text-white p-8 flex items-end justify-between">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Total Contribution</p>
+            <p class="text-5xl font-black tracking-tighter">{{ query.data.value.amount }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Receipt No.</p>
+            <p class="text-sm font-black text-white tracking-tight">{{ query.data.value.receiptNumber }}</p>
+          </div>
+        </div>
+
+        <!-- Receipt Details Grid -->
+        <div class="divide-y divide-slate-100">
+          <div class="grid grid-cols-2 divide-x divide-slate-100">
+            <div class="p-6">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Donor</p>
+              <p class="text-sm font-black text-slate-900">
+                {{ query.data.value.isAnonymous ? 'Anonymous' : query.data.value.contributorName }}
+              </p>
+            </div>
+            <div class="p-6">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Collector</p>
+              <p class="text-sm font-black text-slate-900">{{ query.data.value.collectorName || '—' }}</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 divide-x divide-slate-100">
+            <div class="p-6">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Event</p>
+              <p class="text-sm font-black text-slate-900">{{ query.data.value.eventTitle }}</p>
+            </div>
+            <div class="p-6">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Fund</p>
+              <p class="text-sm font-black text-slate-900">{{ query.data.value.recipientFundName || '—' }}</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 divide-x divide-slate-100">
+            <div class="p-6">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Payment Method</p>
+              <p class="text-sm font-black text-slate-900">{{ query.data.value.paymentMethod }}</p>
+            </div>
+            <div class="p-6">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Date Issued</p>
+              <p class="text-sm font-black text-slate-900">{{ query.data.value.issuedAt.split(',')[0] }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verification Hash -->
+        <div class="p-5 bg-slate-50 border-t border-slate-100">
+          <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Verification Reference</p>
+          <p class="text-xs font-mono text-slate-400 break-all">
+            MFTL-COL-{{ query.data.value.receiptNumber }}-{{ verificationSuffix }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="grid sm:grid-cols-3 gap-4">
+        <AppButton
+          variant="outline"
+          class="w-full"
+          :disabled="isResending"
+          :loading="isResending"
+          @click="handleResend"
         >
-          <Plus class="w-5 h-5 mr-2" /> Record Another Gift
+          <Send class="w-4 h-4 mr-2" />
+          Resend Receipt
         </AppButton>
-        
-        <div class="grid grid-cols-2 gap-4">
-          <AppButton 
-            variant="ghost" 
-            class="bg-white/5 !rounded-none !py-4 hover:bg-white/10"
-            @click="shareReceipt"
-          >
-            <Share2 class="w-5 h-5 mr-2 text-cyan-400" /> <span class="text-sm font-bold">Share</span>
-          </AppButton>
-          <AppButton 
-            variant="ghost" 
-            class="bg-white/5 !rounded-none !py-4 hover:bg-white/10"
-            @click="router.push('/collector')"
-          >
-            <LayoutGrid class="w-5 h-5 mr-2 text-violet-400" /> <span class="text-sm font-bold">Done</span>
-          </AppButton>
-        </div>
+        <AppButton variant="outline" class="w-full" @click="handleShare">
+          <Share2 class="w-4 h-4 mr-2" />
+          Share
+        </AppButton>
+        <AppButton variant="primary" class="w-full" @click="$router.push('/collector/contributions/new')">
+          <Plus class="w-4 h-4 mr-2" />
+          Record Another
+        </AppButton>
       </div>
+
+      <!-- Resend feedback -->
+      <p v-if="resendMessage" class="text-center text-sm font-bold" :class="resendSuccess ? 'text-emerald-600' : 'text-red-600'">
+        {{ resendMessage }}
+      </p>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useReceipt } from '@/modules/receipts/composables/useReceipts'
+import { receiptsService } from '@/modules/receipts/services/receiptsService'
+import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import { 
-  CheckCircle2, 
-  Share2, 
-  Plus, 
-  LayoutGrid 
+import {
+  CheckCircle2,
+  Share2,
+  Plus,
+  Send,
+  ArrowLeft,
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -168,15 +158,48 @@ const router = useRouter()
 const receiptId = computed(() => String(route.params.id ?? ''))
 const query = useReceipt(receiptId.value)
 
-function shareReceipt() {
+const isResending = ref(false)
+const resendMessage = ref('')
+const resendSuccess = ref(false)
+
+const verificationSuffix = computed(() => Date.now().toString(16).toUpperCase())
+
+const statusClass = computed(() => {
+  const s = (query.data.value?.status ?? '').toLowerCase()
+  if (s === 'issued') return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+  if (s === 'voided') return 'bg-red-50 text-red-700 border-red-200'
+  return 'bg-slate-100 text-slate-700 border-slate-200'
+})
+
+async function handleResend() {
+  isResending.value = true
+  resendMessage.value = ''
+  try {
+    await receiptsService.resend(receiptId.value)
+    resendSuccess.value = true
+    resendMessage.value = 'Receipt resent successfully.'
+  } catch (e: any) {
+    resendSuccess.value = false
+    resendMessage.value = e?.response?.data?.message ?? 'Failed to resend receipt. Please try again.'
+  } finally {
+    isResending.value = false
+  }
+}
+
+function handleShare() {
   if (navigator.share) {
     navigator.share({
       title: 'MFTL Contribution Receipt',
-      text: `Receipt for contribution: ${query.data.value?.receiptNumber}`,
+      text: `Receipt #${query.data.value?.receiptNumber}`,
       url: window.location.href,
-    }).catch(console.error)
+    }).catch(() => {/* user cancelled */})
   } else {
-    alert('Sharing is not supported on this browser. Copy the URL to share.')
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        resendSuccess.value = true
+        resendMessage.value = 'Receipt link copied to clipboard.'
+      })
+      .catch(() => {/* ignore */})
   }
 }
 </script>

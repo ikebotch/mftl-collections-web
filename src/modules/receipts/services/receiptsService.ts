@@ -11,3 +11,13 @@ export async function getReceiptById(id: string): Promise<ReceiptDetail> {
   const response = await httpClient.get<ReceiptDto>(`/receipts/${id}`)
   return mapReceiptDetail(response.data)
 }
+
+export async function resendReceipt(id: string): Promise<void> {
+  await httpClient.post(`/receipts/${id}/resend`)
+}
+
+export const receiptsService = {
+  list: listReceipts,
+  getById: getReceiptById,
+  resend: resendReceipt,
+}
