@@ -8,36 +8,40 @@
       class="premium-switcher-btn"
       :class="{ 
         'is-open': isOpen,
-        'is-disabled': !canOpenSwitcher && !isPlatformAdmin
+        'is-disabled': !canOpenSwitcher && !isPlatformAdmin,
+        'is-collapsed': isCollapsed
       }"
       @click="handleToggle"
     >
       <div class="icon-container">
         <div class="icon-glow" />
-        <Building2
-          v-if="!branchStore.selectedBranchId"
-          class="icon"
-        />
-        <MapPin
-          v-else
-          class="icon"
-        />
+        <template v-if="!isCollapsed">
+          <ShieldCheck
+            v-if="!branchStore.selectedBranchId"
+            class="icon"
+          />
+          <MapPin
+            v-else
+            class="icon"
+          />
+        </template>
+        <Building2 v-else class="icon" />
       </div>
       
-      <div class="label-area">
+      <div v-if="!isCollapsed" class="label-area animate-in fade-in slide-in-from-left-2 duration-500">
         <h1 class="hub-title">
-          {{ displayTitle }}
+          {{ config.appName }}
         </h1>
         <div class="hub-badge">
           <span class="badge-dot" />
           <p class="badge-text">
-            {{ displaySubtitle }}
+            {{ displayTitle }} &bull; {{ displaySubtitle }}
           </p>
         </div>
       </div>
       
       <div
-        v-if="canOpenSwitcher || isPlatformAdmin"
+        v-if="!isCollapsed && (canOpenSwitcher || isPlatformAdmin)"
         class="chevron-wrapper"
       >
         <ChevronDown class="chevron" />
@@ -243,13 +247,21 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
-import { Building2, MapPin, ChevronDown, Search, ArrowLeft, Check, Globe, Layers } from 'lucide-vue-next'
+import { Building2, MapPin, ChevronDown, Search, ArrowLeft, Check, Globe, Layers, ShieldCheck } from 'lucide-vue-next'
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { tenantsService } from '../services/tenantsService'
 import { branchesService } from '../services/branchesService'
 import { useTenantStore } from '../store/tenantStore'
 import { useBranchStore } from '@/modules/branches/store/branchStore'
 import { useMe } from '@/modules/users/composables/useUsers'
+import { appConfig } from '@/core/config/appConfig'
+
+const props = defineProps<{
+  isCollapsed?: boolean
+}>()
+
+// Expose appConfig to the template
+const config = appConfig
 
 const isOpen = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
@@ -427,6 +439,11 @@ function selectMainHub() {
 
 .premium-switcher-btn:hover {
   background: rgba(255, 255, 255, 0.03);
+}
+
+.premium-switcher-btn.is-collapsed {
+  padding: 0;
+  justify-content: center;
 }
 
 .premium-switcher-btn.is-disabled {

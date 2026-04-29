@@ -153,7 +153,8 @@ const channelOptions = [
 
 const variables = [
   'donorName', 'receiptNumber', 'amount', 'currency', 'eventName', 
-  'collectorName', 'role', 'inviteLink', 'settlementId', 'receiptLink'
+  'collectorName', 'role', 'inviteLink', 'settlementId', 'receiptLink',
+  'tenantName', 'fundName'
 ]
 
 watch(() => props.isOpen, (open) => {

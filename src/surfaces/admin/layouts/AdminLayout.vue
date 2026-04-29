@@ -2,63 +2,106 @@
   <div class="min-h-screen bg-[#f8fafc] font-sans text-slate-900 selection:bg-violet-100 selection:text-violet-900">
     <AppToast />
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-[#060b13] text-white transition-all duration-300 transform lg:translate-x-0 -translate-x-full border-r border-navy-900">
-      <div class="flex flex-col h-full">
-        <!-- Logo Section -->
-        <div class="px-8 py-10 LogoSection">
-          <TenantSwitcher />
-          <p class="text-[10px] text-slate-400 mt-4 leading-relaxed font-medium uppercase tracking-[0.2em]">
-            Collect. Impact. Transform.
-          </p>
+    <aside 
+      class="fixed inset-y-0 left-0 z-50 bg-[#060b13] text-white transition-all duration-500 ease-in-out transform lg:translate-x-0 -translate-x-full border-r border-navy-900 flex flex-col"
+      :class="[isSidebarCollapsed ? 'w-20' : 'w-72']"
+    >
+      <!-- Logo Section -->
+      <!-- Brand & Context Switcher -->
+      <div 
+        class="px-8 py-10 LogoSection transition-all duration-500 relative z-[60]"
+        :class="[isSidebarCollapsed ? 'items-center px-4' : 'px-8']"
+      >
+        <TenantSwitcher :is-collapsed="isSidebarCollapsed" />
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 px-4 space-y-10 mt-2 overflow-y-auto custom-scrollbar overflow-x-hidden">
+        <div
+          v-for="(group, index) in navGroups"
+          :key="index"
+          class="space-y-4"
+        >
+          <h3
+            v-if="group.title && !isSidebarCollapsed"
+            class="px-4 text-[9px] uppercase tracking-[0.25em] text-slate-500 font-black mb-4 animate-in fade-in duration-500"
+          >
+            {{ group.title }}
+          </h3>
+          <div v-else-if="isSidebarCollapsed" class="h-px bg-white/5 mx-2" />
+
+          <div class="space-y-1">
+            <router-link
+              v-for="item in group.items"
+              :key="item.to"
+              :to="item.to"
+              class="group flex items-center px-4 py-3 rounded-none text-sm font-semibold transition-all duration-300 hover:bg-white/5"
+              :class="[isSidebarCollapsed ? 'justify-center' : 'justify-between']"
+              active-class="!bg-violet-600/10 text-white border-l-4 border-violet-500"
+            >
+              <div class="flex items-center gap-3">
+                <component
+                  :is="item.icon"
+                  class="w-4.5 h-4.5 transition-colors duration-300 shrink-0"
+                  :class="[$route.path === item.to ? 'text-violet-400' : 'text-slate-500 group-hover:text-slate-300']"
+                />
+                <span 
+                  v-if="!isSidebarCollapsed"
+                  class="tracking-tight transition-all duration-500 whitespace-nowrap animate-in fade-in slide-in-from-left-2"
+                  :class="[$route.path === item.to ? 'text-white' : 'text-slate-400 group-hover:text-slate-300']"
+                >{{ item.label }}</span>
+              </div>
+              <div 
+                v-if="item.badge && !isSidebarCollapsed" 
+                class="px-2 py-0.5 rounded-none bg-violet-500/20 text-violet-400 text-[9px] font-black uppercase tracking-widest border border-violet-500/30 animate-in zoom-in duration-500"
+              >
+                {{ item.badge }}
+              </div>
+            </router-link>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div 
+        class="p-6 border-t border-white/5 bg-black/20 mt-auto"
+        :class="[isSidebarCollapsed ? 'px-4 flex flex-col items-center' : 'px-8']"
+      >
+        <div v-if="!isSidebarCollapsed" class="mb-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Connected Server</p>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span class="text-[10px] font-bold text-slate-300 tracking-tight">Mainframe v2.4.0</span>
+          </div>
         </div>
 
-
-        <!-- Navigation -->
-        <nav class="flex-1 px-4 space-y-10 mt-2 overflow-y-auto custom-scrollbar">
-          <div
-            v-for="(group, index) in navGroups"
-            :key="index"
-          >
-            <h3
-              v-if="group.title"
-              class="px-4 text-[9px] uppercase tracking-[0.25em] text-slate-500 font-black mb-4"
-            >
-              {{ group.title }}
-            </h3>
-            <div class="space-y-1">
-              <router-link
-                v-for="item in group.items"
-                :key="item.to"
-                :to="item.to"
-                class="group flex items-center justify-between px-4 py-3 rounded-none text-sm font-semibold transition-all duration-300 hover:bg-white/5"
-                active-class="!bg-violet-600/10 text-white border-l-4 border-violet-500"
-              >
-                <div class="flex items-center gap-3">
-                  <component
-                    :is="item.icon"
-                    class="w-4.5 h-4.5 transition-colors duration-300"
-                    :class="[$route.path === item.to ? 'text-violet-400' : 'text-slate-500 group-hover:text-slate-300']"
-                  />
-                  <span 
-                    class="tracking-tight transition-colors duration-300"
-                    :class="[$route.path === item.to ? 'text-white' : 'text-slate-400 group-hover:text-slate-300']"
-                  >{{ item.label }}</span>
-                </div>
-                <div 
-                  v-if="item.badge" 
-                  class="px-2 py-0.5 rounded-none bg-violet-500/20 text-violet-400 text-[9px] font-black uppercase tracking-widest border border-violet-500/30"
-                >
-                  {{ item.badge }}
-                </div>
-              </router-link>
-            </div>
+        <div class="flex" :class="[isSidebarCollapsed ? 'flex-col gap-4' : 'items-center justify-between']">
+          <div class="flex gap-4">
+            <a href="#" class="text-slate-500 hover:text-white transition-colors group">
+              <Search class="w-4 h-4" />
+            </a>
+            <a href="#" class="text-slate-500 hover:text-white transition-colors">
+              <BarChart3 class="w-4 h-4" />
+            </a>
           </div>
-        </nav>
+          <button 
+            class="text-slate-500 hover:text-white transition-all duration-300"
+            @click="isSidebarCollapsed = !isSidebarCollapsed"
+          >
+            <ChevronLeft 
+              class="w-5 h-5 transition-transform duration-500"
+              :class="{ 'rotate-180': isSidebarCollapsed }"
+            />
+          </button>
+        </div>
       </div>
     </aside>
 
     <!-- Main Content -->
-    <div class="lg:pl-72 min-h-screen flex flex-col">
+    <div 
+      class="min-h-screen flex flex-col transition-all duration-500 ease-in-out"
+      :class="[isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72']"
+    >
       <!-- Topbar -->
       <header class="h-20 bg-white/90 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-[60] px-10 flex items-center justify-between">
         <!-- Search bar -->
@@ -271,6 +314,7 @@ import {
   Bell, 
   Search, 
   ChevronDown, 
+  ChevronLeft,
   LogOut,
   ShieldCheck,
   UserCheck,
@@ -287,6 +331,7 @@ const usersStore = useUsersStore()
 const isUserDropdownOpen = ref(false)
 const isLanguageDropdownOpen = ref(false)
 const isInitializing = ref(true)
+const isSidebarCollapsed = ref(false)
 
 const currentUser = computed(() => {
   if (usersStore.me) {
@@ -388,6 +433,7 @@ const navGroups = computed(() => {
         { label: copy.value.admin.sidebar.nav.users, to: '/admin/users', icon: UserCheck, permission: 'users.view' },
         { label: copy.value.admin.sidebar.nav.organization, to: '/admin/organization', icon: Building2, permission: 'organisations.view' },
         { label: copy.value.admin.sidebar.nav.settings, to: '/admin/settings', icon: Settings, permission: 'settings.view' },
+        { label: 'Notification Templates', to: '/admin/settings/notification-templates', icon: Bell, badge: 'NEW', permission: 'notification-templates.view' },
       ]
     },
   ]
