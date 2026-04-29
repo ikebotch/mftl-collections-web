@@ -6,8 +6,11 @@
     <!-- Main Selector Button (Modernized) -->
     <button 
       class="premium-switcher-btn"
-      :class="{ 'is-open': isOpen }"
-      @click="isOpen = !isOpen"
+      :class="{ 
+        'is-open': isOpen,
+        'is-disabled': !canOpenSwitcher && !isPlatformAdmin
+      }"
+      @click="handleToggle"
     >
       <div class="icon-container">
         <div class="icon-glow" />
@@ -33,7 +36,7 @@
         </div>
       </div>
       
-      <div class="chevron-wrapper">
+      <div v-if="canOpenSwitcher || isPlatformAdmin" class="chevron-wrapper">
         <ChevronDown class="chevron" />
       </div>
     </button>
@@ -288,7 +291,19 @@ const { data: tenants, isPending: isPendingTenants } = useQuery({
   queryFn: () => tenantsService.list()
 })
 
-const isSingleTenant = computed(() => (tenants.value?.length ?? 0) <= 1)
+const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
+const isSingleBranch = computed(() => (branches.value?.length ?? 0) === 1)
+const canOpenSwitcher = computed(() => {
+  if (isPlatformAdmin.value) return true
+  if (!isSingleTenant.value) return true
+  if (!isSingleBranch.value) return true
+  return false
+})
+
+function handleToggle() {
+  if (!canOpenSwitcher.value && !isPlatformAdmin.value) return
+  isOpen.value = !isOpen.value
+}
 
 // Auto-switch to branches if single tenant
 watch([tenants, isPlatformAdmin], ([newTenants, admin]) => {
@@ -393,6 +408,15 @@ function selectMainHub() {
 
 .premium-switcher-btn:hover {
   background: rgba(255, 255, 255, 0.03);
+}
+
+.premium-switcher-btn.is-disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.premium-switcher-btn.is-disabled:hover {
+  background: transparent;
 }
 
 .premium-switcher-btn.is-open {
