@@ -493,7 +493,7 @@ async function onSubmit() {
     const result = await contributionsService.recordCash({
       eventId: form.eventId,
       recipientFundId: form.recipientFundId,
-      amountValue: Number(form.amount),
+      amount: Number(form.amount),
       currency: form.currency,
       contributorName: form.anonymous ? 'Anonymous' : form.contributorName,
       contributorPhone: form.contributorPhone,
