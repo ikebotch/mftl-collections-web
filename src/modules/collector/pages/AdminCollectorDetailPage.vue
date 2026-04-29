@@ -587,8 +587,8 @@ const overviewSections = [
   { id: 'section-assignments', title: 'Assignments', subtitle: 'Step 02' },
   { id: 'section-metrics', title: 'Intelligence', subtitle: 'Step 03' },
 ]
-
 const isEditing = ref(route.query.edit === 'true')
+const isEditingCampaigns = ref(false)
 const form = ref<any>(null)
 const initialEventIds = ref<string[]>([])
 const initialFundIds = ref<string[]>([])
@@ -633,6 +633,7 @@ function startEditing() {
 
 function cancelEditing() {
   isEditing.value = false
+  isEditingCampaigns.value = false
   resetForm()
   router.replace({ query: { ...route.query, edit: undefined } })
 }
@@ -670,75 +671,9 @@ function toggleFundAssignment(id: string) {
   }
 }
 
-function getFundsForEvent(eventId: string) {
-  return allFunds.value.filter(f => f.eventId === eventId)
-}
-
-const groupedAssignedItems = computed(() => {
-  if (!form.value) return []
-  const groups: any[] = []
-
-  // 1. Group Events
-  form.value.eventIds.forEach((id: string) => {
-    const event = availableEvents.value.find(e => e.id === id)
-    if (event) {
-      groups.push({
-        eventId: event.id,
-        event: {
-          type: 'event',
-          id: event.id,
-          uniqueKey: `event-${event.id}`,
-          title: event.title,
-          subtitle: formatDate(event.eventDate),
-          badge: 'Full Campaign',
-          imageUrl: event.displayImageUrl
-        },
-        funds: [] // No individual funds shown if event is fully assigned
-      })
-    }
-  })
-
-  // 2. Group Funds (only if parent event is not assigned)
-  form.value.fundIds.forEach((id: string) => {
-    const fund = allFunds.value.find(f => f.id === id)
-    if (fund && !form.value.eventIds.includes(fund.eventId)) {
-      let group = groups.find(g => g.eventId === fund.eventId)
-      if (!group) {
-        const event = availableEvents.value.find(e => e.id === fund.eventId)
-        group = {
-          eventId: fund.eventId,
-          event: {
-            type: 'event',
-            id: fund.eventId,
-            uniqueKey: `event-header-${fund.eventId}`,
-            title: event?.title || 'Unknown Campaign',
-            subtitle: event ? formatDate(event.eventDate) : '',
-            badge: 'Partial Scope',
-            imageUrl: event?.displayImageUrl,
-            isHeader: true // This will style it as a header but not actionable
-          },
-          funds: []
-        }
-        groups.push(group)
-      }
-      group.funds.push({
-        type: 'fund',
-        id: fund.id,
-        uniqueKey: `fund-${fund.id}`,
-        title: fund.name,
-        subtitle: `Authorized Scope`,
-        badge: 'Fund',
-        isSubItem: true
-      })
-    }
-  })
-
-  return groups
-})
-
 const groupedSearchResults = computed(() => {
   if (!searchQuery.value.trim() || !form.value) return []
-  const query = searchQuery.value.toLowerCase()
+  const queryText = searchQuery.value.toLowerCase()
   const groups: any[] = []
 
   // Iterate over all events and see if they OR their funds match
@@ -746,10 +681,10 @@ const groupedSearchResults = computed(() => {
     // Skip if event is already fully assigned
     if (form.value.eventIds.includes(e.id)) return
 
-    const eventMatches = e.title.toLowerCase().includes(query)
+    const eventMatches = e.title.toLowerCase().includes(queryText)
     const matchingFunds = allFunds.value.filter(f => 
       f.eventId === e.id && 
-      f.name.toLowerCase().includes(query) && 
+      f.name.toLowerCase().includes(queryText) && 
       !form.value.fundIds.includes(f.id)
     )
 
@@ -787,23 +722,6 @@ const groupedSearchResults = computed(() => {
   return groups.slice(0, 10)
 })
 
-function handleSearchAction(item: any) {
-  if (item.type === 'event') {
-    toggleEventAssignment(item.id)
-  } else {
-    toggleFundAssignment(item.id)
-  }
-  searchQuery.value = ''
-}
-
-function handleRemoveAction(item: any) {
-  if (item.type === 'event') {
-    toggleEventAssignment(item.id)
-  } else {
-    toggleFundAssignment(item.id)
-  }
-}
-
 async function handleSave() {
   try {
     await updateMutation.mutateAsync({
@@ -811,6 +729,7 @@ async function handleSave() {
       payload: form.value
     })
     isEditing.value = false
+    isEditingCampaigns.value = false
     toast.success('Staff profile synchronized successfully')
     query.refetch()
     router.replace({ query: { ...route.query, edit: undefined } })
@@ -823,10 +742,6 @@ const collectorEvents = computed(() => {
   if (!collector.value) return []
   return availableEvents.value.filter(e => collector.value!.eventIds.includes(e.id))
 })
-
-function exportPerformance() {
-  toast.info('Synthesizing performance log...')
-}
 
 function handleSuspend() {
   toast.info('Suspending staff access...')

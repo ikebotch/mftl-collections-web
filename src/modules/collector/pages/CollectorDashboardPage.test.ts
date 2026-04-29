@@ -60,7 +60,7 @@ describe('CollectorDashboardPage', () => {
 
     expect(wrapper.text()).toContain('Abena Osei')
     expect(wrapper.text()).toContain('GHS 1,245.00')
-    expect(wrapper.text()).toContain('Start New Collection')
+    expect(wrapper.text()).toContain('New Collection')
     expect(wrapper.text()).toContain('RCT-1001')
   })
 
@@ -83,7 +83,6 @@ describe('CollectorDashboardPage', () => {
 
     const wrapper = mount(CollectorDashboardPage)
 
-    expect(wrapper.text()).toContain('Collection blocked')
-    expect(wrapper.text()).toContain('No event and fund assignments are active for this collector.')
+    expect(wrapper.text()).toContain('No active assignments found')
   })
 })

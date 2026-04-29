@@ -14,6 +14,13 @@ vi.mock('../composables/useEvents', () => ({
   }),
 }))
 
+vi.mock('@/modules/users/composables/useUsers', () => ({
+  useMe: () => ({
+    data: { value: { isPlatformAdmin: false } },
+    isLoading: { value: false }
+  })
+}))
+
 describe('EventCreatePage', () => {
   it('renders the create event form', () => {
     const router = createRouter({

@@ -1,0 +1,179 @@
+
+> frontend@0.0.0 lint
+> eslint . --fix
+
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/auth/pages/AuthCallbackPage.test.ts
+   58:11  error  'wrapper' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   88:11  error  'wrapper' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  117:11  error  'wrapper' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/auth/pages/AuthCallbackPage.vue
+  11:7  error  'tenantStore' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/collector/composables/useCollectors.ts
+  1:10  error  'computed' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/collector/pages/AdminCollectorDetailPage.vue
+  532:3   error  'Plus' is defined but never used              @typescript-eslint/no-unused-vars
+  533:3   error  'History' is defined but never used           @typescript-eslint/no-unused-vars
+  534:3   error  'Users' is defined but never used             @typescript-eslint/no-unused-vars
+  535:3   error  'Settings' is defined but never used          @typescript-eslint/no-unused-vars
+  539:3   error  'Check' is defined but never used             @typescript-eslint/no-unused-vars
+  542:3   error  'Target' is defined but never used            @typescript-eslint/no-unused-vars
+  640:10  error  'isEventAssigned' is defined but never used   @typescript-eslint/no-unused-vars
+  644:10  error  'isFundAssigned' is defined but never used    @typescript-eslint/no-unused-vars
+  673:10  error  'getFundsForEvent' is defined but never used  @typescript-eslint/no-unused-vars
+  817:12  error  'err' is defined but never used               @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/collector/pages/AdminCollectorsPage.vue
+  273:8   error  'AppSelect' is defined but never used          @typescript-eslint/no-unused-vars
+  275:8   error  'RowActions' is defined but never used         @typescript-eslint/no-unused-vars
+  276:8   error  'MultiSelectFilter' is defined but never used  @typescript-eslint/no-unused-vars
+  278:26  error  'Users' is defined but never used              @typescript-eslint/no-unused-vars
+  278:33  error  'TrendingUp' is defined but never used         @typescript-eslint/no-unused-vars
+  278:45  error  'Clock' is defined but never used              @typescript-eslint/no-unused-vars
+  278:52  error  'Trophy' is defined but never used             @typescript-eslint/no-unused-vars
+  278:65  error  'Edit3' is defined but never used              @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/collector/pages/CollectorContributionCreatePage.vue
+  399:3  error  'Plus' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/collector/pages/CollectorCreatePage.vue
+  261:8  error  'AppSwitch' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/contributions/pages/ContributionsPage.vue
+  461:12  error  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/dashboard/pages/AdminDashboardPage.vue
+  348:3  error  'Wallet' is defined but never used       @typescript-eslint/no-unused-vars
+  349:3  error  'Users' is defined but never used        @typescript-eslint/no-unused-vars
+  350:3  error  'ShieldCheck' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/events/components/EventExpandedDetails.vue
+  171:18  error  'Users' is defined but never used     @typescript-eslint/no-unused-vars
+  171:25  error  'UserPlus' is defined but never used  @typescript-eslint/no-unused-vars
+  171:35  error  'Plus' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/events/pages/EventAnalyticsPage.vue
+  331:3  error  'TrendingUp' is defined but never used   @typescript-eslint/no-unused-vars
+  332:3  error  'Users' is defined but never used        @typescript-eslint/no-unused-vars
+  334:3  error  'Globe' is defined but never used        @typescript-eslint/no-unused-vars
+  335:3  error  'ChevronDown' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/events/pages/EventListPage.vue
+  240:8  error  'AppSelect' is defined but never used          @typescript-eslint/no-unused-vars
+  242:8  error  'MultiSelectFilter' is defined but never used  @typescript-eslint/no-unused-vars
+  247:3  error  'Calendar' is defined but never used           @typescript-eslint/no-unused-vars
+  249:3  error  'Eye' is defined but never used                @typescript-eslint/no-unused-vars
+  251:3  error  'BarChart2' is defined but never used          @typescript-eslint/no-unused-vars
+  252:3  error  'Wallet' is defined but never used             @typescript-eslint/no-unused-vars
+  253:3  error  'Target' is defined but never used             @typescript-eslint/no-unused-vars
+  254:3  error  'Users' is defined but never used              @typescript-eslint/no-unused-vars
+  256:3  error  'Coins' is defined but never used              @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/reports/pages/ReportsPage.vue
+  129:8  error  'AdminFilterBar' is defined but never used          @typescript-eslint/no-unused-vars
+  138:3  error  'Calendar' is defined but never used                @typescript-eslint/no-unused-vars
+  139:3  error  'PieChart' is defined but never used                @typescript-eslint/no-unused-vars
+  144:7  error  'searchQuery' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  145:7  error  'timeRange' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  147:7  error  'reportColumns' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/storefront/components/RecipientFundOptionCard.vue
+  47:8  error  'AppBadge' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/storefront/pages/RecipientSelectionPage.vue
+  97:8  error  'AppCard' is defined but never used     @typescript-eslint/no-unused-vars
+  98:8  error  'AppInput' is defined but never used    @typescript-eslint/no-unused-vars
+  99:8  error  'PageHeader' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/storefront/pages/StorefrontContributionPage.vue
+  340:23  error  'MapPin' is defined but never used                     @typescript-eslint/no-unused-vars
+  340:31  error  'Calendar' is defined but never used                   @typescript-eslint/no-unused-vars
+  340:48  error  'Eye' is defined but never used                        @typescript-eslint/no-unused-vars
+  340:53  error  'Activity' is defined but never used                   @typescript-eslint/no-unused-vars
+  358:7   error  'selectedFundName' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/storefront/pages/StorefrontLandingPage.vue
+  217:7  error  'eventQuery' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/components/BranchEditModal.vue
+  118:12  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/composables/useBranches.ts
+  4:15  error  'BranchDto' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/pages/BranchDetailPage.vue
+  292:8   error  'ErrorState' is defined but never used       @typescript-eslint/no-unused-vars
+  294:17  error  'Building2' is defined but never used        @typescript-eslint/no-unused-vars
+  294:28  error  'Settings' is defined but never used         @typescript-eslint/no-unused-vars
+  294:55  error  'LayoutGrid' is defined but never used       @typescript-eslint/no-unused-vars
+  294:67  error  'Trash2' is defined but never used           @typescript-eslint/no-unused-vars
+  294:75  error  'Calendar' is defined but never used         @typescript-eslint/no-unused-vars
+  294:85  error  'Activity' is defined but never used         @typescript-eslint/no-unused-vars
+  297:7   error  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  351:12  error  'error' is defined but never used            @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/pages/BranchListPage.vue
+   88:10  error  'ref' is defined but never used    @typescript-eslint/no-unused-vars
+  125:14  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/pages/OrganizationCreatePage.vue
+  256:12  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/pages/OrganizationDetailPage.vue
+  627:8   error  'DetailSummaryCard' is defined but never used  @typescript-eslint/no-unused-vars
+  635:25  error  'CopyIcon' is defined but never used           @typescript-eslint/no-unused-vars
+  635:75  error  'Settings2' is defined but never used          @typescript-eslint/no-unused-vars
+  635:86  error  'Globe' is defined but never used              @typescript-eslint/no-unused-vars
+  635:93  error  'Network' is defined but never used            @typescript-eslint/no-unused-vars
+  709:10  error  'copyTenantId' is defined but never used       @typescript-eslint/no-unused-vars
+  723:12  error  'error' is defined but never used              @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/tenants/services/tenantSettingsService.ts
+  1:41  error  'tenantId' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/users/components/AssignScopeModal.vue
+  184:24  error  'Building2' is defined but never used  @typescript-eslint/no-unused-vars
+  184:35  error  'Calendar' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/users/components/InviteUserModal.vue
+  98:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/modules/users/pages/UserSettingsPage.vue
+  655:3  error  'Bell' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/shared/components/buttons/AppButton.stories.ts
+  1:1   error  Do not import renderer package "@storybook/vue3" directly. Use a framework package instead (e.g. @storybook/vue3-vite, @storybook/vue3-webpack5)  storybook/no-renderer-packages
+  3:16  error  'Download' is defined but never used                                                                                                              @typescript-eslint/no-unused-vars
+  3:26  error  'Mail' is defined but never used                                                                                                                  @typescript-eslint/no-unused-vars
+  4:10  error  'h' is defined but never used                                                                                                                     @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/shared/components/cards/MetricCard.stories.ts
+  1:1  error  Do not import renderer package "@storybook/vue3" directly. Use a framework package instead (e.g. @storybook/vue3-vite, @storybook/vue3-webpack5)  storybook/no-renderer-packages
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/shared/components/forms/ModernImageInput.vue
+  70:30  error    'Plus' is defined but never used      @typescript-eslint/no-unused-vars
+  75:3   warning  Prop "modelValue" should be optional  vue/no-required-prop-with-default
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/shared/components/layouts/ResourceListPage.stories.ts
+  1:1   error  Do not import renderer package "@storybook/vue3" directly. Use a framework package instead (e.g. @storybook/vue3-vite, @storybook/vue3-webpack5)  storybook/no-renderer-packages
+  3:10  error  'Calendar' is defined but never used                                                                                                              @typescript-eslint/no-unused-vars
+  4:10  error  'h' is defined but never used                                                                                                                     @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/shared/components/layouts/ResourceListPage.vue
+  99:7  error  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/shared/components/modals/AppModal.vue
+  79:7  error  'emit' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/shared/components/rows/AssignmentListRow.vue
+  96:8  error  'LucideIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/ikebotch/dev/mftl-collections/frontend/src/stories/Button.vue
+  30:5  warning  Prop 'size' requires default value to be set             vue/require-default-prop
+  34:5  warning  Prop 'backgroundColor' requires default value to be set  vue/require-default-prop
+
+✖ 102 problems (99 errors, 3 warnings)
+
