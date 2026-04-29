@@ -213,6 +213,24 @@
         </router-view>
       </main>
 
+      <!-- Loading Overlay -->
+      <Transition name="fade">
+        <div
+          v-if="isInitializing"
+          class="fixed inset-0 z-[100] flex items-center justify-center bg-[#060b13] backdrop-blur-md"
+        >
+          <div class="text-center">
+            <div class="mx-auto mb-6 h-16 w-16 animate-spin rounded-none border-4 border-white/10 border-t-violet-500" />
+            <h1 class="text-2xl font-black text-white uppercase tracking-[0.2em] mb-4">
+              Preparing Workspace
+            </h1>
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest max-w-xs mx-auto leading-relaxed">
+              Your secure session is being prepared. We are synchronizing your workspace and permissions.
+            </p>
+          </div>
+        </div>
+      </Transition>
+
       <!-- Footer -->
       <footer class="py-8 px-12 flex items-center justify-between text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-t border-slate-100 bg-white/50">
         <div>&copy; 2026 {{ appName }} &bull; Operational Integrity Systems</div>
@@ -268,6 +286,7 @@ const { currentUser: auth0User } = useCurrentUser()
 const usersStore = useUsersStore()
 const isUserDropdownOpen = ref(false)
 const isLanguageDropdownOpen = ref(false)
+const isInitializing = ref(true)
 
 const currentUser = computed(() => {
   if (usersStore.me) {
@@ -299,8 +318,17 @@ function handleClickOutside(event: MouseEvent) {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('mousedown', handleClickOutside)
+  try {
+    console.log('AdminLayout: Initializing...')
+    await usersStore.fetchMe()
+    isInitializing.value = false
+    console.log('AdminLayout: Initialization complete.')
+  } catch (err) {
+    console.error('AdminLayout: Initialization failed:', err)
+    // We stay in initializing state on error to prevent broken UI
+  }
 })
 
 onUnmounted(() => {

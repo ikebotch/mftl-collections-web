@@ -14,6 +14,7 @@ export const auth0Plugin = authEnabled
       authorizationParams: {
         redirect_uri: appConfig.auth.callbackUrl,
         audience: appConfig.auth.audience || undefined,
+        scope: 'openid profile email offline_access',
       },
       cacheLocation: 'localstorage',
       useRefreshTokens: true,

@@ -19,6 +19,8 @@ export interface UserDetail extends UserRow {
   accessState: string
   scopeAssignments: ScopeAssignment[]
   auth0Roles: string[]
+  effectiveRoles: string[]
+  permissions: string[]
 }
 
 export interface ScopeAssignment {
