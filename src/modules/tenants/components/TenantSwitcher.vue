@@ -45,7 +45,7 @@
     >
       <div class="dropdown-inner">
         <!-- Modern Sliding Tab Switcher -->
-        <div class="sliding-tabs">
+        <div v-if="!isSingleTenant || isPlatformAdmin" class="sliding-tabs">
           <div 
             class="tab-indicator"
             :style="{ transform: `translateX(${activeView === 'tenants' ? '0' : '100%'})` }"
@@ -248,6 +248,14 @@ const branchStore = useBranchStore()
 const { data: me } = useMe()
 
 const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
+const isSingleTenant = computed(() => (tenants.value?.length ?? 0) <= 1)
+
+// Auto-switch to branches if single tenant
+watch([tenants, isPlatformAdmin], ([newTenants, admin]) => {
+  if (newTenants?.length === 1 && !admin) {
+    activeView.value = 'branches'
+  }
+}, { immediate: true })
 
 const displayTitle = computed(() => {
   if (branchStore.selectedBranchIds.includes('all')) return 'All Branches'
