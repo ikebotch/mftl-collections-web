@@ -40,12 +40,13 @@
       <!-- Hero Stats Section -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
-          label="Collections (Gross)"
+          label="TOTAL RAISED"
           :value="formattedTotals"
           icon="Wallet"
-          color="purple"
+          color="emerald"
           trend="+14.2%"
           trend-positive
+          is-collection-card
         />
         <MetricCard
           label="Unique Donors"
@@ -401,7 +402,7 @@ const eventPerformance = computed(() => {
 
 const formattedTotals = computed(() => {
   const totals = query.data.value?.totals ?? []
-  if (totals.length === 0) return 'GHS 0.00'
-  return totals.map(t => formatCurrency(t.amount, t.currency)).join(' • ')
+  if (totals.length === 0) return ['GHS 0.00']
+  return totals.map(t => formatCurrency(t.amount, t.currency))
 })
 </script>

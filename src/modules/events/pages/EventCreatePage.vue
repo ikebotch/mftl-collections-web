@@ -203,52 +203,81 @@
           </div>
         </AppCard>
 
-        <!-- Step 4: Payments -->
+        <!-- Step 4: Payments & Currency -->
         <AppCard 
           id="section-payments"
           class="!p-10 scroll-mt-10"
         >
-          <div class="mb-10">
-            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
-              Step 04
-            </h3>
-            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
-              Payments & Currency
-            </h2>
+          <div class="flex items-center justify-between mb-10">
+            <div>
+              <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
+                Step 04
+              </h3>
+              <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">
+                Payments & Currency
+              </h2>
+            </div>
+            <AppButton
+              size="sm"
+              variant="outline"
+              @click="addCurrencyConfig"
+            >
+              <Plus class="w-4 h-4 mr-2" /> Add Currency
+            </AppButton>
           </div>
 
-          <div class="grid md:grid-cols-2 gap-12">
-            <div class="space-y-8">
-              <AppSelect 
-                v-model="form.currency"
-                label="Primary Currency"
-                :options="[{ label: 'GHS - Ghana Cedi', value: 'GHS' }, { label: 'USD - US Dollar', value: 'USD' }, { label: 'GBP - British Pound', value: 'GBP' }]"
-              />
+          <div class="space-y-8">
+            <div 
+              v-for="(config, cIdx) in form.paymentConfigs" 
+              :key="cIdx"
+              class="p-8 border-2 border-slate-100 bg-white relative group"
+            >
+              <div class="flex items-start justify-between mb-8">
+                <div class="w-full max-w-xs">
+                  <AppSelect 
+                    v-model="config.currency"
+                    label="Currency"
+                    :options="currencyOptions"
+                    required
+                  />
+                </div>
+                <button 
+                  v-if="form.paymentConfigs.length > 1"
+                  class="p-2 text-slate-300 hover:text-red-500 transition-colors"
+                  @click="removeCurrencyConfig(cIdx)"
+                >
+                  <Trash2 class="w-5 h-5" />
+                </button>
+              </div>
+
+              <div class="grid md:grid-cols-3 gap-4">
+                <label
+                  v-for="method in paymentMethods"
+                  :key="method.id"
+                  class="flex items-center gap-4 p-5 border transition-all cursor-pointer"
+                  :class="config.methods.includes(method.id) ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-100 bg-slate-50/50 hover:border-slate-300'"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="config.methods.includes(method.id)"
+                    class="w-5 h-5 rounded-none border-slate-300 text-violet-600 focus:ring-violet-500"
+                    @change="toggleMethod(config, method.id)"
+                  >
+                  <div class="flex-1 text-left">
+                    <p class="text-sm font-bold leading-tight">{{ method.label }}</p>
+                    <p class="text-[9px] font-bold uppercase tracking-widest opacity-60 mt-1">{{ method.description }}</p>
+                  </div>
+                </label>
+              </div>
               
-              <div class="p-6 border border-slate-200 bg-slate-50 italic text-xs text-slate-500">
-                Notice: Extended payment configuration will be available in the campaign settings after creation.
+              <div v-if="config.methods.length === 0" class="mt-4 text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-2">
+                <AlertTriangle class="w-3 h-3" /> Select at least one payment method for this currency
               </div>
             </div>
-
-            <div class="space-y-4">
-              <label
-                v-for="method in paymentMethods"
-                :key="method.id"
-                class="flex items-center gap-4 p-5 border transition-all cursor-pointer"
-                :class="form.acceptedMethods.includes(method.id) ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white hover:border-slate-400'"
-              >
-                <input
-                  v-model="form.acceptedMethods"
-                  type="checkbox"
-                  :value="method.id"
-                  class="w-5 h-5 rounded-none border-slate-300 text-violet-600 focus:ring-violet-500"
-                >
-                <div class="flex-1 text-left">
-                  <p class="text-sm font-bold">{{ method.label }}</p>
-                  <p class="text-[10px] font-bold uppercase tracking-widest opacity-60">{{ method.description }}</p>
-                </div>
-              </label>
-            </div>
+          </div>
+          
+          <div class="mt-10 p-6 border border-slate-200 bg-slate-50 italic text-xs text-slate-500">
+            Notice: Collectors will only see payment methods associated with the selected currency in the mobile app.
           </div>
         </AppCard>
       </AdminWizardLayout>
@@ -343,6 +372,14 @@ const paymentMethods = [
   { id: 'card', label: 'Card / Online', description: 'Credit and Debit cards' },
 ]
 
+const currencyOptions = [
+  { label: 'GHS - Ghana Cedi', value: 'GHS' },
+  { label: 'USD - US Dollar', value: 'USD' },
+  { label: 'GBP - British Pound', value: 'GBP' },
+  { label: 'EUR - Euro', value: 'EUR' },
+  { label: 'NGN - Nigerian Naira', value: 'NGN' },
+]
+
 const form = reactive({
   title: '',
   slug: '',
@@ -350,19 +387,42 @@ const form = reactive({
   startDate: new Date().toISOString().split('T')[0],
   endDate: '',
   status: 'Draft',
-  currency: 'GHS',
   displayImageUrl: '',
   receiptLogoUrl: '',
   branchId: null as string | null,
-  acceptedMethods: ['cash', 'momo'],
   minContribution: 1,
   suggestedAmounts: '10, 20, 50, 100',
-  allowCash: true,
   autoReceipt: true,
   recipientFunds: [
     { name: 'General Fund', description: 'Default allocation for this event', targetAmount: 1000, isActive: true }
+  ],
+  paymentConfigs: [
+    { currency: 'GHS', methods: ['cash', 'momo'] }
   ]
 })
+
+function addCurrencyConfig() {
+  const existingCurrencies = form.paymentConfigs.map(c => c.currency)
+  const nextAvailable = currencyOptions.find(o => !existingCurrencies.includes(o.value))
+  
+  form.paymentConfigs.push({ 
+    currency: nextAvailable ? nextAvailable.value : 'USD', 
+    methods: ['cash'] 
+  })
+}
+
+function removeCurrencyConfig(index: number) {
+  form.paymentConfigs.splice(index, 1)
+}
+
+function toggleMethod(config: any, methodId: string) {
+  const idx = config.methods.indexOf(methodId)
+  if (idx > -1) {
+    config.methods.splice(idx, 1)
+  } else {
+    config.methods.push(methodId)
+  }
+}
 
 async function fetchBranches() {
   try {
@@ -403,6 +463,10 @@ async function submit() {
   isSubmitting.value = true
   
   try {
+    const metadata = JSON.stringify({
+      paymentConfigs: form.paymentConfigs
+    })
+
     const event = await createEventMutation.mutateAsync({
       title: form.title,
       description: form.description,
@@ -410,7 +474,8 @@ async function submit() {
       eventDate: form.startDate ? new Date(`${form.startDate}T00:00:00Z`).toISOString() : null,
       displayImageUrl: form.displayImageUrl,
       receiptLogoUrl: form.receiptLogoUrl,
-      branchId: form.branchId
+      branchId: form.branchId,
+      metadata: metadata
     })
     
     const validFunds = form.recipientFunds.filter(f => f.name.trim())
