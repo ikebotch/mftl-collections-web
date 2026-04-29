@@ -93,9 +93,7 @@
         <Info class="w-6 h-6" />
       </div>
       <div class="space-y-1">
-        <h4 class="text-[11px] font-black uppercase tracking-widest text-violet-900">
-          Important Note
-        </h4>
+        <h4 class="text-[11px] font-black uppercase tracking-widest text-violet-900">Important Note</h4>
         <p class="text-xs text-violet-700 leading-relaxed">
           Please ensure all cash drops are recorded immediately to maintain accurate terminal balances. 
           Unreconciled balances may delay your end-of-day settlement.

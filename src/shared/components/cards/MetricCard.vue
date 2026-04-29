@@ -37,10 +37,7 @@
               class="text-2xl font-black text-slate-900 font-display leading-tight tracking-tight flex items-center"
             >
               {{ val }}
-              <span
-                v-if="idx < value.length - 1"
-                class="ml-2 text-slate-200"
-              >/</span>
+              <span v-if="idx < value.length - 1" class="ml-2 text-slate-200">/</span>
               <span class="ml-1 text-slate-400 font-medium">•</span>
             </h3>
           </template>
@@ -49,10 +46,7 @@
             class="text-2xl font-black text-slate-900 font-display leading-tight tracking-tight"
           >
             {{ value }}
-            <span
-              v-if="isCollectionCard"
-              class="ml-1 text-slate-400 font-medium"
-            >•</span>
+            <span v-if="isCollectionCard" class="ml-1 text-slate-400 font-medium">•</span>
           </h3>
         </div>
       </div>

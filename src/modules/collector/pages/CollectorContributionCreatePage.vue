@@ -60,20 +60,12 @@
 
       <main class="animate-in fade-in slide-in-from-bottom-4 duration-500">
         <!-- Step 1: Event Selection -->
-        <section
-          v-if="currentStep === 1"
-          class="space-y-8"
-        >
+        <section v-if="currentStep === 1" class="space-y-8">
           <div class="text-center space-y-2">
-            <h2
-              class="text-2xl lg:text-4xl font-black uppercase italic"
-              :class="isDesktop ? 'text-slate-900' : 'text-white'"
-            >
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
               Select Target Event
             </h2>
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
-              Which campaign are you collecting for?
-            </p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Which campaign are you collecting for?</p>
           </div>
 
           <div class="grid gap-3">
@@ -91,10 +83,7 @@
                 <Calendar class="w-7 h-7" />
               </div>
               <div class="min-w-0 flex-1">
-                <h4
-                  class="text-xl font-black uppercase italic truncate"
-                  :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                >
+                <h4 class="text-xl font-black uppercase italic truncate" :class="isDesktop ? 'text-slate-900' : 'text-white'">
                   {{ event.title }}
                 </h4>
                 <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
@@ -107,20 +96,12 @@
         </section>
 
         <!-- Step 2: Fund Selection -->
-        <section
-          v-if="currentStep === 2"
-          class="space-y-8"
-        >
+        <section v-if="currentStep === 2" class="space-y-8">
           <div class="text-center space-y-2">
-            <h2
-              class="text-2xl lg:text-4xl font-black uppercase italic"
-              :class="isDesktop ? 'text-slate-900' : 'text-white'"
-            >
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
               Select Destination Fund
             </h2>
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
-              Direct the funds to a specific cause
-            </p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Direct the funds to a specific cause</p>
           </div>
 
           <div class="grid gap-3">
@@ -138,10 +119,7 @@
                 <Target class="w-7 h-7" />
               </div>
               <div class="min-w-0 flex-1">
-                <h4
-                  class="text-xl font-black uppercase italic truncate"
-                  :class="isDesktop ? 'text-slate-900' : 'text-white'"
-                >
+                <h4 class="text-xl font-black uppercase italic truncate" :class="isDesktop ? 'text-slate-900' : 'text-white'">
                   {{ fund.name }}
                 </h4>
                 <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 truncate">
@@ -154,20 +132,12 @@
         </section>
 
         <!-- Step 3: Contributor Info -->
-        <section
-          v-if="currentStep === 3"
-          class="space-y-10"
-        >
+        <section v-if="currentStep === 3" class="space-y-10">
           <div class="text-center space-y-2">
-            <h2
-              class="text-2xl lg:text-4xl font-black uppercase italic"
-              :class="isDesktop ? 'text-slate-900' : 'text-white'"
-            >
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
               Contributor Info
             </h2>
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
-              Capture details for internal records
-            </p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Capture details for internal records</p>
           </div>
 
           <div class="space-y-8">
@@ -199,29 +169,15 @@
                 : (isDesktop ? 'bg-white border-slate-200 text-slate-400 hover:border-violet-500' : 'bg-white/5 border-white/10')"
               @click="form.anonymous = !form.anonymous"
             >
-              <div
-                class="relative w-6 h-6 border flex items-center justify-center"
-                :class="form.anonymous ? 'border-violet-400' : 'border-slate-300'"
-              >
-                <Check
-                  v-if="form.anonymous"
-                  class="w-4 h-4 text-violet-400"
-                />
+              <div class="relative w-6 h-6 border flex items-center justify-center" :class="form.anonymous ? 'border-violet-400' : 'border-slate-300'">
+                <Check v-if="form.anonymous" class="w-4 h-4 text-violet-400" />
               </div>
               <div class="flex-1">
                 <span class="text-[10px] font-black uppercase tracking-widest block">Anonymous Donation</span>
-                <p class="text-[8px] font-bold uppercase tracking-tighter opacity-60">
-                  Hide name on public/admin platform displays
-                </p>
+                <p class="text-[8px] font-bold uppercase tracking-tighter opacity-60">Hide name on public/admin platform displays</p>
               </div>
-              <UserX
-                v-if="form.anonymous"
-                class="w-5 h-5 text-violet-400"
-              />
-              <UserCheck
-                v-else
-                class="w-5 h-5 opacity-20"
-              />
+              <UserX v-if="form.anonymous" class="w-5 h-5 text-violet-400" />
+              <UserCheck v-else class="w-5 h-5 opacity-20" />
             </div>
             
             <AppButton
@@ -236,20 +192,12 @@
         </section>
 
         <!-- Step 4: Amount & Payment -->
-        <section
-          v-if="currentStep === 4"
-          class="space-y-10"
-        >
+        <section v-if="currentStep === 4" class="space-y-10">
           <div class="text-center space-y-2">
-            <h2
-              class="text-2xl lg:text-4xl font-black uppercase italic"
-              :class="isDesktop ? 'text-slate-900' : 'text-white'"
-            >
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
               Amount & Payment
             </h2>
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
-              Enter value and select method
-            </p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Enter value and select method</p>
           </div>
 
           <div class="space-y-12">
@@ -257,12 +205,12 @@
             <div class="relative group max-w-sm mx-auto text-center">
               <span class="absolute left-0 top-1/2 -translate-y-1/2 text-4xl font-black text-violet-500">₵</span>
               <input 
-                ref="amountInput"
                 v-model="form.amount"
                 type="number"
                 placeholder="0.00"
                 class="w-full bg-transparent border-b-4 border-slate-200 focus:border-violet-500 py-8 pl-10 text-7xl font-black outline-none transition-all text-center"
                 :class="isDesktop ? 'text-slate-900' : 'text-white'"
+                ref="amountInput"
               >
             </div>
 
@@ -279,14 +227,9 @@
                     : (isDesktop ? 'bg-white border-slate-200 text-slate-600 hover:border-violet-300' : 'bg-white/5 border-white/10')"
                   @click="form.paymentMethod = method.id"
                 >
-                  <component
-                    :is="method.icon"
-                    class="w-6 h-6 shrink-0"
-                  />
+                  <component :is="method.icon" class="w-6 h-6 shrink-0" />
                   <div class="text-left">
-                    <p class="text-[10px] font-black uppercase tracking-widest">
-                      {{ method.label }}
-                    </p>
+                    <p class="text-[10px] font-black uppercase tracking-widest">{{ method.label }}</p>
                   </div>
                 </button>
               </div>
@@ -304,59 +247,35 @@
         </section>
 
         <!-- Step 5: Review & PIN -->
-        <section
-          v-if="currentStep === 5"
-          class="space-y-10"
-        >
+        <section v-if="currentStep === 5" class="space-y-10">
           <div class="text-center space-y-2">
-            <h2
-              class="text-2xl lg:text-4xl font-black uppercase italic"
-              :class="isDesktop ? 'text-slate-900' : 'text-white'"
-            >
+            <h2 class="text-2xl lg:text-4xl font-black uppercase italic" :class="isDesktop ? 'text-slate-900' : 'text-white'">
               Final Review
             </h2>
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
-              Authorize this collection
-            </p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Authorize this collection</p>
           </div>
 
           <div class="bg-slate-900 p-8 text-white space-y-6 shadow-2xl relative overflow-hidden">
             <div class="relative z-10 grid gap-6">
               <div class="flex justify-between items-start border-b border-white/10 pb-6">
                 <div>
-                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                    Contribution Value
-                  </p>
-                  <h3 class="text-5xl font-black mt-2 tracking-tighter">
-                    {{ formatCurrency(form.amount, 'GHS') }}
-                  </h3>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contribution Value</p>
+                  <h3 class="text-5xl font-black mt-2 tracking-tighter">{{ formatCurrency(form.amount, 'GHS') }}</h3>
                 </div>
                 <div class="text-right">
-                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                    Method
-                  </p>
-                  <p class="text-sm font-black uppercase mt-1">
-                    {{ form.paymentMethod }}
-                  </p>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Method</p>
+                  <p class="text-sm font-black uppercase mt-1">{{ form.paymentMethod }}</p>
                 </div>
               </div>
 
               <div class="grid grid-cols-2 gap-8">
                 <div>
-                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                    Event
-                  </p>
-                  <p class="text-xs font-black uppercase mt-1 truncate">
-                    {{ selectedEvent?.title }}
-                  </p>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Event</p>
+                  <p class="text-xs font-black uppercase mt-1 truncate">{{ selectedEvent?.title }}</p>
                 </div>
                 <div>
-                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                    Contributor
-                  </p>
-                  <p class="text-xs font-black uppercase mt-1 truncate">
-                    {{ form.anonymous ? 'Anonymous' : form.contributorName }}
-                  </p>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contributor</p>
+                  <p class="text-xs font-black uppercase mt-1 truncate">{{ form.anonymous ? 'Anonymous' : form.contributorName }}</p>
                 </div>
               </div>
             </div>

@@ -2,7 +2,6 @@ import type { RouteRecordRaw } from 'vue-router'
 import { requireAuth, requireAdmin } from '@/core/auth/authGuards'
 import { eventRoutes } from '@/modules/events/routes'
 import { recipientFundRoutes } from '@/modules/recipient-funds/routes'
-import { notificationTemplateRoutes } from '@/modules/notification-templates/routes'
 
 export const adminRoutes: RouteRecordRaw[] = [
   {
@@ -22,7 +21,6 @@ export const adminRoutes: RouteRecordRaw[] = [
       },
       ...eventRoutes,
       ...recipientFundRoutes,
-      ...notificationTemplateRoutes,
       {
         path: 'users',
         name: 'admin-users',
