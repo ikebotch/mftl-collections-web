@@ -35,50 +35,34 @@ async function syncAndNavigate() {
       usersStore.setMe(me)
       
       // 2. Redirect based on access state and roles
-      if (me.accessState === 'pending-access' || (me.scopeAssignments.length === 0 && !me.isPlatformAdmin)) {
-        console.log('AuthCallback: Redirecting to pending-access')
-        router.replace('/pending-access')
-        return
-      }
-
       if (me.accessState === 'suspended') {
         console.log('AuthCallback: User suspended')
-        syncError.value = 'Your account has been suspended. Please contact support.'
+        router.replace('/access-suspended')
         return
-      }
-
-      // If we have tenant scopes, activate the first one if none selected
-      const hasScopes = me.scopeAssignments && me.scopeAssignments.length > 0
-      if (hasScopes && !tenantStore.hasTenant) {
-        const tenantScope = me.scopeAssignments.find(s => s.scopeType === 'Tenant' || s.scopeType === 'Organisation')
-        if (tenantScope && tenantScope.targetId) {
-          console.log('AuthCallback: Setting initial tenant:', tenantScope.targetId)
-          tenantStore.setTenant(tenantScope.targetId, tenantScope.targetName || 'Default Organization')
-        }
       }
 
       // Role-based routing
-      const roles = me.auth0Roles || []
-      const isCollector = roles.includes('Collector') || roles.includes('Collector Supervisor')
-      const isAdmin = roles.some(r => r.includes('Admin') || r.includes('Finance') || r.includes('Reporting') || r.includes('Manager')) || me.isPlatformAdmin
+      const effectiveRoles = me.effectiveRoles || []
+      
+      const isAdmin = effectiveRoles.some(r => 
+        ['Platform Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting'].includes(r)
+      ) || me.isPlatformAdmin
+      
+      const isCollector = effectiveRoles.some(r => 
+        ['Collector', 'Collector Supervisor'].includes(r)
+      )
 
-      console.log('AuthCallback: Routing logic:', { roles, isCollector, isAdmin, isPlatformAdmin: me.isPlatformAdmin })
+      console.log('AuthCallback: Routing logic:', { effectiveRoles, isCollector, isAdmin, accessState: me.accessState })
 
-      if (isCollector && !isAdmin) {
-        console.log('AuthCallback: Redirecting to collector')
-        if (router.currentRoute.value.path !== '/collector') {
-          router.replace('/collector')
-        }
-      } else if (isAdmin) {
-        console.log('AuthCallback: Redirecting to admin')
-        if (!router.currentRoute.value.path.startsWith('/admin')) {
-          router.replace('/admin')
-        }
+      if (isAdmin) {
+        console.log('AuthCallback: Redirecting to /admin')
+        await router.replace('/admin')
+      } else if (isCollector) {
+        console.log('AuthCallback: Redirecting to /collector')
+        await router.replace('/collector')
       } else {
-        console.log('AuthCallback: No specific role route, redirecting to pending-access')
-        if (router.currentRoute.value.path !== '/pending-access') {
-          router.replace('/pending-access')
-        }
+        console.log('AuthCallback: No effective roles or pending, redirecting to /pending-access')
+        router.replace('/pending-access')
       }
     } catch (err: any) {
       console.error('AuthCallback: Failed to sync user context:', err)
