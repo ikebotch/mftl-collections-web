@@ -8,7 +8,7 @@ const { logout } = useAuth0()
 const router = useRouter()
 
 function handleLogout() {
-  logout({ logoutParams: { returnTo: window.location.origin + '/auth/login' } })
+  logout({ logoutParams: { returnTo: window.location.origin } })
 }
 </script>
 

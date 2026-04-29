@@ -318,19 +318,19 @@
               </div>
 
               <div
-                v-else-if="me?.scopeAssignments.length || me?.isPlatformAdmin || me?.auth0Roles.length"
+                v-else-if="me?.scopeAssignments.length || me?.isPlatformAdmin || me?.effectiveRoles?.length"
                 class="space-y-8"
               >
                 <div
-                  v-if="me?.auth0Roles.length"
+                  v-if="me?.effectiveRoles?.length"
                   class="space-y-4"
                 >
                   <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
-                    Auth0 Identity Roles
+                    System Authorization Roles
                   </p>
                   <div class="flex flex-wrap gap-2">
                     <span 
-                      v-for="role in me.auth0Roles" 
+                      v-for="role in me.effectiveRoles" 
                       :key="role"
                       class="px-3 py-1.5 bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest rounded-none shadow-lg shadow-violet-100"
                     >

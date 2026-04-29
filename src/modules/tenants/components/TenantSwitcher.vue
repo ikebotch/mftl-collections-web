@@ -261,7 +261,7 @@ const branchStore = useBranchStore()
 const { data: me } = useMe()
 
 const isCollector = computed(() => {
-  const roles = me.value?.auth0Roles || []
+  const roles = me.value?.effectiveRoles || []
   return roles.includes('Collector') || roles.includes('Collector Supervisor')
 })
 
@@ -270,7 +270,7 @@ const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false)
 const { data: tenants, isPending: isPendingTenants } = useQuery({
   queryKey: ['tenants-list'],
   queryFn: () => tenantsService.list(),
-  enabled: computed(() => !isCollector.value || isPlatformAdmin.value)
+  enabled: true // Always enable for authenticated users to see their assignments
 })
 
 const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
@@ -278,21 +278,14 @@ const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
 const { data: branches, refetch: refetchBranches } = useQuery({
   queryKey: ['branches-list', tenantStore.selectedTenantIdsCSV],
   queryFn: () => branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
-  enabled: computed(() => (!isCollector.value && (!!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value)) || isPlatformAdmin.value)
+  enabled: computed(() => (!!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value))
 })
 
 
 
 const canOpenSwitcher = computed(() => {
   if (isPlatformAdmin.value) return true
-  
-  const tenantCount = tenants.value?.length ?? 0
-  const branchCount = branches.value?.length ?? 0
-  
-  if (tenantCount > 1) return true
-  if (tenantCount === 1) return branchCount > 1
-  
-  return false
+  return (tenants.value?.length ?? 0) > 1 || (branches.value?.length ?? 0) > 1
 })
 
 function handleToggle() {

@@ -743,6 +743,81 @@ const collectorEvents = computed(() => {
   return availableEvents.value.filter(e => collector.value!.eventIds.includes(e.id))
 })
 
+const groupedAssignedItems = computed(() => {
+  if (!collector.value) return []
+  
+  const groups: any[] = []
+  const assignedEventIds = collector.value.eventIds || []
+  const assignedFundIds = (collector.value as any).fundIds || []
+
+  // Add fully assigned events
+  availableEvents.value.filter(e => assignedEventIds.includes(e.id)).forEach(e => {
+    groups.push({
+      eventId: e.id,
+      event: {
+        type: 'event',
+        id: e.id,
+        uniqueKey: `assigned-event-${e.id}`,
+        title: e.title,
+        subtitle: formatDate(e.eventDate),
+        badge: 'Campaign',
+        imageUrl: e.displayImageUrl
+      },
+      funds: allFunds.value
+        .filter(f => f.eventId === e.id)
+        .map(f => ({
+          type: 'fund',
+          id: f.id,
+          uniqueKey: `assigned-fund-${f.id}`,
+          title: f.name,
+          subtitle: `Authorized via ${e.title}`,
+          badge: 'Fund',
+          isSubItem: true
+        }))
+    })
+  })
+
+  // Add individual fund assignments for events NOT in assignedEventIds
+  const individualFunds = allFunds.value.filter(f => assignedFundIds.includes(f.id) && !assignedEventIds.includes(f.eventId))
+  
+  // Group them by event
+  const fundsByEvent = individualFunds.reduce((acc, f) => {
+    if (!acc[f.eventId]) acc[f.eventId] = []
+    acc[f.eventId].push(f)
+    return acc
+  }, {} as Record<string, typeof allFunds.value>)
+
+  Object.entries(fundsByEvent).forEach(([eventId, funds]) => {
+    const e = availableEvents.value.find(ev => ev.id === eventId)
+    if (e) {
+      groups.push({
+        eventId: e.id,
+        event: {
+          type: 'event',
+          id: e.id,
+          uniqueKey: `assigned-partial-event-${e.id}`,
+          title: e.title,
+          subtitle: formatDate(e.eventDate),
+          badge: 'Campaign (Partial)',
+          imageUrl: e.displayImageUrl,
+          isPartial: true
+        },
+        funds: funds.map(f => ({
+          type: 'fund',
+          id: f.id,
+          uniqueKey: `assigned-fund-${f.id}`,
+          title: f.name,
+          subtitle: `Authorized via ${e.title}`,
+          badge: 'Fund',
+          isSubItem: true
+        }))
+      })
+    }
+  })
+
+  return groups
+})
+
 function handleSuspend() {
   toast.info('Suspending staff access...')
 }

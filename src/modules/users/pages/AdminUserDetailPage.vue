@@ -218,7 +218,10 @@
                     { label: 'Suspended', value: 'Suspended' }
                   ]"
                 />
-                <div class="flex flex-col gap-4">
+                <div 
+                  v-if="usersStore.isPlatformAdmin"
+                  class="flex flex-col gap-4"
+                >
                   <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Global Privileges</label>
                   <div class="flex items-center gap-3 p-5 bg-slate-50 border border-slate-100">
                     <AppSwitch v-model="form.isPlatformAdmin" />
@@ -280,7 +283,7 @@
                 </p>
                 <div class="grid md:grid-cols-3 gap-4">
                   <button 
-                    v-for="s in [{id:'Platform', label:'System', icon: Globe}, {id:'Organisation', label:'Organization', icon: Building2}, {id:'Event', label:'Events', icon: Calendar}]"
+                    v-for="s in filteredScopeLevels"
                     :key="s.id"
                     class="p-4 rounded-none border transition-all text-left flex items-center gap-4"
                     :class="scopeForm.scopeType === s.id ? 'border-violet-600 bg-white shadow-sm' : 'border-slate-100 bg-white/50 hover:border-slate-200'"
@@ -400,7 +403,7 @@
                 </p>
                 <div class="flex flex-wrap gap-2">
                   <button
-                    v-for="role in roles"
+                    v-for="role in availableRoles"
                     :key="role"
                     class="px-5 py-2.5 rounded-none border text-left transition-all"
                     :class="scopeForm.roles.includes(role) ? 'border-violet-600 bg-violet-600 text-white shadow-lg shadow-violet-100' : 'border-slate-100 bg-white text-slate-500 hover:border-slate-200'"
@@ -747,6 +750,7 @@ import { tenantsService } from '@/modules/tenants/services/tenantsService'
 import { branchesService } from '@/modules/tenants/services/branchesService'
 import { eventsService } from '@/modules/events/services/eventsService'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
+import { useUsersStore } from '@/modules/users/store/usersStore'
 
 const route = useRoute()
 const toast = useToastStore()
@@ -812,6 +816,28 @@ const roles = [
   'Audit/Security Officer', 
   'General Staff/Viewer'
 ]
+
+const usersStore = useUsersStore()
+
+const filteredScopeLevels = computed(() => {
+  const levels = [
+    { id: 'Organisation', label: 'Organization', icon: Building2 },
+    { id: 'Event', label: 'Events', icon: Calendar }
+  ]
+  
+  if (usersStore.isPlatformAdmin) {
+    levels.unshift({ id: 'Platform', label: 'System', icon: Globe })
+  }
+  
+  return levels
+})
+
+const availableRoles = computed(() => {
+  if (!usersStore.isPlatformAdmin) {
+    return roles.filter(r => r !== 'Platform Admin')
+  }
+  return roles
+})
 
 const { data: tenants } = useQuery({
   queryKey: ['tenants-list'],

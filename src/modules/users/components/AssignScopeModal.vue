@@ -127,7 +127,7 @@
           <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Assign Functional Roles</label>
           <div class="grid grid-cols-3 gap-3">
             <button
-              v-for="role in roles"
+              v-for="role in availableRoles"
               :key="role"
               type="button"
               class="p-4 rounded-none border text-left transition-all"
@@ -181,6 +181,7 @@ import { eventsService } from '@/modules/events/services/eventsService'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
 import { tenantsService } from '@/modules/tenants/services/tenantsService'
 import { branchesService } from '@/modules/tenants/services/branchesService'
+import { useUsersStore } from '@/modules/users/store/usersStore'
 import { Check, Globe, Building2, Calendar } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -191,13 +192,30 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'assign'])
 
 const activeTab = ref('org')
-const assignmentTabs = [
-  { key: 'system', label: 'System Access', icon: 'Globe' },
-  { key: 'org', label: 'Org & Branches', icon: 'Building2' },
-  { key: 'events', label: 'Events & Funds', icon: 'Calendar' }
-]
+const usersStore = useUsersStore()
 
-const roles = ['Platform Admin', 'Tenant Admin', 'Finance Admin', 'Event Manager', 'Collector', 'Viewer']
+const assignmentTabs = computed(() => {
+  const tabs = [
+    { key: 'org', label: 'Org & Branches', icon: 'Building2' },
+    { key: 'events', label: 'Events & Funds', icon: 'Calendar' }
+  ]
+  
+  if (usersStore.isPlatformAdmin) {
+    tabs.unshift({ key: 'system', label: 'System Access', icon: 'Globe' })
+  }
+  
+  return tabs
+})
+
+const availableRoles = computed(() => {
+  const allRoles = ['Platform Admin', 'Tenant Admin', 'Finance Admin', 'Event Manager', 'Collector', 'Viewer']
+  
+  if (!usersStore.isPlatformAdmin) {
+    return allRoles.filter(r => r !== 'Platform Admin')
+  }
+  
+  return allRoles
+})
 
 const form = ref({
   roles: [] as string[],

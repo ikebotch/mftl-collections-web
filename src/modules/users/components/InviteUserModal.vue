@@ -94,6 +94,7 @@ import AppModal from '@/shared/components/modals/AppModal.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
+import { useUsersStore } from '@/modules/users/store/usersStore'
 
 const props = defineProps<{
   isOpen: boolean
@@ -110,14 +111,29 @@ const form = ref({
   targetId: ''
 })
 
-const roles = ['PlatformAdmin', 'TenantAdmin', 'FinanceAdmin', 'EventManager', 'Collector', 'Viewer']
+const usersStore = useUsersStore()
 
-const scopeOptions = [
-  { label: 'Platform Global', value: 'Platform' },
-  { label: 'Tenant Wide', value: 'Tenant' },
-  { label: 'Event Specific', value: 'Event' },
-  { label: 'Fund Specific', value: 'RecipientFund' }
-]
+const roles = computed(() => {
+  const allRoles = ['PlatformAdmin', 'TenantAdmin', 'FinanceAdmin', 'EventManager', 'Collector', 'Viewer']
+  if (!usersStore.isPlatformAdmin) {
+    return allRoles.filter(r => r !== 'PlatformAdmin')
+  }
+  return allRoles
+})
+
+const scopeOptions = computed(() => {
+  const options = [
+    { label: 'Tenant Wide', value: 'Tenant' },
+    { label: 'Event Specific', value: 'Event' },
+    { label: 'Fund Specific', value: 'RecipientFund' }
+  ]
+  
+  if (usersStore.isPlatformAdmin) {
+    options.unshift({ label: 'Platform Global', value: 'Platform' })
+  }
+  
+  return options
+})
 
 const isValid = computed(() => {
   return form.value.name && form.value.email && form.value.role
