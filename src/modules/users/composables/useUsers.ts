@@ -10,9 +10,9 @@ export function useUsers() {
   const branchStore = useBranchStore()
 
   return useQuery({
-    queryKey: () => ['users', { 
-      tenantId: tenantStore.selectedTenantIdsCSV,
-      branchId: branchStore.multiBranchIdCSV
+    queryKey: ['users', { 
+      tenantId: computed(() => tenantStore.selectedTenantIdsCSV),
+      branchId: computed(() => branchStore.multiBranchIdCSV)
     }],
     queryFn: () => listUsers({
       tenantId: tenantStore.selectedTenantIdsCSV,

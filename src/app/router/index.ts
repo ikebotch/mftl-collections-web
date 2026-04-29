@@ -11,7 +11,8 @@ const routes: RouteRecordRaw[] = [
   ...collectorRoutes,
   {
     path: '/',
-    redirect: '/admin',
+    name: 'root',
+    component: () => import('@/modules/auth/pages/AuthCallbackPage.vue'), // Reuse callback logic for routing
   },
 ]
 

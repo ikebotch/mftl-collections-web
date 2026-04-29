@@ -17,21 +17,32 @@ const syncError = ref<string | null>(null)
 async function syncAndNavigate() {
   if (isAuthenticated.value) {
     try {
+      if (isSyncing.value) return
       isSyncing.value = true
       syncError.value = null
       
       // 1. Force backend provisioning and get user context
+      console.log('AuthCallback: Fetching me...')
       const me = await usersService.getMe()
+      console.log('AuthCallback: User fetched:', {
+        id: me.id,
+        email: me.email,
+        isPlatformAdmin: me.isPlatformAdmin,
+        accessState: me.accessState,
+        roles: me.auth0Roles,
+        scopesCount: me.scopeAssignments?.length
+      })
       usersStore.setMe(me)
       
-      // 2. Setup initial tenant/branch context if not set
-      if (me.accessState === 'pending-access') {
+      // 2. Redirect based on access state and roles
+      if (me.accessState === 'pending-access' || (me.scopeAssignments.length === 0 && !me.isPlatformAdmin)) {
+        console.log('AuthCallback: Redirecting to pending-access')
         router.replace('/pending-access')
         return
       }
 
       if (me.accessState === 'suspended') {
-        // We could have a suspended page, for now just show error
+        console.log('AuthCallback: User suspended')
         syncError.value = 'Your account has been suspended. Please contact support.'
         return
       }
@@ -41,13 +52,36 @@ async function syncAndNavigate() {
       if (hasScopes && !tenantStore.hasTenant) {
         const tenantScope = me.scopeAssignments.find(s => s.scopeType === 'Tenant' || s.scopeType === 'Organisation')
         if (tenantScope && tenantScope.targetId) {
+          console.log('AuthCallback: Setting initial tenant:', tenantScope.targetId)
           tenantStore.setTenant(tenantScope.targetId, tenantScope.targetName || 'Default Organization')
         }
       }
 
-      router.replace('/admin')
+      // Role-based routing
+      const roles = me.auth0Roles || []
+      const isCollector = roles.includes('Collector') || roles.includes('Collector Supervisor')
+      const isAdmin = roles.some(r => r.includes('Admin') || r.includes('Finance') || r.includes('Reporting') || r.includes('Manager')) || me.isPlatformAdmin
+
+      console.log('AuthCallback: Routing logic:', { roles, isCollector, isAdmin, isPlatformAdmin: me.isPlatformAdmin })
+
+      if (isCollector && !isAdmin) {
+        console.log('AuthCallback: Redirecting to collector')
+        if (router.currentRoute.value.path !== '/collector') {
+          router.replace('/collector')
+        }
+      } else if (isAdmin) {
+        console.log('AuthCallback: Redirecting to admin')
+        if (!router.currentRoute.value.path.startsWith('/admin')) {
+          router.replace('/admin')
+        }
+      } else {
+        console.log('AuthCallback: No specific role route, redirecting to pending-access')
+        if (router.currentRoute.value.path !== '/pending-access') {
+          router.replace('/pending-access')
+        }
+      }
     } catch (err: any) {
-      console.error('Failed to sync user context:', err)
+      console.error('AuthCallback: Failed to sync user context:', err)
       syncError.value = 'We encountered an error while preparing your workspace. Please try again.'
       isSyncing.value = false
     }

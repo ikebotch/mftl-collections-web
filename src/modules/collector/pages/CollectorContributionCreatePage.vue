@@ -328,7 +328,9 @@
                         <Lock class="w-5 h-5" />
                       </div>
                     </div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Enter your 4-digit security PIN to authorize</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                      Enter your 4-digit security PIN to authorize
+                    </p>
                   </div>
 
                   <div class="pt-6">

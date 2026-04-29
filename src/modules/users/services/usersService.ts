@@ -6,7 +6,7 @@ export interface UserRow {
   email: string
   role: string
   status: string
-  inviteState: string
+  inviteStatus: string
   scope: string
   phoneNumber?: string
   lastLoginAt?: string
@@ -16,7 +16,7 @@ export interface UserRow {
 export interface UserDetail extends UserRow {
   auth0Id: string
   createdAt: string
-  inviteStatus: string
+  accessState: string
   scopeAssignments: ScopeAssignment[]
   auth0Roles: string[]
 }
@@ -26,6 +26,7 @@ export interface ScopeAssignment {
   role: string
   scopeType: string
   targetId?: string
+  targetName?: string
 }
 
 export interface AuditLog {

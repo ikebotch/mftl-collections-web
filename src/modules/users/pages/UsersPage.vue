@@ -76,7 +76,7 @@
       <AdminFilterBar
         v-model="searchQuery"
         placeholder="Search by name or email..."
-        :show-clear="searchQuery || activeFilters.roles.length > 0 || activeFilters.status.length > 0"
+        :show-clear="!!searchQuery || activeFilters.roles.length > 0 || activeFilters.status.length > 0"
         @clear="clearAllFilters"
       >
         <template #sections>

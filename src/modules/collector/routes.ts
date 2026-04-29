@@ -1,11 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { requireAuth } from '@/core/auth/authGuards'
+import { requireAuth, requireCollector } from '@/core/auth/authGuards'
 
 export const collectorRoutes: RouteRecordRaw[] = [
   {
     path: '/collector',
     component: () => import('@/surfaces/collector/layouts/CollectorLayout.vue'),
-    beforeEnter: requireAuth,
+    beforeEnter: [requireAuth, requireCollector],
     children: [
       {
         path: '',
