@@ -1,3 +1,9 @@
+export interface CurrencyTotalDto {
+  currency: string
+  total: number
+  label?: string
+}
+
 export interface CollectorProfileDto {
   id: string
   name: string
@@ -13,6 +19,7 @@ export interface CollectorProfileDto {
   eventIds: string[]
   fundIds: string[]
   phoneNumber?: string | null
+  totalsPerCurrency: CurrencyTotalDto[]
 }
 
 export interface CollectorAssignedEventDto {
@@ -57,6 +64,12 @@ export interface CollectorHistoryReceiptDto {
   paymentMethod: string
 }
 
+export interface CurrencyTotal {
+  currency: string
+  total: number
+  label?: string
+}
+
 export interface CollectorProfile {
   id: string
   name: string
@@ -72,6 +85,7 @@ export interface CollectorProfile {
   blockedReason: string
   eventIds: string[]
   fundIds: string[]
+  totalsPerCurrency: CurrencyTotal[]
 }
 
 export interface CollectorAssignedEvent {

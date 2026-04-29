@@ -91,8 +91,12 @@
                 Your products
               </h3>
               <div class="h-px flex-1 bg-slate-200 mx-6 hidden lg:block" />
-              <button class="p-2 text-slate-400 hover:text-violet-600 transition-colors">
-                <Eye class="w-5 h-5" />
+              <button 
+                class="p-2 transition-colors"
+                :class="showFigures ? 'text-violet-600' : 'text-slate-400'"
+                @click.stop="showFigures = !showFigures"
+              >
+                <component :is="showFigures ? Eye : EyeOff" class="w-5 h-5" />
               </button>
             </div>
 
@@ -130,13 +134,13 @@
                   <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
                       <h4 class="text-lg font-black uppercase italic text-slate-900">
-                        {{ idx === 0 ? 'Bank A/C' : (idx === 1 ? 'Global Money Account' : 'Online Bonus Saver') }}
+                        {{ event.title }}
                       </h4>
                       <p class="text-sm font-bold text-slate-500 mt-1">
-                        {{ idx === 0 ? '40-11-00 98648727' : '40-11-97 48225893' }}
+                        {{ event.location || 'Active Terminal' }} · {{ event.dateLabel }}
                       </p>
                       <p class="text-[10px] font-black uppercase tracking-widest text-violet-600 mt-4">
-                        {{ event.title }}
+                        {{ event.assignedFundCount }} Active Funds
                       </p>
                     </div>
                     
@@ -148,14 +152,49 @@
                   </div>
                 </div>
                 
-                <div v-if="idx === 1" class="border-t border-slate-100">
-                  <div class="px-8 py-4 flex items-center justify-between group/row hover:bg-slate-50">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Currency balances</span>
-                    <ChevronDown class="w-4 h-4 text-slate-400" />
+                <div class="border-t border-slate-100">
+                  <button 
+                    class="w-full px-8 py-4 flex items-center justify-between group/row hover:bg-slate-50 transition-colors"
+                    @click.stop="isBalancesExpanded = !isBalancesExpanded"
+                  >
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Currency balances</span>
+                    <ChevronDown 
+                      class="w-4 h-4 text-slate-400 transition-transform duration-300"
+                      :class="{ 'rotate-180': isBalancesExpanded }"
+                    />
+                  </button>
+                  
+                  <div 
+                    v-if="isBalancesExpanded"
+                    class="bg-slate-50/50"
+                  >
+                    <div 
+                      v-for="total in query.data.value.profile.totalsPerCurrency" 
+                      :key="total.currency"
+                      class="px-10 py-5 border-t border-slate-100 flex items-center justify-between group/item hover:bg-white transition-all"
+                    >
+                      <div class="flex flex-col">
+                        <span class="text-xs font-black text-slate-900 uppercase italic">{{ total.label }}</span>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ total.currency }} Terminal</span>
+                      </div>
+                      <p class="text-sm font-black text-slate-900 tracking-tight">
+                        {{ showFigures ? formatCurrency(total.total, total.currency) : '***' }}
+                      </p>
+                    </div>
                   </div>
-                  <div class="px-8 py-4 border-t border-slate-100 flex items-center justify-between group/row hover:bg-slate-50">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">More currencies</span>
-                    <ChevronDown class="w-4 h-4 text-slate-400" />
+
+                  <button 
+                    class="w-full px-8 py-4 border-t border-slate-100 flex items-center justify-between group/row hover:bg-slate-50 transition-colors"
+                    @click.stop="isMoreExpanded = !isMoreExpanded"
+                  >
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">More currencies</span>
+                    <ChevronDown 
+                      class="w-4 h-4 text-slate-400 transition-transform duration-300"
+                      :class="{ 'rotate-180': isMoreExpanded }"
+                    />
+                  </button>
+                  <div v-if="isMoreExpanded" class="p-8 text-center bg-slate-50/30">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Additional currencies available via FX Terminal</p>
                   </div>
                 </div>
               </article>
@@ -227,6 +266,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useCollectorDashboard } from '../composables/useCollector'
+import { formatCurrency } from '@/core/formatting/formatters'
 import ReceiptStatusBadge from '@/modules/receipts/components/ReceiptStatusBadge.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
@@ -239,13 +279,16 @@ import {
   FileText, 
   RefreshCcw, 
   Eye, 
+  EyeOff,
   Wallet, 
   Star, 
   MoreVertical, 
   ChevronDown, 
   Building2, 
   LayoutGrid,
-  CalendarX 
+  CalendarX,
+  TrendingUp,
+  Calendar
 } from 'lucide-vue-next'
 
 const query = useCollectorDashboard()
@@ -253,6 +296,10 @@ const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
 
 const isDrawerOpen = ref(false)
 const selectedReceipt = ref<any>(null)
+
+const showFigures = ref(true)
+const isBalancesExpanded = ref(true)
+const isMoreExpanded = ref(false)
 
 function openReceipt(receipt: any) {
   selectedReceipt.value = receipt
