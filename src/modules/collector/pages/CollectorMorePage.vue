@@ -50,8 +50,12 @@
           <LogOut class="w-5 h-5" />
         </div>
         <div class="text-left">
-          <p class="text-[10px] font-black uppercase tracking-widest">Session End</p>
-          <p class="text-sm font-black uppercase">Terminate Session</p>
+          <p class="text-[10px] font-black uppercase tracking-widest">
+            Session End
+          </p>
+          <p class="text-sm font-black uppercase">
+            Terminate Session
+          </p>
         </div>
       </button>
     </div>
