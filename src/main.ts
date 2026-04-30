@@ -6,18 +6,11 @@ import { watch } from 'vue'
 import App from './App.vue'
 import { router } from './app/router'
 import { installAuth, isAuthConfigured, registerAccessTokenProvider } from './core/auth/auth0'
+import { queryClient } from './core/api/queryClient'
 import './styles/index.css'
 
 const app = createApp(App)
 const pinia = createPinia()
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-})
 
 installAuth(app)
 app.use(pinia)

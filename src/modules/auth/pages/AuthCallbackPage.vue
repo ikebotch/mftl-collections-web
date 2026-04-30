@@ -2,8 +2,6 @@
 import { onMounted, watch, ref } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useRouter } from 'vue-router'
-import { usersService } from '@/modules/users/services/usersService'
-import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { useUsersStore } from '@/modules/users/store/usersStore'
 
 import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
@@ -31,25 +29,16 @@ async function syncAndNavigate() {
       
       // 1. Force backend provisioning and get user context
       console.log('AuthCallback: Fetching me...')
-      const me = await usersService.getMe()
+      const me = await usersStore.fetchMe(true)
+      
       console.log('AuthCallback: User fetched:', {
         id: me.id,
         email: me.email,
         isPlatformAdmin: me.isPlatformAdmin,
         accessState: me.accessState,
-        roles: me.auth0Roles,
+        roles: me.effectiveRoles,
         scopesCount: me.scopeAssignments?.length
       })
-      usersStore.setMe(me)
-      
-      // 2. Automatically select tenant if exactly one is assigned
-      const tenantStore = useTenantStore()
-      const tenantScopes = me.scopeAssignments?.filter(s => s.scopeType === 'Tenant') || []
-      
-      if (tenantScopes.length === 1 && !tenantStore.selectedTenantId) {
-        console.log('AuthCallback: Auto-selecting single tenant:', tenantScopes[0].targetName)
-        tenantStore.setTenant(tenantScopes[0].targetId!, tenantScopes[0].targetName!)
-      }
       
       // 3. Redirect based on access state and roles using centralized logic
       const landingPath = resolveLandingPath()
