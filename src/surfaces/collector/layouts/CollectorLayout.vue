@@ -1,7 +1,6 @@
 <template>
   <div
-    class="min-h-screen font-sans selection:bg-violet-100 selection:text-violet-900 transition-colors duration-500"
-    :class="isDesktop ? 'bg-[#f8fafc]' : 'bg-[#060B16]'"
+    class="min-h-screen font-sans selection:bg-violet-500/30 selection:text-white transition-colors duration-500 bg-[#060B16]"
   >
     <!-- Premium Desktop Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 hidden w-72 bg-[#060b13] text-white lg:block shadow-2xl border-r border-navy-900 transition-transform duration-500">
@@ -81,31 +80,35 @@
         </div>
       </header>
 
-      <!-- Desktop Header (Light/Admin Style) -->
-      <header class="hidden h-20 bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-40 px-12 lg:flex items-center justify-between">
+      <!-- Desktop Header (Terminal Style) -->
+      <header class="hidden h-20 bg-[#060B16]/90 backdrop-blur-xl border-b border-white/5 sticky top-0 z-40 px-12 lg:flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <h2 class="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
-            System / {{ $route.name?.toString().replace('collector-', '') || 'Overview' }}
-          </h2>
-          <div class="h-4 w-px bg-slate-200 mx-2" />
-          <div class="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-none border border-slate-200">
-            <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Network Secure</span>
+          <div class="h-8 w-8 bg-violet-600/10 border border-violet-500/20 flex items-center justify-center">
+            <div class="h-1.5 w-1.5 bg-violet-500 animate-pulse" />
+          </div>
+          <div>
+            <h2 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
+              System Node / {{ $route.name?.toString().replace('collector-','') || 'Station' }}
+            </h2>
+            <p class="text-[11px] font-black text-white uppercase tracking-tight mt-0.5">
+              Secure Operational Terminal
+            </p>
           </div>
         </div>
         
-        <div class="flex items-center gap-6">
+        <div class="flex items-center gap-8">
           <div class="text-right">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-              Local Station
+            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-0.5">
+              Hub Authority
             </p>
-            <p class="text-xs font-black text-slate-900 uppercase tracking-tight">
-              Accra Terminal 01
+            <p class="text-xs font-black text-white uppercase tracking-tight">
+              {{ usersStore.me?.activeTenantId ? 'MFTL MAIN HUB' : 'Unassigned Node' }}
             </p>
           </div>
-          <div class="h-10 w-px bg-slate-200" />
-          <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 p-1.5 px-4 rounded-none">
-            <div class="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-            <span class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Live Sync</span>
+          <div class="h-8 w-px bg-white/5" />
+          <div class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 px-4">
+            <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
+            <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Live Link</span>
           </div>
         </div>
       </header>
