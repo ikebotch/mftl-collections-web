@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 import { createPinia } from 'pinia'
 import { useAuth0 } from '@auth0/auth0-vue'
+import { watch } from 'vue'
 import App from './App.vue'
 import { router } from './app/router'
 import { installAuth, isAuthConfigured, registerAccessTokenProvider } from './core/auth/auth0'
@@ -26,7 +27,36 @@ app.use(VueQueryPlugin, { queryClient })
 if (isAuthConfigured()) {
   app.runWithContext(() => {
     const auth0 = useAuth0()
-    registerAccessTokenProvider(async () => auth0.getAccessTokenSilently())
+
+    const waitForAuthReady = async () => {
+      if (!auth0.isLoading.value) {
+        return
+      }
+
+      await new Promise<void>((resolve) => {
+        const stop = watch(auth0.isLoading, (loading) => {
+          if (!loading) {
+            stop()
+            resolve()
+          }
+        })
+      })
+    }
+
+    registerAccessTokenProvider(async () => {
+      await waitForAuthReady()
+
+      if (!auth0.isAuthenticated.value) {
+        return undefined
+      }
+
+      return auth0.getAccessTokenSilently({
+        authorizationParams: {
+          audience: import.meta.env.VITE_AUTH0_AUDIENCE || undefined,
+          scope: 'openid profile email offline_access',
+        },
+      })
+    })
   })
 }
 

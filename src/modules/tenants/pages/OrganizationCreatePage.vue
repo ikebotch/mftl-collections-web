@@ -70,6 +70,7 @@
             </AppInput>
 
             <AppTextarea
+              id="mission-statement"
               v-model="form.missionStatement"
               label="Mission Statement"
               placeholder="Define the purpose of this node..."

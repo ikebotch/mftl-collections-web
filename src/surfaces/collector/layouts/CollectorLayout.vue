@@ -49,12 +49,7 @@
         <div class="p-6 mt-auto border-t border-white/5 bg-white/[0.02]">
           <div class="flex items-center gap-4">
             <div class="h-10 w-10 rounded-none bg-slate-800 border border-white/10 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase overflow-hidden">
-              <img
-                v-if="usersStore.me?.picture"
-                :src="usersStore.me.picture"
-                class="w-full h-full object-cover"
-              >
-              <span v-else>{{ usersStore.me?.name?.charAt(0) || 'C' }}</span>
+              <span>{{ usersStore.me?.name?.charAt(0) || 'C' }}</span>
             </div>
             <div class="min-w-0">
               <p class="text-[10px] font-black text-white uppercase tracking-widest truncate">

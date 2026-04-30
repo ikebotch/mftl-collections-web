@@ -57,7 +57,12 @@
       >
         <template #cell:fund="{ row }">
           <div class="flex flex-col">
-            <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
+            <button 
+              class="font-black text-slate-900 tracking-tight hover:text-violet-600 transition-colors text-left"
+              @click="router.push({ name: 'admin-funds-detail', params: { id: row.id } })"
+            >
+              {{ row.name }}
+            </button>
             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ row.id.split('-')[0] }}</span>
           </div>
         </template>

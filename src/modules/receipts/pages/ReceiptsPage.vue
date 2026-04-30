@@ -63,22 +63,28 @@
         exportable
         title="Digital Receipt Archive"
       >
-        <template #cell:receiptNumber="{ value }">
-          <div class="flex flex-col">
-            <span class="text-sm font-black text-slate-900 tracking-tight">#{{ value }}</span>
+        <template #cell:receiptNumber="{ row }">
+          <button 
+            class="flex flex-col text-left group/receipt"
+            @click="selectedReceipt = row"
+          >
+            <span class="text-sm font-black text-slate-900 tracking-tight group-hover/receipt:text-violet-600 transition-colors">#{{ row.receiptNumber }}</span>
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5 italic">Audit ID</span>
-          </div>
+          </button>
         </template>
 
-        <template #cell:contributorName="{ value }">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-none bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0 uppercase">
-              {{ getInitials(value) }}
+        <template #cell:contributorName="{ row }">
+          <button 
+            class="flex items-center gap-3 text-left group/contributor"
+            @click="selectedReceipt = row"
+          >
+            <div class="w-8 h-8 rounded-none bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0 uppercase group-hover/contributor:border-violet-200 transition-colors">
+              {{ getInitials(row.contributorName) }}
             </div>
-            <span class="text-sm font-black text-slate-900 tracking-tight truncate max-w-[150px]">
-              {{ value }}
+            <span class="text-sm font-black text-slate-900 tracking-tight truncate max-w-[150px] group-hover/contributor:text-violet-600 transition-colors">
+              {{ row.contributorName }}
             </span>
-          </div>
+          </button>
         </template>
 
         <template #cell:eventTitle="{ value, row }">

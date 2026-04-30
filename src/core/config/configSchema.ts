@@ -12,6 +12,7 @@ export const configSchema = z.object({
   VITE_AUTH0_CALLBACK_URL: z.string().trim().url().default('http://localhost:5174/auth/callback'),
   VITE_TENANT_HEADER_NAME: z.string().trim().min(1).default('X-Tenant-Id'),
   VITE_AUTH_DEV_BYPASS: z.string().trim().transform((v) => v === 'true').default(false),
+  VITE_DEV_USER_ID: z.string().trim().default('google-oauth2|116477927979198470992'),
 })
 
 export type ConfigSchema = z.infer<typeof configSchema>

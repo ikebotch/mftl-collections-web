@@ -21,6 +21,7 @@ export function useEvents(branchId?: MaybeRefOrGetter<string | undefined>) {
       tenantId: tenantStore.selectedTenantIdsCSV,
       branchId: effectiveBranchId.value
     }),
+    enabled: computed(() => !!tenantStore.selectedTenantId && tenantStore.selectedTenantId !== '00000000-0000-0000-0000-000000000000'),
   })
 }
 

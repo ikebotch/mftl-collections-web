@@ -120,13 +120,13 @@
           </div>
         </template>
 
-        <template #cell:today="{ value }">
+        <template #cell:totalCollectedToday="{ value }">
           <span class="text-xs font-black text-slate-900 italic tracking-tight">
-            {{ formatCurrency(value, 'GHS') }}
+            {{ formatCurrency(value || 0, 'GHS') }}
           </span>
         </template>
 
-        <template #cell:receipts="{ value }">
+        <template #cell:receiptsIssuedToday="{ value }">
           <span class="text-xs font-black text-slate-900">{{ value || 0 }}</span>
         </template>
 
@@ -311,10 +311,10 @@ const metrics = computed(() => ({
 
 const columns = [
   { key: 'name', label: 'Field Staff', sortable: true, width: '35%' },
-  { key: 'today', label: 'Raised Today', sortable: true, width: '20%' },
-  { key: 'receipts', label: 'Receipts', sortable: true, width: '10%' },
+  { key: 'totalCollectedToday', label: 'Raised Today', sortable: true, width: '20%' },
+  { key: 'receiptsIssuedToday', label: 'Receipts', sortable: true, width: '10%' },
   { key: 'assignments', label: 'Assigned', sortable: false, width: '15%' },
-  { key: 'lastActive', label: 'Last Activity', sortable: true, width: '20%' }
+  { key: 'lastActiveAt', label: 'Last Activity', sortable: true, width: '20%' }
 ]
 
 const filteredCollectors = computed(() => {
@@ -344,10 +344,10 @@ const sortedCollectors = computed(() => {
     let valA = a[key]
     let valB = b[key]
 
-    if (key === 'today') {
+    if (key === 'totalCollectedToday') {
       valA = a.totalCollectedToday || 0
       valB = b.totalCollectedToday || 0
-    } else if (key === 'receipts') {
+    } else if (key === 'receiptsIssuedToday') {
       valA = a.receiptsIssuedToday || 0
       valB = b.receiptsIssuedToday || 0
     }

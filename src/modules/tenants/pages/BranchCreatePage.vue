@@ -195,7 +195,7 @@ const tenantStore = useTenantStore()
 const { data: me } = useMe()
 const createBranchMutation = useCreateBranch()
 
-const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
+const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false)
 
 const steps = [
   { id: 'section-identity', title: 'Identity', subtitle: 'Designation & IDs' },

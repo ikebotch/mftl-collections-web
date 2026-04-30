@@ -46,13 +46,16 @@
         title="Donor Directory"
       >
         <template #cell:donor="{ row }">
-          <div class="flex flex-col">
-            <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
+          <button 
+            class="flex flex-col text-left group/donor"
+            @click="openDrawer(row)"
+          >
+            <span class="font-black text-slate-900 tracking-tight group-hover/donor:text-violet-600 transition-colors">{{ row.name }}</span>
             <span
               v-if="row.id.includes('-')"
               class="text-[10px] text-slate-400 font-bold uppercase tracking-widest"
             >{{ row.id.split('-')[0] }}</span>
-          </div>
+          </button>
         </template>
 
         <template #cell:contact="{ row }">

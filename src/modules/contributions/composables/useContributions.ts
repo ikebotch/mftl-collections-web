@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
-import { toValue, type MaybeRef } from 'vue'
+import { computed, toValue, type MaybeRef } from 'vue'
 import { listContributions, getContributionById, updateContribution } from '../services/contributionsService'
 import type { ContributionRow } from '../types/contribution'
 import type { ApiError } from '@/core/api/apiError'
@@ -11,16 +11,17 @@ export function useContributions(params?: MaybeRef<{ page?: number, pageSize?: n
   const tenantStore = useTenantStore()
   const branchStore = useBranchStore()
   return useQuery<PagedResponse<ContributionRow>, ApiError>({
-    queryKey: () => ['contributions', { 
-      tenantId: tenantStore.selectedTenantIdsCSV,
-      branchId: branchStore.multiBranchIdCSV,
+    queryKey: computed(() => ['contributions', { 
+      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      branchId: toValue(branchStore.multiBranchIdCSV),
       ...toValue(params) 
-    }],
+    }]),
     queryFn: () => listContributions({ 
       ...toValue(params), 
-      tenantId: tenantStore.selectedTenantIdsCSV,
-      branchId: branchStore.multiBranchIdCSV 
+      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      branchId: toValue(branchStore.multiBranchIdCSV) 
     }),
+    enabled: computed(() => !!toValue(tenantStore.selectedTenantId) && toValue(tenantStore.selectedTenantId) !== '00000000-0000-0000-0000-000000000000'),
   })
 }
 

@@ -5,7 +5,7 @@ import { CORRELATION_HEADER_NAME, createCorrelationId } from './correlation'
 import { isApiEnvelope, unwrapApiEnvelope, type ApiEnvelope } from './apiEnvelope'
 import type { RequestOptions } from './types'
 import { getAccessToken } from '@/core/auth/auth0'
-import { readSelectedTenantId } from '@/modules/tenants/store/tenantStore'
+import { readSelectedTenantIdsCSV } from '@/modules/tenants/store/tenantStore'
 import { readSelectedBranchId } from '@/modules/branches/store/branchStore'
 
 declare module 'axios' {
@@ -30,27 +30,63 @@ export class HttpClient {
       headers[CORRELATION_HEADER_NAME] = createCorrelationId()
 
       if (!headers[appConfig.api.tenantHeaderName]) {
-        let tenantId = readSelectedTenantId()
-        if (!tenantId && appConfig.auth.devBypass) {
-          tenantId = '00000000-0000-0000-0000-000000000000'
-        }
-
-        if (tenantId) {
-          headers[appConfig.api.tenantHeaderName] = tenantId
+        const tenantIdCsv = readSelectedTenantIdsCSV()
+        // Never send Guid.Empty or placeholders. Header must represent exactly one active tenant.
+        if (tenantIdCsv && tenantIdCsv !== '00000000-0000-0000-0000-000000000000') {
+          headers[appConfig.api.tenantHeaderName] = tenantIdCsv
         }
       }
 
       if (!headers['X-Branch-Id']) {
         const branchId = readSelectedBranchId()
-        if (branchId) {
+        if (branchId && branchId !== '00000000-0000-0000-0000-000000000000') {
           headers['X-Branch-Id'] = branchId
         }
       }
 
-      if (!config.skipAuth && !appConfig.auth.devBypass) {
-        const accessToken = await getAccessToken()
-        if (accessToken) {
-          headers.Authorization = `Bearer ${accessToken}`
+      // Clean up params - remove any empty GUIDs, nulls, or empty strings
+      if (config.params) {
+        Object.keys(config.params).forEach((key) => {
+          const val = config.params[key]
+          if (
+            val === '00000000-0000-0000-0000-000000000000' ||
+            val === '' ||
+            val === null ||
+            val === undefined
+          ) {
+            delete config.params[key]
+          }
+        })
+      }
+
+      if (!config.skipAuth) {
+        if (appConfig.auth.devBypass) {
+          headers['X-Dev-User-Id'] = appConfig.auth.devUserId
+        } else {
+          const accessToken = await getAccessToken()
+          if (accessToken) {
+            headers.Authorization = `Bearer ${accessToken}`
+          }
+        }
+      }
+
+      // Development Diagnostic Logging
+      if (import.meta.env.DEV) {
+        const isContributionRequest = config.url?.includes('/contributions')
+        if (isContributionRequest) {
+          console.debug(`[HTTP][CONTRIBUTION_DEBUG] ${config.method?.toUpperCase()} ${config.url}`, {
+            queryParams: config.params,
+            tenantId: headers[appConfig.api.tenantHeaderName],
+            hasAuth: !!headers.Authorization,
+            hasDevUser: !!headers['X-Dev-User-Id'],
+            branchId: headers['X-Branch-Id'],
+          })
+        } else {
+          console.debug(`[HTTP] ${config.method?.toUpperCase()} ${config.url}`, {
+            hasAuth: !!headers.Authorization,
+            hasDevUser: !!headers['X-Dev-User-Id'],
+            tenantId: headers[appConfig.api.tenantHeaderName],
+          })
         }
       }
 

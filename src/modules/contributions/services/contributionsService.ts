@@ -101,9 +101,27 @@ export async function listContributions(params?: {
   tenantId?: string
 }): Promise<PagedResponse<ContributionRow>> {
   try {
-    const response = await httpClient.get<PagedResponse<ContributionListItemDto>>('/contributions', { params })
-    const paged = response.data
+    const response = await httpClient.get<ContributionListItemDto[] | PagedResponse<ContributionListItemDto>>('/contributions', { params })
+    const data = response.data
     
+    if (import.meta.env.DEV) {
+      const len = Array.isArray(data) ? data.length : (data as any)?.items?.length ?? 0
+      console.debug(`[HTTP][CONTRIBUTION_DEBUG] Response data length: ${len}`)
+    }
+
+    if (Array.isArray(data)) {
+      return {
+        items: data.map(mapContributionRow),
+        totalCount: data.length,
+        page: params?.page || 1,
+        pageSize: params?.pageSize || data.length || 10,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPreviousPage: false
+      }
+    }
+
+    const paged = data as PagedResponse<ContributionListItemDto>
     return {
       ...paged,
       items: (paged.items || []).map(mapContributionRow)

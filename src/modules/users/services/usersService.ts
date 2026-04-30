@@ -21,6 +21,7 @@ export interface UserDetail extends UserRow {
   auth0Roles: string[]
   effectiveRoles: string[]
   permissions: string[]
+  activeTenantId?: string
 }
 
 export interface ScopeAssignment {

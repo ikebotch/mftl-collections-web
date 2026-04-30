@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue';
 import DataTable from '@/shared/components/tables/DataTable.vue';
@@ -116,7 +116,7 @@ function openCreateModal() {
   router.push('/admin/branches/new');
 }
 
-async function confirmDelete(branch) {
+async function confirmDelete(branch: any) {
   if (confirm(`Are you sure you want to deactivate/delete ${branch.name}?`)) {
     try {
       await branchesService.delete(branch.id);

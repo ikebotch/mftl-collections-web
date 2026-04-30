@@ -82,14 +82,20 @@ export function requireAdmin(
 
     const roles = usersStore.roles || []
     const isAdmin = roles.some((r: string) => 
-      ['Platform Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'System Manager'].includes(r) ||
+      ['Platform Admin', 'Tenant Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'Finance Admin', 'Event Manager', 'System Manager'].includes(r) ||
       r.includes('Admin') || r.includes('Finance') || r.includes('Reporting')
     ) || usersStore.isPlatformAdmin
     
+    const hasAssignments = (usersStore.me?.scopeAssignments?.length ?? 0) > 0
+    const isActive = usersStore.accessState === 'active'
+
     if (isAdmin) {
       next()
     } else if (roles.some(r => ['Collector', 'Collector Supervisor'].includes(r))) {
       next('/collector')
+    } else if (isActive && hasAssignments) {
+      // User is active and has assignments, but no effective roles yet (likely need tenant selection/auto-bootstrap)
+      next()
     } else {
       next('/pending-access')
     }
@@ -128,11 +134,16 @@ export function requireCollector(
     const roles = usersStore.roles || []
     const isCollector = roles.some(r => ['Collector', 'Collector Supervisor'].includes(r))
     const isAdmin = roles.some((r: string) => 
-      ['Platform Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'System Manager'].includes(r) ||
+      ['Platform Admin', 'Tenant Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'Finance Admin', 'Event Manager', 'System Manager'].includes(r) ||
       r.includes('Admin') || r.includes('Finance') || r.includes('Reporting')
     ) || usersStore.isPlatformAdmin
     
+    const hasAssignments = (usersStore.me?.scopeAssignments?.length ?? 0) > 0
+    const isActive = usersStore.accessState === 'active'
+
     if (isCollector || isAdmin) {
+      next()
+    } else if (isActive && hasAssignments) {
       next()
     } else {
       next('/pending-access')

@@ -125,7 +125,12 @@
             </div>
             <div class="flex flex-col">
               <div class="flex items-center gap-2">
-                <span class="font-black text-slate-900 tracking-tight">{{ row.name }}</span>
+                <button 
+                  class="font-black text-slate-900 tracking-tight hover:text-violet-600 transition-colors text-left"
+                  @click="router.push(`/admin/users/${row.id}`)"
+                >
+                  {{ row.name }}
+                </button>
                 <span 
                   v-if="row.isPlatformAdmin" 
                   class="px-1.5 py-0.5 rounded-none bg-violet-600 text-[8px] font-black text-white uppercase tracking-widest"
@@ -147,7 +152,7 @@
           />
         </template>
 
-        <template #cell:inviteState="{ value }">
+        <template #cell:inviteStatus="{ value }">
           <div class="flex items-center gap-2">
             <div 
               class="w-1.5 h-1.5 rounded-none" 
@@ -218,7 +223,7 @@ const router = useRouter()
 const query = useUsers()
 const dashboardQuery = useQuery({
   queryKey: ['admin-dashboard-summary'],
-  queryFn: getDashboardSummary
+  queryFn: () => getDashboardSummary()
 })
 const toast = useToastStore()
 const searchQuery = ref('')
@@ -234,7 +239,7 @@ const columns = [
   { key: 'user', label: 'User' },
   { key: 'role', label: 'Role' },
   { key: 'status', label: 'Status' },
-  { key: 'inviteState', label: 'Invite State' },
+  { key: 'inviteStatus', label: 'Invite State' },
   { key: 'scope', label: 'Scope' },
   { key: 'lastLoginAt', label: 'Last Login' }
 ]
@@ -281,7 +286,7 @@ function countRole(role: string) {
 }
 
 function countInviteState(state: string) {
-  return query.data.value?.filter(u => u.inviteState === state).length.toString() || '0'
+  return query.data.value?.filter(u => u.inviteStatus === state).length.toString() || '0'
 }
 
 async function handleInvite(payload: any) {

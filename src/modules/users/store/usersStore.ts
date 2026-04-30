@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { UserDetail } from '../services/usersService'
 import { usersService } from '../services/usersService'
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 
 export const useUsersStore = defineStore('users-module', () => {
   const me = ref<UserDetail | null>(null)
@@ -29,10 +30,21 @@ export const useUsersStore = defineStore('users-module', () => {
     me.value = profile
   }
 
-  async function fetchMe() {
-    if (me.value) return me.value
+  async function fetchMe(force = false) {
+    if (me.value && !force) return me.value
     const profile = await usersService.getMe()
     me.value = profile
+
+    // Auto-bootstrap tenant if the backend successfully bootstrapped one
+    if (profile.activeTenantId) {
+      const tenantStore = useTenantStore()
+      if (!tenantStore.selectedTenantId) {
+        // Find the target name for the resolved tenant
+        const assignment = profile.scopeAssignments.find(a => a.targetId === profile.activeTenantId)
+        tenantStore.setTenant(profile.activeTenantId, assignment?.targetName || 'Default Tenant')
+      }
+    }
+    
     return profile
   }
 

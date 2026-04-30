@@ -116,6 +116,7 @@
                   />
                 </div>
                 <AppTextarea
+                  id="branch-location"
                   v-model="form.location"
                   label="Geographic Parameters"
                   :rows="3"
@@ -289,9 +290,8 @@ import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import BranchEventsList from '../components/BranchEventsList.vue'
-import { Check, Building2, Settings, Pencil, History, LayoutGrid, Trash2, Calendar, Activity } from 'lucide-vue-next'
+import { Check, Pencil, History } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -330,7 +330,7 @@ watchEffect(() => {
       name: branch.value.name,
       identifier: branch.value.identifier,
       location: branch.value.location || '',
-      isActive: branch.value.isActive
+      isActive: branch.value.isActive ?? true
     }
   }
 })
@@ -342,7 +342,7 @@ function resetAllEdits() {
 async function handleSave() {
   try {
     await updateMutation.mutateAsync({
-      id: branchId,
+      id: branchId.value,
       payload: form.value
     })
     toast.success('Infrastructure matrix synchronized')

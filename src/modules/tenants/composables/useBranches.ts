@@ -10,8 +10,12 @@ export function useBranches(tenantIds?: MaybeRefOrGetter<string | undefined>) {
   const effectiveTenantIds = computed(() => toValue(tenantIds) || tenantStore.selectedTenantIdsCSV)
 
   return useQuery({
-    queryKey: () => ['branches', { tenantId: effectiveTenantIds.value }],
-    queryFn: () => branchesService.list(effectiveTenantIds.value),
+    queryKey: computed(() => ['branches', { tenantId: toValue(effectiveTenantIds) }]),
+    queryFn: () => branchesService.list(toValue(effectiveTenantIds)),
+    enabled: computed(() => {
+      const tid = toValue(effectiveTenantIds)
+      return !!tid && tid !== '00000000-0000-0000-0000-000000000000'
+    }),
   })
 }
 

@@ -1,23 +1,24 @@
 import { useQuery } from '@tanstack/vue-query'
+import { computed, toValue } from 'vue'
 import { getDashboardSummary, type DashboardSummary } from '../services/dashboardService'
 import type { ApiError } from '@/core/api/apiError'
 
 import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { useBranchStore } from '@/modules/branches/store/branchStore'
-import { computed } from 'vue'
 
 export function useDashboard() {
   const tenantStore = useTenantStore()
   const branchStore = useBranchStore()
   
   return useQuery<DashboardSummary, ApiError>({
-    queryKey: ['dashboard-summary', { 
-      tenantIds: computed(() => tenantStore.selectedTenantIds.join(',')),
-      branchIds: computed(() => branchStore.selectedBranchIds.join(','))
-    }],
+    queryKey: computed(() => ['dashboard-summary', { 
+      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      branchId: toValue(branchStore.multiBranchIdCSV)
+    }]),
     queryFn: () => getDashboardSummary({
-      tenantId: tenantStore.selectedTenantIdsCSV,
-      branchId: branchStore.multiBranchIdCSV
+      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      branchId: toValue(branchStore.multiBranchIdCSV)
     }),
+    enabled: computed(() => !!toValue(tenantStore.selectedTenantId) && toValue(tenantStore.selectedTenantId) !== '00000000-0000-0000-0000-000000000000'),
   })
 }

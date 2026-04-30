@@ -143,6 +143,7 @@
 import { ref, computed } from 'vue'
 import { useNotificationTemplates, useCreateNotificationTemplate, useUpdateNotificationTemplate } from '../composables/useNotificationTemplates'
 import { useUsersStore } from '@/modules/users/store/usersStore'
+import { Permissions } from '@/core/auth/permissions'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
@@ -165,7 +166,7 @@ import type { NotificationTemplate } from '../services/notificationTemplatesServ
 
 const usersStore = useUsersStore()
 const toast = useToastStore()
-const canManage = computed(() => usersStore.isPlatformAdmin || usersStore.hasPermission('notification-templates.manage') || usersStore.hasPermission('notification-templates.*'))
+const canManage = computed(() => usersStore.isPlatformAdmin || usersStore.hasPermission(Permissions.Notifications.Manage) || usersStore.hasPermission(Permissions.Notifications.All))
 
 const searchQuery = ref('')
 const activeChannel = ref('all')

@@ -10,7 +10,7 @@
       @retry="query.refetch"
     />
 
-    <template v-else-if="query.data.value">
+    <div v-else-if="query.data.value">
 
       <!-- ══════════════════════════════════════════════════
            PHONE HEADER  (< 768 px)
@@ -99,9 +99,8 @@
           </div>
 
           <!-- No-assignments state -->
-          <div class="mx-4 md:mx-0">
+          <div v-if="!query.data.value.profile.hasAssignments" class="mx-4 md:mx-0">
             <EmptyState
-              v-if="!query.data.value.profile.hasAssignments"
               title="No active assignments"
               description="Contact your administrator to be assigned to an event."
               icon="calendar"
@@ -247,32 +246,31 @@
         </div>
       </div>
 
-    </template>
 
-    <!-- Detail drawer (all breakpoints) -->
-    <DetailDrawer
-      :is-open="isDrawerOpen"
-      title="Contribution Details"
-      :subtitle="selectedReceipt?.receiptNumber"
-      @close="isDrawerOpen = false"
-    >
-      <ContributionDetailView v-if="selectedReceipt" :contribution="selectedReceipt" />
-    </DetailDrawer>
-
-    <!-- ══════════════════════════════════════════════════
-         PHONE: Sticky bottom CTA
-    ══════════════════════════════════════════════════ -->
-    <div
-      v-if="query.data.value"
-      class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 px-4 py-3 safe-area-bottom z-30"
-    >
-      <button
-        class="w-full bg-violet-600 text-white py-4 text-sm font-black uppercase tracking-widest active:opacity-90 transition-opacity flex items-center justify-center gap-2"
-        @click="$router.push('/collector/contributions/new')"
+      <!-- Detail drawer (all breakpoints) -->
+      <DetailDrawer
+        :is-open="isDrawerOpen"
+        title="Contribution Details"
+        :subtitle="selectedReceipt?.receiptNumber"
+        @close="isDrawerOpen = false"
       >
-        <Plus class="w-4 h-4" />
-        Record New Collection
-      </button>
+        <ContributionDetailView v-if="selectedReceipt" :contribution="selectedReceipt" />
+      </DetailDrawer>
+
+      <!-- ══════════════════════════════════════════════════
+           PHONE: Sticky bottom CTA
+      ══════════════════════════════════════════════════ -->
+      <div
+        class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 px-4 py-3 safe-area-bottom z-30"
+      >
+        <button
+          class="w-full bg-violet-600 text-white py-4 text-sm font-black uppercase tracking-widest active:opacity-90 transition-opacity flex items-center justify-center gap-2"
+          @click="$router.push('/collector/contributions/new')"
+        >
+          <Plus class="w-4 h-4" />
+          Record New Collection
+        </button>
+      </div>
     </div>
   </div>
 </template>

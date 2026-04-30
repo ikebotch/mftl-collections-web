@@ -6,7 +6,7 @@
     >
       <template #actions>
         <AppButton
-          v-if="usersStore.hasPermission('organisations.create')"
+          v-if="usersStore.hasPermission(Permissions.Organisations.Create)"
           variant="primary"
           class="px-8 shadow-lg shadow-violet-100"
           @click="router.push('/admin/organization/new')"
@@ -111,6 +111,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useTenants } from '../composables/useTenants'
+import { useUsersStore } from '@/modules/users/store/usersStore'
+import { Permissions } from '@/core/auth/permissions'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
@@ -118,6 +120,7 @@ import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { Plus } from 'lucide-vue-next'
 
 const router = useRouter()
+const usersStore = useUsersStore()
 const { data: tenants, isLoading } = useTenants()
 
 function goToDetail(id: string) {

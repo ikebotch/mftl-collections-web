@@ -3,12 +3,29 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { useRouter } from 'vue-router'
 import { ShieldAlert, LogOut, MessageCircle } from 'lucide-vue-next'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
+import { useUsersStore } from '@/modules/users/store/usersStore'
 
-const { logout } = useAuth0()
+import { isAuthConfigured } from '@/core/auth/auth0'
+
+const auth0 = isAuthConfigured() ? useAuth0() : null
 const router = useRouter()
 
 function handleLogout() {
-  logout({ logoutParams: { returnTo: window.location.origin } })
+  if (auth0) {
+    auth0.logout({ logoutParams: { returnTo: window.location.origin } })
+  } else {
+    router.push('/')
+  }
+}
+
+async function handleRetry() {
+  try {
+    const usersStore = useUsersStore()
+    await usersStore.fetchMe(true)
+    router.replace('/admin')
+  } catch (err) {
+    console.error('Retry failed:', err)
+  }
 }
 </script>
 
@@ -57,7 +74,7 @@ function handleLogout() {
           <AppButton
             variant="primary"
             class="flex-1 !rounded-none bg-teal-500 hover:bg-teal-400 text-slate-950 py-6 font-black uppercase tracking-widest"
-            @click="router.replace('/admin')"
+            @click="handleRetry"
           >
             Retry Access
           </AppButton>

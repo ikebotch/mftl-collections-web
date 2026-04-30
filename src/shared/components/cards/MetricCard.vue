@@ -88,7 +88,7 @@ interface Props {
   label: string
   value: string | number | string[]
   icon?: string
-  color?: 'purple' | 'green' | 'amber' | 'blue' | 'red' | 'slate' | 'emerald'
+  color?: 'purple' | 'green' | 'amber' | 'blue' | 'red' | 'slate' | 'emerald' | 'rose' | 'violet'
   trend?: string
   trendPositive?: boolean
   progress?: number
@@ -111,26 +111,30 @@ const resolvedIcon = computed(() => (Icons as any)[props.icon] || Icons.Activity
 const colorClasses = computed(() => {
   const maps = {
     purple: 'bg-violet-50 text-violet-600',
+    violet: 'bg-violet-50 text-violet-600',
     green: 'bg-emerald-50 text-emerald-600',
     emerald: 'bg-emerald-50 text-emerald-600',
     amber: 'bg-amber-50 text-amber-600',
     blue: 'bg-blue-50 text-blue-600',
     red: 'bg-red-50 text-red-600',
+    rose: 'bg-rose-50 text-rose-600',
     slate: 'bg-slate-50 text-slate-600',
   }
-  return maps[props.color] || maps.purple
+  return (maps as any)[props.color] || maps.purple
 })
 
 const barColorClass = computed(() => {
   const maps = {
     purple: 'bg-violet-500',
+    violet: 'bg-violet-500',
     green: 'bg-emerald-500',
     emerald: 'bg-emerald-500',
     amber: 'bg-amber-500',
     blue: 'bg-blue-500',
     red: 'bg-red-500',
+    rose: 'bg-rose-500',
     slate: 'bg-slate-500',
   }
-  return maps[props.color] || maps.purple
+  return (maps as any)[props.color] || maps.purple
 })
 </script>

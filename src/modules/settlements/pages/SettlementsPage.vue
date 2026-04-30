@@ -56,13 +56,16 @@
         title="Settlement Reconciliation"
         @retry="query.refetch"
       >
-        <template #cell:collectorName="{ value }">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-none bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0">
-              {{ getInitials(value) }}
+        <template #cell:collectorName="{ row }">
+          <button 
+            class="flex items-center gap-4 text-left group/collector"
+            @click="() => {}"
+          >
+            <div class="w-10 h-10 rounded-none bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 shrink-0 group-hover/collector:border-violet-200 transition-colors">
+              {{ getInitials(row.collectorName) }}
             </div>
-            <span class="text-sm font-black text-slate-900 tracking-tight">{{ value }}</span>
-          </div>
+            <span class="text-sm font-black text-slate-900 tracking-tight group-hover/collector:text-violet-600 transition-colors">{{ row.collectorName }}</span>
+          </button>
         </template>
 
         <template #cell:amount="{ row }">

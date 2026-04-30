@@ -8,32 +8,40 @@
     <AdminMetricGrid>
       <MetricCard
         label="Total Raised"
-        :value="totalRaisedFormatted"
+        :value="query.isLoading.value ? '---' : totalRaisedFormatted"
         icon="TrendingUp"
         color="green"
-        :trend="finalTotalItems > 0 ? '+100%' : '0%'"
+        :trend="!query.isLoading.value && finalTotalItems > 0 ? '+100%' : '0%'"
       />
       <MetricCard
         label="Total Records"
-        :value="String(finalTotalItems)"
+        :value="query.isLoading.value ? '---' : String(finalTotalItems)"
         icon="Calendar"
         color="purple"
       />
       <MetricCard
         label="Verified Funds"
-        :value="String(contributions.filter(c => c.status === 'Completed' || c.status === 'Collected').length)"
+        :value="query.isLoading.value ? '---' : String(contributions.filter(c => c.status === 'Completed' || c.status === 'Collected').length)"
         icon="ShieldCheck"
         color="slate"
       />
       <MetricCard
         label="Failed Payments"
-        :value="String(contributions.filter(c => c.status === 'Failed').length)"
+        :value="query.isLoading.value ? '---' : String(contributions.filter(c => c.status === 'Failed').length)"
         icon="AlertCircle"
         color="red"
       />
     </AdminMetricGrid>
 
-    <div class="space-y-6">
+    <LoadingState v-if="query.isLoading.value" text="Loading contributions..." />
+    <ErrorState
+      v-else-if="query.isError.value"
+      title="Could not load contributions"
+      :message="query.error.value?.message ?? 'Check your connection and try again.'"
+      show-retry
+      @retry="query.refetch()"
+    />
+    <div v-else class="space-y-6">
       <AdminFilterBar
         v-model="searchQuery"
         placeholder="Search donor, event, or fund..."
@@ -85,12 +93,12 @@
           </div>
         </template>
       </AdminFilterBar>
-
+ 
       <DataTable
         v-model:page="currentPage"
         :columns="columns"
         :rows="filteredContributions"
-        :loading="query.isLoading.value"
+        :loading="query.isFetching.value"
         :total-items="finalTotalItems"
         :page-size="pageSize"
         exportable
@@ -99,34 +107,39 @@
         <template #cell:date="{ value }">
           <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ value }}</span>
         </template>
-
+ 
         <template #cell:donor="{ row }">
-          <span class="text-xs font-bold text-slate-900">{{ row.contributorName }}</span>
+          <button 
+            class="text-xs font-bold text-slate-900 hover:text-violet-600 transition-colors text-left"
+            @click="openDrawer(row)"
+          >
+            {{ row.contributorName }}
+          </button>
         </template>
-
+ 
         <template #cell:event="{ value }">
           <span class="text-xs font-bold text-slate-600">{{ value }}</span>
         </template>
-
+ 
         <template #cell:fund="{ value }">
           <span class="text-xs font-bold text-slate-500">{{ value }}</span>
         </template>
-
+ 
         <template #cell:collector="{ row }">
           <span class="text-xs font-black text-slate-900 lowercase">{{ row.collectorName || 'system' }}</span>
         </template>
-
+ 
         <template #cell:method="{ value }">
           <span class="text-[10px] font-black text-slate-900 tracking-widest uppercase">{{ value }}</span>
         </template>
-
+ 
         <template #cell:status="{ row }">
           <StatusBadge
             :status="row.status"
             :tone="row.status.toLowerCase() === 'completed' || row.status.toLowerCase() === 'collected' ? 'success' : 'neutral'"
           />
         </template>
-
+ 
         <template #rowActions="{ row }">
           <RowActions
             :actions="[

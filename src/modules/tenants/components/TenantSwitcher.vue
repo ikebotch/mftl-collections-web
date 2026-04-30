@@ -1,45 +1,39 @@
 <template>
-  <div
-    ref="containerRef"
-    class="relative group"
-  >
+  <div ref="containerRef" class="relative group">
     <!-- Main Selector Button (Modernized) -->
-    <button 
+    <button
       class="premium-switcher-btn"
-      :class="{ 
+      :class="{
         'is-open': isOpen,
         'is-disabled': !canOpenSwitcher && !isPlatformAdmin,
-        'is-collapsed': isCollapsed
+        'is-collapsed': isCollapsed,
       }"
       @click="handleToggle"
     >
       <div class="icon-container">
         <div class="icon-glow" />
         <template v-if="!isCollapsed">
-          <ShieldCheck
-            v-if="!branchStore.selectedBranchId"
-            class="icon"
-          />
-          <MapPin
-            v-else
-            class="icon"
-          />
+          <ShieldCheck v-if="!branchStore.selectedBranchId" class="icon" />
+          <MapPin v-else class="icon" />
         </template>
         <Building2 v-else class="icon" />
       </div>
-      
-      <div v-if="!isCollapsed" class="label-area animate-in fade-in slide-in-from-left-2 duration-500">
+
+      <div
+        v-if="!isCollapsed"
+        class="label-area animate-in fade-in slide-in-from-left-2 duration-500"
+      >
         <h1 class="hub-title">
-          {{ config.appName }}
+          {{ displayTitle }}
         </h1>
         <div class="hub-badge">
           <span class="badge-dot" />
           <p class="badge-text">
-            {{ displayTitle }} &bull; {{ displaySubtitle }}
+            {{ displaySubtitle }}
           </p>
         </div>
       </div>
-      
+
       <div
         v-if="!isCollapsed && (canOpenSwitcher || isPlatformAdmin)"
         class="chevron-wrapper"
@@ -49,22 +43,20 @@
     </button>
 
     <!-- Premium Glassmorphism Dropdown -->
-    <div 
-      v-if="isOpen"
-      class="premium-dropdown"
-    >
+    <div v-if="isOpen" class="premium-dropdown">
       <div class="dropdown-inner">
         <!-- Modern Sliding Tab Switcher -->
-        <div
-          v-if="!isSingleTenant || isPlatformAdmin"
-          class="sliding-tabs"
-        >
-          <div 
+        <div v-if="!isSingleTenant || isPlatformAdmin" class="sliding-tabs">
+          <div
             class="tab-indicator"
-            :style="{ transform: `translateX(${activeView === 'tenants' ? '0' : '100%'})` }"
+            :style="{
+              transform: `translateX(${
+                activeView === 'tenants' ? '0' : '100%'
+              })`,
+            }"
           />
           <div class="tabs-grid">
-            <button 
+            <button
               v-if="!isSingleTenant || isPlatformAdmin"
               class="tab-btn"
               :class="{ active: activeView === 'tenants' }"
@@ -72,11 +64,11 @@
             >
               Organizations
             </button>
-            <button 
+            <button
               class="tab-btn"
-              :class="{ 
+              :class="{
                 active: activeView === 'branches',
-                'full-width': isSingleTenant && !isPlatformAdmin
+                'full-width': isSingleTenant && !isPlatformAdmin,
               }"
               @click="activeView = 'branches'"
             >
@@ -88,7 +80,7 @@
         <!-- Scrollable Content Area -->
         <div class="content-viewport custom-scrollbar">
           <!-- Organizations List -->
-          <TransitionGroup 
+          <TransitionGroup
             v-if="activeView === 'tenants'"
             name="list-slide"
             tag="div"
@@ -117,19 +109,15 @@
                 <Globe class="w-4 h-4" />
               </div>
               <div class="item-info">
-                <p class="item-name">
-                  Global System View
-                </p>
-                <p class="item-meta">
-                  All Organizations & Branches
-                </p>
+                <p class="item-name">Global System View</p>
+                <p class="item-meta">All Organizations & Branches</p>
               </div>
               <div
                 v-if="!tenantStore.selectedTenantId"
                 class="active-indicator"
               />
             </button>
-            
+
             <button
               v-for="tenant in tenants"
               :key="tenant.id"
@@ -144,21 +132,16 @@
                 <p class="item-name">
                   {{ tenant.name }}
                 </p>
-                <p class="item-meta">
-                  Primary Identity
-                </p>
+                <p class="item-meta">Primary Identity</p>
               </div>
-              <div
-                v-if="isTenantSelected(tenant.id)"
-                class="multi-check"
-              >
+              <div v-if="isTenantSelected(tenant.id)" class="multi-check">
                 <Check class="w-3 h-3" />
               </div>
             </button>
           </TransitionGroup>
 
           <!-- Branches List -->
-          <TransitionGroup 
+          <TransitionGroup
             v-else-if="activeView === 'branches'"
             name="list-slide"
             tag="div"
@@ -168,7 +151,9 @@
             <button
               key="root"
               class="list-item"
-              :class="{ 'is-selected': branchStore.selectedBranchIds.length === 0 }"
+              :class="{
+                'is-selected': branchStore.selectedBranchIds.length === 0,
+              }"
               @click="selectMainHub"
             >
               <div class="item-icon-box root-icon">
@@ -176,11 +161,9 @@
               </div>
               <div class="item-info">
                 <p class="item-name">
-                  {{ tenantStore.selectedTenantName || 'Main Hub' }}
+                  {{ tenantStore.selectedTenantName || "Main Hub" }}
                 </p>
-                <p class="item-meta">
-                  Root Organization View
-                </p>
+                <p class="item-meta">Root Organization View</p>
               </div>
               <div
                 v-if="branchStore.selectedBranchIds.length === 0"
@@ -193,19 +176,17 @@
               v-if="isPlatformAdmin"
               key="all-branches"
               class="list-item"
-              :class="{ 'is-selected': branchStore.selectedBranchIds.includes('all') }"
+              :class="{
+                'is-selected': branchStore.selectedBranchIds.includes('all'),
+              }"
               @click="selectAllBranches"
             >
               <div class="item-icon-box all-icon">
                 <Layers class="w-4 h-4" />
               </div>
               <div class="item-info">
-                <p class="item-name">
-                  All Branches
-                </p>
-                <p class="item-meta">
-                  System Wide Overview
-                </p>
+                <p class="item-name">All Branches</p>
+                <p class="item-meta">System Wide Overview</p>
               </div>
               <div
                 v-if="branchStore.selectedBranchIds.includes('all')"
@@ -228,13 +209,14 @@
                   {{ branch.name }}
                 </p>
                 <p class="item-meta">
-                  {{ branch.isHeadquarters ? 'Headquarters' : getTenantName(branch.tenantId) }}
+                  {{
+                    branch.isHeadquarters
+                      ? "Headquarters"
+                      : getTenantName(branch.tenantId)
+                  }}
                 </p>
               </div>
-              <div
-                v-if="isBranchSelected(branch.id)"
-                class="multi-check"
-              >
+              <div v-if="isBranchSelected(branch.id)" class="multi-check">
                 <Check class="w-3 h-3" />
               </div>
             </button>
@@ -246,170 +228,209 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
-import { Building2, MapPin, ChevronDown, Search, ArrowLeft, Check, Globe, Layers, ShieldCheck } from 'lucide-vue-next'
-import { useQuery, useQueryClient } from '@tanstack/vue-query'
-import { tenantsService } from '../services/tenantsService'
-import { branchesService } from '../services/branchesService'
-import { useTenantStore } from '../store/tenantStore'
-import { useBranchStore } from '@/modules/branches/store/branchStore'
-import { useMe } from '@/modules/users/composables/useUsers'
-import { appConfig } from '@/core/config/appConfig'
+import { ref, watch, computed, onMounted, onUnmounted } from "vue";
+import {
+  Building2,
+  MapPin,
+  ChevronDown,
+  Search,
+  ArrowLeft,
+  Check,
+  Globe,
+  Layers,
+  ShieldCheck,
+} from "lucide-vue-next";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { tenantsService } from "../services/tenantsService";
+import { branchesService } from "../services/branchesService";
+import { useTenantStore } from "../store/tenantStore";
+import { useBranchStore } from "@/modules/branches/store/branchStore";
+import { useMe } from "@/modules/users/composables/useUsers";
+import { appConfig } from "@/core/config/appConfig";
 
 const props = defineProps<{
-  isCollapsed?: boolean
-}>()
+  isCollapsed?: boolean;
+}>();
 
 // Expose appConfig to the template
-const config = appConfig
+const config = appConfig;
 
-const isOpen = ref(false)
-const containerRef = ref<HTMLElement | null>(null)
-const activeView = ref<'tenants' | 'branches'>('tenants')
-const queryClient = useQueryClient()
+const isOpen = ref(false);
+const containerRef = ref<HTMLElement | null>(null);
+const activeView = ref<"tenants" | "branches">("tenants");
+const queryClient = useQueryClient();
 
-const tenantStore = useTenantStore()
-const branchStore = useBranchStore()
-const { data: me } = useMe()
+const tenantStore = useTenantStore();
+const branchStore = useBranchStore();
+const { data: me } = useMe();
 
 const isCollector = computed(() => {
-  const roles = me.value?.effectiveRoles || []
-  return roles.includes('Collector') || roles.includes('Collector Supervisor')
-})
+  const roles = me.value?.effectiveRoles || [];
+  return roles.includes("Collector") || roles.includes("Collector Supervisor");
+});
 
-const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false)
+const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false);
 
 const { data: tenants, isPending: isPendingTenants } = useQuery({
-  queryKey: ['tenants-list'],
+  queryKey: ["tenants-list"],
   queryFn: () => tenantsService.list(),
-  enabled: true // Always enable for authenticated users to see their assignments
-})
+  enabled: true, // Always enable for authenticated users to see their assignments
+});
 
-const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1)
+const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1);
 
 const { data: branches, refetch: refetchBranches } = useQuery({
-  queryKey: ['branches-list', tenantStore.selectedTenantIdsCSV],
-  queryFn: () => branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
-  enabled: computed(() => (!!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value))
-})
-
-
+  queryKey: ["branches-list", tenantStore.selectedTenantIdsCSV],
+  queryFn: () =>
+    branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
+  enabled: computed(
+    () => !!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value
+  ),
+});
 
 const canOpenSwitcher = computed(() => {
-  if (isPlatformAdmin.value) return true
-  return (tenants.value?.length ?? 0) > 1 || (branches.value?.length ?? 0) > 1
-})
+  if (isPlatformAdmin.value) return true;
+  return (tenants.value?.length ?? 0) > 1 || (branches.value?.length ?? 0) > 1;
+});
 
 function handleToggle() {
-  if (!canOpenSwitcher.value && !isPlatformAdmin.value) return
-  isOpen.value = !isOpen.value
+  if (!canOpenSwitcher.value && !isPlatformAdmin.value) return;
+  isOpen.value = !isOpen.value;
 }
 
 // Auto-initialize context for single-tenant users
-watch(tenants, (newTenants) => {
-  if (newTenants?.length === 1 && !isPlatformAdmin.value) {
-    activeView.value = 'branches'
-    if (!tenantStore.selectedTenantId) {
-      tenantStore.setTenants([newTenants[0].id], newTenants[0].name)
+watch(
+  tenants,
+  (newTenants) => {
+    if (newTenants?.length === 1 && !isPlatformAdmin.value) {
+      activeView.value = "branches";
+      if (!tenantStore.selectedTenantId) {
+        tenantStore.setTenants([newTenants[0].id], newTenants[0].name);
+      }
     }
-  }
-}, { immediate: true })
+  },
+  { immediate: true }
+);
 
 const displayTitle = computed(() => {
-  if (branchStore.selectedBranchIds.includes('all')) return 'All Branches'
-  if (branchStore.selectedBranchIds.length > 1) return `${branchStore.selectedBranchIds.length} Branches`
+  if (branchStore.selectedBranchIds.includes("all")) return "All Branches";
+  if (branchStore.selectedBranchIds.length > 1)
+    return `${branchStore.selectedBranchIds.length} Branches`;
   if (branchStore.selectedBranchIds.length === 1) {
-    const branch = branches.value?.find(b => b.id === branchStore.selectedBranchIds[0])
-    return branch?.name || 'Selected Branch'
+    const branch = branches.value?.find(
+      (b) => b.id === branchStore.selectedBranchIds[0]
+    );
+    return branch?.name || "Selected Branch";
   }
-  
-  if (!tenantStore.selectedTenantId && isPlatformAdmin.value) return 'Global View'
-  if (tenantStore.selectedTenantIds.length > 1) return `${tenantStore.selectedTenantIds.length} Organizations`
-  return tenantStore.selectedTenantName || 'Select Hub'
-})
+
+  if (!tenantStore.selectedTenantId && isPlatformAdmin.value)
+    return "Global View";
+  if (tenantStore.selectedTenantIds.length > 1)
+    return `${tenantStore.selectedTenantIds.length} Organizations`;
+  return tenantStore.selectedTenantName || "Select Hub";
+});
 
 const displaySubtitle = computed(() => {
-  if (branchStore.selectedBranchIds.includes('all')) return 'System Wide Discovery'
-  if (branchStore.selectedBranchIds.length > 0) return 'Operational Scope'
-  if (!tenantStore.selectedTenantId && isPlatformAdmin.value) return 'System Authority'
-  return 'Organization Wide'
-})
+  if (branchStore.selectedBranchIds.includes("all"))
+    return "System Wide Discovery";
+  if (branchStore.selectedBranchIds.length > 0) return "Operational Scope";
+  if (!tenantStore.selectedTenantId && isPlatformAdmin.value)
+    return "System Authority";
+  return "Organization Wide";
+});
 
 function handleClickOutside(event: MouseEvent) {
-  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-    isOpen.value = false
+  if (
+    containerRef.value &&
+    !containerRef.value.contains(event.target as Node)
+  ) {
+    isOpen.value = false;
   }
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
+  document.addEventListener("click", handleClickOutside);
+});
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener("click", handleClickOutside);
+});
 
-watch(() => tenantStore.selectedTenantIds, () => {
-  refetchBranches()
-  queryClient.invalidateQueries()
-}, { deep: true })
+watch(
+  () => tenantStore.selectedTenantIds,
+  () => {
+    refetchBranches();
+    queryClient.invalidateQueries();
+  },
+  { deep: true }
+);
 
-watch(() => branchStore.selectedBranchIds, () => {
-  queryClient.invalidateQueries()
-}, { deep: true })
+watch(
+  () => branchStore.selectedBranchIds,
+  () => {
+    queryClient.invalidateQueries();
+  },
+  { deep: true }
+);
 
 function getTenantName(tenantId: string) {
-  if (!tenants.value) return 'Organization'
-  const tenant = tenants.value.find(t => t.id === tenantId)
-  return tenant ? tenant.name : 'Organization'
+  if (!tenants.value) return "Organization";
+  const tenant = tenants.value.find((t) => t.id === tenantId);
+  return tenant ? tenant.name : "Organization";
 }
 
 function isTenantSelected(id: string) {
-  return tenantStore.selectedTenantIds.includes(id)
+  return tenantStore.selectedTenantIds.includes(id);
 }
 
 function isBranchSelected(id: string) {
-  return branchStore.selectedBranchIds.includes(id)
+  return branchStore.selectedBranchIds.includes(id);
 }
 
 function toggleTenant(tenant: any) {
-  const ids = [...tenantStore.selectedTenantIds]
-  const index = ids.indexOf(tenant.id)
-  
+  const ids = [...tenantStore.selectedTenantIds];
+  const index = ids.indexOf(tenant.id);
+
   if (index > -1) {
-    ids.splice(index, 1)
+    ids.splice(index, 1);
   } else {
-    ids.push(tenant.id)
+    ids.push(tenant.id);
   }
-  
-  let name = ''
+
+  let name = "";
   if (ids.length === 1) {
-    const activeTenant = tenants.value?.find(t => t.id === ids[0])
-    name = activeTenant?.name || ''
+    const activeTenant = tenants.value?.find((t) => t.id === ids[0]);
+    name = activeTenant?.name || "";
   }
-  
-  tenantStore.setTenants(ids, name)
-  branchStore.clearBranch()
+
+  tenantStore.setTenants(ids, name);
+  branchStore.clearBranch();
+  // Force re-fetch of effective roles/permissions for the new tenant(s)
+  void usersStore.fetchMe(true);
 }
 
 function selectGlobalView() {
-  tenantStore.clearTenant()
-  branchStore.clearBranch()
-  isOpen.value = false
+  tenantStore.clearTenant();
+  branchStore.clearBranch();
+  isOpen.value = false;
+  void usersStore.fetchMe(true);
 }
 
 function toggleBranch(branch: any) {
-  branchStore.toggleBranch(branch.id)
+  branchStore.toggleBranch(branch.id);
+  void usersStore.fetchMe(true);
 }
 
 function selectAllBranches() {
-  branchStore.setBranches(['all'])
-  isOpen.value = false
+  branchStore.setBranches(["all"]);
+  isOpen.value = false;
+  void usersStore.fetchMe(true);
 }
 
 function selectMainHub() {
-  branchStore.clearBranch()
-  isOpen.value = false
+  branchStore.clearBranch();
+  isOpen.value = false;
+  void usersStore.fetchMe(true);
 }
 </script>
 
@@ -566,8 +587,14 @@ function selectMainHub() {
 }
 
 @keyframes dropdown-in {
-  from { opacity: 0; transform: translateY(8px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .dropdown-inner {
@@ -587,7 +614,7 @@ function selectMainHub() {
   padding: 0.25rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
- 
+
 .tabs-grid {
   position: relative;
   display: grid;
@@ -605,7 +632,7 @@ function selectMainHub() {
   border-radius: 0;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .tab-btn {

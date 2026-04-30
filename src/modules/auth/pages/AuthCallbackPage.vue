@@ -6,7 +6,15 @@ import { usersService } from '@/modules/users/services/usersService'
 import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { useUsersStore } from '@/modules/users/store/usersStore'
 
-const { isAuthenticated, isLoading, error, loginWithRedirect } = useAuth0()
+import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
+
+const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
+const { 
+  isAuthenticated = ref(shouldBypassAuth()), 
+  isLoading = ref(false), 
+  error = ref(null), 
+  loginWithRedirect = () => {} 
+} = auth0 || {}
 const router = useRouter()
 const usersStore = useUsersStore()
 
@@ -33,7 +41,16 @@ async function syncAndNavigate() {
       })
       usersStore.setMe(me)
       
-      // 2. Redirect based on access state and roles
+      // 2. Automatically select tenant if exactly one is assigned
+      const tenantStore = useTenantStore()
+      const tenantScopes = me.scopeAssignments?.filter(s => s.scopeType === 'Tenant') || []
+      
+      if (tenantScopes.length === 1 && !tenantStore.selectedTenantId) {
+        console.log('AuthCallback: Auto-selecting single tenant:', tenantScopes[0].targetName)
+        tenantStore.setTenant(tenantScopes[0].targetId!, tenantScopes[0].targetName!)
+      }
+      
+      // 3. Redirect based on access state and roles
       if (me.accessState === 'suspended') {
         console.log('AuthCallback: User suspended')
         router.replace('/access-suspended')
@@ -44,14 +61,18 @@ async function syncAndNavigate() {
       const effectiveRoles = me.effectiveRoles || []
       
       const isAdmin = effectiveRoles.some(r => 
-        ['Platform Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting'].includes(r)
+        ['Platform Admin', 'Tenant Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'Finance Admin', 'Event Manager', 'System Manager'].includes(r) ||
+        r.includes('Admin') || r.includes('Finance') || r.includes('Reporting')
       ) || me.isPlatformAdmin
       
       const isCollector = effectiveRoles.some(r => 
         ['Collector', 'Collector Supervisor'].includes(r)
       )
 
-      console.log('AuthCallback: Routing logic:', { effectiveRoles, isCollector, isAdmin, accessState: me.accessState })
+      const hasAssignments = (me.scopeAssignments?.length ?? 0) > 0
+      const isActive = me.accessState === 'active'
+
+      console.log('AuthCallback: Routing logic:', { effectiveRoles, isCollector, isAdmin, isActive, hasAssignments })
 
       if (isAdmin) {
         console.log('AuthCallback: Redirecting to /admin')
@@ -59,6 +80,9 @@ async function syncAndNavigate() {
       } else if (isCollector) {
         console.log('AuthCallback: Redirecting to /collector')
         await router.replace('/collector')
+      } else if (isActive && hasAssignments) {
+        console.log('AuthCallback: Active with assignments but no effective roles yet, landing on /admin to resolve')
+        await router.replace('/admin')
       } else {
         console.log('AuthCallback: No effective roles or pending, redirecting to /pending-access')
         router.replace('/pending-access')

@@ -5,6 +5,8 @@ export interface BranchRow {
   name: string
   identifier: string
   tenantId: string
+  location?: string
+  isActive?: boolean
 }
 
 export async function listBranches(tenantIds?: string | string[]): Promise<BranchRow[]> {

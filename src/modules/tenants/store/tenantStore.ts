@@ -99,5 +99,10 @@ export const useTenantStore = defineStore('tenant', () => {
 // Helper for HTTP client
 export function readSelectedTenantId(): string {
   const ids = readSelectedTenantIds()
+  return ids[0] ?? ''
+}
+
+export function readSelectedTenantIdsCSV(): string {
+  const ids = readSelectedTenantIds()
   return ids.join(',')
 }
