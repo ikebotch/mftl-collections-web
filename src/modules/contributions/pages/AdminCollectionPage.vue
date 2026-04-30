@@ -291,10 +291,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, toValue } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuery } from '@tanstack/vue-query'
 import { eventsService } from '@/modules/events/services/eventsService'
+import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { contributionsService } from '@/modules/contributions/services/contributionsService'
 import { formatCurrency } from '@/core/formatting/formatters'
 import { shouldBypassAuth } from '@/core/auth/auth0'
@@ -317,12 +318,14 @@ const isSubmitting = ref(false)
 const submissionError = ref<ApiError | null>(null)
 
 // Queries
+const tenantStore = useTenantStore()
 const eventsQuery = useQuery({
-  queryKey: ['admin', 'events', 'active'],
+  queryKey: computed(() => ['admin', 'events', 'active', { tenantId: toValue(tenantStore.selectedTenantId) }]),
   queryFn: () => eventsService.list({ 
     status: 'Published',
     isActive: true 
-  })
+  }),
+  enabled: computed(() => !!toValue(tenantStore.selectedTenantId))
 })
 
 const form = reactive({

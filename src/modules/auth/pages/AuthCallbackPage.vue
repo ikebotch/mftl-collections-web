@@ -7,6 +7,7 @@ import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { useUsersStore } from '@/modules/users/store/usersStore'
 
 import { isAuthConfigured, shouldBypassAuth } from '@/core/auth/auth0'
+import { resolveLandingPath } from '@/core/auth/landing'
 
 const auth0 = !shouldBypassAuth() && isAuthConfigured() ? useAuth0() : null
 const { 
@@ -50,43 +51,10 @@ async function syncAndNavigate() {
         tenantStore.setTenant(tenantScopes[0].targetId!, tenantScopes[0].targetName!)
       }
       
-      // 3. Redirect based on access state and roles
-      if (me.accessState === 'suspended') {
-        console.log('AuthCallback: User suspended')
-        router.replace('/access-suspended')
-        return
-      }
-
-      // Role-based routing
-      const effectiveRoles = me.effectiveRoles || []
-      
-      const isAdmin = effectiveRoles.some(r => 
-        ['Platform Admin', 'Tenant Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'Finance Admin', 'Event Manager', 'System Manager'].includes(r) ||
-        r.includes('Admin') || r.includes('Finance') || r.includes('Reporting')
-      ) || me.isPlatformAdmin
-      
-      const isCollector = effectiveRoles.some(r => 
-        ['Collector', 'Collector Supervisor'].includes(r)
-      )
-
-      const hasAssignments = (me.scopeAssignments?.length ?? 0) > 0
-      const isActive = me.accessState === 'active'
-
-      console.log('AuthCallback: Routing logic:', { effectiveRoles, isCollector, isAdmin, isActive, hasAssignments })
-
-      if (isAdmin) {
-        console.log('AuthCallback: Redirecting to /admin')
-        await router.replace('/admin')
-      } else if (isCollector) {
-        console.log('AuthCallback: Redirecting to /collector')
-        await router.replace('/collector')
-      } else if (isActive && hasAssignments) {
-        console.log('AuthCallback: Active with assignments but no effective roles yet, landing on /admin to resolve')
-        await router.replace('/admin')
-      } else {
-        console.log('AuthCallback: No effective roles or pending, redirecting to /pending-access')
-        router.replace('/pending-access')
-      }
+      // 3. Redirect based on access state and roles using centralized logic
+      const landingPath = resolveLandingPath()
+      console.log('AuthCallback: Redirecting to:', landingPath)
+      await router.replace(landingPath)
     } catch (err: any) {
       console.error('AuthCallback: Failed to sync user context:', err)
       syncError.value = 'We encountered an error while preparing your workspace. Please try again.'

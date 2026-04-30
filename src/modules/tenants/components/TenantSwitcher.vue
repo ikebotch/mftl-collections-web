@@ -246,7 +246,10 @@ import { branchesService } from "../services/branchesService";
 import { useTenantStore } from "../store/tenantStore";
 import { useBranchStore } from "@/modules/branches/store/branchStore";
 import { useMe } from "@/modules/users/composables/useUsers";
+import { useUsersStore } from "@/modules/users/store/usersStore";
 import { appConfig } from "@/core/config/appConfig";
+import { resolveLandingPath } from "@/core/auth/landing";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
   isCollapsed?: boolean;
@@ -259,9 +262,11 @@ const isOpen = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 const activeView = ref<"tenants" | "branches">("tenants");
 const queryClient = useQueryClient();
+const router = useRouter();
 
 const tenantStore = useTenantStore();
 const branchStore = useBranchStore();
+const usersStore = useUsersStore();
 const { data: me } = useMe();
 
 const isCollector = computed(() => {
@@ -360,6 +365,8 @@ watch(
   () => tenantStore.selectedTenantIds,
   () => {
     refetchBranches();
+    // Use removeQueries to immediately evict stale data from other tenants
+    queryClient.removeQueries();
     queryClient.invalidateQueries();
   },
   { deep: true }
@@ -368,6 +375,7 @@ watch(
 watch(
   () => branchStore.selectedBranchIds,
   () => {
+    queryClient.removeQueries();
     queryClient.invalidateQueries();
   },
   { deep: true }
@@ -387,14 +395,21 @@ function isBranchSelected(id: string) {
   return branchStore.selectedBranchIds.includes(id);
 }
 
-function toggleTenant(tenant: any) {
-  const ids = [...tenantStore.selectedTenantIds];
-  const index = ids.indexOf(tenant.id);
-
-  if (index > -1) {
-    ids.splice(index, 1);
+async function toggleTenant(tenant: any) {
+  let ids: string[] = [];
+  
+  if (isPlatformAdmin.value) {
+    // Multi-select for platform admins
+    ids = [...tenantStore.selectedTenantIds];
+    const index = ids.indexOf(tenant.id);
+    if (index > -1) {
+      ids.splice(index, 1);
+    } else {
+      ids.push(tenant.id);
+    }
   } else {
-    ids.push(tenant.id);
+    // Single-select for tenant admins/collectors
+    ids = [tenant.id];
   }
 
   let name = "";
@@ -406,31 +421,49 @@ function toggleTenant(tenant: any) {
   tenantStore.setTenants(ids, name);
   branchStore.clearBranch();
   // Force re-fetch of effective roles/permissions for the new tenant(s)
-  void usersStore.fetchMe(true);
+  await usersStore.fetchMe(true);
+  
+  // Role-aware redirection after tenant switch
+  const landingPath = resolveLandingPath();
+  const currentPath = router.currentRoute.value.path;
+  
+  const isCurrentlyInAdmin = currentPath.startsWith('/admin');
+  const isCurrentlyInCollector = currentPath.startsWith('/collector');
+  
+  const shouldMoveToCollector = isCurrentlyInAdmin && landingPath === '/collector';
+  const shouldMoveToAdmin = isCurrentlyInCollector && landingPath === '/admin';
+  const accessLost = landingPath.startsWith('/pending') || landingPath.startsWith('/access-');
+
+  if (shouldMoveToCollector || shouldMoveToAdmin || (accessLost && currentPath !== landingPath)) {
+    router.push(landingPath);
+  }
 }
 
-function selectGlobalView() {
+async function selectGlobalView() {
   tenantStore.clearTenant();
   branchStore.clearBranch();
   isOpen.value = false;
-  void usersStore.fetchMe(true);
+  await usersStore.fetchMe(true);
+  
+  const landingPath = resolveLandingPath();
+  router.push(landingPath);
 }
 
-function toggleBranch(branch: any) {
+async function toggleBranch(branch: any) {
   branchStore.toggleBranch(branch.id);
-  void usersStore.fetchMe(true);
+  await usersStore.fetchMe(true);
 }
 
-function selectAllBranches() {
+async function selectAllBranches() {
   branchStore.setBranches(["all"]);
   isOpen.value = false;
-  void usersStore.fetchMe(true);
+  await usersStore.fetchMe(true);
 }
 
-function selectMainHub() {
+async function selectMainHub() {
   branchStore.clearBranch();
   isOpen.value = false;
-  void usersStore.fetchMe(true);
+  await usersStore.fetchMe(true);
 }
 </script>
 

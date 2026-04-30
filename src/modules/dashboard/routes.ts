@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { requireAuth, requireAdmin } from '@/core/auth/authGuards'
+import { requireAuth, requireAdmin, requirePermission } from '@/core/auth/authGuards'
+import { Permissions } from '@/core/auth/permissions'
 import { eventRoutes } from '@/modules/events/routes'
 import { recipientFundRoutes } from '@/modules/recipient-funds/routes'
 import { notificationTemplateRoutes } from '@/modules/notification-templates/routes'
@@ -86,6 +87,7 @@ export const adminRoutes: RouteRecordRaw[] = [
       {
         path: 'contributions',
         name: 'admin-contributions',
+        beforeEnter: [requirePermission(Permissions.Contributions.View)],
         component: () => import('@/modules/contributions/pages/ContributionsPage.vue'),
       },
       {

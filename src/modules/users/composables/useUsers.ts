@@ -33,8 +33,9 @@ export function useUser(id: MaybeRefOrGetter<string | undefined>) {
 }
 
 export function useMe() {
+  const tenantStore = useTenantStore()
   return useQuery({
-    queryKey: ['users', 'me'],
+    queryKey: computed(() => ['users', 'me', { tenantId: toValue(tenantStore.selectedTenantId) }]),
     queryFn: getMe,
   })
 }
