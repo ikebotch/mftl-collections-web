@@ -101,7 +101,7 @@ const router = useRouter();
 const toast = useToastStore();
 const tenantStore = useTenantStore();
 
-const query = useBranches(computed(() => tenantStore.selectedTenantIdsCSV));
+const query = useBranches(computed(() => tenantStore.selectedTenantId));
 const branches = computed(() => query.data.value || []);
 const isLoading = query.isLoading;
 

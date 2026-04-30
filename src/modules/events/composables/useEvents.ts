@@ -10,15 +10,15 @@ import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 export function useEvents(branchId?: MaybeRefOrGetter<string | undefined>) {
   const tenantStore = useTenantStore()
   const branchStore = useBranchStore()
-  const effectiveBranchId = computed(() => toValue(branchId) || branchStore.multiBranchIdCSV)
+  const effectiveBranchId = computed(() => toValue(branchId) || branchStore.selectedBranchId)
 
   return useQuery<Event[], ApiError>({
-    queryKey: () => ['events', { 
-      tenantId: tenantStore.selectedTenantIdsCSV,
+    queryKey: computed(() => ['events', { 
+      tenantId: tenantStore.selectedTenantId,
       branchId: effectiveBranchId.value 
-    }],
+    }]),
     queryFn: () => eventsService.list({
-      tenantId: tenantStore.selectedTenantIdsCSV,
+      tenantId: tenantStore.selectedTenantId,
       branchId: effectiveBranchId.value
     }),
     enabled: computed(() => !!tenantStore.selectedTenantId && tenantStore.selectedTenantId !== '00000000-0000-0000-0000-000000000000'),

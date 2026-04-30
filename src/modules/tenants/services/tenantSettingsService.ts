@@ -1,4 +1,4 @@
-export async function getTenantSettings(tenantId?: string) {
+export async function getTenantSettings(_tenantId?: string) {
   return {
     profile: 'Community collections tenant',
     branding: 'Brand kit placeholder',

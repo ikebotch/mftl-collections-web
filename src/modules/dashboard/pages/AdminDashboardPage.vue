@@ -117,11 +117,11 @@
               <template #cell:total="{ row }">
                 <div class="flex flex-col gap-1">
                   <span 
-                    v-for="(amt, curr) in row.totals" 
+                    v-for="[curr, amt] in Object.entries(row.totals)" 
                     :key="curr"
                     class="text-sm font-black text-slate-900 italic leading-none"
                   >
-                    {{ formatCurrency(amt, curr) }}
+                    {{ formatCurrency(Number(amt), curr) }}
                   </span>
                 </div>
               </template>
@@ -345,10 +345,7 @@ import {
   Activity,
   Zap,
   UserCheck,
-  Target,
-  Wallet,
-  Users,
-  ShieldCheck
+  Target
 } from 'lucide-vue-next'
 
 const { copy } = useCopy()

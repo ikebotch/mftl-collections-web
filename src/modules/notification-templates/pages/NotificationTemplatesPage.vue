@@ -20,7 +20,7 @@
       <AdminFilterBar
         v-model="searchQuery"
         placeholder="Search by name or key..."
-        :show-clear="searchQuery || activeChannel !== 'all' || activeScope !== 'all'"
+        :show-clear="!!(searchQuery || activeChannel !== 'all' || activeScope !== 'all')"
         @clear="clearFilters"
       >
         <template #sections>
@@ -166,7 +166,11 @@ import type { NotificationTemplate } from '../services/notificationTemplatesServ
 
 const usersStore = useUsersStore()
 const toast = useToastStore()
-const canManage = computed(() => usersStore.isPlatformAdmin || usersStore.hasPermission(Permissions.Notifications.Manage) || usersStore.hasPermission(Permissions.Notifications.All))
+const canManage = computed(() => 
+  usersStore.isPlatformAdmin || 
+  usersStore.hasPermission(Permissions.NotificationTemplates.Update) || 
+  usersStore.hasPermission(Permissions.NotificationTemplates.Create)
+)
 
 const searchQuery = ref('')
 const activeChannel = ref('all')

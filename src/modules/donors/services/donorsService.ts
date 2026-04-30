@@ -45,7 +45,7 @@ export const donorsService = {
       const contributions = await contributionsService.list()
       const donorMap = new Map<string, Donor & { methods: Record<string, number>, events: Set<string> }>()
       
-      contributions.forEach(c => {
+      contributions.items.forEach(c => {
         const isAnonymous = !c.contributorPhone && (!c.contributorName || c.contributorName.toLowerCase() === 'anonymous')
         if (isAnonymous) return
 

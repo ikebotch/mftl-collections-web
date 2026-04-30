@@ -18,7 +18,7 @@
       <div class="flex gap-2">
         <button
           class="px-3 py-1.5 border border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wide"
-          @click="query.refetch"
+          @click="() => query.refetch()"
         >
           Sync
         </button>
@@ -204,7 +204,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useCollectorHistory } from '../composables/useCollector'
 import { formatCurrency } from '@/core/formatting/formatters'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
@@ -217,7 +216,7 @@ import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { ChevronRight, FileText, Plus } from 'lucide-vue-next'
 
-const router = useRouter()
+// const router = useRouter()
 const query = useCollectorHistory()
 const activeFilter = ref<'all' | 'issued' | 'pending' | 'voided'>('all')
 const isDrawerOpen = ref(false)

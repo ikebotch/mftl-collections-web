@@ -211,7 +211,7 @@ function startEditing(fund: RecipientFund) {
     name: fund.name,
     description: fund.description,
     targetAmount: fund.targetAmount,
-    isActive: fund.isActive
+    isActive: fund.isActive ?? true
   }
 }
 

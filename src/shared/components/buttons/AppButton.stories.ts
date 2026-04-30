@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import AppButton from './AppButton.vue'
-import { Plus, Download, Mail } from 'lucide-vue-next'
-import { h } from 'vue'
+import { Plus } from 'lucide-vue-next'
 
 const meta: Meta<typeof AppButton> = {
   title: 'Components/AppButton',

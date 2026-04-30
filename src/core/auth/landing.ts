@@ -26,7 +26,6 @@ export function resolveLandingPath(): string {
   )
   
   const canViewDashboard = usersStore.hasPermission(Permissions.Dashboard.View)
-  const canViewUsers = usersStore.hasPermission(Permissions.Users.View)
   
   // If they have explicit dashboard view and are NOT just a collector, send to admin
   // A collector also has dashboard.view (collector dashboard), so we check roles too

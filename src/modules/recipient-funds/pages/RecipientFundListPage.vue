@@ -136,13 +136,14 @@ import MoneyCell from '@/shared/components/tables/MoneyCell.vue'
 import StatusBadge from '@/shared/components/badges/StatusBadge.vue'
 import ProgressBar from '@/shared/components/feedback/ProgressBar.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
+import type { RecipientFund } from '../types/recipientFund'
 import { Plus } from 'lucide-vue-next'
 import { formatCurrency } from '@/core/formatting/formatters'
 
 const router = useRouter()
 const searchQuery = ref('')
 const query = useAllRecipientFunds()
-const funds = computed(() => query.data.value || [])
+const funds = computed<RecipientFund[]>(() => query.data.value || [])
 
 const columns = [
   { key: 'fund', label: 'Fund' },
@@ -160,10 +161,10 @@ const filteredFunds = computed(() => {
   )
 })
 
-function aggregateTotals(list: any[]) {
+function aggregateTotals(list: RecipientFund[]) {
   const map: Record<string, number> = {}
   list.forEach(f => {
-    f.totals?.forEach((t: any) => {
+    f.totals?.forEach((t) => {
       map[t.currency] = (map[t.currency] || 0) + t.amount
     })
   })
@@ -172,7 +173,7 @@ function aggregateTotals(list: any[]) {
   return entries.map(([curr, amt]) => formatCurrency(amt, curr)).join(' • ')
 }
 
-function calculateProgressValue(fund: any) {
-  return fund.totals?.find((t: any) => t.currency === 'GHS')?.amount ?? 0
+function calculateProgressValue(fund: RecipientFund) {
+  return fund.totals?.find((t) => t.currency === 'GHS')?.amount ?? 0
 }
 </script>

@@ -156,6 +156,8 @@ import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 
+import type { Event } from '@/modules/events/types/event'
+
 const router = useRouter()
 const mutation = useCreateRecipientFund()
 const eventsQuery = useEvents()
@@ -167,7 +169,7 @@ const steps = [
 ]
 
 const eventOptions = computed(() => 
-  (eventsQuery.data.value || []).map(e => ({ label: e.title, value: e.id }))
+  (eventsQuery.data.value as Event[] || []).map((e: Event) => ({ label: e.title, value: e.id }))
 )
 
 const form = reactive({
@@ -187,7 +189,8 @@ async function handleCreate() {
       eventId: form.eventId,
       name: form.name,
       description: form.description,
-      targetAmount: form.targetAmount
+      targetAmount: form.targetAmount,
+      isActive: form.isActive
     })
     router.push({ name: 'admin-funds' })
   } catch (err) {

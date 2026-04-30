@@ -10,11 +10,11 @@ export function useAllCollectors() {
   const branchStore = useBranchStore()
   return useQuery<CollectorProfile[], ApiError>({
     queryKey: ['admin', 'collectors', { 
-      tenantId: tenantStore.selectedTenantIdsCSV,
+      tenantId: tenantStore.selectedTenantId,
       branchId: branchStore.multiBranchIdCSV 
     }],
     queryFn: () => collectorService.listAll({
-      tenantId: tenantStore.selectedTenantIdsCSV,
+      tenantId: tenantStore.selectedTenantId,
       branchId: branchStore.multiBranchIdCSV
     }),
   })

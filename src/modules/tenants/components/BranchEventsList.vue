@@ -88,6 +88,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { eventsService } from '@/modules/events/services/eventsService'
+import type { Event } from '@/modules/events/types/event'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import { formatCurrency } from '@/core/formatting/formatters'
@@ -98,7 +99,7 @@ const props = defineProps<{
 }>()
 
 const router = useRouter()
-const events = ref([])
+const events = ref<Event[]>([])
 const isLoading = ref(true)
 
 const columns = [
@@ -110,7 +111,7 @@ const columns = [
 async function fetchEvents() {
   isLoading.value = true
   try {
-    events.value = await eventsService.list(props.branchId)
+    events.value = await eventsService.list({ branchId: props.branchId })
   } catch (error) {
     console.error('Failed to sync branch events:', error)
   } finally {

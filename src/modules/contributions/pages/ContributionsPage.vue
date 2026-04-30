@@ -45,7 +45,7 @@
       <AdminFilterBar
         v-model="searchQuery"
         placeholder="Search donor, event, or fund..."
-        :show-clear="searchQuery || activeFilters.status.length > 0 || activeFilters.methods.length > 0"
+        :show-clear="!!searchQuery || activeFilters.status.length > 0 || activeFilters.methods.length > 0"
         @clear="clearAllFilters"
       >
         <template #sections>

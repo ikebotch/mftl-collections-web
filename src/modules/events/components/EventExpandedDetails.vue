@@ -168,7 +168,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { Target, Users, UserPlus, Plus } from 'lucide-vue-next'
+import { Target } from 'lucide-vue-next'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
 import { collectorService } from '@/modules/collector/services/collectorService'
 import { formatCurrency } from '@/core/formatting/formatters'

@@ -75,7 +75,6 @@ export const useTenantStore = defineStore('tenant', () => {
     }
   }
 
-  const selectedTenantIdsCSV = computed(() => selectedTenantIds.value.join(','))
 
   function clearTenant() {
     selectedTenantIds.value = []
@@ -87,7 +86,6 @@ export const useTenantStore = defineStore('tenant', () => {
   return {
     selectedTenantIds,
     selectedTenantId,
-    selectedTenantIdsCSV,
     selectedTenantName,
     hasTenant,
     setTenant,
@@ -100,9 +98,4 @@ export const useTenantStore = defineStore('tenant', () => {
 export function readSelectedTenantId(): string {
   const ids = readSelectedTenantIds()
   return ids[0] ?? ''
-}
-
-export function readSelectedTenantIdsCSV(): string {
-  const ids = readSelectedTenantIds()
-  return ids.join(',')
 }

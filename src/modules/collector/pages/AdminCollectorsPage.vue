@@ -139,7 +139,7 @@
 
         <template #cell:lastActive="{ value }">
           <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
-            {{ value ? formatDate(value, 'MMM d, HH:mm') : 'Never' }}
+            {{ value ? formatDate(value) : 'Never' }}
           </span>
         </template>
 
@@ -270,12 +270,9 @@ import MetricCard from '@/shared/components/cards/MetricCard.vue'
 import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
-import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import RowActions from '@/shared/components/tables/RowActions.vue'
-import MultiSelectFilter from '@/shared/components/filters/MultiSelectFilter.vue'
 import { formatCurrency, formatDate } from '@/core/formatting/formatters'
-import { Plus, Download, Users, TrendingUp, Clock, Trophy, Eye, Edit3 } from 'lucide-vue-next'
+import { Plus, Download, Eye } from 'lucide-vue-next'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import type { CollectorProfile } from '../types/collector'
 

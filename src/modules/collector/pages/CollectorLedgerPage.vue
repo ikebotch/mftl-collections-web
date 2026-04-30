@@ -127,7 +127,7 @@ const todayDate = computed(() => {
 
 const cashInHand = computed(() => {
   // Mocking for now, in a real app this would come from a specific ledger query
-  return query.data.value?.todayTotalNumeric || 0
+  return query.data.value?.profile.totalCollectedToday || 0
 })
 
 const summaryStats = computed(() => [

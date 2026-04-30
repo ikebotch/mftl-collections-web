@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ResourceListPage from './ResourceListPage.vue'
-import { Calendar, Users, Wallet, Target } from 'lucide-vue-next'
-import { h } from 'vue'
+
 
 const meta: Meta<typeof ResourceListPage> = {
   title: 'Layouts/ResourceListPage',

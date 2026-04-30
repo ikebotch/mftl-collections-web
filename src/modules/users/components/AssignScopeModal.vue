@@ -182,7 +182,7 @@ import { recipientFundsService } from '@/modules/recipient-funds/services/recipi
 import { tenantsService } from '@/modules/tenants/services/tenantsService'
 import { branchesService } from '@/modules/tenants/services/branchesService'
 import { useUsersStore } from '@/modules/users/store/usersStore'
-import { Check, Globe, Building2, Calendar } from 'lucide-vue-next'
+import { Check, Globe } from 'lucide-vue-next'
 
 const props = defineProps<{
   open: boolean

@@ -327,12 +327,8 @@ import DataTable from '@/shared/components/tables/DataTable.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { formatCurrency } from '@/core/formatting/formatters'
 import { 
-  ArrowLeft, 
-  TrendingUp, 
-  Users, 
-  Zap, 
-  Globe,
-  ChevronDown
+  ArrowLeft,
+  Zap
 } from 'lucide-vue-next'
 
 const props = defineProps<{

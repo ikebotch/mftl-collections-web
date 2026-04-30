@@ -16,7 +16,7 @@
         v-for="(item, index) in menuItems"
         :key="index"
         class="group p-8 text-left border border-slate-200 bg-white hover:border-violet-500 hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
-        @click="item.action ? item.action() : $router.push(item.to)"
+        @click="$router.push(item.to)"
       >
         <div class="relative z-10">
           <component 
@@ -64,7 +64,6 @@
 
 <script setup lang="ts">
 import { 
-  Settings, 
   RefreshCcw, 
   FileCheck, 
   HelpCircle, 
@@ -72,9 +71,8 @@ import {
   ShieldCheck,
   User
 } from 'lucide-vue-next'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
+// const router = useRouter()
 
 const menuItems = [
   {

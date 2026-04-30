@@ -196,7 +196,6 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStorefrontEvent } from '../composables/useStorefront'
 import { useContributionFlowStore } from '../store/contributionFlowStore'
 import { 
   Heart, 
@@ -214,7 +213,6 @@ const route = useRoute()
 const router = useRouter()
 const flowStore = useContributionFlowStore()
 const eventSlug = computed(() => String(route.params.eventSlug ?? ''))
-const eventQuery = useStorefrontEvent(eventSlug.value)
 
 watchEffect(() => {
   flowStore.initialise(eventSlug.value)

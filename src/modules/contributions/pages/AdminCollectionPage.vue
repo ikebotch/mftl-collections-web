@@ -64,7 +64,7 @@
               variant="light"
             />
             <button
-              v-for="event in eventsQuery.data.value?.data"
+              v-for="event in eventsQuery.data.value"
               :key="event.id"
               class="p-6 text-left border bg-white border-slate-100 hover:border-violet-500/50 hover:shadow-lg transition-all group"
               @click="form.eventId = event.id"
@@ -321,10 +321,7 @@ const submissionError = ref<ApiError | null>(null)
 const tenantStore = useTenantStore()
 const eventsQuery = useQuery({
   queryKey: computed(() => ['admin', 'events', 'active', { tenantId: toValue(tenantStore.selectedTenantId) }]),
-  queryFn: () => eventsService.list({ 
-    status: 'Published',
-    isActive: true 
-  }),
+  queryFn: () => eventsService.list(),
   enabled: computed(() => !!toValue(tenantStore.selectedTenantId))
 })
 
@@ -342,7 +339,7 @@ const form = reactive({
 })
 
 const selectedEvent = computed(() => 
-  eventsQuery.data.value?.data.find(e => e.id === form.eventId)
+  eventsQuery.data.value?.find((e: any) => e.id === form.eventId)
 )
 
 const availableFunds = computed(() => 
@@ -350,7 +347,7 @@ const availableFunds = computed(() =>
 )
 
 const selectedFund = computed(() => 
-  availableFunds.value.find(f => f.id === form.recipientFundId)
+  availableFunds.value.find((f: any) => f.id === form.recipientFundId)
 )
 
 const canSubmit = computed(() => {
@@ -376,7 +373,7 @@ async function handleSubmit() {
     const result = await contributionsService.recordCash({
       eventId: form.eventId,
       recipientFundId: form.recipientFundId,
-      amountValue: Number(form.amount),
+      amount: Number(form.amount),
       currency: form.currency,
       contributorName: form.anonymous ? 'Anonymous' : form.contributorName,
       contributorPhone: form.contributorPhone,
@@ -384,6 +381,7 @@ async function handleSubmit() {
       anonymous: form.anonymous,
       paymentMethod: form.paymentMethod,
       note: form.note,
+      pin: '0000',
     }, shouldBypassAuth()
       ? {
           headers: { 'X-Dev-User-Id': 'admin-quick-collect' },

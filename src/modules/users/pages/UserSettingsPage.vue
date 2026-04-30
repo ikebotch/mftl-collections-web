@@ -649,10 +649,9 @@ import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import EditorialHeader from '@/shared/components/headers/EditorialHeader.vue'
 import { 
-  Camera, 
+  Camera,
   ShieldCheck, 
   Fingerprint, 
-  Bell, 
   ShieldAlert, 
   Target,
   Pencil

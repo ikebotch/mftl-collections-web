@@ -239,7 +239,7 @@ async function submit() {
     })
     
     toast.success('Hub initialization sequence completed.')
-    router.push(`/admin/branches/${branch.id}`)
+    router.push(`/admin/branches/${branch}`)
   } catch (err: any) {
     console.error('Initialization failed:', err)
     toast.error(err.message || 'Failed to initialize hub.')

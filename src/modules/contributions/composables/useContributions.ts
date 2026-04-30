@@ -12,13 +12,13 @@ export function useContributions(params?: MaybeRef<{ page?: number, pageSize?: n
   const branchStore = useBranchStore()
   return useQuery<PagedResponse<ContributionRow>, ApiError>({
     queryKey: computed(() => ['contributions', { 
-      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      tenantId: toValue(tenantStore.selectedTenantId),
       branchId: toValue(branchStore.multiBranchIdCSV),
       ...toValue(params) 
     }]),
     queryFn: () => listContributions({ 
       ...toValue(params), 
-      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      tenantId: toValue(tenantStore.selectedTenantId),
       branchId: toValue(branchStore.multiBranchIdCSV) 
     }),
     enabled: computed(() => !!toValue(tenantStore.selectedTenantId) && toValue(tenantStore.selectedTenantId) !== '00000000-0000-0000-0000-000000000000'),

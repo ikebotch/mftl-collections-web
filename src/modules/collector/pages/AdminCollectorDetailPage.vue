@@ -529,17 +529,11 @@ import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue
 import { formatCurrency, formatDate } from '@/core/formatting/formatters'
 import { 
   Download,
-  Plus,
-  History,
-  Users,
-  Settings,
   Pencil,
   ShieldAlert,
   Calendar,
-  Check,
   Search,
-  SearchX,
-  Target
+  SearchX
 } from 'lucide-vue-next'
 import AssignmentListRow from '@/shared/components/rows/AssignmentListRow.vue'
 import EditorialHeader from '@/shared/components/headers/EditorialHeader.vue'
@@ -557,7 +551,7 @@ const eventQuery = useEvents()
 const availableEvents = computed(() => eventQuery.data.value ?? [])
 const allFunds = ref<RecipientFund[]>([])
 const isLoadingBranches = ref(true)
-const branchOptions = ref([])
+const branchOptions = ref<{ label: string; value: string }[]>([])
 
 onMounted(async () => {
   try {
@@ -636,14 +630,6 @@ function cancelEditing() {
   isEditingCampaigns.value = false
   resetForm()
   router.replace({ query: { ...route.query, edit: undefined } })
-}
-
-function isEventAssigned(id: string) {
-  return form.value?.eventIds.includes(id)
-}
-
-function isFundAssigned(id: string) {
-  return form.value?.fundIds.includes(id)
 }
 
 function toggleEventAssignment(id: string) {
@@ -817,6 +803,20 @@ const groupedAssignedItems = computed(() => {
 
   return groups
 })
+
+function handleSearchAction(item: any) {
+  if (item.type === 'event') toggleEventAssignment(item.id)
+  else toggleFundAssignment(item.id)
+}
+
+function handleRemoveAction(item: any) {
+  if (item.type === 'event') toggleEventAssignment(item.id)
+  else toggleFundAssignment(item.id)
+}
+
+function exportPerformance() {
+  toast.info('Synthesizing performance log for export...')
+}
 
 function handleSuspend() {
   toast.info('Suspending staff access...')

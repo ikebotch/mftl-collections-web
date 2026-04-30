@@ -37,7 +37,7 @@
         <div class="space-y-4 animate-in fade-in slide-in-from-left-8 duration-1000 delay-200">
           <div class="relative inline-flex items-start gap-5">
             <h2 class="text-5xl xl:text-6xl font-black text-[#0F172A] leading-[0.85] tracking-tighter">
-              {{ eventQuery.data.value?.name || 'Again' }}<span class="text-[#7C3AED]">.</span>
+              {{ eventQuery.data.value?.title || 'Again' }}<span class="text-[#7C3AED]">.</span>
             </h2>
               
             <!-- Badges Top-Aligned with Heading -->
@@ -195,10 +195,11 @@
               <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Select Fund</label>
               <div class="grid grid-cols-1 gap-3">
                 <CampaignFundCard 
-                  v-for="fund in fundsQuery.data.value?.filter(f => f.isActive) ?? []"
+                  v-for="fund in fundsQuery.data.value ?? []"
                   :key="fund.id"
-                  :fund="fund"
-                  :is-selected="flowStore.draft.recipientFundId === fund.id"
+                  :title="fund.name"
+                  :description="fund.description"
+                  :selected="flowStore.draft.recipientFundId === fund.id"
                   @select="flowStore.patch({ recipientFundId: fund.id })"
                 />
               </div>
@@ -211,7 +212,7 @@
                 <div class="h-14 rounded-2xl bg-white border border-slate-100 px-5 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-300">
                   <User class="w-4 h-4 text-slate-300 group-focus-within:text-[#7C3AED] transition-colors" />
                   <input 
-                    v-model="flowStore.draft.donorName"
+                    v-model="flowStore.draft.contributorName"
                     type="text" 
                     placeholder="Full Name"
                     class="flex-1 bg-transparent border-none outline-none text-sm font-bold text-[#0F172A] placeholder:text-slate-300 placeholder:font-bold"
@@ -220,7 +221,7 @@
                 <div class="h-14 rounded-2xl bg-white border border-slate-100 px-5 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-300">
                   <Mail class="w-4 h-4 text-slate-300 group-focus-within:text-[#7C3AED] transition-colors" />
                   <input 
-                    v-model="flowStore.draft.donorEmail"
+                    v-model="flowStore.draft.contributorEmail"
                     type="email" 
                     placeholder="Email Address"
                     class="flex-1 bg-transparent border-none outline-none text-sm font-bold text-[#0F172A] placeholder:text-slate-300 placeholder:font-bold"
@@ -235,7 +236,7 @@
                   </div>
                   <div class="flex-1 h-14 rounded-2xl bg-white border border-slate-100 px-5 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-300">
                     <input 
-                      v-model="flowStore.draft.donorPhone"
+                      v-model="flowStore.draft.contributorPhone"
                       type="tel" 
                       placeholder="Phone Number"
                       class="flex-1 bg-transparent border-none outline-none text-sm font-bold text-[#0F172A] placeholder:text-slate-300 placeholder:font-bold"
@@ -337,8 +338,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStorefrontEvent, useStorefrontRecipientFunds } from '../composables/useStorefront'
 import { useContributionFlowStore } from '../store/contributionFlowStore'
 import { 
-  ShieldCheck, Heart, MapPin, Calendar, Clock, Eye, Activity, 
-  User, Mail, ChevronDown, Lock, ArrowRight, Utensils
+  ShieldCheck, Clock, 
+  User, Mail, ChevronDown, Lock, ArrowRight, Utensils, Users
 } from 'lucide-vue-next'
 import CampaignFundCard from '../components/CampaignFundCard.vue'
 import PaymentMethodSelector from '../components/PaymentMethodSelector.vue'
@@ -355,10 +356,6 @@ const amountStr = ref(flowStore.draft.amount ? String(flowStore.draft.amount) : 
 const paymentMethod = ref('momo')
 const network = ref('mtn')
 
-const selectedFundName = computed(() => {
-  const fund = fundsQuery.data.value?.find(f => f.id === flowStore.draft.recipientFundId)
-  return fund?.name || 'Feed Families'
-})
 
 watch(amountStr, (val) => {
   flowStore.patch({ amount: parseFloat(val) || 0 })

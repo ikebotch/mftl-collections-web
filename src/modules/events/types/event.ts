@@ -9,6 +9,7 @@ export interface EventDto {
   description: string
   eventDate: string | null
   isActive: boolean
+  branchId?: string | null
   totals?: CurrencyTotal[]
   totalTarget: number
   fundCount: number
@@ -21,6 +22,9 @@ export interface EventDto {
 
 export interface Event extends EventDto {
   status: 'active' | 'draft'
+  branchName?: string
+  location?: string
+  recipientFunds?: any[]
 }
 
 export interface CreateEventInput {
@@ -40,6 +44,7 @@ export interface UpdateEventInput {
   eventDate: string
   isActive: boolean
   slug: string
+  branchId?: string | null
   displayImageUrl?: string
   receiptLogoUrl?: string
   metadata?: string

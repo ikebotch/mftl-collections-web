@@ -33,7 +33,7 @@
         :description="stepLabels[currentStep - 1]"
       >
         <template #actions>
-          <AppButton variant="outline" size="sm" @click="handleBack">
+          <AppButton variant="outline" size="sm" @click="() => assignmentsQuery.refetch()">
             <ChevronLeft class="w-4 h-4 mr-1" />{{ currentStep === 1 ? 'Cancel' : 'Back' }}
           </AppButton>
         </template>
@@ -321,7 +321,7 @@
               <div class="flex items-start justify-between border-b border-white/10 pb-5 mb-5">
                 <div>
                   <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Amount</p>
-                  <h3 class="text-3xl md:text-4xl font-black tracking-tighter">{{ formatCurrency(form.amount, form.currency) }}</h3>
+                  <h3 class="text-3xl md:text-4xl font-black tracking-tighter">{{ formatCurrency(Number(form.amount), form.currency) }}</h3>
                 </div>
                 <span class="text-xs font-black text-slate-400 bg-white/10 px-3 py-1.5 uppercase tracking-widest shrink-0">
                   {{ form.paymentMethod }}

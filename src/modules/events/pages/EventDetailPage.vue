@@ -200,6 +200,7 @@
                   </AppInput>
                 </div>
                 <AppTextarea
+                  id="operational-narrative"
                   v-model="form!.description"
                   label="Operational Narrative"
                   placeholder="Event purpose..."
@@ -489,6 +490,8 @@ import { ref, computed, watchEffect, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEvent, useUpdateEvent } from '../composables/useEvents'
 import { branchesService } from '@/modules/tenants/services/branchesService'
+import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
+import type { RecipientFund } from '@/modules/recipient-funds/types/recipientFund'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import DetailPageHeader from '@/shared/components/headers/DetailPageHeader.vue'
 import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
@@ -550,7 +553,7 @@ const newFunds = ref<any[]>([])
 const editingFunds = ref<any[]>([])
 const isLoadingFunds = ref(false)
 const isLoadingBranches = ref(true)
-const branchOptions = ref([])
+const branchOptions = ref<{ label: string; value: string }[]>([])
 
 onMounted(async () => {
   try {
@@ -625,7 +628,7 @@ async function startEditing() {
     isLoadingFunds.value = true
     try {
       const funds = await recipientFundsService.listByEvent(event.value.id)
-      editingFunds.value = funds.map(f => ({
+      editingFunds.value = funds.map((f: RecipientFund) => ({
         id: f.id,
         name: f.name,
         description: f.description,

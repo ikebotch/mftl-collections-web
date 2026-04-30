@@ -148,7 +148,7 @@
                     required
                   >
                     <template #prefix>
-                      <span class="text-slate-400 font-bold">{{ form.currency }}</span>
+                      <span class="text-slate-400 font-bold">{{ form.paymentConfigs[0]?.currency || 'GHS' }}</span>
                     </template>
                   </AppInput>
                 </div>
@@ -356,7 +356,7 @@ const tenantStore = useTenantStore()
 const { data: me } = useMe()
 const createEventMutation = useCreateEvent()
 
-const isPlatformAdmin = computed(() => me?.isPlatformAdmin ?? false)
+const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false)
 
 const steps = [
   { id: 'section-basics', title: 'Basics', subtitle: 'Title & Identity' },
@@ -367,7 +367,7 @@ const steps = [
 
 const isSubmitting = ref(false)
 const isLoadingBranches = ref(true)
-const branchOptions = ref([])
+const branchOptions = ref<{ label: string; value: string }[]>([])
 
 const paymentMethods = [
   { id: 'cash', label: 'Cash', description: 'Offline physical currency' },

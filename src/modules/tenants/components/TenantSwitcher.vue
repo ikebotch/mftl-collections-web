@@ -209,11 +209,7 @@
                   {{ branch.name }}
                 </p>
                 <p class="item-meta">
-                  {{
-                    branch.isHeadquarters
-                      ? "Headquarters"
-                      : getTenantName(branch.tenantId)
-                  }}
+                  {{ getTenantName(branch.tenantId) }}
                 </p>
               </div>
               <div v-if="isBranchSelected(branch.id)" class="multi-check">
@@ -247,7 +243,6 @@ import { useTenantStore } from "../store/tenantStore";
 import { useBranchStore } from "@/modules/branches/store/branchStore";
 import { useMe } from "@/modules/users/composables/useUsers";
 import { useUsersStore } from "@/modules/users/store/usersStore";
-import { appConfig } from "@/core/config/appConfig";
 import { resolveLandingPath } from "@/core/auth/landing";
 import { useRouter } from "vue-router";
 
@@ -256,7 +251,6 @@ const props = defineProps<{
 }>();
 
 // Expose appConfig to the template
-const config = appConfig;
 
 const isOpen = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
@@ -269,10 +263,6 @@ const branchStore = useBranchStore();
 const usersStore = useUsersStore();
 const { data: me } = useMe();
 
-const isCollector = computed(() => {
-  const roles = me.value?.effectiveRoles || [];
-  return roles.includes("Collector") || roles.includes("Collector Supervisor");
-});
 
 const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false);
 
@@ -285,11 +275,11 @@ const { data: tenants, isPending: isPendingTenants } = useQuery({
 const isSingleTenant = computed(() => (tenants.value?.length ?? 0) === 1);
 
 const { data: branches, refetch: refetchBranches } = useQuery({
-  queryKey: ["branches-list", tenantStore.selectedTenantIdsCSV],
+  queryKey: ["branches-list", tenantStore.selectedTenantId],
   queryFn: () =>
-    branchesService.list(tenantStore.selectedTenantIdsCSV || undefined),
+    branchesService.list(tenantStore.selectedTenantId || undefined),
   enabled: computed(
-    () => !!tenantStore.selectedTenantIdsCSV || isPlatformAdmin.value
+    () => !!tenantStore.selectedTenantId || isPlatformAdmin.value
   ),
 });
 

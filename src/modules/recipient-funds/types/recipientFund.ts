@@ -6,6 +6,7 @@ export interface RecipientFundDto {
   name: string
   description: string
   targetAmount: number
+  isActive?: boolean
   totals?: CurrencyTotal[]
   collectorCount?: number
 }
@@ -20,4 +21,5 @@ export interface CreateRecipientFundInput {
   name: string
   description: string
   targetAmount: number
+  isActive?: boolean
 }

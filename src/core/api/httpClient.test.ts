@@ -68,4 +68,20 @@ describe('HttpClient', () => {
     expect(result.headers['x-correlation-id']).toBeDefined()
     expect(typeof result.headers['x-correlation-id']).toBe('string')
   })
+
+  it('enforces single tenant ID even if multiple are somehow selected', async () => {
+    const tenantStore = useTenantStore()
+    // Force multiple IDs to test the safeguard in HttpClient
+    tenantStore.selectedTenantIds = ['id-1', 'id-2']
+    
+    new HttpClient()
+    const interceptor = (vi.mocked(axios.create().interceptors.request.use) as any).mock.calls[0][0]
+    
+    const config = { headers: {} }
+    const result = await interceptor(config)
+    
+    // Should only take the first one and never contain a comma
+    expect(result.headers['X-Tenant-Id']).not.toContain(',')
+    expect(result.headers['X-Tenant-Id']).toBe('id-1')
+  })
 })

@@ -11,11 +11,11 @@ export function useUsers() {
 
   return useQuery({
     queryKey: ['users', { 
-      tenantId: computed(() => tenantStore.selectedTenantIdsCSV),
+      tenantId: computed(() => tenantStore.selectedTenantId),
       branchId: computed(() => branchStore.multiBranchIdCSV)
     }],
     queryFn: () => listUsers({
-      tenantId: tenantStore.selectedTenantIdsCSV,
+      tenantId: tenantStore.selectedTenantId,
       branchId: branchStore.multiBranchIdCSV
     }),
   })

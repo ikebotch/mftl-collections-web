@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Image as ImageIcon, Plus } from 'lucide-vue-next'
+import { Image as ImageIcon } from 'lucide-vue-next'
 import AppInput from './AppInput.vue'
 import AppButton from '../buttons/AppButton.vue'
 

@@ -26,7 +26,7 @@
           </div>
           <button
             class="p-2.5 border border-slate-200 rounded"
-            @click="query.refetch"
+            @click="() => query.refetch()"
           >
             <RefreshCcw class="w-4 h-4 text-slate-500" />
           </button>
@@ -54,7 +54,7 @@
         :description="`Welcome back, ${query.data.value.profile.name}`"
       >
         <template #actions>
-          <AppButton variant="outline" size="sm" @click="query.refetch">
+          <AppButton variant="outline" size="sm" @click="() => query.refetch()">
             <RefreshCcw class="w-4 h-4 mr-2" />Sync
           </AppButton>
           <AppButton variant="primary" size="sm" @click="$router.push('/collector/contributions/new')">

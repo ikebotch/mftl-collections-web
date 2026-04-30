@@ -193,7 +193,7 @@
         <template #cell:dates="{ row }">
           <div class="flex flex-col gap-1 py-1">
             <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-none">
-              {{ row.eventDate ? formatDate(row.eventDate, 'MMM d, yyyy') : 'No date set' }}
+              {{ row.eventDate ? formatDate(row.eventDate) : 'No date set' }}
             </span>
           </div>
         </template>
@@ -237,23 +237,14 @@ import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import RowActions from '@/shared/components/tables/RowActions.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
-import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import EventExpandedDetails from '../components/EventExpandedDetails.vue'
-import MultiSelectFilter from '@/shared/components/filters/MultiSelectFilter.vue'
 import { formatDate, formatCurrency } from '@/core/formatting/formatters'
 import { 
   Plus, 
   Download, 
-  Calendar,
   Image as ImageIcon,
-  Eye,
   Link2,
-  BarChart2,
-  Wallet,
-  Target,
-  Users,
   FileText,
-  Coins,
   ChevronDown
 } from 'lucide-vue-next'
 
@@ -312,8 +303,8 @@ const sortedEvents = computed(() => {
   const order = sortOrder.value
 
   list.sort((a, b) => {
-    let valA = a[key]
-    let valB = b[key]
+    let valA = (a as any)[key]
+    let valB = (b as any)[key]
 
     if (key === 'dates') {
       valA = a.eventDate ? new Date(a.eventDate).getTime() : 0
@@ -392,7 +383,7 @@ function exportToExcel() {
       aggregateTotals([e]).replace(/ • /g, ' | '),
       e.fundCount || 0,
       e.collectorCount || 0,
-      e.eventDate ? formatDate(e.eventDate, 'yyyy-MM-dd') : 'N/A',
+      e.eventDate ? formatDate(e.eventDate) : 'N/A',
       e.isActive ? 'Active' : 'Draft'
     ])
 
@@ -406,7 +397,7 @@ function exportToExcel() {
     const url = URL.createObjectURL(blob)
     
     link.setAttribute('href', url)
-    link.setAttribute('download', `mftl-campaigns-${formatDate(new Date(), 'yyyy-MM-dd')}.csv`)
+    link.setAttribute('download', `mftl-campaigns-${formatDate(new Date().toISOString())}.csv`)
     link.style.visibility = 'hidden'
     document.body.appendChild(link)
     link.click()

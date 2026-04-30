@@ -71,7 +71,7 @@ export function requirePermission(permission: AppPermission) {
 
 
 export function requireAdmin(
-  to: RouteLocationNormalized,
+  _to: RouteLocationNormalized,
   _from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
@@ -115,7 +115,7 @@ export function requireAdmin(
 }
 
 export function requireCollector(
-  to: RouteLocationNormalized,
+  _to: RouteLocationNormalized,
   _from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {

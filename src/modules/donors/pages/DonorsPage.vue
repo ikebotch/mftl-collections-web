@@ -14,13 +14,13 @@
       />
       <MetricCard
         label="New Donors"
-        :value="donors.filter(d => d.donationCount === 1).length.toString()"
+        :value="donors.filter((d: Donor) => d.donationCount === 1).length.toString()"
         icon="UserPlus"
         color="green"
       />
       <MetricCard
         label="Repeat Donors"
-        :value="donors.filter(d => d.donationCount > 1).length.toString()"
+        :value="donors.filter((d: Donor) => d.donationCount > 1).length.toString()"
         icon="Zap"
         color="purple"
       />
@@ -245,11 +245,11 @@ import type { Donor } from '../types/donor'
 
 const searchQuery = ref('')
 const query = useDonors()
-const donors = computed(() => query.data.value || [])
+const donors = computed<Donor[]>(() => query.data.value || ([] as Donor[]))
 
 const avgYield = computed(() => {
   if (donors.value.length === 0) return 'GHS 0.00'
-  const total = donors.value.reduce((acc, d) => acc + d.totalGiven, 0)
+  const total = donors.value.reduce((acc: number, d: Donor) => acc + d.totalGiven, 0)
   return formatCurrency(total / donors.value.length, 'GHS')
 })
 
@@ -268,7 +268,7 @@ const columns = [
 const filteredDonors = computed(() => {
   if (!searchQuery.value) return donors.value
   const q = searchQuery.value.toLowerCase()
-  return donors.value.filter(d => 
+  return donors.value.filter((d: Donor) => 
     d.name.toLowerCase().includes(q) || 
     (d.email && d.email.toLowerCase().includes(q)) || 
     d.phone.toLowerCase().includes(q)

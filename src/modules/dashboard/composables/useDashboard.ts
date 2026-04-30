@@ -12,11 +12,11 @@ export function useDashboard() {
   
   return useQuery<DashboardSummary, ApiError>({
     queryKey: computed(() => ['dashboard-summary', { 
-      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      tenantId: toValue(tenantStore.selectedTenantId),
       branchId: toValue(branchStore.multiBranchIdCSV)
     }]),
     queryFn: () => getDashboardSummary({
-      tenantId: toValue(tenantStore.selectedTenantIdsCSV),
+      tenantId: toValue(tenantStore.selectedTenantId),
       branchId: toValue(branchStore.multiBranchIdCSV)
     }),
     enabled: computed(() => !!toValue(tenantStore.selectedTenantId) && toValue(tenantStore.selectedTenantId) !== '00000000-0000-0000-0000-000000000000'),

@@ -8,8 +8,8 @@ import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 export function useDonors() {
   const tenantStore = useTenantStore()
   return useQuery<Donor[], ApiError>({
-    queryKey: () => ['donors', { tenantId: tenantStore.selectedTenantIdsCSV }],
-    queryFn: () => donorsService.list({ tenantId: tenantStore.selectedTenantIdsCSV }),
+    queryKey: ['donors', { tenantId: tenantStore.selectedTenantId }],
+    queryFn: () => donorsService.list({ tenantId: tenantStore.selectedTenantId }),
   })
 }
 

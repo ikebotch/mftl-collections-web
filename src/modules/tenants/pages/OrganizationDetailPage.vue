@@ -624,7 +624,6 @@ import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import DetailSummaryCard from '@/shared/components/cards/DetailSummaryCard.vue'
 import ToggleCard from '@/shared/components/cards/ToggleCard.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import ModernImageInput from '@/shared/components/forms/ModernImageInput.vue'
@@ -632,7 +631,7 @@ import DetailTabs from '@/shared/components/tabs/DetailTabs.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import AdminWizardLayout from '@/shared/components/layouts/AdminWizardLayout.vue'
 import EditorialHeader from '@/shared/components/headers/EditorialHeader.vue'
-import { Check, Copy as CopyIcon, Image as ImageIcon, Printer, Building2, Settings2, Globe, Network, Activity, Pencil, MapPin, ArrowRight, Plus } from 'lucide-vue-next'
+import { Check, Image as ImageIcon, Printer, Building2, Activity, Pencil, MapPin, ArrowRight, Plus } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
@@ -706,10 +705,6 @@ watch(() => orgName.value, (newVal) => {
   if (newVal) orgNameProxy.value = newVal
 }, { immediate: true })
 
-function copyTenantId() {
-  navigator.clipboard.writeText(tenantId.value)
-  toast.success('Organization identifier copied')
-}
 
 async function saveConfiguration() {
   try {

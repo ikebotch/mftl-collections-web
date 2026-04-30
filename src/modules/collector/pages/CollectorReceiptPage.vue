@@ -216,7 +216,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useReceipt } from '@/modules/receipts/composables/useReceipts'
 import { receiptsService } from '@/modules/receipts/services/receiptsService'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
@@ -226,7 +226,7 @@ import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { CheckCircle2, Share2, Plus, Send, ArrowLeft, X } from 'lucide-vue-next'
 
 const route = useRoute()
-const router = useRouter()
+// const router = useRouter()
 const receiptId = computed(() => String(route.params.id ?? ''))
 const query = useReceipt(receiptId.value)
 

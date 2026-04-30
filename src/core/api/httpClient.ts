@@ -5,7 +5,7 @@ import { CORRELATION_HEADER_NAME, createCorrelationId } from './correlation'
 import { isApiEnvelope, unwrapApiEnvelope, type ApiEnvelope } from './apiEnvelope'
 import type { RequestOptions } from './types'
 import { getAccessToken } from '@/core/auth/auth0'
-import { readSelectedTenantIdsCSV } from '@/modules/tenants/store/tenantStore'
+import { readSelectedTenantId } from '@/modules/tenants/store/tenantStore'
 import { readSelectedBranchId } from '@/modules/branches/store/branchStore'
 
 declare module 'axios' {
@@ -30,10 +30,10 @@ export class HttpClient {
       headers[CORRELATION_HEADER_NAME] = createCorrelationId()
 
       if (!headers[appConfig.api.tenantHeaderName]) {
-        const tenantIdCsv = readSelectedTenantIdsCSV()
+        const tenantId = readSelectedTenantId()
         // Never send Guid.Empty or placeholders. Header must represent exactly one active tenant.
-        if (tenantIdCsv && tenantIdCsv !== '00000000-0000-0000-0000-000000000000') {
-          headers[appConfig.api.tenantHeaderName] = tenantIdCsv
+        if (tenantId && tenantId !== '00000000-0000-0000-0000-000000000000' && !tenantId.includes(',')) {
+          headers[appConfig.api.tenantHeaderName] = tenantId
         }
       }
 

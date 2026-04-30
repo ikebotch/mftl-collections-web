@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-10 pb-32">
     <DetailPageHeader
-      :title="branch?.name"
+      :title="branch?.name || ''"
       description="Regional operational hub management, resource allocation, and localized parameter configuration."
       back-to="/admin/branches"
       back-label="Branches"
@@ -276,7 +276,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useBranch, useUpdateBranch } from '../composables/useBranches'
 import { useToastStore } from '@/shared/stores/useToastStore'
 import DetailPageHeader from '@/shared/components/headers/DetailPageHeader.vue'
@@ -294,7 +294,6 @@ import BranchEventsList from '../components/BranchEventsList.vue'
 import { Check, Pencil, History } from 'lucide-vue-next'
 
 const route = useRoute()
-const router = useRouter()
 const toast = useToastStore()
 const branchId = computed(() => route.params.id as string)
 const query = useBranch(branchId)

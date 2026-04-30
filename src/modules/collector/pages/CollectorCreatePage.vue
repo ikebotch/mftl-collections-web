@@ -219,7 +219,7 @@
       <template #left>
         <AppButton 
           variant="outline" 
-          @click="router.push({ name: 'admin-collectors' })"
+          @click="$router.back()"
         >
           Cancel
         </AppButton>
@@ -257,8 +257,6 @@ import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppTextarea from '@/shared/components/forms/AppTextarea.vue'
-import AppSelect from '@/shared/components/forms/AppSelect.vue'
-import AppSwitch from '@/shared/components/forms/AppSwitch.vue'
 import StickyFormActions from '@/shared/components/forms/StickyFormActions.vue'
 import ToggleCard from '@/shared/components/cards/ToggleCard.vue'
 import { Info } from 'lucide-vue-next'
@@ -269,7 +267,7 @@ const mutation = useCreateCollector()
 const isSubmitting = computed(() => mutation.isPending.value)
 
 const isLoadingBranches = ref(true)
-const branchOptions = ref([])
+const branchOptions = ref<{ label: string; value: string }[]>([])
 
 const steps = [
   { id: 'section-identity', title: 'Identity', subtitle: 'Profile Details' },

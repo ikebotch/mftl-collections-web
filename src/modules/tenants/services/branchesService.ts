@@ -9,11 +9,10 @@ export interface BranchRow {
   isActive?: boolean
 }
 
-export async function listBranches(tenantIds?: string | string[]): Promise<BranchRow[]> {
-  const url = new URL('/branches', 'http://localhost') // dummy base for URLSearchParams
-  if (tenantIds) {
-    const ids = Array.isArray(tenantIds) ? tenantIds.join(',') : tenantIds
-    url.searchParams.set('tenantId', ids)
+export async function listBranches(tenantId?: string): Promise<BranchRow[]> {
+  const url = new URL('/branches', 'http://localhost')
+  if (tenantId) {
+    url.searchParams.set('tenantId', tenantId)
   }
   const response = await httpClient.get<BranchRow[]>(url.pathname + url.search)
   return response.data || []

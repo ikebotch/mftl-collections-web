@@ -121,12 +121,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useContributions } from '@/modules/contributions/composables/useContributions'
 import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AdminMetricGrid from '@/shared/components/cards/AdminMetricGrid.vue'
 import MetricCard from '@/shared/components/cards/MetricCard.vue'
-import AdminFilterBar from '@/shared/components/filters/AdminFilterBar.vue'
 import DataTable from '@/shared/components/tables/DataTable.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
@@ -134,21 +133,12 @@ import ProgressBar from '@/shared/components/feedback/ProgressBar.vue'
 import { formatCurrency } from '@/core/formatting/formatters'
 import { 
   Download, 
-  Share2, 
-  Calendar,
-  PieChart
+  Share2
 } from 'lucide-vue-next'
 
 const query = useContributions()
 const contributions = computed(() => query.data.value?.items || [])
-const searchQuery = ref('')
-const timeRange = ref('30d')
 
-const reportColumns = [
-  { key: 'title', label: 'Campaign' },
-  { key: 'total', label: 'Aggregated' },
-  { key: 'percent', label: 'Velocity' }
-]
 
 const totalsByCurrency = computed(() => {
   const map: Record<string, number> = {}

@@ -1,14 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
-import { computed, toValue } from 'vue'
 import { tenantsService } from '../services/tenantsService'
 
-import { useTenantStore } from '../store/tenantStore'
-
 export function useTenants() {
-  const tenantStore = useTenantStore()
   return useQuery({
-    queryKey: computed(() => ['tenants', { tenantId: toValue(tenantStore.selectedTenantIdsCSV) }]),
-    queryFn: () => tenantsService.list({ tenantId: toValue(tenantStore.selectedTenantIdsCSV) }),
+    queryKey: ['tenants'],
+    queryFn: () => tenantsService.list(),
   })
 }
 

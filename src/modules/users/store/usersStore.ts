@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { UserDetail, ScopeAssignment } from '../services/usersService'
+import type { UserDetail } from '../services/usersService'
 import { usersService } from '../services/usersService'
 import { useTenantStore } from '@/modules/tenants/store/tenantStore'
 import { useBranchStore } from '@/modules/branches/store/branchStore'

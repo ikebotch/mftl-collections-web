@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
+import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createPinia } from 'pinia'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { watch } from 'vue'

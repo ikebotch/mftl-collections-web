@@ -82,7 +82,8 @@
           />
 
           <ToggleCard
-            v-model="form.isActive"
+            :model-value="form.isActive ?? true"
+            @update:model-value="form.isActive = $event"
             title="Active Status"
             description="Enable or disable this template for live dispatch."
             :disabled="!canManage"
@@ -120,7 +121,7 @@ import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import ToggleCard from '@/shared/components/cards/ToggleCard.vue'
-import type { NotificationTemplate, CreateNotificationTemplatePayload, UpdateNotificationTemplatePayload } from '../services/notificationTemplatesService'
+import type { NotificationTemplate, CreateNotificationTemplatePayload } from '../services/notificationTemplatesService'
 
 const props = defineProps<{
   isOpen: boolean
