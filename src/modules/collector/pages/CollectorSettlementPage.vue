@@ -2,12 +2,12 @@
   <div class="min-h-screen bg-[#060B16] text-white pb-32 selection:bg-violet-500/30">
     <!-- ─── Loading / Error ─── -->
     <div v-if="query.isLoading.value" class="py-20 flex flex-col items-center">
-      <LoadingState text="Accessing Node History…" class="!text-slate-400" />
+      <LoadingState text="Accessing Node Settlements…" class="!text-slate-400" />
     </div>
     
     <div v-else-if="query.isError.value" class="px-6 py-12">
       <ErrorState
-        title="Sync Protocol Failure"
+        title="Protocol Sync Failure"
         :message="query.error.value?.message ?? 'Node connection timed out.'"
         show-retry
         class="!bg-white/5 !border-white/10"
@@ -25,13 +25,13 @@
             <div class="space-y-2">
               <div class="flex items-center gap-3">
                 <div class="w-1.5 h-1.5 bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.5)] animate-pulse" />
-                <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">Operational Ledger</p>
+                <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">Operational Settlements</p>
               </div>
               <h1 class="text-4xl font-black text-white uppercase tracking-tight italic leading-none">
-                History
+                Settlements
               </h1>
               <p class="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                Verified contributions recorded by this terminal node
+                Cash reconciliation and field agent handovers
               </p>
             </div>
             
@@ -93,49 +93,48 @@
         <div class="space-y-6">
           
           <!-- No-records state -->
-          <div v-if="!filteredReceipts.length" class="py-24 text-center bg-white/[0.02] border border-white/5 animate-in fade-in duration-500">
-            <CalendarX class="w-16 h-16 text-slate-800 mx-auto mb-8" />
-            <h4 class="text-xl font-black text-white uppercase tracking-tight mb-2">No Records Detected</h4>
-            <p class="text-sm text-slate-500 max-w-xs mx-auto font-medium uppercase tracking-wide opacity-60">No collections matching the selected protocol were found on this node.</p>
+          <div v-if="!filteredSettlements.length" class="py-24 text-center bg-white/[0.02] border border-white/5 animate-in fade-in duration-500">
+            <FileX2 class="w-16 h-16 text-slate-800 mx-auto mb-8" />
+            <h4 class="text-xl font-black text-white uppercase tracking-tight mb-2">No Settlement Data</h4>
+            <p class="text-sm text-slate-500 max-w-xs mx-auto font-medium uppercase tracking-wide opacity-60">No reconciliation records matching the selected protocol were found on this node.</p>
           </div>
 
           <!-- Phone: Card List -->
           <div class="md:hidden space-y-4">
-            <button
-              v-for="receipt in filteredReceipts"
-              :key="receipt.id"
+            <div
+              v-for="settlement in filteredSettlements"
+              :key="settlement.id"
               class="
                 w-full bg-white/[0.02] border border-white/10 p-6
                 flex items-center justify-between gap-6
                 hover:bg-white/[0.04] hover:border-white/20 transition-all text-left group
               "
-              @click="openReceipt(receipt)"
             >
               <div class="flex items-center gap-5 min-w-0">
                 <div class="h-14 w-14 bg-white/5 flex items-center justify-center shrink-0 border border-white/5">
-                  <ReceiptIcon class="w-6 h-6 text-slate-700 group-hover:text-violet-500/50 transition-colors" />
+                  <Wallet class="w-6 h-6 text-slate-700 group-hover:text-violet-500/50 transition-colors" />
                 </div>
                 <div class="min-w-0">
-                  <p class="text-sm font-black text-white uppercase tracking-tight truncate leading-none mb-1.5">{{ receipt.contributorName || 'Anonymous Node' }}</p>
+                  <p class="text-sm font-black text-white uppercase tracking-tight truncate leading-none mb-1.5">{{ settlement.date }}</p>
                   <div class="flex items-center gap-2 overflow-hidden">
-                    <p class="text-[10px] font-black text-slate-500 uppercase truncate tracking-widest">{{ receipt.eventTitle }}</p>
+                    <p class="text-[10px] font-black text-slate-500 uppercase truncate tracking-widest">{{ settlement.collectorName }}</p>
                     <span class="h-1 w-1 bg-slate-800 rounded-full shrink-0" />
-                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ receipt.paymentMethod }}</p>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest truncate">{{ settlement.note || 'Regular Handover' }}</p>
                   </div>
                 </div>
               </div>
               <div class="text-right shrink-0">
-                <p class="text-xl font-black text-white tracking-tighter tabular-nums leading-none">{{ receipt.amount }}</p>
+                <p class="text-xl font-black text-white tracking-tighter tabular-nums leading-none">{{ settlement.amount }}</p>
                 <div class="flex justify-end mt-2">
                   <div 
                     class="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-0.5 border"
-                    :class="getStatusClasses(receipt.status)"
+                    :class="getStatusClasses(settlement.status)"
                   >
-                    {{ receipt.status }}
+                    {{ settlement.status }}
                   </div>
                 </div>
               </div>
-            </button>
+            </div>
           </div>
 
           <!-- Tablet / Desktop: Data Table -->
@@ -146,44 +145,33 @@
                   <th v-for="col in columns" :key="col.key" class="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
                     {{ col.label }}
                   </th>
-                  <th class="px-8 py-5"></th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-white/5">
                 <tr 
-                  v-for="receipt in filteredReceipts" 
-                  :key="receipt.id"
-                  class="hover:bg-white/[0.03] transition-all cursor-pointer group"
-                  @click="openReceipt(receipt)"
+                  v-for="settlement in filteredSettlements" 
+                  :key="settlement.id"
+                  class="hover:bg-white/[0.03] transition-all group"
                 >
                   <td class="px-8 py-6">
-                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">{{ receipt.issuedAt }}</span>
+                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">{{ settlement.date }}</span>
                   </td>
                   <td class="px-8 py-6">
-                    <span class="text-[11px] font-black text-violet-400 uppercase tracking-[0.3em] italic">{{ receipt.receiptNumber }}</span>
+                    <span class="text-sm font-black text-white uppercase tracking-tight">{{ settlement.collectorName }}</span>
                   </td>
                   <td class="px-8 py-6">
-                    <span class="text-sm font-black text-white uppercase tracking-tight">{{ receipt.contributorName || 'Anonymous' }}</span>
+                    <span class="text-xs font-black text-slate-500 truncate max-w-[200px] block uppercase tracking-wide">{{ settlement.note || 'Terminal Handover' }}</span>
                   </td>
                   <td class="px-8 py-6">
-                    <span class="text-xs font-black text-slate-500 truncate max-w-[200px] block uppercase tracking-wide">{{ receipt.eventTitle }}</span>
-                  </td>
-                  <td class="px-8 py-6">
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">{{ receipt.paymentMethod }}</span>
-                  </td>
-                  <td class="px-8 py-6">
-                    <span class="text-sm font-black text-white tabular-nums tracking-tighter">{{ receipt.amount }}</span>
+                    <span class="text-sm font-black text-white tabular-nums tracking-tighter">{{ settlement.amount }}</span>
                   </td>
                   <td class="px-8 py-6">
                     <div 
                       class="inline-block text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 border"
-                      :class="getStatusClasses(receipt.status)"
+                      :class="getStatusClasses(settlement.status)"
                     >
-                      {{ receipt.status }}
+                      {{ settlement.status }}
                     </div>
-                  </td>
-                  <td class="px-8 py-6 text-right">
-                    <ChevronRight class="w-5 h-5 text-slate-800 group-hover:text-violet-500 transition-colors ml-auto" />
                   </td>
                 </tr>
               </tbody>
@@ -191,17 +179,6 @@
           </div>
         </div>
       </main>
-
-      <!-- Detail Drawer -->
-      <DetailDrawer
-        :is-open="isDrawerOpen"
-        title="Node Operational Record"
-        :subtitle="selectedReceipt?.receiptNumber"
-        @close="isDrawerOpen = false"
-        class="terminal-drawer"
-      >
-        <ContributionDetailView v-if="selectedReceipt" :contribution="selectedReceipt" />
-      </DetailDrawer>
 
       <!-- Mobile Sticky CTA -->
       <div class="md:hidden fixed bottom-0 inset-x-0 bg-[#060B16] border-t border-white/5 px-6 py-6 safe-area-bottom z-40">
@@ -213,10 +190,10 @@
             shadow-[0_15px_40px_rgba(124,58,237,0.3)]
             active:scale-[0.98] transition-all
           "
-          @click="$router.push('/collector/contributions/new')"
+          @click="() => query.refetch()"
         >
-          <Plus class="w-4 h-4" />
-          Authorize New Collection
+          <RefreshCcw class="w-4 h-4" />
+          Sync Operational State
         </button>
       </div>
     </div>
@@ -225,96 +202,66 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useCollectorHistory } from '../composables/useCollector'
+import { useCollectorSettlements } from '../composables/useCollector'
 import { formatCurrency } from '@/core/formatting/formatters'
-import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
-import ContributionDetailView from '@/modules/contributions/components/ContributionDetailView.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { 
-  ChevronRight, FileText, Plus, RefreshCcw, 
-  TrendingUp, CheckCircle, Clock, Receipt as ReceiptIcon,
-  CalendarX
+  RefreshCcw, Wallet, CheckCircle, Clock, 
+  TrendingDown, FileX2, ShieldCheck
 } from 'lucide-vue-next'
 
-const query = useCollectorHistory()
-const activeFilter = ref<'all' | 'issued' | 'pending' | 'voided'>('all')
-const isDrawerOpen = ref(false)
-const selectedReceipt = ref<any>(null)
-
-function openReceipt(receipt: any) {
-  selectedReceipt.value = receipt
-  isDrawerOpen.value = true
-}
+const query = useCollectorSettlements()
+const activeFilter = ref<'all' | 'completed' | 'pending' | 'review'>('all')
 
 const columns = [
-  { key: 'issuedAt', label: 'Date' },
-  { key: 'receiptNumber', label: 'Token #' },
-  { key: 'contributorName', label: 'Source' },
-  { key: 'eventTitle', label: 'Hub' },
-  { key: 'paymentMethod', label: 'Protocol' },
+  { key: 'date', label: 'Protocol Date' },
+  { key: 'collectorName', label: 'Node Agent' },
+  { key: 'note', label: 'Reference' },
   { key: 'amount', label: 'Value' },
   { key: 'status', label: 'Status' },
 ]
 
 const filters = [
-  { label: 'All Operations', value: 'all' as const },
-  { label: 'Issued', value: 'issued' as const },
-  { label: 'Pending', value: 'pending' as const },
-  { label: 'Voided', value: 'voided' as const },
+  { label: 'All Protocols', value: 'all' as const },
+  { label: 'Completed', value: 'completed' as const },
+  { label: 'Awaiting Audit', value: 'pending' as const },
+  { label: 'In Review', value: 'review' as const },
 ]
 
-const filteredReceipts = computed(() => {
-  const receipts = query.data.value ?? []
-  if (activeFilter.value === 'all') return receipts
-  return receipts.filter(r => r.status.toLowerCase() === activeFilter.value)
+const filteredSettlements = computed(() => {
+  const list = query.data.value ?? []
+  if (activeFilter.value === 'all') return list
+  return list.filter(s => s.status.toLowerCase().includes(activeFilter.value))
 })
 
 function countByStatus(status: string) {
-  return (query.data.value ?? []).filter(r => r.status.toLowerCase() === status).length
+  return (query.data.value ?? []).filter(s => s.status.toLowerCase().includes(status)).length
 }
 
 function getStatusClasses(status: string) {
   const s = status.toLowerCase()
-  if (s === 'issued') return 'border-emerald-500/20 text-emerald-500 bg-emerald-500/5 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
-  if (s === 'pending') return 'border-amber-500/20 text-amber-500 bg-amber-500/5'
-  if (s === 'voided') return 'border-rose-500/20 text-rose-500 bg-rose-500/5'
+  if (s.includes('completed') || s.includes('success')) return 'border-emerald-500/20 text-emerald-500 bg-emerald-500/5 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
+  if (s.includes('pending') || s.includes('awaiting')) return 'border-amber-500/20 text-amber-500 bg-amber-500/5'
+  if (s.includes('review')) return 'border-violet-500/20 text-violet-500 bg-violet-500/5'
   return 'border-slate-500/20 text-slate-500 bg-slate-500/5'
 }
 
-const todayTotalFormatted = computed(() => {
-  const receipts = query.data.value ?? []
-  const today = new Date().toDateString()
-  let total = 0
-  let currency = 'GHS'
-  for (const r of receipts) {
-    try {
-      if (new Date(r.issuedAt).toDateString() === today) {
-        total += r.amountValue ?? 0
-        currency = r.currency || currency
-      }
-    } catch { /* skip */ }
-  }
-  return formatCurrency(total, currency)
-})
-
 const stats = computed(() => {
+  const list = query.data.value ?? []
+  const pendingTotal = list.filter(s => !s.status.toLowerCase().includes('completed')).reduce((acc, s) => acc + s.amountValue, 0)
+  const currency = list[0]?.currency || 'GHS'
+
   return [
-    { label: 'Today Revenue', value: todayTotalFormatted.value, icon: TrendingUp },
-    { label: 'Node Volume', value: String(filteredReceipts.value.length), icon: FileText },
-    { label: 'Verified', value: String(countByStatus('issued')), icon: CheckCircle },
-    { label: 'Pending Sync', value: String(countByStatus('pending')), icon: Clock },
+    { label: 'Pending Audit', value: formatCurrency(pendingTotal, currency), icon: TrendingDown },
+    { label: 'Node Records', value: String(list.length), icon: ShieldCheck },
+    { label: 'Completed', value: String(countByStatus('completed')), icon: CheckCircle },
+    { label: 'Awaiting', value: String(countByStatus('awaiting')), icon: Clock },
   ]
 })
 </script>
 
 <style scoped>
-.terminal-drawer :deep(.bg-white) {
-  background-color: #060B16 !important;
-  color: white !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-}
-
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-none::-webkit-scrollbar {
   display: none;

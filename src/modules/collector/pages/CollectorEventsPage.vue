@@ -1,175 +1,164 @@
 <template>
-  <div class="space-y-6 pb-20">
-    <header class="pt-2">
-      <h2 class="text-3xl font-black text-white tracking-tight">
-        Assigned Shifts
-      </h2>
-      <p class="mt-2 text-sm text-slate-400 font-medium">
-        Select an event to start collecting contributions.
-      </p>
+  <div class="min-h-screen bg-[#060B16] text-white selection:bg-violet-500/30">
+    <!-- ══════════════════════════════════════════════════
+         TERMINAL HEADER
+    ══════════════════════════════════════════════════ -->
+    <header class="px-6 pt-12 pb-10 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
+      <div class="max-w-xl mx-auto space-y-2">
+        <div class="flex items-center gap-3">
+          <div class="w-1.5 h-1.5 bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.5)] animate-pulse" />
+          <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">Operational Protocol</p>
+        </div>
+        <h1 class="text-4xl font-black text-white uppercase tracking-tight italic leading-none">
+          Assigned Shifts
+        </h1>
+        <p class="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">
+          Authorized collection hubs for this node
+        </p>
+      </div>
     </header>
 
-    <LoadingState
-      v-if="query.isLoading.value"
-      text="Syncing assignments…"
-      variant="dark"
-    />
-    <ErrorState
-      v-else-if="query.isError.value"
-      title="Sync failed"
-      variant="dark"
-      :message="query.error.value?.message ?? 'Please check your connection.'"
-      show-retry
-      @retry="query.refetch"
-    />
-    
-    <template v-else-if="query.data.value">
-      <!-- Tabs -->
-      <div class="grid grid-cols-2 gap-2 rounded-none border border-white/5 bg-white/[0.03] p-1.5">
-        <button
-          v-for="tab in ['events', 'funds']"
-          :key="tab"
-          type="button"
-          class="rounded-none py-3 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300"
-          :class="activeTab === tab ? 'bg-violet-600 text-white shadow-premium' : 'text-slate-500 hover:text-slate-300'"
-          @click="activeTab = tab as any"
-        >
-          {{ tab }}
-        </button>
+    <main class="max-w-xl mx-auto px-6 py-10 pb-32 space-y-8">
+      <div v-if="query.isLoading.value" class="py-20 flex flex-col items-center">
+        <LoadingState text="Syncing assignments…" class="!text-slate-400" />
       </div>
-
-      <!-- Assignments Status -->
-      <div
-        v-if="!query.data.value.hasAssignments"
-        class="rounded-none border border-amber-500/20 bg-amber-500/10 p-6 flex gap-4 items-start"
-      >
-        <div class="w-10 h-10 rounded-none bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
-          <AlertTriangle class="w-6 h-6" />
-        </div>
-        <div>
-          <h4 class="text-amber-500 font-bold">
-            No active assignments.
-          </h4>
-          <p class="text-sm text-slate-300 mt-1 leading-relaxed">
-            Contact your administrator to be assigned to a collection shift.
-          </p>
-        </div>
+      
+      <div v-else-if="query.isError.value" class="py-12">
+        <ErrorState
+          title="Terminal Access Denied"
+          :message="query.error.value?.message ?? 'Node connection failed.'"
+          show-retry
+          class="!bg-white/5 !border-white/10"
+          @retry="query.refetch"
+        />
       </div>
+      
+      <template v-else-if="query.data.value">
+        <!-- Status Tabs -->
+        <div class="grid grid-cols-2 gap-2 border border-white/10 bg-white/[0.03] p-1.5">
+          <button
+            v-for="tab in ['events', 'funds']"
+            :key="tab"
+            class="py-3 text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300"
+            :class="activeTab === tab ? 'bg-violet-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'"
+            @click="activeTab = tab as any"
+          >
+            {{ tab }}
+          </button>
+        </div>
 
-      <!-- Events List -->
-      <div
-        v-else-if="activeTab === 'events'"
-        class="space-y-4"
-      >
+        <!-- Warning: No Assignments -->
         <div
-          v-if="query.data.value.events.length === 0"
-          class="rounded-none border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
+          v-if="!query.data.value.hasAssignments"
+          class="border border-amber-500/20 bg-amber-500/5 p-8 flex gap-6 items-start animate-in fade-in duration-500"
         >
-          <Calendar class="w-12 h-12 text-slate-700 mx-auto mb-4" />
-          <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">
-            No Assigned Events
-          </p>
+          <div class="w-12 h-12 bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
+            <AlertTriangle class="w-7 h-7" />
+          </div>
+          <div class="space-y-1">
+            <h4 class="text-amber-500 font-black uppercase tracking-widest text-xs">
+              No Authorized Protocol
+            </h4>
+            <p class="text-xs text-slate-400 leading-relaxed font-medium">
+              Contact your hub administrator to provision collection shifts for this terminal node.
+            </p>
+          </div>
         </div>
 
-        <article
-          v-for="event in query.data.value.events"
-          :key="event.id"
-          class="relative overflow-hidden active:scale-[0.98] transition-all duration-200 group"
-          @click="router.push(`/collector/contributions/new?eventId=${event.id}`)"
-        >
-          <div class="p-5 rounded-none bg-white/[0.03] border border-white/5 flex gap-5 items-center">
-            <div class="relative h-24 w-24 shrink-0 overflow-hidden rounded-none bg-slate-900 border border-white/10 flex items-center justify-center">
-              <Calendar class="w-10 h-10 text-slate-800" />
-              <div class="absolute inset-0 bg-gradient-to-br from-violet-600/20 to-cyan-500/20" />
+        <!-- Events List -->
+        <div v-else-if="activeTab === 'events'" class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div
+            v-if="query.data.value.events.length === 0"
+            class="border border-dashed border-white/10 bg-white/[0.01] p-16 text-center"
+          >
+            <Calendar class="w-12 h-12 text-slate-800 mx-auto mb-6" />
+            <p class="text-xs font-black text-slate-600 uppercase tracking-widest">
+              No Assigned Events Detected
+            </p>
+          </div>
+
+          <button
+            v-for="event in query.data.value.events"
+            :key="event.id"
+            class="w-full bg-white/[0.03] border border-white/10 p-6 flex gap-6 items-center hover:bg-white/[0.05] hover:border-violet-500/30 transition-all text-left group active:scale-[0.98]"
+            @click="router.push(`/collector/contributions/new?eventId=${event.id}`)"
+          >
+            <div class="relative h-20 w-20 shrink-0 border border-white/10 bg-[#0F172A] flex items-center justify-center">
+              <Calendar class="w-8 h-8 text-slate-800" />
+              <div class="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-transparent opacity-50" />
               <div
-                class="absolute bottom-2 right-2 w-3 h-3 rounded-none border-2 border-slate-900"
-                :class="event.status.toLowerCase() === 'live' ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'bg-amber-400'"
+                class="absolute bottom-2 right-2 w-2.5 h-2.5 border-2 border-[#0F172A] shadow-[0_0_8px_rgba(52,211,153,0.3)]"
+                :class="event.status.toLowerCase() === 'live' ? 'bg-emerald-500' : 'bg-amber-500'"
               />
             </div>
             
-            <div class="min-w-0 flex-1 py-1">
-              <div class="flex items-start justify-between">
-                <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-violet-500 mb-1.5">
-                    {{ event.status }}
-                  </p>
-                  <h3 class="text-xl font-black text-white leading-tight">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-start justify-between gap-4">
+                <div class="space-y-1">
+                  <p class="text-[9px] font-black uppercase tracking-[0.3em] text-violet-400">{{ event.status }} Hub</p>
+                  <h3 class="text-xl font-black text-white uppercase tracking-tight leading-tight group-hover:text-violet-400 transition-colors">
                     {{ event.title }}
                   </h3>
                 </div>
-                <div class="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center text-white/40 group-hover:text-white group-hover:bg-violet-600 transition-all">
-                  <ChevronRight class="w-6 h-6" />
+                <ArrowRight class="w-5 h-5 text-slate-800 group-hover:text-violet-500 transition-colors shrink-0 mt-2" />
+              </div>
+              
+              <div class="mt-4 flex items-center gap-4 text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <div class="flex items-center gap-1.5"><MapPin class="w-3 h-3" /> {{ event.location }}</div>
+                <div class="flex items-center gap-1.5"><Clock class="w-3 h-3" /> {{ event.dateLabel }}</div>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Funds List -->
+        <div v-else class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div
+            v-if="query.data.value.funds.length === 0"
+            class="border border-dashed border-white/10 bg-white/[0.01] p-16 text-center"
+          >
+            <LayoutGrid class="w-12 h-12 text-slate-800 mx-auto mb-6" />
+            <p class="text-xs font-black text-slate-600 uppercase tracking-widest">
+              No Authorized Funds Detected
+            </p>
+          </div>
+
+          <button
+            v-for="fund in query.data.value.funds"
+            :key="fund.id"
+            class="w-full bg-white/[0.03] border border-white/10 p-8 hover:bg-white/[0.05] hover:border-violet-500/30 transition-all text-left group active:scale-[0.98] relative overflow-hidden"
+            @click="router.push(`/collector/contributions/new?eventId=${fund.eventId}&fundId=${fund.id}`)"
+          >
+            <div class="relative z-10 flex flex-col gap-6">
+              <div class="flex items-center justify-between gap-6">
+                <h3 class="text-2xl font-black text-white uppercase tracking-tight leading-none group-hover:text-violet-400 transition-colors">
+                  {{ fund.name }}
+                </h3>
+                <div class="text-[10px] font-black text-violet-400 uppercase tracking-widest tabular-nums">
+                  {{ fund.progress }}% Protocol
                 </div>
               </div>
               
-              <div class="mt-4 space-y-1.5">
-                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
-                  <MapPin class="w-3 h-3" />
-                  <span>{{ event.location }}</span>
+              <div class="space-y-3">
+                <div class="h-1.5 w-full bg-white/5 overflow-hidden">
+                  <div 
+                    class="h-full bg-violet-600 shadow-[0_0_12px_rgba(124,58,237,0.4)] transition-all duration-1000"
+                    :style="{ width: `${fund.progress}%` }"
+                  />
                 </div>
-                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
-                  <Clock class="w-3 h-3" />
-                  <span>{{ event.dateLabel }}</span>
+                <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                  <span class="text-slate-500">Collected Node Value</span>
+                  <span class="text-white">{{ formatCurrency(fund.collectedAmount, fund.currency) }}</span>
                 </div>
-              </div>
-
-              <div class="mt-4 flex items-center gap-2">
-                <div class="px-3 py-1 rounded-none bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-slate-400">
-                  {{ event.assignedFundCount }} Assigned Funds
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Funds List -->
-      <div
-        v-else
-        class="space-y-4"
-      >
-        <div
-          v-if="query.data.value.funds.length === 0"
-          class="rounded-none border border-dashed border-white/10 bg-white/[0.02] p-12 text-center"
-        >
-          <LayoutGrid class="w-12 h-12 text-slate-700 mx-auto mb-4" />
-          <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">
-            No Assigned Funds
-          </p>
-        </div>
-
-        <article
-          v-for="fund in query.data.value.funds"
-          :key="fund.id"
-          class="relative group active:scale-[0.98] transition-transform duration-200"
-          @click="router.push(`/collector/contributions/new?eventId=${fund.eventId}&fundId=${fund.id}`)"
-        >
-          <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-none blur opacity-0 group-hover:opacity-20 transition duration-500" />
-          <div class="relative rounded-none border border-white/10 bg-white/[0.04] p-6">
-            <div class="flex items-center justify-between gap-4 mb-4">
-              <h3 class="text-xl font-black text-white truncate">
-                {{ fund.name }}
-              </h3>
-              <div class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">
-                {{ fund.progress }}%
               </div>
             </div>
             
-            <div class="h-2 w-full bg-white/5 rounded-none overflow-hidden mb-4">
-              <div 
-                class="h-full bg-gradient-to-r from-violet-600 to-cyan-400 rounded-none transition-all duration-1000"
-                :style="{ width: `${fund.progress}%` }"
-              />
-            </div>
-
-            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
-              <span class="text-slate-500">Collected</span>
-              <span class="text-white">{{ formatCurrency(fund.collectedAmount, fund.currency) }}</span>
-            </div>
-          </div>
-        </article>
-      </div>
-    </template>
+            <!-- Decorative background -->
+            <LayoutGrid class="absolute -right-6 -bottom-6 w-32 h-32 text-white opacity-[0.01] pointer-events-none" />
+          </button>
+        </div>
+      </template>
+    </main>
   </div>
 </template>
 
@@ -181,7 +170,7 @@ import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
 import { formatCurrency } from '@/core/formatting/formatters'
 import { 
-  ChevronRight, 
+  ArrowRight, 
   AlertTriangle, 
   Calendar, 
   LayoutGrid,

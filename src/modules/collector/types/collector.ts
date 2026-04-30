@@ -145,3 +145,24 @@ export interface CollectorDashboardSummary {
   syncStatusDescription: string
   recentReceipts: CollectorHistoryReceipt[]
 }
+
+export interface SettlementDto {
+  id: string
+  collectorName: string
+  amount: number
+  currency: string
+  status: string
+  date: string
+  note?: string | null
+}
+
+export interface CollectorSettlement {
+  id: string
+  collectorName: string
+  amount: string
+  amountValue: number
+  currency: string
+  status: string
+  date: string
+  note: string
+}

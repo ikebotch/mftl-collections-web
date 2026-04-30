@@ -127,6 +127,8 @@
         </router-view>
       </main>
 
+      <CollectorDevDiagnostics />
+
       <!-- Mobile Nav (Dark) -->
       <nav
         class="fixed inset-x-0 bottom-0 z-50 mx-auto w-full border-t border-white/10 bg-[#09101D]/98 px-3 pb-[max(env(safe-area-inset-bottom),0.9rem)] pt-3 backdrop-blur-xl lg:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
@@ -167,6 +169,7 @@ import { appConfig } from '@/core/config/appConfig'
 import { CalendarDays, FileText, Home, LayoutGrid, Plus, ShieldCheck } from 'lucide-vue-next'
 import { useUsersStore } from '@/modules/users/store/usersStore'
 import TenantSwitcher from '@/modules/tenants/components/TenantSwitcher.vue'
+import CollectorDevDiagnostics from '@/modules/collector/components/CollectorDevDiagnostics.vue'
 
 const appName = appConfig.appName
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)

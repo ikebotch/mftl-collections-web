@@ -1,216 +1,156 @@
 <template>
-  <!--
-    Breakpoints
-    phone  < 768px : full-screen receipt, centered success icon, stacked action buttons
-    tablet 768–1199: contained card receipt, 3-col action buttons
-    desktop >= 1200: content-width card, split view if needed
-  -->
-  <div class="pb-28 md:pb-8 space-y-0 md:space-y-8">
-
+  <div class="min-h-screen bg-[#060B16] text-white selection:bg-violet-500/30">
     <!-- Loading / Error -->
-    <LoadingState v-if="query.isLoading.value" text="Loading receipt…" />
-    <ErrorState
-      v-else-if="query.isError.value"
-      title="Receipt Not Found"
-      :message="query.error.value?.message ?? 'The receipt link may be invalid or expired.'"
-      show-retry
-      @retry="query.refetch"
-    />
+    <div v-if="query.isLoading.value" class="py-20 flex flex-col items-center">
+      <LoadingState text="Accessing Node Record…" class="!text-slate-400" />
+    </div>
+    
+    <div v-else-if="query.isError.value" class="px-6 py-12">
+      <ErrorState
+        title="Record Access Failure"
+        :message="query.error.value?.message ?? 'The requested receipt could not be retrieved from the node.'"
+        show-retry
+        class="!bg-white/5 !border-white/10"
+        @retry="query.refetch"
+      />
+    </div>
 
     <template v-else-if="query.data.value">
-
       <!-- ══════════════════════════════════════════════════
-           PHONE HEADER  (< 768 px)
-           Close button + share icon  (mobile-app style)
+           TERMINAL HEADER
       ══════════════════════════════════════════════════ -->
-      <header class="md:hidden sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-        <button class="w-10 h-10 flex items-center justify-center" @click="$router.push('/collector/history')">
-          <X class="w-5 h-5 text-slate-600" />
-        </button>
-        <p class="text-sm font-black text-slate-900 uppercase tracking-tight">Receipt</p>
-        <button class="w-10 h-10 flex items-center justify-center" @click="handleShare">
-          <Share2 class="w-4 h-4 text-slate-600" />
-        </button>
+      <header class="sticky top-0 z-40 bg-[#060B16]/80 backdrop-blur-md border-b border-white/5 px-6 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <button
+            class="w-10 h-10 flex items-center justify-center border border-white/10 hover:bg-white/5 transition-colors"
+            @click="$router.push('/collector/history')"
+          >
+            <ChevronLeft class="w-5 h-5 text-slate-400" />
+          </button>
+          <div>
+            <p class="text-[9px] font-black text-violet-400 uppercase tracking-[0.3em]">Node Operation</p>
+            <h1 class="text-sm font-black text-white uppercase tracking-tight">Receipt Record</h1>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <button
+            class="h-10 w-10 flex items-center justify-center border border-white/10 hover:bg-white/5 transition-all"
+            @click="handleShare"
+          >
+            <Share2 class="w-4 h-4 text-slate-400" />
+          </button>
+        </div>
       </header>
 
-      <!-- ══════════════════════════════════════════════════
-           TABLET / DESKTOP HEADER  (>= 768 px)
-      ══════════════════════════════════════════════════ -->
-      <AdminPageHeader
-        class="hidden md:flex"
-        title="Collection Receipt"
-        :description="query.data.value.receiptNumber"
-      >
-        <template #actions>
-          <AppButton variant="outline" size="sm" @click="$router.push('/collector/history')">
-            <ArrowLeft class="w-4 h-4 mr-2" />Back to History
-          </AppButton>
-          <AppButton variant="primary" size="sm" @click="$router.push('/collector/contributions/new')">
-            <Plus class="w-4 h-4 mr-2" />New Collection
-          </AppButton>
-        </template>
-      </AdminPageHeader>
-
-      <!-- ══════════════════════════════════════════════════
-           PHONE: Success hero  (< 768 px)
-           Matches mobile-app receipt screen pattern
-      ══════════════════════════════════════════════════ -->
-      <div class="md:hidden flex flex-col items-center px-4 pt-8 pb-4 space-y-3">
-        <div class="w-16 h-16 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg">
-          <CheckCircle2 class="w-8 h-8 text-white" />
-        </div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Collection Recorded!</h2>
-        <p class="text-sm text-slate-500 text-center max-w-xs font-medium leading-relaxed">
-          A receipt has been generated for the contributor.
-        </p>
-      </div>
-
-      <!-- ══════════════════════════════════════════════════
-           TABLET / DESKTOP: Success banner  (>= 768 px)
-      ══════════════════════════════════════════════════ -->
-      <div class="hidden md:flex bg-emerald-50 border border-emerald-200 p-5 items-center gap-4">
-        <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center shrink-0">
-          <CheckCircle2 class="w-5 h-5 text-white" />
-        </div>
-        <div class="flex-1">
-          <p class="text-sm font-black text-emerald-800 uppercase tracking-tight">Collection Recorded Successfully</p>
-          <p class="text-xs text-emerald-600 font-medium mt-0.5">A digital receipt has been generated for this contribution.</p>
-        </div>
-        <span
-          class="text-xs font-black uppercase tracking-widest px-3 py-1.5 border shrink-0"
-          :class="statusClass"
-        >
-          {{ query.data.value.status }}
-        </span>
-      </div>
-
-      <!-- ══════════════════════════════════════════════════
-           RECEIPT BODY
-           phone:  full-width row list (mobile app pattern)
-           tablet+: card with amount header + grid
-      ══════════════════════════════════════════════════ -->
-
-      <!-- PHONE: Amount display -->
-      <div class="md:hidden text-center px-4 pb-4">
-        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Amount</p>
-        <p class="text-4xl font-black text-slate-900 tracking-tighter">{{ query.data.value.amount }}</p>
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 mt-2 inline-block">
-          {{ query.data.value.paymentMethod }}
-        </span>
-      </div>
-
-      <!-- PHONE: Detail rows (mobile app pattern — full-width bordered rows) -->
-      <div class="md:hidden bg-white border-y border-slate-100 divide-y divide-slate-100">
-        <div
-          v-for="row in detailRows"
-          :key="row.label"
-          class="flex items-center justify-between px-4 py-4 min-h-[52px]"
-        >
-          <span class="text-sm text-slate-400 font-medium">{{ row.label }}</span>
-          <span class="text-sm font-black text-slate-900 text-right max-w-[60%] truncate">{{ row.value }}</span>
-        </div>
-      </div>
-
-      <!-- TABLET / DESKTOP: Card with dark amount header + grid -->
-      <div class="hidden md:block bg-white border border-slate-200 shadow-sm">
-        <div class="bg-slate-900 text-white px-8 py-8 flex items-end justify-between">
-          <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Total Contribution</p>
-            <p class="text-5xl font-black tracking-tighter">{{ query.data.value.amount }}</p>
-          </div>
-          <div class="text-right">
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Receipt No.</p>
-            <p class="text-sm font-black text-white tracking-tight">{{ query.data.value.receiptNumber }}</p>
-          </div>
-        </div>
-        <div class="divide-y divide-slate-100">
-          <div class="grid grid-cols-2 divide-x divide-slate-100">
-            <div class="p-6">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Donor</p>
-              <p class="text-sm font-black text-slate-900">{{ query.data.value.isAnonymous ? 'Anonymous' : query.data.value.contributorName }}</p>
-            </div>
-            <div class="p-6">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Collector</p>
-              <p class="text-sm font-black text-slate-900">{{ query.data.value.collectorName || '—' }}</p>
+      <main class="max-w-xl mx-auto px-6 py-10 pb-32">
+        <!-- Success Hero -->
+        <div class="flex flex-col items-center text-center space-y-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div class="relative">
+            <div class="absolute -inset-4 bg-emerald-500/20 blur-xl rounded-full animate-pulse"></div>
+            <div class="relative w-20 h-20 bg-emerald-500 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+              <CheckCircle2 class="w-10 h-10 text-white" />
             </div>
           </div>
-          <div class="grid grid-cols-2 divide-x divide-slate-100">
-            <div class="p-6">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Event</p>
-              <p class="text-sm font-black text-slate-900">{{ query.data.value.eventTitle }}</p>
-            </div>
-            <div class="p-6">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Fund</p>
-              <p class="text-sm font-black text-slate-900">{{ query.data.value.recipientFundName || '—' }}</p>
-            </div>
+          <div class="space-y-2">
+            <h2 class="text-3xl font-black text-white uppercase tracking-tight italic">Collection Verified</h2>
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Operational Token: {{ query.data.value.receiptNumber }}</p>
           </div>
-          <div class="grid grid-cols-2 divide-x divide-slate-100">
-            <div class="p-6">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Payment Method</p>
-              <p class="text-sm font-black text-slate-900">{{ query.data.value.paymentMethod }}</p>
+        </div>
+
+        <!-- Digital Receipt Card -->
+        <div class="relative animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+          <div class="absolute -inset-1 bg-white/5 blur-md"></div>
+          <div class="relative bg-white text-[#060B16] p-10 shadow-2xl overflow-hidden">
+            <!-- Watermark -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] rotate-[-25deg] pointer-events-none whitespace-nowrap">
+              <p class="text-9xl font-black uppercase">MFTL NODE</p>
             </div>
-            <div class="p-6">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Date Issued</p>
-              <p class="text-sm font-black text-slate-900">{{ query.data.value.issuedAt.split(',')[0] }}</p>
+
+            <!-- Serrated edge effect -->
+            <div class="absolute -top-1 left-0 right-0 flex justify-between overflow-hidden">
+              <div v-for="i in 24" :key="i" class="w-4 h-4 bg-[#060B16] rotate-45 -translate-y-2 shrink-0" />
+            </div>
+
+            <div class="text-center border-b-2 border-dashed border-slate-200 pb-10 mb-10">
+              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Total Value Received</p>
+              <h3 class="text-6xl font-black tracking-tighter tabular-nums">{{ query.data.value.amount }}</h3>
+              <div class="inline-block mt-6 px-4 py-1.5 bg-[#060B16] text-white text-[10px] font-black uppercase tracking-[0.3em]">
+                {{ query.data.value.paymentMethod }} PROTOCOL
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <div
+                v-for="row in detailRows"
+                :key="row.label"
+                class="flex justify-between items-start gap-6"
+                :class="{ 'border-t border-slate-100 pt-6 mt-6': row.label === 'Contributor' }"
+              >
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ row.label }}</span>
+                <span class="text-xs font-black uppercase text-right leading-tight max-w-[60%]">{{ row.value }}</span>
+              </div>
+            </div>
+
+            <div class="mt-12 pt-8 border-t-2 border-dashed border-slate-200 text-center">
+              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">System Verified · {{ query.data.value.issuedAt }}</p>
             </div>
           </div>
         </div>
-        <!-- Verification row -->
-        <div class="p-5 bg-slate-50 border-t border-slate-100">
-          <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Verification Reference</p>
-          <p class="text-xs font-mono text-slate-400 break-all">MFTL-COL-{{ query.data.value.receiptNumber }}</p>
+
+        <!-- Feedback Messages -->
+        <div v-if="resendMessage" class="mt-8 animate-in fade-in slide-in-from-top-2">
+          <div 
+            class="p-4 border text-[10px] font-black uppercase tracking-[0.2em] text-center"
+            :class="resendSuccess ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'"
+          >
+            {{ resendMessage }}
+          </div>
         </div>
-      </div>
+      </main>
 
       <!-- ══════════════════════════════════════════════════
-           TABLET / DESKTOP: Action buttons inline
+           FIXED ACTION BAR
       ══════════════════════════════════════════════════ -->
-      <div class="hidden md:grid grid-cols-3 gap-4">
-        <AppButton variant="outline" class="w-full" :disabled="isResending" :loading="isResending" @click="handleResend">
-          <Send class="w-4 h-4 mr-2" />Resend Receipt
-        </AppButton>
-        <AppButton variant="outline" class="w-full" @click="handleShare">
-          <Share2 class="w-4 h-4 mr-2" />Share
-        </AppButton>
-        <AppButton variant="primary" class="w-full" @click="$router.push('/collector/contributions/new')">
-          <Plus class="w-4 h-4 mr-2" />Record Another
-        </AppButton>
-      </div>
+      <footer class="fixed bottom-0 inset-x-0 bg-[#060B16] border-t border-white/5 p-6 safe-area-bottom z-40">
+        <div class="max-w-xl mx-auto flex flex-col gap-3">
+          <button
+            class="
+              w-full bg-violet-600 text-white py-5
+              text-xs font-black uppercase tracking-[0.2em]
+              flex items-center justify-center gap-3
+              disabled:opacity-40 transition-all
+              active:scale-[0.98] shadow-[0_10px_30px_rgba(124,58,237,0.3)]
+            "
+            :disabled="isResending"
+            @click="handleResend"
+          >
+            <template v-if="isResending">
+              <div class="w-4 h-4 border-2 border-white/30 border-t-white animate-spin" />
+              Processing Resend...
+            </template>
+            <template v-else>
+              <Send class="w-4 h-4" />
+              Resend Digital Receipt
+            </template>
+          </button>
 
-      <!-- Resend feedback -->
-      <p v-if="resendMessage" class="text-center text-sm font-bold px-4 md:px-0" :class="resendSuccess ? 'text-emerald-600' : 'text-red-600'">
-        {{ resendMessage }}
-      </p>
-
+          <button
+            class="
+              w-full bg-white/5 border border-white/10 text-white py-5
+              text-xs font-black uppercase tracking-[0.2em]
+              flex items-center justify-center gap-3
+              hover:bg-white/10 transition-all
+              active:scale-[0.98]
+            "
+            @click="$router.push('/collector/contributions/new')"
+          >
+            <Plus class="w-4 h-4" />
+            Record Another Amount
+          </button>
+        </div>
+      </footer>
     </template>
-
-    <!-- ══════════════════════════════════════════════════
-         PHONE: Sticky bottom action bar (mobile app pattern)
-         3 stacked actions like receipt_screen.dart
-    ══════════════════════════════════════════════════ -->
-    <div
-      v-if="query.data.value"
-      class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 px-4 py-3 safe-area-bottom z-30 space-y-2"
-    >
-      <!-- Primary: Resend (matches "Print Receipt" slot in mobile) -->
-      <button
-        class="w-full bg-violet-600 text-white py-4 text-sm font-black uppercase tracking-widest flex items-center justify-center gap-2 active:opacity-90 transition-opacity disabled:opacity-40"
-        :disabled="isResending"
-        @click="handleResend"
-      >
-        <Send class="w-4 h-4" />
-        {{ isResending ? 'Sending…' : 'Resend Receipt' }}
-      </button>
-
-      <!-- Secondary: Record Another -->
-      <button
-        class="w-full border border-slate-200 py-3.5 text-sm font-black uppercase tracking-widest text-slate-700 flex items-center justify-center gap-2 active:bg-slate-50 transition-colors"
-        @click="$router.push('/collector/contributions/new')"
-      >
-        <Plus class="w-4 h-4" />
-        Collect Another Amount
-      </button>
-    </div>
   </div>
 </template>
 
@@ -219,14 +159,11 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useReceipt } from '@/modules/receipts/composables/useReceipts'
 import { receiptsService } from '@/modules/receipts/services/receiptsService'
-import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
-import AppButton from '@/shared/components/buttons/AppButton.vue'
 import ErrorState from '@/shared/components/loaders/ErrorState.vue'
 import LoadingState from '@/shared/components/loaders/LoadingState.vue'
-import { CheckCircle2, Share2, Plus, Send, ArrowLeft, X } from 'lucide-vue-next'
+import { CheckCircle2, Share2, Plus, Send, ChevronLeft } from 'lucide-vue-next'
 
 const route = useRoute()
-// const router = useRouter()
 const receiptId = computed(() => String(route.params.id ?? ''))
 const query = useReceipt(receiptId.value)
 
@@ -234,26 +171,15 @@ const isResending = ref(false)
 const resendMessage = ref('')
 const resendSuccess = ref(false)
 
-const statusClass = computed(() => {
-  const s = (query.data.value?.status ?? '').toLowerCase()
-  if (s === 'issued') return 'bg-emerald-50 text-emerald-700 border-emerald-200'
-  if (s === 'voided') return 'bg-red-50 text-red-700 border-red-200'
-  return 'bg-slate-100 text-slate-700 border-slate-200'
-})
-
-/** Flattened detail rows for the phone card-list pattern (mirrors receipt_screen.dart _buildDetailRow) */
+/** Flattened detail rows for the terminal card list */
 const detailRows = computed(() => {
   const d = query.data.value
   if (!d) return []
   return [
-    { label: 'Event', value: d.eventTitle },
-    { label: 'Fund / Cause', value: d.recipientFundName || '—' },
-    { label: 'Contributor', value: d.isAnonymous ? 'Anonymous' : d.contributorName },
-    { label: 'Phone', value: d.contributorPhone || '—' },
-    { label: 'Amount', value: d.amount },
-    { label: 'Payment Method', value: d.paymentMethod },
-    { label: 'Receipt #', value: d.receiptNumber },
-    { label: 'Issued', value: d.issuedAt },
+    { label: 'Active Hub', value: d.eventTitle },
+    { label: 'Allocation', value: d.recipientFundName || 'General Allocation' },
+    { label: 'Contributor', value: d.isAnonymous ? 'Anonymous Node' : d.contributorName },
+    { label: 'Contact', value: d.contributorPhone || 'Not Provided' },
   ]
 })
 
@@ -263,24 +189,37 @@ async function handleResend() {
   try {
     await receiptsService.resend(receiptId.value)
     resendSuccess.value = true
-    resendMessage.value = 'Receipt resent successfully.'
+    resendMessage.value = 'Receipt resent successfully to contributor node.'
   } catch (e: any) {
     resendSuccess.value = false
-    resendMessage.value = e?.response?.data?.message ?? 'Failed to resend. Please try again.'
+    resendMessage.value = e?.response?.data?.message ?? 'Protocol error during resend.'
   } finally {
     isResending.value = false
+    // Clear message after delay
+    setTimeout(() => { resendMessage.value = '' }, 5000)
   }
 }
 
 function handleShare() {
   if (navigator.share) {
-    navigator.share({ title: 'MFTL Contribution Receipt', text: `Receipt #${query.data.value?.receiptNumber}`, url: window.location.href })
-      .catch(() => {/* user cancelled */})
+    navigator.share({ 
+      title: 'MFTL Node Receipt', 
+      text: `Receipt Record #${query.data.value?.receiptNumber}`, 
+      url: window.location.href 
+    }).catch(() => {/* user cancelled */})
   } else {
     navigator.clipboard.writeText(window.location.href).then(() => {
       resendSuccess.value = true
-      resendMessage.value = 'Receipt link copied to clipboard.'
+      resendMessage.value = 'Record link copied to terminal clipboard.'
+      setTimeout(() => { resendMessage.value = '' }, 3000)
     }).catch(() => {/* ignore */})
   }
 }
 </script>
+
+<style scoped>
+/* Mobile Ergonomics */
+.safe-area-bottom {
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+}
+</style>

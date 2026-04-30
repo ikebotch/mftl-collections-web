@@ -43,6 +43,11 @@ export const collectorRoutes: RouteRecordRaw[] = [
         component: () => import('./pages/CollectorLedgerPage.vue'),
       },
       {
+        path: 'settlements',
+        name: 'collector-settlements',
+        component: () => import('./pages/CollectorSettlementPage.vue'),
+      },
+      {
         path: 'more',
         name: 'collector-more',
         component: () => import('./pages/CollectorMorePage.vue'),

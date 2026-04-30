@@ -13,6 +13,8 @@ import type {
   CollectorHistoryReceiptDto,
   CollectorProfile,
   CollectorProfileDto,
+  SettlementDto,
+  CollectorSettlement,
 } from '../types/collector'
 
 const DEV_COLLECTOR_ID = 'dev-collector'
@@ -106,6 +108,19 @@ function mapHistoryReceipt(dto: CollectorHistoryReceiptDto): CollectorHistoryRec
   }
 }
 
+function mapSettlement(dto: SettlementDto): CollectorSettlement {
+  return {
+    id: dto.id,
+    collectorName: dto.collectorName,
+    amount: formatCurrency(dto.amount, dto.currency),
+    amountValue: dto.amount,
+    currency: dto.currency,
+    status: dto.status,
+    date: formatDate(dto.date),
+    note: dto.note ?? '',
+  }
+}
+
 export async function getCollectorProfile(): Promise<CollectorProfile> {
   const response = await httpClient.get<CollectorProfileDto>('/collector/me', collectorRequestOptions())
   return mapProfile(response.data)
@@ -119,6 +134,11 @@ export async function getCollectorAssignments(): Promise<CollectorAssignments> {
 export async function getCollectorHistory(): Promise<CollectorHistoryReceipt[]> {
   const response = await httpClient.get<CollectorHistoryReceiptDto[]>('/collector/history', collectorRequestOptions())
   return (response.data ?? []).map(mapHistoryReceipt)
+}
+
+export async function getCollectorSettlements(): Promise<CollectorSettlement[]> {
+  const response = await httpClient.get<SettlementDto[]>('/collector/settlements', collectorRequestOptions())
+  return (response.data ?? []).map(mapSettlement)
 }
 
 export async function getCollectorDashboard(): Promise<CollectorDashboardSummary> {
@@ -167,6 +187,7 @@ export const collectorService = {
   getCollectorProfile,
   getCollectorAssignments,
   getCollectorHistory,
+  getCollectorSettlements,
   getCollectorDashboard,
   listAll: listAllCollectors,
   getById: getCollectorById,

@@ -8,6 +8,7 @@ import type {
   CollectorDashboardSummary,
   CollectorHistoryReceipt,
   CollectorProfile,
+  CollectorSettlement,
 } from '../types/collector'
 import type { ApiError } from '@/core/api/apiError'
 
@@ -52,6 +53,15 @@ export function useCollectorHistory() {
   return useQuery<CollectorHistoryReceipt[], ApiError>({
     queryKey: computed(() => ['collector-history', { tenantId: toValue(tenantStore.selectedTenantId) }]),
     queryFn: collectorService.getCollectorHistory,
+    enabled: computed(() => !!toValue(tenantStore.selectedTenantId)),
+  })
+}
+
+export function useCollectorSettlements() {
+  const tenantStore = useTenantStore()
+  return useQuery<CollectorSettlement[], ApiError>({
+    queryKey: computed(() => ['collector-settlements', { tenantId: toValue(tenantStore.selectedTenantId) }]),
+    queryFn: collectorService.getCollectorSettlements,
     enabled: computed(() => !!toValue(tenantStore.selectedTenantId)),
   })
 }
