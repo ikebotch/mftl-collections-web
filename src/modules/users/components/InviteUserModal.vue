@@ -38,7 +38,7 @@
               class="text-[10px] font-black uppercase tracking-widest block mb-1"
               :class="form.role === role ? 'text-white' : 'text-slate-900'"
             >
-              {{ role.replace(/([A-Z])/g, ' $1').trim() }}
+              {{ getRoleLabel(role) }}
             </span>
             <span 
               class="text-[9px] font-bold block leading-tight"
@@ -95,6 +95,7 @@ import AppInput from '@/shared/components/forms/AppInput.vue'
 import AppSelect from '@/shared/components/forms/AppSelect.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import { useUsersStore } from '@/modules/users/store/usersStore'
+import { AppRoles, getRoleLabel } from '@/core/auth/roles'
 
 const props = defineProps<{
   isOpen: boolean
@@ -106,7 +107,7 @@ const emit = defineEmits(['close', 'invite'])
 const form = ref({
   name: '',
   email: '',
-  role: 'Viewer',
+  role: AppRoles.Viewer as string,
   scopeType: 'Tenant',
   targetId: ''
 })
@@ -114,9 +115,16 @@ const form = ref({
 const usersStore = useUsersStore()
 
 const roles = computed(() => {
-  const allRoles = ['PlatformAdmin', 'TenantAdmin', 'FinanceAdmin', 'EventManager', 'Collector', 'Viewer']
+  const allRoles = [
+    AppRoles.PlatformAdmin, 
+    AppRoles.OrganisationAdmin, 
+    AppRoles.FinanceAdmin, 
+    AppRoles.EventManager, 
+    AppRoles.Collector, 
+    AppRoles.Viewer
+  ]
   if (!usersStore.isPlatformAdmin) {
-    return allRoles.filter(r => r !== 'PlatformAdmin')
+    return allRoles.filter(r => r !== AppRoles.PlatformAdmin)
   }
   return allRoles
 })
@@ -141,12 +149,12 @@ const isValid = computed(() => {
 
 function getRoleDescription(role: string) {
   const desc: Record<string, string> = {
-    PlatformAdmin: 'Full system control',
-    TenantAdmin: 'Manage own organization',
-    FinanceAdmin: 'Reports and settlements',
-    EventManager: 'Manage specific events',
-    Collector: 'On-ground collection',
-    Viewer: 'Read-only access'
+    [AppRoles.PlatformAdmin]: 'Full system control',
+    [AppRoles.OrganisationAdmin]: 'Manage own organization',
+    [AppRoles.FinanceAdmin]: 'Reports and settlements',
+    [AppRoles.EventManager]: 'Manage specific events',
+    [AppRoles.Collector]: 'On-ground collection',
+    [AppRoles.Viewer]: 'Read-only access'
   }
   return desc[role] || ''
 }

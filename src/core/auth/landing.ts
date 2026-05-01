@@ -1,5 +1,6 @@
 import { useUsersStore } from '@/modules/users/store/usersStore'
 import { Permissions } from './permissions'
+import { AppRoles } from './roles'
 
 /**
  * Resolves the appropriate landing path for a user based on their effective permissions
@@ -21,20 +22,24 @@ export function resolveLandingPath(): string {
   
   // 4. Admin-like roles or explicit admin dashboard permission
   const hasAdminRole = roles.some(r => 
-    ['Tenant Admin', 'Organisation Admin', 'Branch Admin', 'Organisation Finance', 'Branch Finance', 'Organisation Reporting', 'Finance Admin', 'Event Manager', 'System Manager'].includes(r) ||
-    r.includes('Admin') || r.includes('Finance') || r.includes('Reporting')
+    [
+      AppRoles.PlatformAdmin, 
+      AppRoles.OrganisationAdmin, 
+      AppRoles.BranchAdmin, 
+      AppRoles.FinanceAdmin, 
+      AppRoles.EventManager
+    ].includes(r)
   )
   
   const canViewDashboard = usersStore.hasPermission(Permissions.Dashboard.View)
   
   // If they have explicit dashboard view and are NOT just a collector, send to admin
-  // A collector also has dashboard.view (collector dashboard), so we check roles too
-  if (hasAdminRole || (canViewDashboard && !roles.includes('Collector'))) {
+  if (hasAdminRole || (canViewDashboard && !roles.includes(AppRoles.Collector))) {
     return '/admin'
   }
   
   // 5. Collector-only users
-  const isCollector = roles.some(r => ['Collector', 'Collector Supervisor'].includes(r))
+  const isCollector = roles.some(r => r === AppRoles.Collector)
   const hasAssignments = (usersStore.me.scopeAssignments?.length ?? 0) > 0
   
   if (isCollector || (usersStore.accessState === 'active' && hasAssignments)) {

@@ -81,7 +81,7 @@
                 :key="role.role"
                 class="p-6 text-center bg-slate-50 border-b border-slate-100"
               >
-                <span class="text-[10px] font-black uppercase tracking-widest text-slate-900 block">{{ role.role }}</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-900 block">{{ getRoleLabel(role.role) }}</span>
               </th>
             </tr>
           </thead>
@@ -128,6 +128,7 @@ import AdminPageHeader from '@/shared/components/headers/AdminPageHeader.vue'
 import AppCard from '@/shared/components/cards/AppCard.vue'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 import { ShieldCheck, Fingerprint, Check, Minus } from 'lucide-vue-next'
+import { AppRoles, getRoleLabel } from '@/core/auth/roles'
 
 const features = [
   { key: 'tenant_management', name: 'Tenant Control', description: 'Configure organization-wide settings' },
@@ -141,23 +142,23 @@ const features = [
 
 const roles = [
   { 
-    role: 'Platform Admin', 
+    role: AppRoles.PlatformAdmin, 
     permissions: ['all_access']
   },
   { 
-    role: 'Tenant Admin', 
+    role: AppRoles.OrganisationAdmin, 
     permissions: ['manage_events', 'manage_funds', 'manage_collectors', 'view_reports', 'manage_users', 'tenant_management']
   },
   { 
-    role: 'Finance Admin', 
+    role: AppRoles.FinanceAdmin, 
     permissions: ['view_reports', 'manage_funds', 'reconcile_cash']
   },
   { 
-    role: 'Event Manager', 
+    role: AppRoles.EventManager, 
     permissions: ['manage_events', 'view_reports', 'manage_collectors']
   },
   { 
-    role: 'Collector', 
+    role: AppRoles.Collector, 
     permissions: ['record_contribution', 'view_own_history']
   }
 ]

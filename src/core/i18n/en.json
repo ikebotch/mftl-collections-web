@@ -19,8 +19,8 @@
         "collectors": "Collectors",
         "reports": "Reports",
         "settlements": "Settlements",
-        "users": "Users",
         "organization": "Organization",
+        "users": "Users",
         "settings": "Settings"
       }
     },

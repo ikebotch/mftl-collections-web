@@ -102,7 +102,8 @@ describe('usersStore', () => {
     } as any).mockResolvedValueOnce({
       auth0Id: 'user-1',
       isPlatformAdmin: false,
-      effectiveRoles: ['Tenant Admin'],
+      effectiveRoles: ['Organisation Admin'],
+      effectiveRoleKeys: ['OrganisationAdmin'],
       scopeAssignments: [
         { scopeType: 'Tenant', targetId: 'mftl-tenant', targetName: 'MFTL' }
       ]
@@ -111,6 +112,6 @@ describe('usersStore', () => {
     await usersStore.fetchMe()
 
     expect(tenantStore.selectedTenantId).toBe('mftl-tenant')
-    expect(usersStore.roles).toContain('Tenant Admin')
+    expect(usersStore.roles).toContain('OrganisationAdmin')
   })
 })

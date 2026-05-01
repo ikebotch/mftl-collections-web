@@ -20,6 +20,7 @@ export interface UserDetail extends UserRow {
   scopeAssignments: ScopeAssignment[]
   auth0Roles: string[]
   effectiveRoles: string[]
+  effectiveRoleKeys: string[]
   permissions: string[]
   activeTenantId?: string
 }

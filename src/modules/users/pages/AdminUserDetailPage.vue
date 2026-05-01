@@ -409,7 +409,7 @@
                     :class="scopeForm.roles.includes(role) ? 'border-violet-600 bg-violet-600 text-white shadow-lg shadow-violet-100' : 'border-slate-100 bg-white text-slate-500 hover:border-slate-200'"
                     @click="toggleRole(role)"
                   >
-                    <span class="text-[10px] font-black uppercase tracking-widest">{{ role }}</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">{{ getRoleLabel(role) }}</span>
                   </button>
                 </div>
               </div>
@@ -440,7 +440,7 @@
                   :type="getScopeRowType(scope.scopeType)"
                   :title="scope.targetName || 'Global System Access'"
                   :subtitle="formatScopeType(scope.scopeType)"
-                  :badge="scope.role"
+                  :badge="getRoleLabel(scope.role)"
                   :is-assigned="true"
                   :is-editing="isEditingScopes"
                   @action="handleRevokeScope(scope.id)"
@@ -590,7 +590,7 @@
                 </td>
                 <td class="px-8 py-6">
                   <span class="px-3 py-1 bg-violet-50 text-violet-600 text-[9px] font-black uppercase tracking-widest border border-violet-100">
-                    {{ scope.role }}
+                    {{ getRoleLabel(scope.role) }}
                   </span>
                 </td>
                 <td class="px-8 py-6 text-right">
@@ -751,6 +751,7 @@ import { branchesService } from '@/modules/tenants/services/branchesService'
 import { eventsService } from '@/modules/events/services/eventsService'
 import { recipientFundsService } from '@/modules/recipient-funds/services/recipientFundsService'
 import { useUsersStore } from '@/modules/users/store/usersStore'
+import { AppRoles, getRoleLabel } from '@/core/auth/roles'
 
 const route = useRoute()
 const toast = useToastStore()
@@ -805,16 +806,13 @@ function getScopeRowType(type: string): 'event' | 'fund' {
 }
 
 const roles = [
-  'Platform Admin', 
-  'Organisation Admin', 
-  'Finance Officer', 
-  'Branch Manager', 
-  'Event Manager', 
-  'Collector', 
-  'Recipient Manager', 
-  'Reporting Officer', 
-  'Audit/Security Officer', 
-  'General Staff/Viewer'
+  AppRoles.PlatformAdmin, 
+  AppRoles.OrganisationAdmin, 
+  AppRoles.FinanceAdmin, 
+  AppRoles.BranchAdmin, 
+  AppRoles.EventManager, 
+  AppRoles.Collector, 
+  AppRoles.Viewer
 ]
 
 const usersStore = useUsersStore()
@@ -834,7 +832,7 @@ const filteredScopeLevels = computed(() => {
 
 const availableRoles = computed(() => {
   if (!usersStore.isPlatformAdmin) {
-    return roles.filter(r => r !== 'Platform Admin')
+    return roles.filter(r => r !== AppRoles.PlatformAdmin)
   }
   return roles
 })
@@ -897,7 +895,7 @@ async function handleAssignScope() {
     }
 
     await usersService.assignScope(userId.value, {
-      roles: scopeForm.value.roles.length > 0 ? scopeForm.value.roles : ['General Staff/Viewer'],
+      roles: scopeForm.value.roles.length > 0 ? scopeForm.value.roles : [AppRoles.Viewer],
       scopeType: finalScopeType,
       targetId: targetId || undefined
     })
@@ -1039,16 +1037,13 @@ async function handleStatusAction(action: string) {
 
 function getPermissionsByRole(role: string) {
   const mapping: Record<string, string[]> = {
-    'Platform Admin': ['all_access'],
-    'Organisation Admin': ['organisations.*', 'branches.*', 'events.*', 'funds.*', 'reports.*', 'users.*'],
-    'Finance Officer': ['contributions.*', 'payments.*', 'reports.finance'],
-    'Branch Manager': ['branches.manage', 'events.*', 'collectors.*'],
-    'Event Manager': ['events.manage', 'funds.manage', 'collectors.manage'],
-    'Collector': ['contributions.create', 'receipts.issue'],
-    'Recipient Manager': ['funds.manage', 'donors.view'],
-    'Reporting Officer': ['reports.view', 'analytics.view'],
-    'Audit/Security Officer': ['audit.view', 'security.manage'],
-    'General Staff/Viewer': ['events.view', 'funds.view']
+    [AppRoles.PlatformAdmin]: ['all_access'],
+    [AppRoles.OrganisationAdmin]: ['organisations.*', 'branches.*', 'events.*', 'funds.*', 'reports.*', 'users.*'],
+    [AppRoles.FinanceAdmin]: ['contributions.*', 'payments.*', 'reports.finance'],
+    [AppRoles.BranchAdmin]: ['branches.manage', 'events.*', 'collectors.*'],
+    [AppRoles.EventManager]: ['events.manage', 'funds.manage', 'collectors.manage'],
+    [AppRoles.Collector]: ['contributions.create', 'receipts.issue'],
+    [AppRoles.Viewer]: ['events.view', 'funds.view']
   }
   return mapping[role] || ['read_access']
 }

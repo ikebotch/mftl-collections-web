@@ -15,7 +15,7 @@ export const useUsersStore = defineStore('users-module', () => {
   const isPlatformAdmin = computed(() => me.value?.isPlatformAdmin ?? false)
   const accessState = computed(() => me.value?.accessState ?? 'pending-access')
   
-  const roles = computed(() => me.value?.effectiveRoles ?? [])
+  const roles = computed(() => me.value?.effectiveRoleKeys ?? [])
   const scopes = computed(() => me.value?.scopeAssignments ?? [])
   const permissions = computed(() => me.value?.permissions ?? [])
   

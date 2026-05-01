@@ -43,6 +43,7 @@ describe('AuthCallbackPage', () => {
       name: 'Admin User',
       email: 'admin@test.com',
       accessState: 'active',
+      effectiveRoleKeys: ['OrganisationAdmin'],
       effectiveRoles: ['Organisation Admin'],
       auth0Roles: [],
       scopeAssignments: [],
@@ -53,7 +54,7 @@ describe('AuthCallbackPage', () => {
       auth0Id: 'auth0|1',
       createdAt: '',
       permissions: []
-    })
+    } as any)
 
     mount(AuthCallbackPage, {
       global: {
@@ -73,6 +74,7 @@ describe('AuthCallbackPage', () => {
       name: 'Collector User',
       email: 'collector@test.com',
       accessState: 'active',
+      effectiveRoleKeys: ['Collector'],
       effectiveRoles: ['Collector'],
       auth0Roles: [],
       scopeAssignments: [],
@@ -83,7 +85,7 @@ describe('AuthCallbackPage', () => {
       auth0Id: 'auth0|2',
       createdAt: '',
       permissions: []
-    })
+    } as any)
 
     mount(AuthCallbackPage, {
       global: {
@@ -102,6 +104,7 @@ describe('AuthCallbackPage', () => {
       name: 'New User',
       email: 'new@test.com',
       accessState: 'pending-access',
+      effectiveRoleKeys: [],
       effectiveRoles: [],
       auth0Roles: [],
       scopeAssignments: [],
@@ -112,7 +115,7 @@ describe('AuthCallbackPage', () => {
       auth0Id: 'auth0|3',
       createdAt: '',
       permissions: []
-    })
+    } as any)
 
     mount(AuthCallbackPage, {
       global: {

@@ -140,7 +140,7 @@
                 <span
                   class="text-[10px] font-black uppercase tracking-widest block"
                   :class="form.roles.includes(role) ? 'text-violet-600' : 'text-slate-900'"
-                >{{ role }}</span>
+                >{{ getRoleLabel(role) }}</span>
                 <Check
                   v-if="form.roles.includes(role)"
                   class="w-3 h-3 text-violet-600"
@@ -183,6 +183,7 @@ import { tenantsService } from '@/modules/tenants/services/tenantsService'
 import { branchesService } from '@/modules/tenants/services/branchesService'
 import { useUsersStore } from '@/modules/users/store/usersStore'
 import { Check, Globe } from 'lucide-vue-next'
+import { AppRoles, getRoleLabel } from '@/core/auth/roles'
 
 const props = defineProps<{
   open: boolean
@@ -208,10 +209,19 @@ const assignmentTabs = computed(() => {
 })
 
 const availableRoles = computed(() => {
-  const allRoles = ['Platform Admin', 'Tenant Admin', 'Finance Admin', 'Event Manager', 'Collector', 'Viewer']
+  const allRoles = [
+    AppRoles.PlatformAdmin,
+    AppRoles.OrganisationAdmin,
+    AppRoles.FinanceAdmin,
+    AppRoles.BranchAdmin,
+    AppRoles.EventManager,
+    AppRoles.NotificationManager,
+    AppRoles.Collector,
+    AppRoles.Viewer
+  ]
   
   if (!usersStore.isPlatformAdmin) {
-    return allRoles.filter(r => r !== 'Platform Admin')
+    return allRoles.filter(r => r !== AppRoles.PlatformAdmin)
   }
   
   return allRoles
