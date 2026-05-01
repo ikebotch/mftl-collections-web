@@ -127,7 +127,7 @@
           <span class="text-xs font-bold text-slate-600">{{ value }}</span>
         </template>
  
-        <template #cell:fund="{ value }">
+        <template #cell:recipientFund="{ value }">
           <span class="text-xs font-bold text-slate-500">{{ value }}</span>
         </template>
  
@@ -135,8 +135,8 @@
           <span class="text-xs font-black text-slate-900 lowercase">{{ row.collectorName || 'system' }}</span>
         </template>
  
-        <template #cell:method="{ value }">
-          <span class="text-[10px] font-black text-slate-900 tracking-widest uppercase">{{ value }}</span>
+        <template #cell:paymentMethod="{ value }">
+          <span class="text-[10px] font-black text-slate-900 tracking-widest uppercase">{{ formatPaymentMethod(value) }}</span>
         </template>
  
         <template #cell:status="{ row }">
@@ -360,11 +360,20 @@ const columns = computed(() => [
   { key: 'donor', label: 'Donor', sortable: true },
   { key: 'amount', label: 'Amount', sortable: !!activeFilters.value.currency },
   { key: 'event', label: 'Event', sortable: true },
-  { key: 'fund', label: 'Fund', sortable: true },
+  { key: 'recipientFund', label: 'Fund', sortable: true },
   { key: 'collector', label: 'Collector', sortable: true },
-  { key: 'method', label: 'Method', sortable: true },
+  { key: 'paymentMethod', label: 'Method', sortable: true },
   { key: 'status', label: 'Status', sortable: true }
 ])
+
+function formatPaymentMethod(method: string) {
+  if (!method) return 'Unknown'
+  const m = method.toLowerCase()
+  if (m === 'momo') return 'Mobile Money'
+  if (m === 'cash') return 'Cash'
+  if (m === 'card') return 'Card'
+  return method.charAt(0).toUpperCase() + method.slice(1)
+}
 
 function toggleFilter(type: 'status' | 'methods', value: string) {
   const index = activeFilters.value[type].indexOf(value)
