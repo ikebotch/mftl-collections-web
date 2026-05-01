@@ -11,3 +11,21 @@ export async function getStorefrontRecipientFunds(eventSlug: string): Promise<Re
   const response = await httpClient.get<RecipientFund[]>(`/storefront/events/${eventSlug}/funds`)
   return response.data
 }
+
+export interface CreateContributionInput {
+  eventId: string
+  recipientFundId: string
+  amount: number
+  currency: string
+  contributorName: string
+  contributorPhone: string
+  contributorEmail?: string
+  anonymous: boolean
+  paymentMethod: string
+  note?: string
+}
+
+export async function createStorefrontContribution(payload: CreateContributionInput): Promise<{ id: string }> {
+  const response = await httpClient.post<{ id: string }>('/contributions', payload)
+  return response.data
+}

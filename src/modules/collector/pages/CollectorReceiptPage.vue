@@ -1,11 +1,20 @@
 <template>
   <div class="min-h-screen bg-[#060B16] text-white selection:bg-violet-500/30">
     <!-- Loading / Error -->
-    <div v-if="query.isLoading.value" class="py-20 flex flex-col items-center">
-      <LoadingState text="Accessing Node Record…" class="!text-slate-400" />
+    <div
+      v-if="query.isLoading.value"
+      class="py-20 flex flex-col items-center"
+    >
+      <LoadingState
+        text="Accessing Node Record…"
+        class="!text-slate-400"
+      />
     </div>
     
-    <div v-else-if="query.isError.value" class="px-6 py-12">
+    <div
+      v-else-if="query.isError.value"
+      class="px-6 py-12"
+    >
       <ErrorState
         title="Record Access Failure"
         :message="query.error.value?.message ?? 'The requested receipt could not be retrieved from the node.'"
@@ -28,8 +37,12 @@
             <ChevronLeft class="w-5 h-5 text-slate-400" />
           </button>
           <div>
-            <p class="text-[9px] font-black text-violet-400 uppercase tracking-[0.3em]">Node Operation</p>
-            <h1 class="text-sm font-black text-white uppercase tracking-tight">Receipt Record</h1>
+            <p class="text-[9px] font-black text-violet-400 uppercase tracking-[0.3em]">
+              Node Operation
+            </p>
+            <h1 class="text-sm font-black text-white uppercase tracking-tight">
+              Receipt Record
+            </h1>
           </div>
         </div>
         
@@ -47,34 +60,48 @@
         <!-- Success Hero -->
         <div class="flex flex-col items-center text-center space-y-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div class="relative">
-            <div class="absolute -inset-4 bg-emerald-500/20 blur-xl rounded-full animate-pulse"></div>
+            <div class="absolute -inset-4 bg-emerald-500/20 blur-xl rounded-full animate-pulse" />
             <div class="relative w-20 h-20 bg-emerald-500 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.4)]">
               <CheckCircle2 class="w-10 h-10 text-white" />
             </div>
           </div>
           <div class="space-y-2">
-            <h2 class="text-3xl font-black text-white uppercase tracking-tight italic">Collection Verified</h2>
-            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Operational Token: {{ query.data.value.receiptNumber }}</p>
+            <h2 class="text-3xl font-black text-white uppercase tracking-tight italic">
+              Collection Verified
+            </h2>
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+              Operational Token: {{ query.data.value.receiptNumber }}
+            </p>
           </div>
         </div>
 
         <!-- Digital Receipt Card -->
         <div class="relative animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-          <div class="absolute -inset-1 bg-white/5 blur-md"></div>
+          <div class="absolute -inset-1 bg-white/5 blur-md" />
           <div class="relative bg-white text-[#060B16] p-10 shadow-2xl overflow-hidden">
             <!-- Watermark -->
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] rotate-[-25deg] pointer-events-none whitespace-nowrap">
-              <p class="text-9xl font-black uppercase">MFTL NODE</p>
+              <p class="text-9xl font-black uppercase">
+                MFTL NODE
+              </p>
             </div>
 
             <!-- Serrated edge effect -->
             <div class="absolute -top-1 left-0 right-0 flex justify-between overflow-hidden">
-              <div v-for="i in 24" :key="i" class="w-4 h-4 bg-[#060B16] rotate-45 -translate-y-2 shrink-0" />
+              <div
+                v-for="i in 24"
+                :key="i"
+                class="w-4 h-4 bg-[#060B16] rotate-45 -translate-y-2 shrink-0"
+              />
             </div>
 
             <div class="text-center border-b-2 border-dashed border-slate-200 pb-10 mb-10">
-              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Total Value Received</p>
-              <h3 class="text-6xl font-black tracking-tighter tabular-nums">{{ query.data.value.amount }}</h3>
+              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">
+                Total Value Received
+              </p>
+              <h3 class="text-6xl font-black tracking-tighter tabular-nums">
+                {{ query.data.value.amount }}
+              </h3>
               <div class="inline-block mt-6 px-4 py-1.5 bg-[#060B16] text-white text-[10px] font-black uppercase tracking-[0.3em]">
                 {{ query.data.value.paymentMethod }} PROTOCOL
               </div>
@@ -93,13 +120,18 @@
             </div>
 
             <div class="mt-12 pt-8 border-t-2 border-dashed border-slate-200 text-center">
-              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">System Verified · {{ query.data.value.issuedAt }}</p>
+              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">
+                System Verified · {{ query.data.value.issuedAt }}
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Feedback Messages -->
-        <div v-if="resendMessage" class="mt-8 animate-in fade-in slide-in-from-top-2">
+        <div
+          v-if="resendMessage"
+          class="mt-8 animate-in fade-in slide-in-from-top-2"
+        >
           <div 
             class="p-4 border text-[10px] font-black uppercase tracking-[0.2em] text-center"
             :class="resendSuccess ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'"

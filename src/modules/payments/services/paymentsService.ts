@@ -4,7 +4,13 @@ import type { PaymentDto, PaymentRow } from '../types/payment'
 
 export interface InitiatePaymentInput {
   contributionId: string
-  provider: 'stripe' | 'test'
+  provider: 'stripe' | 'paystack' | 'test'
+}
+
+export interface PaymentResult {
+  success: boolean
+  checkoutUrl?: string
+  providerReference?: string
 }
 
 export async function listPayments(): Promise<PaymentRow[]> {
@@ -12,8 +18,8 @@ export async function listPayments(): Promise<PaymentRow[]> {
   return (response.data || []).map(mapPaymentDto)
 }
 
-export async function initiatePayment(payload: InitiatePaymentInput): Promise<{ paymentUrl: string }> {
-  const response = await httpClient.post<{ paymentUrl: string }, InitiatePaymentInput>(
+export async function initiatePayment(payload: InitiatePaymentInput): Promise<PaymentResult> {
+  const response = await httpClient.post<PaymentResult, InitiatePaymentInput>(
     '/payments/initiate',
     payload,
   )

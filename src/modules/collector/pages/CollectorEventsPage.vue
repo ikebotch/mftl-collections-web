@@ -7,7 +7,9 @@
       <div class="max-w-xl mx-auto space-y-2">
         <div class="flex items-center gap-3">
           <div class="w-1.5 h-1.5 bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.5)] animate-pulse" />
-          <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">Operational Protocol</p>
+          <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">
+            Operational Protocol
+          </p>
         </div>
         <h1 class="text-4xl font-black text-white uppercase tracking-tight italic leading-none">
           Assigned Shifts
@@ -19,11 +21,20 @@
     </header>
 
     <main class="max-w-xl mx-auto px-6 py-10 pb-32 space-y-8">
-      <div v-if="query.isLoading.value" class="py-20 flex flex-col items-center">
-        <LoadingState text="Syncing assignments…" class="!text-slate-400" />
+      <div
+        v-if="query.isLoading.value"
+        class="py-20 flex flex-col items-center"
+      >
+        <LoadingState
+          text="Syncing assignments…"
+          class="!text-slate-400"
+        />
       </div>
       
-      <div v-else-if="query.isError.value" class="py-12">
+      <div
+        v-else-if="query.isError.value"
+        class="py-12"
+      >
         <ErrorState
           title="Terminal Access Denied"
           :message="query.error.value?.message ?? 'Node connection failed.'"
@@ -66,7 +77,10 @@
         </div>
 
         <!-- Events List -->
-        <div v-else-if="activeTab === 'events'" class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div
+          v-else-if="activeTab === 'events'"
+          class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700"
+        >
           <div
             v-if="query.data.value.events.length === 0"
             class="border border-dashed border-white/10 bg-white/[0.01] p-16 text-center"
@@ -95,7 +109,9 @@
             <div class="min-w-0 flex-1">
               <div class="flex items-start justify-between gap-4">
                 <div class="space-y-1">
-                  <p class="text-[9px] font-black uppercase tracking-[0.3em] text-violet-400">{{ event.status }} Hub</p>
+                  <p class="text-[9px] font-black uppercase tracking-[0.3em] text-violet-400">
+                    {{ event.status }} Hub
+                  </p>
                   <h3 class="text-xl font-black text-white uppercase tracking-tight leading-tight group-hover:text-violet-400 transition-colors">
                     {{ event.title }}
                   </h3>
@@ -104,15 +120,22 @@
               </div>
               
               <div class="mt-4 flex items-center gap-4 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                <div class="flex items-center gap-1.5"><MapPin class="w-3 h-3" /> {{ event.location }}</div>
-                <div class="flex items-center gap-1.5"><Clock class="w-3 h-3" /> {{ event.dateLabel }}</div>
+                <div class="flex items-center gap-1.5">
+                  <MapPin class="w-3 h-3" /> {{ event.location }}
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <Clock class="w-3 h-3" /> {{ event.dateLabel }}
+                </div>
               </div>
             </div>
           </button>
         </div>
 
         <!-- Funds List -->
-        <div v-else class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div
+          v-else
+          class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700"
+        >
           <div
             v-if="query.data.value.funds.length === 0"
             class="border border-dashed border-white/10 bg-white/[0.01] p-16 text-center"

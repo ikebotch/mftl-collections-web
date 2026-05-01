@@ -68,8 +68,7 @@
                   class="px-2 py-1 bg-white border border-violet-100 text-[10px] font-mono text-violet-600 cursor-pointer hover:bg-violet-600 hover:text-white transition-colors"
                   @click="insertVariable(v)"
                   v-text="'{{' + v + '}}'"
-                >
-                </code>
+                />
               </div>
             </div>
           </div>
@@ -83,10 +82,10 @@
 
           <ToggleCard
             :model-value="form.isActive ?? true"
-            @update:model-value="form.isActive = $event"
             title="Active Status"
             description="Enable or disable this template for live dispatch."
             :disabled="!canManage"
+            @update:model-value="form.isActive = $event"
           />
         </div>
       </AppCard>

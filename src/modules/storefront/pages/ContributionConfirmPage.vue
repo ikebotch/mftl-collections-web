@@ -40,7 +40,10 @@
         >
           Back
         </AppButton>
-        <AppButton @click="router.push(`/contribute/${eventSlug}/success`)">
+        <AppButton
+          :loading="flowStore.isSubmitting"
+          @click="flowStore.submit()"
+        >
           Confirm contribution
         </AppButton>
       </div>

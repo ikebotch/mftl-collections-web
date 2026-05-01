@@ -1,11 +1,20 @@
 <template>
   <div class="min-h-screen bg-[#060B16] text-white pb-32 selection:bg-violet-500/30">
     <!-- ─── Loading / Error ─── -->
-    <div v-if="query.isLoading.value" class="py-20 flex flex-col items-center">
-      <LoadingState text="Accessing Node Settlements…" class="!text-slate-400" />
+    <div
+      v-if="query.isLoading.value"
+      class="py-20 flex flex-col items-center"
+    >
+      <LoadingState
+        text="Accessing Node Settlements…"
+        class="!text-slate-400"
+      />
     </div>
     
-    <div v-else-if="query.isError.value" class="px-6 py-12">
+    <div
+      v-else-if="query.isError.value"
+      class="px-6 py-12"
+    >
       <ErrorState
         title="Protocol Sync Failure"
         :message="query.error.value?.message ?? 'Node connection timed out.'"
@@ -15,7 +24,10 @@
       />
     </div>
 
-    <div v-else class="animate-in fade-in duration-700">
+    <div
+      v-else
+      class="animate-in fade-in duration-700"
+    >
       <!-- ══════════════════════════════════════════════════
            TERMINAL HEADER
       ══════════════════════════════════════════════════ -->
@@ -25,7 +37,9 @@
             <div class="space-y-2">
               <div class="flex items-center gap-3">
                 <div class="w-1.5 h-1.5 bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.5)] animate-pulse" />
-                <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">Operational Settlements</p>
+                <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">
+                  Operational Settlements
+                </p>
               </div>
               <h1 class="text-4xl font-black text-white uppercase tracking-tight italic leading-none">
                 Settlements
@@ -53,12 +67,17 @@
               class="bg-white/[0.03] border border-white/10 p-6 group hover:border-white/20 transition-all flex items-center justify-between"
             >
               <div class="space-y-2">
-                <p class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">{{ stat.label }}</p>
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">
+                  {{ stat.label }}
+                </p>
                 <p class="text-2xl font-black text-white uppercase tracking-tight tabular-nums">
                   {{ stat.value }}
                 </p>
               </div>
-              <component :is="stat.icon" class="w-5 h-5 text-violet-500/30 group-hover:text-violet-500 transition-colors" />
+              <component
+                :is="stat.icon"
+                class="w-5 h-5 text-violet-500/30 group-hover:text-violet-500 transition-colors"
+              />
             </div>
           </div>
         </div>
@@ -68,7 +87,6 @@
            MAIN WORKSPACE
       ══════════════════════════════════════════════════ -->
       <main class="max-w-[1400px] mx-auto px-6 py-12">
-        
         <!-- Filter Tabs -->
         <div class="flex items-center gap-1 border-b border-white/5 mb-10 overflow-x-auto scrollbar-none">
           <button
@@ -91,12 +109,18 @@
 
         <!-- Content Area -->
         <div class="space-y-6">
-          
           <!-- No-records state -->
-          <div v-if="!filteredSettlements.length" class="py-24 text-center bg-white/[0.02] border border-white/5 animate-in fade-in duration-500">
+          <div
+            v-if="!filteredSettlements.length"
+            class="py-24 text-center bg-white/[0.02] border border-white/5 animate-in fade-in duration-500"
+          >
             <FileX2 class="w-16 h-16 text-slate-800 mx-auto mb-8" />
-            <h4 class="text-xl font-black text-white uppercase tracking-tight mb-2">No Settlement Data</h4>
-            <p class="text-sm text-slate-500 max-w-xs mx-auto font-medium uppercase tracking-wide opacity-60">No reconciliation records matching the selected protocol were found on this node.</p>
+            <h4 class="text-xl font-black text-white uppercase tracking-tight mb-2">
+              No Settlement Data
+            </h4>
+            <p class="text-sm text-slate-500 max-w-xs mx-auto font-medium uppercase tracking-wide opacity-60">
+              No reconciliation records matching the selected protocol were found on this node.
+            </p>
           </div>
 
           <!-- Phone: Card List -->
@@ -115,16 +139,24 @@
                   <Wallet class="w-6 h-6 text-slate-700 group-hover:text-violet-500/50 transition-colors" />
                 </div>
                 <div class="min-w-0">
-                  <p class="text-sm font-black text-white uppercase tracking-tight truncate leading-none mb-1.5">{{ settlement.date }}</p>
+                  <p class="text-sm font-black text-white uppercase tracking-tight truncate leading-none mb-1.5">
+                    {{ settlement.date }}
+                  </p>
                   <div class="flex items-center gap-2 overflow-hidden">
-                    <p class="text-[10px] font-black text-slate-500 uppercase truncate tracking-widest">{{ settlement.collectorName }}</p>
+                    <p class="text-[10px] font-black text-slate-500 uppercase truncate tracking-widest">
+                      {{ settlement.collectorName }}
+                    </p>
                     <span class="h-1 w-1 bg-slate-800 rounded-full shrink-0" />
-                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest truncate">{{ settlement.note || 'Regular Handover' }}</p>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest truncate">
+                      {{ settlement.note || 'Regular Handover' }}
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="text-right shrink-0">
-                <p class="text-xl font-black text-white tracking-tighter tabular-nums leading-none">{{ settlement.amount }}</p>
+                <p class="text-xl font-black text-white tracking-tighter tabular-nums leading-none">
+                  {{ settlement.amount }}
+                </p>
                 <div class="flex justify-end mt-2">
                   <div 
                     class="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-0.5 border"
@@ -142,7 +174,11 @@
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="border-b border-white/10 bg-white/[0.03]">
-                  <th v-for="col in columns" :key="col.key" class="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+                  <th
+                    v-for="col in columns"
+                    :key="col.key"
+                    class="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]"
+                  >
                     {{ col.label }}
                   </th>
                 </tr>

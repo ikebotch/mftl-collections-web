@@ -135,18 +135,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { z } from 'zod'
 import { useContributionFlowStore } from '../store/contributionFlowStore'
 import { contributorDetailsSchema } from '../validators/storefrontValidators'
 import AppButton from '@/shared/components/buttons/AppButton.vue'
 
+import { useStorefrontEvent } from '../composables/useStorefront'
+
 const route = useRoute()
 const router = useRouter()
 const flowStore = useContributionFlowStore()
 
 const eventSlug = computed(() => String(route.params.eventSlug ?? ''))
+const { data: event } = useStorefrontEvent(eventSlug.value)
+
+watchEffect(() => {
+  if (event.value) {
+    flowStore.initialise(eventSlug.value, event.value.id)
+  } else {
+    flowStore.initialise(eventSlug.value)
+  }
+})
 const contributorName = ref(flowStore.draft.contributorName)
 const contributorPhone = ref(flowStore.draft.contributorPhone)
 const contributorEmail = ref(flowStore.draft.contributorEmail)

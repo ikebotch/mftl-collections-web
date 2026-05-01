@@ -7,7 +7,9 @@
       <div class="max-w-xl mx-auto space-y-2">
         <div class="flex items-center gap-3">
           <div class="w-1.5 h-1.5 bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.5)] animate-pulse" />
-          <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">Financial Node Status</p>
+          <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">
+            Financial Node Status
+          </p>
         </div>
         <h1 class="text-4xl font-black text-white uppercase tracking-tight italic leading-none">
           Cash Ledger
@@ -21,9 +23,11 @@
     <main class="max-w-xl mx-auto px-6 py-10 pb-32 space-y-12">
       <!-- Cash In Hand Node -->
       <section class="relative group animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div class="absolute -inset-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 blur-xl opacity-10 group-hover:opacity-20 transition duration-1000"></div>
+        <div class="absolute -inset-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 blur-xl opacity-10 group-hover:opacity-20 transition duration-1000" />
         <div class="relative bg-white/[0.03] border border-white/10 p-10 overflow-hidden">
-          <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-6">Total Cash In Hand</p>
+          <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-6">
+            Total Cash In Hand
+          </p>
           
           <div class="flex flex-col gap-8">
             <h3 class="text-7xl font-black text-white tracking-tighter tabular-nums leading-none">
@@ -78,11 +82,18 @@
           class="bg-white/[0.03] border border-white/10 p-8 group hover:border-white/20 transition-all flex items-center justify-between"
         >
           <div class="space-y-3">
-            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">{{ stat.label }}</p>
-            <p class="text-3xl font-black text-white uppercase tracking-tight tabular-nums">{{ stat.value }}</p>
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+              {{ stat.label }}
+            </p>
+            <p class="text-3xl font-black text-white uppercase tracking-tight tabular-nums">
+              {{ stat.value }}
+            </p>
           </div>
           <div class="h-14 w-14 bg-white/5 flex items-center justify-center text-violet-500/30 group-hover:text-violet-500 group-hover:bg-violet-500/10 transition-all">
-            <component :is="stat.iconComp" class="w-6 h-6" />
+            <component
+              :is="stat.iconComp"
+              class="w-6 h-6"
+            />
           </div>
         </div>
       </section>

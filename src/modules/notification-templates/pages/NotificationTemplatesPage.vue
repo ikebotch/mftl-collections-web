@@ -67,7 +67,7 @@
             <span
               class="text-[10px] font-mono text-slate-400 mt-1 italic"
               v-text="'{{' + row.templateKey + '}}'"
-            ></span>
+            />
           </div>
         </template>
 

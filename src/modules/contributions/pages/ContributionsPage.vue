@@ -33,7 +33,10 @@
       />
     </AdminMetricGrid>
 
-    <LoadingState v-if="query.isLoading.value" text="Loading contributions..." />
+    <LoadingState
+      v-if="query.isLoading.value"
+      text="Loading contributions..."
+    />
     <ErrorState
       v-else-if="query.isError.value"
       title="Could not load contributions"
@@ -41,7 +44,10 @@
       show-retry
       @retry="query.refetch()"
     />
-    <div v-else class="space-y-6">
+    <div
+      v-else
+      class="space-y-6"
+    >
       <AdminFilterBar
         v-model="searchQuery"
         placeholder="Search donor, event, or fund..."

@@ -213,9 +213,14 @@ const route = useRoute()
 const router = useRouter()
 const flowStore = useContributionFlowStore()
 const eventSlug = computed(() => String(route.params.eventSlug ?? ''))
+const { data: event } = useStorefrontEvent(eventSlug.value)
 
 watchEffect(() => {
-  flowStore.initialise(eventSlug.value)
+  if (event.value) {
+    flowStore.initialise(eventSlug.value, event.value.id)
+  } else {
+    flowStore.initialise(eventSlug.value)
+  }
 })
 
 const benefits = [

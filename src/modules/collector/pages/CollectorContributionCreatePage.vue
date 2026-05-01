@@ -20,8 +20,12 @@
           <X class="w-5 h-5 text-slate-400" />
         </button>
         <div>
-          <p class="text-[9px] font-black text-violet-400 uppercase tracking-[0.3em]">Collector Node</p>
-          <h1 class="text-sm font-black text-white uppercase tracking-tight">{{ stepLabels[currentStep - 1] }}</h1>
+          <p class="text-[9px] font-black text-violet-400 uppercase tracking-[0.3em]">
+            Collector Node
+          </p>
+          <h1 class="text-sm font-black text-white uppercase tracking-tight">
+            {{ stepLabels[currentStep - 1] }}
+          </h1>
         </div>
       </div>
       
@@ -40,11 +44,20 @@
 
     <main class="max-w-xl mx-auto px-6 pt-8 pb-32">
       <!-- Loading / Error -->
-      <div v-if="assignmentsQuery.isLoading.value" class="py-12">
-        <LoadingState text="Accessing Assignments…" class="!text-slate-400" />
+      <div
+        v-if="assignmentsQuery.isLoading.value"
+        class="py-12"
+      >
+        <LoadingState
+          text="Accessing Assignments…"
+          class="!text-slate-400"
+        />
       </div>
       
-      <div v-else-if="assignmentsQuery.isError.value" class="py-12">
+      <div
+        v-else-if="assignmentsQuery.isError.value"
+        class="py-12"
+      >
         <ErrorState
           title="Terminal Access Denied"
           :message="assignmentsQuery.error.value?.message ?? 'Node connection failed.'"
@@ -56,10 +69,17 @@
 
       <template v-else>
         <!-- ── STEP 1: Event Selection ── -->
-        <div v-if="currentStep === 1" class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div
+          v-if="currentStep === 1"
+          class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        >
           <div class="mb-8">
-            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Active Assignments</h2>
-            <p class="text-sm text-slate-400 mt-1">Select a campaign to begin collection.</p>
+            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+              Active Assignments
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">
+              Select a campaign to begin collection.
+            </p>
           </div>
 
           <div
@@ -67,7 +87,9 @@
             class="bg-white/5 border border-white/10 p-16 text-center"
           >
             <CalendarX class="w-12 h-12 text-slate-800 mx-auto mb-6" />
-            <h4 class="text-lg font-black text-white uppercase tracking-tight mb-2">No Active Hubs</h4>
+            <h4 class="text-lg font-black text-white uppercase tracking-tight mb-2">
+              No Active Hubs
+            </h4>
             <p class="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto">
               No collection hubs have been assigned to your node.<br>
               <span class="text-violet-400 font-bold">Contact supervisor</span> to provision access.
@@ -119,11 +141,18 @@
         </div>
 
         <!-- ── STEP 2: Fund Selection ── -->
-        <div v-if="currentStep === 2" class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div
+          v-if="currentStep === 2"
+          class="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        >
           <div class="mb-8 flex items-center justify-between">
             <div>
-              <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Select Target Fund</h2>
-              <p class="text-sm font-black text-violet-400 mt-1 uppercase italic tracking-tighter">{{ selectedEvent?.title }}</p>
+              <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                Select Target Fund
+              </h2>
+              <p class="text-sm font-black text-violet-400 mt-1 uppercase italic tracking-tighter">
+                {{ selectedEvent?.title }}
+              </p>
             </div>
             <div class="h-12 w-12 bg-white/5 flex items-center justify-center border border-white/5">
               <Target class="w-6 h-6 text-violet-500/30" />
@@ -134,7 +163,9 @@
             v-if="!availableFunds.length"
             class="bg-white/5 border border-white/10 p-16 text-center"
           >
-            <p class="text-sm text-slate-500 uppercase font-black tracking-widest">No Authorized Funds Found</p>
+            <p class="text-sm text-slate-500 uppercase font-black tracking-widest">
+              No Authorized Funds Found
+            </p>
           </div>
 
           <button
@@ -148,8 +179,14 @@
             @click="selectFund(fund)"
           >
             <div class="h-16 w-16 bg-white/5 border border-white/10 flex items-center justify-center text-slate-600 group-hover:text-violet-400 group-hover:bg-violet-500/10 transition-all shrink-0">
-              <Banknote v-if="fund.name.toLowerCase().includes('cash')" class="w-7 h-7" />
-              <Target v-else class="w-7 h-7" />
+              <Banknote
+                v-if="fund.name.toLowerCase().includes('cash')"
+                class="w-7 h-7"
+              />
+              <Target
+                v-else
+                class="w-7 h-7"
+              />
             </div>
             <div class="flex-1 min-w-0">
               <h4 class="text-xl font-black text-white uppercase tracking-tight group-hover:text-violet-400 transition-colors leading-tight">
@@ -164,10 +201,17 @@
         </div>
 
         <!-- ── STEP 3: Contributor Info ── -->
-        <div v-if="currentStep === 3" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div
+          v-if="currentStep === 3"
+          class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        >
           <div class="mb-4">
-            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Contributor Information</h2>
-            <p class="text-sm text-slate-400 mt-1">Audit details for digital receipt generation</p>
+            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+              Contributor Information
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">
+              Audit details for digital receipt generation
+            </p>
           </div>
 
           <!-- Anonymous Toggle Card -->
@@ -178,25 +222,44 @@
               : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'"
             @click="form.anonymous = !form.anonymous"
           >
-            <div class="w-8 h-8 border-2 flex items-center justify-center shrink-0" :class="form.anonymous ? 'border-white' : 'border-slate-700'">
-              <Check v-if="form.anonymous" class="w-5 h-5" />
+            <div
+              class="w-8 h-8 border-2 flex items-center justify-center shrink-0"
+              :class="form.anonymous ? 'border-white' : 'border-slate-700'"
+            >
+              <Check
+                v-if="form.anonymous"
+                class="w-5 h-5"
+              />
             </div>
             <div class="flex-1 text-left">
-              <p class="text-lg font-black uppercase tracking-tight">Anonymous Node</p>
-              <p class="text-[10px] opacity-70 font-black uppercase tracking-widest mt-1">Bypass personal data entry</p>
+              <p class="text-lg font-black uppercase tracking-tight">
+                Anonymous Node
+              </p>
+              <p class="text-[10px] opacity-70 font-black uppercase tracking-widest mt-1">
+                Bypass personal data entry
+              </p>
             </div>
-            <UserX v-if="form.anonymous" class="w-8 h-8 opacity-40" />
-            <UserCheck v-else class="w-8 h-8 opacity-10" />
+            <UserX
+              v-if="form.anonymous"
+              class="w-8 h-8 opacity-40"
+            />
+            <UserCheck
+              v-else
+              class="w-8 h-8 opacity-10"
+            />
           </button>
 
-          <div class="space-y-6" :class="{ 'opacity-10 pointer-events-none transition-all duration-500 scale-[0.98]': form.anonymous }">
+          <div
+            class="space-y-6"
+            :class="{ 'opacity-10 pointer-events-none transition-all duration-500 scale-[0.98]': form.anonymous }"
+          >
             <div class="space-y-2">
               <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">Full Identity</label>
               <input
                 v-model="form.contributorName"
                 placeholder="E.G. KWAME MENSAH"
                 class="w-full bg-white/5 border border-white/10 p-6 text-white font-black uppercase tracking-widest focus:border-violet-500 focus:bg-white/10 outline-none transition-all placeholder:text-white/5"
-              />
+              >
             </div>
             <div class="space-y-2">
               <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">Contact Protocol (Phone)</label>
@@ -205,20 +268,27 @@
                 type="tel"
                 placeholder="+233 -- --- ----"
                 class="w-full bg-white/5 border border-white/10 p-6 text-white font-black tracking-[0.2em] focus:border-violet-500 focus:bg-white/10 outline-none transition-all placeholder:text-white/5"
-              />
+              >
             </div>
           </div>
         </div>
 
         <!-- ── STEP 4: Amount & Payment ── -->
-        <div v-if="currentStep === 4" class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div
+          v-if="currentStep === 4"
+          class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        >
           <div class="mb-4">
-            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Transaction Value</h2>
-            <p class="text-sm text-slate-400 mt-1">Specify contribution amount in {{ form.currency }}</p>
+            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+              Transaction Value
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">
+              Specify contribution amount in {{ form.currency }}
+            </p>
           </div>
 
           <div class="relative group">
-            <div class="absolute -inset-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 blur-xl opacity-20 group-focus-within:opacity-40 transition duration-1000"></div>
+            <div class="absolute -inset-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 blur-xl opacity-20 group-focus-within:opacity-40 transition duration-1000" />
             <div class="relative bg-[#0F172A] border border-white/10 p-12 flex flex-col items-center">
               <div class="flex items-center gap-4">
                 <span class="text-5xl font-black text-slate-700 italic tracking-tighter">{{ currencySymbol }}</span>
@@ -229,7 +299,7 @@
                   placeholder="0.00"
                   class="bg-transparent text-7xl md:text-8xl font-black text-white outline-none w-full text-center placeholder:text-white/5 tracking-tighter tabular-nums"
                   @focus="$event.target.select()"
-                />
+                >
               </div>
               <div class="h-1 w-24 bg-violet-600 mt-8 shadow-[0_0_15px_rgba(124,58,237,0.5)]" />
             </div>
@@ -250,7 +320,10 @@
                   : 'border-white/5 bg-white/5 text-slate-600 hover:border-white/20'"
                 @click="form.paymentMethod = method.id"
               >
-                <component :is="method.icon" class="w-7 h-7" />
+                <component
+                  :is="method.icon"
+                  class="w-7 h-7"
+                />
                 {{ method.label }}
               </button>
             </div>
@@ -258,24 +331,37 @@
         </div>
 
         <!-- ── STEP 5: Review & Authorize ── -->
-        <div v-if="currentStep === 5" class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div
+          v-if="currentStep === 5"
+          class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        >
           <!-- Digital Receipt Review -->
           <div class="relative">
-            <div class="absolute -inset-1 bg-white/10 blur-md"></div>
+            <div class="absolute -inset-1 bg-white/10 blur-md" />
             <div class="relative bg-white text-[#060B16] p-10 shadow-2xl overflow-hidden">
               <!-- Watermark -->
               <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] rotate-[-25deg] pointer-events-none whitespace-nowrap">
-                <p class="text-9xl font-black uppercase">MFTL NODE</p>
+                <p class="text-9xl font-black uppercase">
+                  MFTL NODE
+                </p>
               </div>
 
               <!-- Serrated edge effect -->
               <div class="absolute -top-1 left-0 right-0 flex justify-between overflow-hidden">
-                <div v-for="i in 24" :key="i" class="w-4 h-4 bg-[#060B16] rotate-45 -translate-y-2 shrink-0" />
+                <div
+                  v-for="i in 24"
+                  :key="i"
+                  class="w-4 h-4 bg-[#060B16] rotate-45 -translate-y-2 shrink-0"
+                />
               </div>
 
               <div class="text-center border-b-2 border-dashed border-slate-200 pb-10 mb-10">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Node Operations</p>
-                <h3 class="text-6xl font-black tracking-tighter tabular-nums">{{ formatCurrency(Number(form.amount), form.currency) }}</h3>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">
+                  Node Operations
+                </p>
+                <h3 class="text-6xl font-black tracking-tighter tabular-nums">
+                  {{ formatCurrency(Number(form.amount), form.currency) }}
+                </h3>
                 <div class="inline-block mt-6 px-4 py-1.5 bg-[#060B16] text-white text-[10px] font-black uppercase tracking-[0.3em]">
                   {{ form.paymentMethod }} PROTOCOL
                 </div>
@@ -294,14 +380,19 @@
                   <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Identity</span>
                   <span class="text-xs font-black uppercase text-right">{{ form.anonymous ? 'Anonymous' : form.contributorName }}</span>
                 </div>
-                <div v-if="!form.anonymous" class="flex justify-between items-start gap-6">
+                <div
+                  v-if="!form.anonymous"
+                  class="flex justify-between items-start gap-6"
+                >
                   <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contact</span>
                   <span class="text-xs font-black text-right tracking-widest">{{ form.contributorPhone }}</span>
                 </div>
               </div>
 
               <div class="mt-12 pt-8 border-t-2 border-dashed border-slate-200 text-center">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Authorized by node protocol v1.0.4</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">
+                  Authorized by node protocol v1.0.4
+                </p>
               </div>
             </div>
           </div>
@@ -327,11 +418,21 @@
                   :class="pinError
                     ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]'
                     : 'border-white/10 focus:border-violet-500'"
-                />
+                >
                 <Lock class="absolute right-8 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-700" />
               </div>
-              <p v-if="pinError" class="mt-6 text-xs font-black text-red-500 uppercase tracking-[0.2em] animate-pulse">{{ pinError }}</p>
-              <p v-if="submitError" class="mt-6 p-6 bg-red-500/10 border border-red-500/20 text-xs font-black text-red-400 uppercase tracking-wide leading-relaxed">{{ submitError }}</p>
+              <p
+                v-if="pinError"
+                class="mt-6 text-xs font-black text-red-500 uppercase tracking-[0.2em] animate-pulse"
+              >
+                {{ pinError }}
+              </p>
+              <p
+                v-if="submitError"
+                class="mt-6 p-6 bg-red-500/10 border border-red-500/20 text-xs font-black text-red-400 uppercase tracking-wide leading-relaxed"
+              >
+                {{ submitError }}
+              </p>
             </div>
           </div>
         </div>

@@ -7,7 +7,9 @@
       <div class="max-w-xl mx-auto space-y-2">
         <div class="flex items-center gap-3">
           <div class="w-1.5 h-1.5 bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.5)] animate-pulse" />
-          <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">System Menu</p>
+          <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">
+            System Menu
+          </p>
         </div>
         <h1 class="text-4xl font-black text-white uppercase tracking-tight italic leading-none">
           Terminal Ops
@@ -37,7 +39,10 @@
                 class="h-12 w-12 bg-white/5 flex items-center justify-center transition-all group-hover:bg-violet-600 group-hover:text-white"
                 :class="item.highlight ? 'text-violet-400 border border-violet-500/20' : 'text-slate-500'"
               >
-                <component :is="item.icon" class="w-6 h-6" />
+                <component
+                  :is="item.icon"
+                  class="w-6 h-6"
+                />
               </div>
               <div>
                 <h3 class="text-xl font-black uppercase italic text-white group-hover:text-violet-400 transition-colors">

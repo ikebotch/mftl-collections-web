@@ -1,5 +1,8 @@
 <template>
-  <div v-if="isDev" class="fixed top-20 right-4 z-[100] max-w-xs bg-black/90 border border-violet-500/50 p-4 font-mono text-[10px] text-violet-400 shadow-2xl backdrop-blur-xl">
+  <div
+    v-if="isDev"
+    class="fixed top-20 right-4 z-[100] max-w-xs bg-black/90 border border-violet-500/50 p-4 font-mono text-[10px] text-violet-400 shadow-2xl backdrop-blur-xl"
+  >
     <div class="flex items-center justify-between mb-3 border-b border-violet-500/30 pb-2">
       <span class="font-black uppercase tracking-widest text-white">System Diagnostics</span>
       <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />

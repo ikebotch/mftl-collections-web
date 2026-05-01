@@ -1,11 +1,20 @@
 <template>
   <div class="min-h-screen bg-[#060B16] text-white pb-32 selection:bg-violet-500/30">
     <!-- ─── Loading / Error ─── -->
-    <div v-if="query.isLoading.value" class="py-20 flex flex-col items-center">
-      <LoadingState text="Accessing Terminal Hub…" class="!text-slate-400" />
+    <div
+      v-if="query.isLoading.value"
+      class="py-20 flex flex-col items-center"
+    >
+      <LoadingState
+        text="Accessing Terminal Hub…"
+        class="!text-slate-400"
+      />
     </div>
     
-    <div v-else-if="query.isError.value" class="px-6 py-12">
+    <div
+      v-else-if="query.isError.value"
+      class="px-6 py-12"
+    >
       <ErrorState
         title="Sync Protocol Failure"
         :message="query.error.value?.message ?? 'Node connection timed out.'"
@@ -15,7 +24,10 @@
       />
     </div>
 
-    <div v-else-if="query.data.value" class="animate-in fade-in duration-700">
+    <div
+      v-else-if="query.data.value"
+      class="animate-in fade-in duration-700"
+    >
       <!-- ══════════════════════════════════════════════════
            TERMINAL HEADER
       ══════════════════════════════════════════════════ -->
@@ -25,7 +37,9 @@
             <div class="space-y-1.5">
               <div class="flex items-center gap-3">
                 <div class="w-1.5 h-1.5 bg-violet-500 animate-pulse" />
-                <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">Operational Session Active</p>
+                <p class="text-[10px] font-black text-violet-400 uppercase tracking-[0.3em]">
+                  Operational Session Active
+                </p>
               </div>
               <h1 class="text-3xl md:text-4xl font-black text-white uppercase tracking-tight italic">
                 Welcome, {{ query.data.value.profile.name.split(' ')[0] }}
@@ -65,8 +79,13 @@
               class="bg-white/[0.03] border border-white/10 p-5 group hover:border-white/20 transition-all"
             >
               <div class="flex items-start justify-between mb-2">
-                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">{{ stat.label }}</p>
-                <component :is="stat.icon" class="w-3.5 h-3.5 text-violet-500/50 group-hover:text-violet-500 transition-colors" />
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                  {{ stat.label }}
+                </p>
+                <component
+                  :is="stat.icon"
+                  class="w-3.5 h-3.5 text-violet-500/50 group-hover:text-violet-500 transition-colors"
+                />
               </div>
               <p class="text-2xl font-black text-white uppercase tracking-tight tabular-nums">
                 {{ stat.value }}
@@ -82,19 +101,25 @@
       ══════════════════════════════════════════════════ -->
       <main class="max-w-[1400px] mx-auto px-6 py-12">
         <div class="space-y-12">
-          
           <!-- ASSIGNMENTS SECTION -->
           <div class="space-y-8">
             <div class="flex items-center justify-between border-b border-white/5 pb-4">
               <div>
-                <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Active Assignments</h3>
-                <p class="text-[11px] text-slate-400 font-bold uppercase mt-1">Campaigns assigned to your node</p>
+                <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                  Active Assignments
+                </h3>
+                <p class="text-[11px] text-slate-400 font-bold uppercase mt-1">
+                  Campaigns assigned to your node
+                </p>
               </div>
               <button 
                 class="flex items-center gap-2 px-3 py-1.5 border border-white/5 hover:bg-white/5 text-[10px] font-black text-slate-500 uppercase tracking-widest transition-all"
                 @click="showFigures = !showFigures"
               >
-                <component :is="showFigures ? Eye : EyeOff" class="w-3.5 h-3.5" />
+                <component
+                  :is="showFigures ? Eye : EyeOff"
+                  class="w-3.5 h-3.5"
+                />
                 {{ showFigures ? 'Mask Figures' : 'Show Figures' }}
               </button>
             </div>
@@ -103,7 +128,9 @@
             <div v-if="!query.data.value.assignments.events.length && !query.data.value.assignments.funds.length">
               <div class="bg-white/[0.02] border border-white/5 p-16 text-center">
                 <Calendar class="w-12 h-12 text-slate-800 mx-auto mb-6" />
-                <h4 class="text-lg font-black text-white uppercase tracking-tight mb-2">No Active Assignments</h4>
+                <h4 class="text-lg font-black text-white uppercase tracking-tight mb-2">
+                  No Active Assignments
+                </h4>
                 <p class="text-sm text-slate-500 max-w-xs mx-auto">
                   No assigned collections found for this hub.<br>
                   <span class="text-violet-400">Switch hub</span> or contact your supervisor.
@@ -112,7 +139,10 @@
             </div>
 
             <!-- Assignments Loop -->
-            <div v-else class="space-y-6">
+            <div
+              v-else
+              class="space-y-6"
+            >
               <div
                 v-for="event in query.data.value.assignments.events"
                 :key="event.id"
@@ -125,7 +155,9 @@
                       <Target class="w-6 h-6 text-violet-500/50" />
                     </div>
                     <div>
-                      <h3 class="text-lg font-black text-white uppercase tracking-tight">{{ event.title }}</h3>
+                      <h3 class="text-lg font-black text-white uppercase tracking-tight">
+                        {{ event.title }}
+                      </h3>
                       <div class="flex items-center gap-3 mt-1.5 text-[10px] font-black text-slate-500 uppercase tracking-widest">
                         <span class="flex items-center gap-1"><MapPin class="w-3 h-3" /> {{ event.location || 'Active Hub' }}</span>
                         <span class="h-1 w-1 bg-slate-700 rounded-full" />
@@ -158,7 +190,9 @@
 
                     <div class="flex items-start justify-between mb-6">
                       <div class="flex-1">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">{{ fund.name }}</p>
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
+                          {{ fund.name }}
+                        </p>
                         <h4 class="text-3xl font-black text-white tracking-tighter tabular-nums">
                           {{ showFigures ? formatCurrency(fund.collectedAmount, fund.currency) : '••••••' }}
                         </h4>
@@ -191,8 +225,12 @@
           <div class="space-y-8">
             <div class="flex items-center justify-between border-b border-white/5 pb-4">
               <div>
-                <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Recent Node Operations</h3>
-                <p class="text-[11px] text-slate-400 font-bold uppercase mt-1">Recently processed receipts</p>
+                <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                  Recent Node Operations
+                </h3>
+                <p class="text-[11px] text-slate-400 font-bold uppercase mt-1">
+                  Recently processed receipts
+                </p>
               </div>
               <router-link 
                 to="/collector/history" 
@@ -218,18 +256,31 @@
                     <Receipt class="w-6 h-6 text-slate-700 group-hover:text-violet-500/50 transition-colors" />
                   </div>
                   <div class="min-w-0">
-                    <p class="text-sm font-black text-white uppercase tracking-tight truncate">{{ receipt.contributorName || 'Anonymous' }}</p>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase truncate mt-1">{{ receipt.eventTitle }}</p>
+                    <p class="text-sm font-black text-white uppercase tracking-tight truncate">
+                      {{ receipt.contributorName || 'Anonymous' }}
+                    </p>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase truncate mt-1">
+                      {{ receipt.eventTitle }}
+                    </p>
                   </div>
                 </div>
                 <div class="text-right shrink-0">
-                  <p class="text-lg font-black text-white tracking-tight tabular-nums">{{ receipt.amount }}</p>
-                  <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-1.5 opacity-60">Verified</p>
+                  <p class="text-lg font-black text-white tracking-tight tabular-nums">
+                    {{ receipt.amount }}
+                  </p>
+                  <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-1.5 opacity-60">
+                    Verified
+                  </p>
                 </div>
               </button>
 
-              <div v-if="!query.data.value.recentReceipts.length" class="col-span-full py-16 text-center bg-white/[0.01] border border-dashed border-white/10">
-                <p class="text-xs font-bold text-slate-600 uppercase tracking-widest">No Recent Node Activity</p>
+              <div
+                v-if="!query.data.value.recentReceipts.length"
+                class="col-span-full py-16 text-center bg-white/[0.01] border border-dashed border-white/10"
+              >
+                <p class="text-xs font-bold text-slate-600 uppercase tracking-widest">
+                  No Recent Node Activity
+                </p>
               </div>
             </div>
           </div>
@@ -241,7 +292,9 @@
                 <ShieldCheck class="w-8 h-8" />
               </div>
               <div class="space-y-1">
-                <h4 class="text-sm font-black text-white uppercase tracking-widest">Secure Terminal Node</h4>
+                <h4 class="text-sm font-black text-white uppercase tracking-widest">
+                  Secure Terminal Node
+                </h4>
                 <p class="text-xs text-slate-400 leading-relaxed max-w-md italic">
                   Node {{ query.data.value.profile.id.substring(0, 8) }} is currently linked to the central hub. All data is end-to-end encrypted.
                 </p>
@@ -260,10 +313,13 @@
         :is-open="isDrawerOpen"
         title="Operational Receipt"
         :subtitle="selectedReceipt?.receiptNumber"
-        @close="isDrawerOpen = false"
         class="terminal-drawer"
+        @close="isDrawerOpen = false"
       >
-        <ContributionDetailView v-if="selectedReceipt" :contribution="selectedReceipt" />
+        <ContributionDetailView
+          v-if="selectedReceipt"
+          :contribution="selectedReceipt"
+        />
       </DetailDrawer>
 
       <!-- Mobile Sticky CTA -->

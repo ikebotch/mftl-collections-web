@@ -1,5 +1,8 @@
 <template>
-  <div ref="containerRef" class="relative group">
+  <div
+    ref="containerRef"
+    class="relative group"
+  >
     <!-- Main Selector Button (Modernized) -->
     <button
       class="premium-switcher-btn"
@@ -13,10 +16,19 @@
       <div class="icon-container">
         <div class="icon-glow" />
         <template v-if="!isCollapsed">
-          <ShieldCheck v-if="!branchStore.selectedBranchId" class="icon" />
-          <MapPin v-else class="icon" />
+          <ShieldCheck
+            v-if="!branchStore.selectedBranchId"
+            class="icon"
+          />
+          <MapPin
+            v-else
+            class="icon"
+          />
         </template>
-        <Building2 v-else class="icon" />
+        <Building2
+          v-else
+          class="icon"
+        />
       </div>
 
       <div
@@ -43,10 +55,16 @@
     </button>
 
     <!-- Premium Glassmorphism Dropdown -->
-    <div v-if="isOpen" class="premium-dropdown">
+    <div
+      v-if="isOpen"
+      class="premium-dropdown"
+    >
       <div class="dropdown-inner">
         <!-- Modern Sliding Tab Switcher -->
-        <div v-if="!isSingleTenant || isPlatformAdmin" class="sliding-tabs">
+        <div
+          v-if="!isSingleTenant || isPlatformAdmin"
+          class="sliding-tabs"
+        >
           <div
             class="tab-indicator"
             :style="{
@@ -109,8 +127,12 @@
                 <Globe class="w-4 h-4" />
               </div>
               <div class="item-info">
-                <p class="item-name">Global System View</p>
-                <p class="item-meta">All Organizations & Branches</p>
+                <p class="item-name">
+                  Global System View
+                </p>
+                <p class="item-meta">
+                  All Organizations & Branches
+                </p>
               </div>
               <div
                 v-if="!tenantStore.selectedTenantId"
@@ -132,9 +154,14 @@
                 <p class="item-name">
                   {{ tenant.name }}
                 </p>
-                <p class="item-meta">Primary Identity</p>
+                <p class="item-meta">
+                  Primary Identity
+                </p>
               </div>
-              <div v-if="isTenantSelected(tenant.id)" class="multi-check">
+              <div
+                v-if="isTenantSelected(tenant.id)"
+                class="multi-check"
+              >
                 <Check class="w-3 h-3" />
               </div>
             </button>
@@ -163,7 +190,9 @@
                 <p class="item-name">
                   {{ tenantStore.selectedTenantName || "Main Hub" }}
                 </p>
-                <p class="item-meta">Root Organization View</p>
+                <p class="item-meta">
+                  Root Organization View
+                </p>
               </div>
               <div
                 v-if="branchStore.selectedBranchIds.length === 0"
@@ -185,8 +214,12 @@
                 <Layers class="w-4 h-4" />
               </div>
               <div class="item-info">
-                <p class="item-name">All Branches</p>
-                <p class="item-meta">System Wide Overview</p>
+                <p class="item-name">
+                  All Branches
+                </p>
+                <p class="item-meta">
+                  System Wide Overview
+                </p>
               </div>
               <div
                 v-if="branchStore.selectedBranchIds.includes('all')"
@@ -212,7 +245,10 @@
                   {{ getTenantName(branch.tenantId) }}
                 </p>
               </div>
-              <div v-if="isBranchSelected(branch.id)" class="multi-check">
+              <div
+                v-if="isBranchSelected(branch.id)"
+                class="multi-check"
+              >
                 <Check class="w-3 h-3" />
               </div>
             </button>
