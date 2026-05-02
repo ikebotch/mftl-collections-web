@@ -46,3 +46,12 @@ pnpm-debug.log*
 lerna-debug.log*
 *storybook.log
 storybook-static
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
