@@ -1,29 +1,48 @@
-# Logs
-logs
+# Local Azure Functions settings
+local.settings.json
+**/local.settings.json
+!**/local.settings.example.json
+!**/local.settings.template.json
+
+# ASP.NET local/dev settings
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+!**/appsettings.example.json
+!**/appsettings.template.json
+!**/appsettings.Template.json
+
+# User/machine launch profiles
+**/Properties/launchSettings.json
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Azurite/local emulator files
+**/__azurite_db_*__.json
+**/__azurite_db_*__.json.lock
+**/AzuriteConfig
+**/.azurite/
+
+# Local logs/scratch
 *.log
+logs/
+scratch/
+
+# Frontend
+node_modules
+dist
+dist-ssr
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-.env
-.env.*
-!.env.example
-
 *storybook.log
 storybook-static
