@@ -228,12 +228,23 @@
                   >
                 </div>
                 <div class="flex gap-4">
-                  <div class="w-28 h-14 rounded-2xl bg-white border border-slate-100 px-5 flex items-center justify-between group focus-within:border-[#7C3AED] transition-all duration-300 cursor-pointer">
-                    <span class="text-xs font-bold text-[#0F172A] flex items-center gap-2">
-                      <span class="text-lg">🇬🇭</span> +233
-                    </span>
+                  <!-- Integrated Phone Prefix Selector -->
+                  <div class="relative w-32 h-14 rounded-2xl bg-white border border-slate-100 px-4 flex items-center justify-between group focus-within:border-[#7C3AED] transition-all duration-300">
+                    <div class="flex items-center gap-2">
+                      <span class="text-lg">{{ phonePrefix === '+233' ? '🇬🇭' : phonePrefix === '+44' ? '🇬🇧' : '🇺🇸' }}</span>
+                      <span class="text-xs font-bold text-[#0F172A]">{{ phonePrefix }}</span>
+                    </div>
                     <ChevronDown class="w-3 h-3 text-slate-400" />
+                    <select 
+                      v-model="phonePrefix"
+                      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                    >
+                      <option value="+233">+233 (GH)</option>
+                      <option value="+44">+44 (UK)</option>
+                      <option value="+1">+1 (US)</option>
+                    </select>
                   </div>
+
                   <div class="flex-1 h-14 rounded-2xl bg-white border border-slate-100 px-5 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-300">
                     <input 
                       v-model="flowStore.draft.contributorPhone"
@@ -245,7 +256,7 @@
                 </div>
               </div>
             </div>
-  
+   
             <!-- Amount Selection -->
             <div class="space-y-4">
               <div class="flex justify-between items-center px-1">
@@ -254,20 +265,22 @@
               </div>
               
               <div class="relative h-24 rounded-[32px] bg-white border border-slate-100 px-6 flex items-center gap-4 group focus-within:border-[#7C3AED] focus-within:shadow-xl focus-within:shadow-violet-500/5 transition-all duration-500 shadow-sm">
-                <!-- Integrated Currency Selector -->
-                <div class="relative flex items-center gap-2 pr-6 border-r border-slate-100 shrink-0">
-                  <span class="text-xl shrink-0">{{ currency === 'GHS' ? '🇬🇭' : currency === 'GBP' ? '🇬🇧' : '🇪🇺' }}</span>
-                  <div class="relative flex items-center">
-                    <select 
-                      v-model="currency"
-                      class="appearance-none bg-transparent border-none outline-none text-base font-black text-[#0F172A] pr-6 cursor-pointer z-10 relative"
-                    >
-                      <option value="GHS">GHS</option>
-                      <option value="GBP">GBP</option>
-                      <option value="EUR">EUR</option>
-                    </select>
-                    <ChevronDown class="w-3.5 h-3.5 text-slate-400 absolute right-0 pointer-events-none" />
+                <!-- Integrated Currency Selector (Full Area Hitbox) -->
+                <div class="relative flex items-center h-full pr-6 border-r border-slate-100 shrink-0">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl shrink-0">{{ currency === 'GHS' ? '🇬🇭' : currency === 'GBP' ? '🇬🇧' : '🇪🇺' }}</span>
+                    <span class="text-base font-black text-[#0F172A]">{{ currency }}</span>
+                    <ChevronDown class="w-3.5 h-3.5 text-slate-400" />
                   </div>
+                  
+                  <select 
+                    v-model="currency"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                  >
+                    <option value="GHS">GHS (₵)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="EUR">EUR (€)</option>
+                  </select>
                 </div>
 
                 <input 
@@ -382,6 +395,7 @@ const amountStr = ref(flowStore.draft.amount ? String(flowStore.draft.amount) : 
 const currency = ref<'GHS' | 'GBP' | 'EUR'>(flowStore.draft.currency || 'GHS')
 const paymentMethod = ref(flowStore.draft.paymentMethod || 'card')
 const network = ref(flowStore.draft.momoNetwork || 'mtn')
+const phonePrefix = ref('+233')
 
 // Ensure store is initialized with slug on mount/access
 if (slug.value) {
@@ -422,9 +436,11 @@ function onSubmit() {
     return
   }
 
+  const fullPhone = `${phonePrefix.value}${flowStore.draft.contributorPhone || ''}`
+  
   if (paymentMethod.value === 'momo') {
-    if (!flowStore.draft.contributorPhone || flowStore.draft.contributorPhone.length < 9) {
-      alert('Please enter a valid phone number for Mobile Money.')
+    if (!flowStore.draft.contributorPhone) {
+      alert('Mobile Money phone number is required.')
       return
     }
     if (!network.value) {
@@ -439,7 +455,8 @@ function onSubmit() {
     fundName: selectedFund.name,
     currency: currency.value,
     paymentMethod: paymentMethod.value as any,
-    momoNetwork: paymentMethod.value === 'momo' ? network.value : ''
+    momoNetwork: paymentMethod.value === 'momo' ? network.value : '',
+    contributorPhone: fullPhone
   })
   
   void router.push({

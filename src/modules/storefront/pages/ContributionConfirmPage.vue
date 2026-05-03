@@ -115,7 +115,7 @@
               <button
                 class="w-full sm:w-auto min-w-[240px] bg-[#7C3AED] text-white py-6 px-10 rounded-[24px] font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-violet-500/20 hover:bg-[#6D28D9] transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed group active:scale-95"
                 :disabled="flowStore.isSubmitting"
-                @click="flowStore.submit(slug)"
+                @click="handleConfirm"
               >
                 <template v-if="flowStore.isSubmitting">
                   <Loader2 class="w-5 h-5 animate-spin" />
@@ -156,4 +156,16 @@ const route = useRoute()
 const router = useRouter()
 const slug = computed(() => String(route.params.eventSlug || '').trim())
 const flowStore = useContributionFlowStore()
+
+async function handleConfirm() {
+  try {
+    const res = await flowStore.submit(slug.value)
+    if (res && 'success' in res && !res.success) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  } catch (err) {
+    console.error("Confirm submission error:", err)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
 </script>

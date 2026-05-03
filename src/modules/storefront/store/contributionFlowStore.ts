@@ -86,9 +86,14 @@ export const useContributionFlowStore = defineStore('contribution-flow', () => {
         throw new Error('Payment initiation failed: No checkout URL or payment reference returned.')
       }
     } catch (e: any) {
-      error.value = e.response?.data?.message || e.message || 'Failed to initiate contribution.'
+      console.error("Contribution submission failed:", e)
+      
+      const responseData = e.response?.data
+      error.value = responseData?.message || responseData?.Message || e.message || 'Failed to initiate contribution. Please try again.'
+      
       isSubmitting.value = false
-      throw e
+      // Ensure we don't have unhandled promise rejection if the caller doesn't catch
+      return { success: false, error: error.value }
     }
   }
 
