@@ -149,14 +149,10 @@ const router = useRouter()
 const flowStore = useContributionFlowStore()
 
 const eventSlug = computed(() => String(route.params.eventSlug ?? ''))
-const { data: event } = useStorefrontEvent(eventSlug.value)
+useStorefrontEvent(eventSlug.value)
 
 watchEffect(() => {
-  if (event.value) {
-    flowStore.initialise(eventSlug.value, event.value.id)
-  } else {
-    flowStore.initialise(eventSlug.value)
-  }
+  flowStore.initialise(eventSlug.value)
 })
 const contributorName = ref(flowStore.draft.contributorName)
 const contributorPhone = ref(flowStore.draft.contributorPhone)

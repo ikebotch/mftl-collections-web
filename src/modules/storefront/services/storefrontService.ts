@@ -13,19 +13,47 @@ export async function getStorefrontRecipientFunds(eventSlug: string): Promise<Re
 }
 
 export interface CreateContributionInput {
-  eventId: string
   recipientFundId: string
   amount: number
   currency: string
-  contributorName: string
-  contributorPhone: string
-  contributorEmail?: string
+  donorName: string
+  donorPhone?: string
+  donorEmail?: string
   anonymous: boolean
   paymentMethod: string
+  donorNetwork?: string
   note?: string
 }
 
-export async function createStorefrontContribution(payload: CreateContributionInput): Promise<{ id: string }> {
-  const response = await httpClient.post<{ id: string }>('/contributions', payload)
+export interface StorefrontContributionResponse {
+  contributionId: string
+  paymentId?: string
+  providerReference?: string
+  status: string
+  paymentMethod: string
+  checkoutUrl?: string
+  redirectUrl?: string
+}
+
+export interface ContributionStatusDto {
+  id: string
+  status: string
+  reference?: string
+  providerReference?: string
+  failureReason?: string
+}
+
+export async function createStorefrontContribution(slug: string, payload: CreateContributionInput): Promise<StorefrontContributionResponse> {
+  if (!slug || !slug.trim()) {
+    throw new Error("Missing event slug")
+  }
+  
+  const encodedSlug = encodeURIComponent(slug.trim())
+  const response = await httpClient.post<StorefrontContributionResponse>(`/storefront/events/${encodedSlug}/contributions`, payload)
+  return response.data
+}
+
+export async function getContributionStatus(id: string): Promise<ContributionStatusDto> {
+  const response = await httpClient.get<ContributionStatusDto>(`/storefront/contributions/${id}/status`)
   return response.data
 }

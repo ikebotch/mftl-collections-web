@@ -298,7 +298,7 @@
                   type="number"
                   placeholder="0.00"
                   class="bg-transparent text-7xl md:text-8xl font-black text-white outline-none w-full text-center placeholder:text-white/5 tracking-tighter tabular-nums"
-                  @focus="$event.target.select()"
+                  @focus="($event.target as HTMLInputElement).select()"
                 >
               </div>
               <div class="h-1 w-24 bg-violet-600 mt-8 shadow-[0_0_15px_rgba(124,58,237,0.5)]" />

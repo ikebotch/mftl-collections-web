@@ -22,13 +22,13 @@ export function resolveLandingPath(): string {
   
   // 4. Admin-like roles or explicit admin dashboard permission
   const hasAdminRole = roles.some(r => 
-    [
+    ([
       AppRoles.PlatformAdmin, 
       AppRoles.OrganisationAdmin, 
       AppRoles.BranchAdmin, 
       AppRoles.FinanceAdmin, 
       AppRoles.EventManager
-    ].includes(r)
+    ] as string[]).includes(r)
   )
   
   const canViewDashboard = usersStore.hasPermission(Permissions.Dashboard.View)

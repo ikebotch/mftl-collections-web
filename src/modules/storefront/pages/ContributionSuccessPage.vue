@@ -10,7 +10,7 @@
       Receipt generation is still a placeholder, but the success flow and handoff state are in place.
     </p>
     <div class="mt-8 flex flex-wrap justify-center gap-3">
-      <AppButton @click="router.push(`/contribute/${eventSlug}`)">
+      <AppButton @click="router.push(`/give/${eventSlug}`)">
         Contribute again
       </AppButton>
       <AppButton variant="secondary">

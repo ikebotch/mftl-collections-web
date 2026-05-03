@@ -6,9 +6,9 @@
       description="Choose the method that matches how the contributor wants to complete the gift."
     />
 
-    <div class="grid gap-4 md:grid-cols-3">
+    <div class="grid gap-4 md:grid-cols-2">
       <button
-        v-for="option in paymentMethodOptions"
+        v-for="option in filteredPaymentMethodOptions"
         :key="option.value"
         type="button"
         :class="[
@@ -55,6 +55,10 @@ const route = useRoute()
 const router = useRouter()
 const eventSlug = computed(() => String(route.params.eventSlug ?? ''))
 const flowStore = useContributionFlowStore()
+
+const filteredPaymentMethodOptions = computed(() => 
+  paymentMethodOptions.filter(opt => opt.value !== 'cash') as Array<{ label: string, value: 'card' | 'momo' | 'bank' }>
+)
 
 function onContinue() {
   void router.push(`/contribute/${eventSlug.value}/confirm`)

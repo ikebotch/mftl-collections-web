@@ -335,7 +335,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStorefrontEvent, useStorefrontRecipientFunds } from '../composables/useStorefront'
+import { useStorefrontEvent, useStorefrontRecipientFunds } from '@/modules/storefront/composables/useStorefront'
 import { useContributionFlowStore } from '../store/contributionFlowStore'
 import { 
   ShieldCheck, Clock, 
@@ -348,21 +348,48 @@ import NetworkSelector from '../components/NetworkSelector.vue'
 const route = useRoute()
 const router = useRouter()
 const flowStore = useContributionFlowStore()
-const eventSlug = computed(() => String(route.params.eventSlug ?? ''))
-const eventQuery = useStorefrontEvent(eventSlug.value)
-const fundsQuery = useStorefrontRecipientFunds(eventSlug.value)
+const slug = computed(() => String(route.params.eventSlug || '').trim())
+const eventQuery = useStorefrontEvent(slug)
+const fundsQuery = useStorefrontRecipientFunds(slug)
 
 const amountStr = ref(flowStore.draft.amount ? String(flowStore.draft.amount) : '')
 const paymentMethod = ref('momo')
 const network = ref('mtn')
 
+// Ensure store is initialized with slug on mount/access
+if (slug.value) {
+  flowStore.initialise(slug.value)
+}
 
 watch(amountStr, (val) => {
   flowStore.patch({ amount: parseFloat(val) || 0 })
 })
 
 function onSubmit() {
-  void router.push(`/give/${eventSlug.value}/confirm`)
+  if (!slug.value) {
+    alert('Invalid event link.')
+    return
+  }
+
+  if (!flowStore.draft.recipientFundId) {
+    alert('Please select a fund.')
+    return
+  }
+  if (!flowStore.draft.amount || flowStore.draft.amount <= 0) {
+    alert('Please enter a valid amount.')
+    return
+  }
+
+  flowStore.patch({ 
+    eventSlug: slug.value,
+    paymentMethod: paymentMethod.value as any,
+    donorNetwork: paymentMethod.value === 'momo' ? network.value : ''
+  })
+  
+  void router.push({
+    name: 'storefront-confirm',
+    params: { eventSlug: slug.value }
+  })
 }
 </script>
 

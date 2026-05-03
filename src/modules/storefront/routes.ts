@@ -43,6 +43,11 @@ export const storefrontRoutes: RouteRecordRaw[] = [
         name: 'storefront-self',
         component: () => import('@/modules/self-donations/pages/SelfDonationLandingPage.vue'),
       },
+      {
+        path: 'pending/:id',
+        name: 'storefront-pending',
+        component: () => import('./pages/ContributionPendingPage.vue'),
+      },
     ],
   },
 ]

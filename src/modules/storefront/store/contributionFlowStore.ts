@@ -2,11 +2,10 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { ContributionDraft } from '../types/storefront'
 import { createStorefrontContribution } from '../services/storefrontService'
-import { initiatePayment } from '@/modules/payments/services/paymentsService'
+import { useRouter } from 'vue-router'
 
-function createDefaultDraft(): ContributionDraft & { eventId: string } {
+function createDefaultDraft(): ContributionDraft {
   return {
-    eventId: '',
     eventSlug: '',
     recipientFundId: '',
     amount: 0,
@@ -16,60 +15,76 @@ function createDefaultDraft(): ContributionDraft & { eventId: string } {
     anonymous: false,
     note: '',
     paymentMethod: 'card',
+    donorNetwork: '',
   }
 }
 
 export const useContributionFlowStore = defineStore('contribution-flow', () => {
+  const router = useRouter()
   const draft = ref(createDefaultDraft())
   const isSubmitting = ref(false)
   const error = ref<string | null>(null)
+  const result = ref<any>(null)
 
-  function initialise(eventSlug: string, eventId?: string) {
+  function initialise(eventSlug: string) {
     if (draft.value.eventSlug !== eventSlug) {
       draft.value = {
         ...createDefaultDraft(),
         eventSlug,
-        eventId: eventId ?? '',
       }
-    } else if (eventId && !draft.value.eventId) {
-      draft.value.eventId = eventId
     }
   }
 
-  async function submit() {
+  async function submit(slug?: string) {
     if (isSubmitting.value) return
+    
+    // Recovery: use provided slug or fall back to draft
+    const finalSlug = (slug || draft.value.eventSlug || '').trim()
+    
+    if (!finalSlug) {
+      error.value = "Missing giving link. Please restart from the giving page."
+      return
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      console.debug("Submitting storefront contribution", { slug: finalSlug })
+    }
+
     isSubmitting.value = true
     error.value = null
 
     try {
-      // 1. Create Contribution
-      const contribution = await createStorefrontContribution({
-        eventId: draft.value.eventId,
+      // Create Storefront Contribution (Backend now initiates payment internally)
+      const res = await createStorefrontContribution(finalSlug, {
         recipientFundId: draft.value.recipientFundId,
         amount: draft.value.amount,
         currency: 'GHS', // Default for now
-        contributorName: draft.value.contributorName,
-        contributorPhone: draft.value.contributorPhone,
-        contributorEmail: draft.value.contributorEmail,
+        donorName: draft.value.contributorName,
+        donorPhone: draft.value.contributorPhone,
+        donorEmail: draft.value.contributorEmail,
         anonymous: draft.value.anonymous,
         paymentMethod: draft.value.paymentMethod,
+        donorNetwork: draft.value.donorNetwork,
         note: draft.value.note,
       })
 
-      // 2. Initiate Payment
-      const payment = await initiatePayment({
-        contributionId: contribution.id,
-        provider: draft.value.paymentMethod === 'card' ? 'stripe' : 'paystack', // Map appropriately
-      })
+      result.value = res
 
-      // 3. Redirect to Checkout
-      if (payment.checkoutUrl) {
-        window.location.href = payment.checkoutUrl
+      const checkoutUrl = res.checkoutUrl || res.redirectUrl
+
+      if (checkoutUrl) {
+        window.location.assign(checkoutUrl)
+      } else if (res.contributionId && (res.paymentId || res.providerReference)) {
+        // MoMo case usually returns no checkout URL but has a payment record
+        router.push({
+          name: 'storefront-pending',
+          params: { eventSlug: finalSlug, id: res.contributionId }
+        })
       } else {
-        throw new Error('No checkout URL returned from payment service.')
+        throw new Error('Payment initiation failed: No checkout URL or payment reference returned.')
       }
     } catch (e: any) {
-      error.value = e.message || 'Failed to initiate contribution.'
+      error.value = e.response?.data?.message || e.message || 'Failed to initiate contribution.'
       isSubmitting.value = false
       throw e
     }

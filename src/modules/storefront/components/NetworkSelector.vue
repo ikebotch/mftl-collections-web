@@ -45,7 +45,7 @@ defineEmits(['update:modelValue'])
 
 const networks = [
   { id: 'mtn', label: 'MTN MoMo' },
-  { id: 'vodafone', label: 'Vodafone' },
-  { id: 'airteltigo', label: 'AirtelTigo' }
+  { id: 'telecel', label: 'Telecel' },
+  { id: 'at', label: 'AT Money' }
 ]
 </script>

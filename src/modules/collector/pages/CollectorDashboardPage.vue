@@ -354,7 +354,7 @@ import DetailDrawer from '@/shared/components/drawers/DetailDrawer.vue'
 import ContributionDetailView from '@/modules/contributions/components/ContributionDetailView.vue'
 import { 
   Plus, RefreshCcw, Eye, EyeOff, Wallet, 
-  ChevronDown, ArrowRight, Receipt, Target,
+  ArrowRight, Receipt, Target,
   MapPin, Calendar, TrendingUp, FileText, ShieldCheck
 } from 'lucide-vue-next'
 
@@ -366,22 +366,8 @@ const selectedReceipt = ref<any>(null)
 const showFigures = ref(true)
 const expandedEvents = ref(new Set<string>())
 
-function toggleEventExpand(eventId: string) {
-  expandedEvents.value.has(eventId) ? expandedEvents.value.delete(eventId) : expandedEvents.value.add(eventId)
-  expandedEvents.value = new Set(expandedEvents.value)
-}
-
 function fundsForEvent(eventId: string): CollectorAssignedFund[] {
   return (query.data.value?.assignments.funds ?? []).filter(f => f.eventId === eventId)
-}
-
-function eventCurrencyTotals(eventId: string) {
-  const byCode: Record<string, { currency: string; total: number; label: string }> = {}
-  for (const fund of fundsForEvent(eventId)) {
-    if (!byCode[fund.currency]) byCode[fund.currency] = { currency: fund.currency, total: 0, label: fund.currency }
-    byCode[fund.currency].total += fund.collectedAmount
-  }
-  return Object.values(byCode)
 }
 
 function navigateToCollect(event: CollectorAssignedEvent, fund: CollectorAssignedFund) {

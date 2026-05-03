@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
     <button
       v-for="method in methods"
       :key="method.id"
@@ -39,7 +39,6 @@
 
 <script setup lang="ts">
 import { 
-  Banknote, 
   Smartphone, 
   CreditCard, 
   Building2 
@@ -52,7 +51,6 @@ defineProps<{
 defineEmits(['update:modelValue'])
 
 const methods = [
-  { id: 'cash', label: 'Cash', subtext: 'Pay collector', icon: Banknote },
   { id: 'momo', label: 'Mobile Money', subtext: 'Pay with MoMo', icon: Smartphone },
   { id: 'card', label: 'Visa / Card', subtext: 'Pay securely', icon: CreditCard },
   { id: 'bank', label: 'Bank Transfer', subtext: 'Transfer directly', icon: Building2 }

@@ -17,5 +17,6 @@ export interface ContributionDraft {
   contributorEmail: string
   anonymous: boolean
   note: string
-  paymentMethod: 'card' | 'momo' | 'cash'
+  paymentMethod: 'card' | 'momo' | 'bank'
+  donorNetwork?: string
 }
