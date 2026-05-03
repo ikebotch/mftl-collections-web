@@ -246,30 +246,36 @@
               </div>
             </div>
   
-            <!-- Currency Selection -->
-            <div class="space-y-6">
-              <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Select Currency</label>
-              <CurrencySelector v-model="currency" />
-            </div>
-
             <!-- Amount Selection -->
-            <div class="space-y-6">
-              <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Amount to Give</label>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center px-1">
+                <label class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Amount to Give</label>
+                <span class="text-[9px] font-black text-[#7C3AED] uppercase tracking-widest opacity-0 group-focus-within:opacity-100 transition-opacity duration-300">Enter Amount</span>
+              </div>
               
-              <div class="relative h-20 rounded-3xl bg-white border border-slate-100 px-6 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-500">
-                <div class="flex items-center gap-3 pr-4 border-r border-slate-100">
-                  <span class="text-lg">{{ currency === 'GHS' ? '🇬🇭' : currency === 'GBP' ? '🇬🇧' : '🇪🇺' }}</span>
-                  <span class="text-base font-black text-[#0F172A]">{{ currency }}</span>
+              <div class="relative h-24 rounded-[32px] bg-white border border-slate-100 px-6 flex items-center gap-4 group focus-within:border-[#7C3AED] focus-within:shadow-xl focus-within:shadow-violet-500/5 transition-all duration-500 shadow-sm">
+                <!-- Integrated Currency Selector -->
+                <div class="relative flex items-center gap-2 pr-6 border-r border-slate-100 shrink-0">
+                  <span class="text-xl shrink-0">{{ currency === 'GHS' ? '🇬🇭' : currency === 'GBP' ? '🇬🇧' : '🇪🇺' }}</span>
+                  <div class="relative flex items-center">
+                    <select 
+                      v-model="currency"
+                      class="appearance-none bg-transparent border-none outline-none text-base font-black text-[#0F172A] pr-6 cursor-pointer z-10 relative"
+                    >
+                      <option value="GHS">GHS</option>
+                      <option value="GBP">GBP</option>
+                      <option value="EUR">EUR</option>
+                    </select>
+                    <ChevronDown class="w-3.5 h-3.5 text-slate-400 absolute right-0 pointer-events-none" />
+                  </div>
                 </div>
+
                 <input 
                   v-model="amountStr"
                   type="text" 
-                  class="flex-1 bg-transparent border-none outline-none text-4xl font-black text-[#0F172A] text-right placeholder:text-slate-100"
+                  class="flex-1 min-w-0 bg-transparent border-none outline-none text-4xl font-black text-[#0F172A] text-right placeholder:text-slate-100"
                   placeholder="0"
                 >
-                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity">
-                  <span class="text-[10px] font-black text-[#7C3AED] uppercase tracking-widest">Enter Amount</span>
-                </div>
               </div>
             </div>
   
@@ -363,7 +369,6 @@ import {
 import CampaignFundCard from '../components/CampaignFundCard.vue'
 import PaymentMethodSelector from '../components/PaymentMethodSelector.vue'
 import NetworkSelector from '../components/NetworkSelector.vue'
-import CurrencySelector from '../components/CurrencySelector.vue'
 import { Building2 } from 'lucide-vue-next'
 
 const route = useRoute()
