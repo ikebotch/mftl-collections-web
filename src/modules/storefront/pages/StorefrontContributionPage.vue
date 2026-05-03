@@ -228,12 +228,23 @@
                   >
                 </div>
                 <div class="flex gap-4">
-                  <div class="w-28 h-14 rounded-2xl bg-white border border-slate-100 px-5 flex items-center justify-between group focus-within:border-[#7C3AED] transition-all duration-300 cursor-pointer">
-                    <span class="text-xs font-bold text-[#0F172A] flex items-center gap-2">
-                      <span class="text-lg">🇬🇭</span> +233
-                    </span>
+                  <!-- Integrated Phone Prefix Selector -->
+                  <div class="relative w-32 h-14 rounded-2xl bg-white border border-slate-100 px-4 flex items-center justify-between group focus-within:border-[#7C3AED] transition-all duration-300">
+                    <div class="flex items-center gap-2">
+                      <span class="text-lg">{{ phonePrefix === '+233' ? '🇬🇭' : phonePrefix === '+44' ? '🇬🇧' : '🇺🇸' }}</span>
+                      <span class="text-xs font-bold text-[#0F172A]">{{ phonePrefix }}</span>
+                    </div>
                     <ChevronDown class="w-3 h-3 text-slate-400" />
+                    <select 
+                      v-model="phonePrefix"
+                      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                    >
+                      <option value="+233">+233 (GH)</option>
+                      <option value="+44">+44 (UK)</option>
+                      <option value="+1">+1 (US)</option>
+                    </select>
                   </div>
+
                   <div class="flex-1 h-14 rounded-2xl bg-white border border-slate-100 px-5 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-300">
                     <input 
                       v-model="flowStore.draft.contributorPhone"
@@ -245,25 +256,39 @@
                 </div>
               </div>
             </div>
-  
+   
             <!-- Amount Selection -->
-            <div class="space-y-6">
-              <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Amount to Give</label>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center px-1">
+                <label class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Amount to Give</label>
+                <span class="text-[9px] font-black text-[#7C3AED] uppercase tracking-widest opacity-0 group-focus-within:opacity-100 transition-opacity duration-300">Enter Amount</span>
+              </div>
               
-              <div class="relative h-20 rounded-3xl bg-white border border-slate-100 px-6 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-500">
-                <div class="flex items-center gap-3 pr-4 border-r border-slate-100">
-                  <span class="text-lg">🇬🇭</span>
-                  <span class="text-base font-black text-[#0F172A]">GHS</span>
+              <div class="relative h-24 rounded-[32px] bg-white border border-slate-100 px-6 flex items-center gap-4 group focus-within:border-[#7C3AED] focus-within:shadow-xl focus-within:shadow-violet-500/5 transition-all duration-500 shadow-sm">
+                <!-- Integrated Currency Selector (Full Area Hitbox) -->
+                <div class="relative flex items-center h-full pr-6 border-r border-slate-100 shrink-0">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl shrink-0">{{ currency === 'GHS' ? '🇬🇭' : currency === 'GBP' ? '🇬🇧' : '🇪🇺' }}</span>
+                    <span class="text-base font-black text-[#0F172A]">{{ currency }}</span>
+                    <ChevronDown class="w-3.5 h-3.5 text-slate-400" />
+                  </div>
+                  
+                  <select 
+                    v-model="currency"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                  >
+                    <option value="GHS">GHS (₵)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="EUR">EUR (€)</option>
+                  </select>
                 </div>
+
                 <input 
                   v-model="amountStr"
                   type="text" 
-                  class="flex-1 bg-transparent border-none outline-none text-4xl font-black text-[#0F172A] text-right placeholder:text-slate-100"
+                  class="flex-1 min-w-0 bg-transparent border-none outline-none text-4xl font-black text-[#0F172A] text-right placeholder:text-slate-100"
                   placeholder="0"
                 >
-                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity">
-                  <span class="text-[10px] font-black text-[#7C3AED] uppercase tracking-widest">Enter Amount</span>
-                </div>
               </div>
             </div>
   
@@ -272,6 +297,7 @@
               <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Payment Method</label>
               <PaymentMethodSelector 
                 v-model="paymentMethod"
+                :currency="currency"
               />
 
               <div
@@ -280,6 +306,18 @@
               >
                 <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Select Network</label>
                 <NetworkSelector v-model="network" />
+              </div>
+
+              <div
+                v-if="paymentMethod === 'bank'"
+                class="p-4 rounded-2xl bg-violet-50 border border-violet-100 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-500"
+              >
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#7C3AED] shadow-sm">
+                  <Building2 class="w-4 h-4" />
+                </div>
+                <p class="text-[10px] font-bold text-[#7C3AED] leading-tight">
+                  Secure bank authorisation via GoCardless.
+                </p>
               </div>
             </div>
 
@@ -291,7 +329,7 @@
                     Final Amount
                   </p>
                   <p class="text-5xl font-black text-[#7C3AED] tracking-tighter">
-                    {{ amountStr || '0' }}<span class="text-slate-200 ml-2">GHS</span>
+                    {{ amountStr || '0' }}<span class="text-slate-200 ml-2">{{ currency }}</span>
                   </p>
                 </div>
                 <div class="text-right space-y-2">
@@ -335,7 +373,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStorefrontEvent, useStorefrontRecipientFunds } from '../composables/useStorefront'
+import { useStorefrontEvent, useStorefrontRecipientFunds } from '@/modules/storefront/composables/useStorefront'
 import { useContributionFlowStore } from '../store/contributionFlowStore'
 import { 
   ShieldCheck, Clock, 
@@ -344,25 +382,87 @@ import {
 import CampaignFundCard from '../components/CampaignFundCard.vue'
 import PaymentMethodSelector from '../components/PaymentMethodSelector.vue'
 import NetworkSelector from '../components/NetworkSelector.vue'
+import { Building2 } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
 const flowStore = useContributionFlowStore()
-const eventSlug = computed(() => String(route.params.eventSlug ?? ''))
-const eventQuery = useStorefrontEvent(eventSlug.value)
-const fundsQuery = useStorefrontRecipientFunds(eventSlug.value)
+const slug = computed(() => String(route.params.eventSlug || '').trim())
+const eventQuery = useStorefrontEvent(slug)
+const fundsQuery = useStorefrontRecipientFunds(slug)
 
 const amountStr = ref(flowStore.draft.amount ? String(flowStore.draft.amount) : '')
-const paymentMethod = ref('momo')
-const network = ref('mtn')
+const currency = ref<'GHS' | 'GBP' | 'EUR'>(flowStore.draft.currency || 'GHS')
+const paymentMethod = ref(flowStore.draft.paymentMethod || 'card')
+const network = ref(flowStore.draft.momoNetwork || 'mtn')
+const phonePrefix = ref('+233')
 
+// Ensure store is initialized with slug on mount/access
+if (slug.value) {
+  flowStore.initialise(slug.value, currency.value)
+}
 
 watch(amountStr, (val) => {
-  flowStore.patch({ amount: parseFloat(val) || 0 })
+  flowStore.patch({ amount: Number(val) || 0 })
+})
+
+watch(currency, (newVal) => {
+  if (newVal === 'GHS') {
+    if (paymentMethod.value === 'bank') {
+      paymentMethod.value = 'card'
+    }
+  } else {
+    if (paymentMethod.value === 'momo') {
+      paymentMethod.value = 'card'
+    }
+  }
+  flowStore.patch({ currency: newVal })
 })
 
 function onSubmit() {
-  void router.push(`/give/${eventSlug.value}/confirm`)
+  if (!slug.value) {
+    alert('Invalid event link.')
+    return
+  }
+
+  const selectedFund = fundsQuery.data.value?.find(f => f.id === flowStore.draft.recipientFundId)
+  if (!selectedFund) {
+    alert('Please select a fund.')
+    return
+  }
+
+  if (!flowStore.draft.amount || flowStore.draft.amount <= 0) {
+    alert('Please enter a valid amount.')
+    return
+  }
+
+  const fullPhone = `${phonePrefix.value}${flowStore.draft.contributorPhone || ''}`
+  
+  if (paymentMethod.value === 'momo') {
+    if (!flowStore.draft.contributorPhone) {
+      alert('Mobile Money phone number is required.')
+      return
+    }
+    if (!network.value) {
+      alert('Please select a mobile network.')
+      return
+    }
+  }
+
+  flowStore.patch({ 
+    eventSlug: slug.value,
+    eventId: eventQuery.data.value?.id,
+    fundName: selectedFund.name,
+    currency: currency.value,
+    paymentMethod: paymentMethod.value as any,
+    momoNetwork: paymentMethod.value === 'momo' ? network.value : '',
+    contributorPhone: fullPhone
+  })
+  
+  void router.push({
+    name: 'storefront-confirm',
+    params: { eventSlug: slug.value }
+  })
 }
 </script>
 

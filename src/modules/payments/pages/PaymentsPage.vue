@@ -159,7 +159,7 @@ const successRate = computed(() => {
 const totalVolume = computed(() => {
   const currencyGroups: Record<string, number> = {}
   payments.value.forEach(p => {
-    const amt = parseFloat(String(p.amount).replace(/[^0-9.]/g, ''))
+    const amt = Number(String(p.amount).replace(/[^0-9.]/g, ''))
     const cur = p.amount.split(' ')[0] || 'GHS'
     currencyGroups[cur] = (currencyGroups[cur] || 0) + amt
   })
