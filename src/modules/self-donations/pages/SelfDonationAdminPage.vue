@@ -100,7 +100,7 @@ const formattedTotalVolume = computed(() => {
   const currencyGroups: Record<string, number> = {}
   
   items.forEach(item => {
-    const amt = parseFloat(item.amount.replace(/[^0-9.]/g, ''))
+    const amt = Number(item.amount.replace(/[^0-9.]/g, ''))
     const cur = item.amount.split(' ')[0] || 'GHS'
     if (!isNaN(amt)) {
       currencyGroups[cur] = (currencyGroups[cur] || 0) + amt

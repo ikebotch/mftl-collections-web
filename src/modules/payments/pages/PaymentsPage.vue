@@ -63,11 +63,14 @@
         exportable
         title="Transaction Ledger"
       >
-        <template #cell:providerReference="{ value }">
-          <div class="flex flex-col">
-            <span class="text-sm font-black text-slate-900 tracking-tight">{{ value }}</span>
+        <template #cell:providerReference="{ row }">
+          <button 
+            class="flex flex-col text-left group/ref"
+            @click="() => {}"
+          >
+            <span class="text-sm font-black text-slate-900 tracking-tight group-hover/ref:text-violet-600 transition-colors">{{ row.providerReference }}</span>
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5 italic">Provider Ref</span>
-          </div>
+          </button>
         </template>
 
         <template #cell:method="{ value }">
@@ -156,7 +159,7 @@ const successRate = computed(() => {
 const totalVolume = computed(() => {
   const currencyGroups: Record<string, number> = {}
   payments.value.forEach(p => {
-    const amt = parseFloat(String(p.amount).replace(/[^0-9.]/g, ''))
+    const amt = Number(String(p.amount).replace(/[^0-9.]/g, ''))
     const cur = p.amount.split(' ')[0] || 'GHS'
     currencyGroups[cur] = (currencyGroups[cur] || 0) + amt
   })
