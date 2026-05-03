@@ -196,6 +196,7 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useStorefrontEvent } from '../composables/useStorefront'
 import { useContributionFlowStore } from '../store/contributionFlowStore'
 import { 
   Heart, 
