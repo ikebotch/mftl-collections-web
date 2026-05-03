@@ -9,13 +9,14 @@ function createDefaultDraft(): ContributionDraft {
     eventSlug: '',
     recipientFundId: '',
     amount: 0,
+    currency: 'GHS',
     contributorName: '',
     contributorPhone: '',
     contributorEmail: '',
     anonymous: false,
     note: '',
     paymentMethod: 'card',
-    donorNetwork: '',
+    momoNetwork: '',
   }
 }
 
@@ -26,11 +27,12 @@ export const useContributionFlowStore = defineStore('contribution-flow', () => {
   const error = ref<string | null>(null)
   const result = ref<any>(null)
 
-  function initialise(eventSlug: string) {
+  function initialise(eventSlug: string, defaultCurrency: 'GHS' | 'GBP' | 'EUR' = 'GHS') {
     if (draft.value.eventSlug !== eventSlug) {
       draft.value = {
         ...createDefaultDraft(),
         eventSlug,
+        currency: defaultCurrency
       }
     }
   }
@@ -58,13 +60,13 @@ export const useContributionFlowStore = defineStore('contribution-flow', () => {
       const res = await createStorefrontContribution(finalSlug, {
         recipientFundId: draft.value.recipientFundId,
         amount: draft.value.amount,
-        currency: 'GHS', // Default for now
+        currency: draft.value.currency,
         donorName: draft.value.contributorName,
         donorPhone: draft.value.contributorPhone,
         donorEmail: draft.value.contributorEmail,
         anonymous: draft.value.anonymous,
         paymentMethod: draft.value.paymentMethod,
-        donorNetwork: draft.value.donorNetwork,
+        donorNetwork: draft.value.momoNetwork,
         note: draft.value.note,
       })
 

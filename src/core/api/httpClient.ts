@@ -11,6 +11,7 @@ import { readSelectedBranchId } from '@/modules/branches/store/branchStore'
 declare module 'axios' {
   interface AxiosRequestConfig {
     skipAuth?: boolean
+    skipTenant?: boolean
   }
 }
 
@@ -29,18 +30,20 @@ export class HttpClient {
       const headers = config.headers ?? {}
       headers[CORRELATION_HEADER_NAME] = createCorrelationId()
 
-      if (!headers[appConfig.api.tenantHeaderName]) {
-        const tenantId = readSelectedTenantId()
-        // Never send Guid.Empty or placeholders. Header must represent exactly one active tenant.
-        if (tenantId && tenantId !== '00000000-0000-0000-0000-000000000000' && !tenantId.includes(',')) {
-          headers[appConfig.api.tenantHeaderName] = tenantId
+      if (!config.skipTenant) {
+        if (!headers[appConfig.api.tenantHeaderName]) {
+          const tenantId = readSelectedTenantId()
+          // Never send Guid.Empty or placeholders. Header must represent exactly one active tenant.
+          if (tenantId && tenantId !== '00000000-0000-0000-0000-000000000000' && !tenantId.includes(',')) {
+            headers[appConfig.api.tenantHeaderName] = tenantId
+          }
         }
-      }
 
-      if (!headers['X-Branch-Id']) {
-        const branchId = readSelectedBranchId()
-        if (branchId && branchId !== '00000000-0000-0000-0000-000000000000') {
-          headers['X-Branch-Id'] = branchId
+        if (!headers['X-Branch-Id']) {
+          const branchId = readSelectedBranchId()
+          if (branchId && branchId !== '00000000-0000-0000-0000-000000000000') {
+            headers['X-Branch-Id'] = branchId
+          }
         }
       }
 
@@ -162,11 +165,13 @@ function mergeRequestOptions(config: any, options?: RequestOptions): InternalAxi
     ...config,
     signal: options?.signal,
     params: options?.params,
+    skipAuth: options?.skipAuth,
+    skipTenant: options?.skipTenant,
     headers: {
       ...(config.headers ?? {}),
       ...(options?.headers ?? {}),
     },
-  }
+  } as InternalAxiosRequestConfig
 }
 
 export function mapApiError(error: unknown): ApiError {

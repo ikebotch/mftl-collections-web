@@ -246,14 +246,20 @@
               </div>
             </div>
   
+            <!-- Currency Selection -->
+            <div class="space-y-6">
+              <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Select Currency</label>
+              <CurrencySelector v-model="currency" />
+            </div>
+
             <!-- Amount Selection -->
             <div class="space-y-6">
               <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Amount to Give</label>
               
               <div class="relative h-20 rounded-3xl bg-white border border-slate-100 px-6 flex items-center gap-4 group focus-within:border-[#7C3AED] transition-all duration-500">
                 <div class="flex items-center gap-3 pr-4 border-r border-slate-100">
-                  <span class="text-lg">🇬🇭</span>
-                  <span class="text-base font-black text-[#0F172A]">GHS</span>
+                  <span class="text-lg">{{ currency === 'GHS' ? '🇬🇭' : currency === 'GBP' ? '🇬🇧' : '🇪🇺' }}</span>
+                  <span class="text-base font-black text-[#0F172A]">{{ currency }}</span>
                 </div>
                 <input 
                   v-model="amountStr"
@@ -272,6 +278,7 @@
               <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Payment Method</label>
               <PaymentMethodSelector 
                 v-model="paymentMethod"
+                :currency="currency"
               />
 
               <div
@@ -280,6 +287,18 @@
               >
                 <label class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 pl-1">Select Network</label>
                 <NetworkSelector v-model="network" />
+              </div>
+
+              <div
+                v-if="paymentMethod === 'bank'"
+                class="p-4 rounded-2xl bg-violet-50 border border-violet-100 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-500"
+              >
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#7C3AED] shadow-sm">
+                  <Building2 class="w-4 h-4" />
+                </div>
+                <p class="text-[10px] font-bold text-[#7C3AED] leading-tight">
+                  Secure bank authorisation via GoCardless.
+                </p>
               </div>
             </div>
 
@@ -291,7 +310,7 @@
                     Final Amount
                   </p>
                   <p class="text-5xl font-black text-[#7C3AED] tracking-tighter">
-                    {{ amountStr || '0' }}<span class="text-slate-200 ml-2">GHS</span>
+                    {{ amountStr || '0' }}<span class="text-slate-200 ml-2">{{ currency }}</span>
                   </p>
                 </div>
                 <div class="text-right space-y-2">
@@ -344,6 +363,8 @@ import {
 import CampaignFundCard from '../components/CampaignFundCard.vue'
 import PaymentMethodSelector from '../components/PaymentMethodSelector.vue'
 import NetworkSelector from '../components/NetworkSelector.vue'
+import CurrencySelector from '../components/CurrencySelector.vue'
+import { Building2 } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -353,16 +374,30 @@ const eventQuery = useStorefrontEvent(slug)
 const fundsQuery = useStorefrontRecipientFunds(slug)
 
 const amountStr = ref(flowStore.draft.amount ? String(flowStore.draft.amount) : '')
-const paymentMethod = ref('momo')
-const network = ref('mtn')
+const currency = ref<'GHS' | 'GBP' | 'EUR'>(flowStore.draft.currency || 'GHS')
+const paymentMethod = ref(flowStore.draft.paymentMethod || 'card')
+const network = ref(flowStore.draft.momoNetwork || 'mtn')
 
 // Ensure store is initialized with slug on mount/access
 if (slug.value) {
-  flowStore.initialise(slug.value)
+  flowStore.initialise(slug.value, currency.value)
 }
 
 watch(amountStr, (val) => {
   flowStore.patch({ amount: parseFloat(val) || 0 })
+})
+
+watch(currency, (newVal) => {
+  if (newVal === 'GHS') {
+    if (paymentMethod.value === 'bank') {
+      paymentMethod.value = 'card'
+    }
+  } else {
+    if (paymentMethod.value === 'momo') {
+      paymentMethod.value = 'card'
+    }
+  }
+  flowStore.patch({ currency: newVal })
 })
 
 function onSubmit() {
@@ -371,19 +406,35 @@ function onSubmit() {
     return
   }
 
-  if (!flowStore.draft.recipientFundId) {
+  const selectedFund = fundsQuery.data.value?.find(f => f.id === flowStore.draft.recipientFundId)
+  if (!selectedFund) {
     alert('Please select a fund.')
     return
   }
+
   if (!flowStore.draft.amount || flowStore.draft.amount <= 0) {
     alert('Please enter a valid amount.')
     return
   }
 
+  if (paymentMethod.value === 'momo') {
+    if (!flowStore.draft.contributorPhone || flowStore.draft.contributorPhone.length < 9) {
+      alert('Please enter a valid phone number for Mobile Money.')
+      return
+    }
+    if (!network.value) {
+      alert('Please select a mobile network.')
+      return
+    }
+  }
+
   flowStore.patch({ 
     eventSlug: slug.value,
+    eventId: eventQuery.data.value?.id,
+    fundName: selectedFund.name,
+    currency: currency.value,
     paymentMethod: paymentMethod.value as any,
-    donorNetwork: paymentMethod.value === 'momo' ? network.value : ''
+    momoNetwork: paymentMethod.value === 'momo' ? network.value : ''
   })
   
   void router.push({

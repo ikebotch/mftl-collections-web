@@ -3,12 +3,20 @@ import type { StorefrontEvent } from '../types/storefront'
 import type { RecipientFund } from '@/modules/recipient-funds/types/recipientFund'
 
 export async function getStorefrontEvent(eventSlug: string): Promise<StorefrontEvent> {
-  const response = await httpClient.get<StorefrontEvent>(`/storefront/events/${eventSlug}`)
+  const encodedSlug = encodeURIComponent(eventSlug)
+  const response = await httpClient.get<StorefrontEvent>(`/storefront/events/${encodedSlug}`, {
+    skipAuth: true,
+    skipTenant: true
+  })
   return response.data
 }
 
 export async function getStorefrontRecipientFunds(eventSlug: string): Promise<RecipientFund[]> {
-  const response = await httpClient.get<RecipientFund[]>(`/storefront/events/${eventSlug}/funds`)
+  const encodedSlug = encodeURIComponent(eventSlug)
+  const response = await httpClient.get<RecipientFund[]>(`/storefront/events/${encodedSlug}/funds`, {
+    skipAuth: true,
+    skipTenant: true
+  })
   return response.data
 }
 
@@ -49,11 +57,17 @@ export async function createStorefrontContribution(slug: string, payload: Create
   }
   
   const encodedSlug = encodeURIComponent(slug.trim())
-  const response = await httpClient.post<StorefrontContributionResponse>(`/storefront/events/${encodedSlug}/contributions`, payload)
+  const response = await httpClient.post<StorefrontContributionResponse>(`/storefront/events/${encodedSlug}/contributions`, payload, {
+    skipAuth: true,
+    skipTenant: true
+  })
   return response.data
 }
 
 export async function getContributionStatus(id: string): Promise<ContributionStatusDto> {
-  const response = await httpClient.get<ContributionStatusDto>(`/storefront/contributions/${id}/status`)
+  const response = await httpClient.get<ContributionStatusDto>(`/storefront/contributions/${id}/status`, {
+    skipAuth: true,
+    skipTenant: true
+  })
   return response.data
 }
