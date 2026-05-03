@@ -403,7 +403,7 @@ if (slug.value) {
 }
 
 watch(amountStr, (val) => {
-  flowStore.patch({ amount: parseFloat(val) || 0 })
+  flowStore.patch({ amount: Number(val) || 0 })
 })
 
 watch(currency, (newVal) => {
